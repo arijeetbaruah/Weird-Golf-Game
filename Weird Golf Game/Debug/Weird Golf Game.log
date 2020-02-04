@@ -1,7 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1875,5): warning : The referenced project '..\Logger\Logger.vcxproj' does not exist.
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(452,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (LogTest.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  FileLogger.cpp
-  Logger.cpp
-  Main.cpp
-  Generating Code...
-  Weird Golf Game.vcxproj -> D:\Source\Repos\weird-golf-game\Debug\Weird Golf Game.exe
