@@ -4,9 +4,11 @@
 
 class Logger
 {
-public:
+protected:
 	std::shared_ptr<spdlog::logger> Log;
+public:
 	Logger() {}
+	Logger(std::shared_ptr<spdlog::logger> Log) {}
 	Logger(std::string name);
 
 	template<typename T>
@@ -48,5 +50,7 @@ public:
 	void debug(std::string fmt, T const... args) {
 		Log->debug(fmt, args...);
 	}
+
+	static Logger* get(std::string name);
 };
 

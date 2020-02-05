@@ -12,5 +12,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(submodules/spdlog)
 
-add_executable(weird_golf_game src/Main.cpp src/Logger.cpp src/FileLogger.cpp include/Logger.h include/FileLogger.h)
+add_executable(weird_golf_game
+	src/Main.cpp
+	src/Logger.cpp
+	src/FileLogger.cpp
+	src/State.cpp
+	src/StateTransition.cpp
+	src/StateMachine.cpp
+	src/PushdownState.cpp
+	src/PushdownMachine.cpp
+	include/Logger.h
+	include/FileLogger.h
+	include/State.h
+	include/StateTransition.h
+	include/StateMachine.h
+	include/PushdownState.h
+	include/PushdownMachine.h)
 target_link_libraries(weird_golf_game spdlog::spdlog)
