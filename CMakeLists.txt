@@ -5,12 +5,14 @@ project(weird_golf_game)
 ## Including headers, from both the current project and from the imported libraries
 include_directories(include)
 include_directories(submodules/spdlog)
+include_directories(submodules/enet/include)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(submodules/spdlog)
+add_subdirectory(submodules/enet)
 
 add_executable(weird_golf_game
 	src/Main.cpp
@@ -28,4 +30,4 @@ add_executable(weird_golf_game
 	include/StateMachine.h
 	include/PushdownState.h
 	include/PushdownMachine.h)
-target_link_libraries(weird_golf_game spdlog::spdlog)
+target_link_libraries(weird_golf_game spdlog::spdlog enet)
