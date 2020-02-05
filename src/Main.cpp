@@ -8,8 +8,6 @@
 #include "./AI//StateTransition.h"
 #include "./AI//State.h"
 
-
-
 void TestStateMachine() {
 	StateMachine* testMachine = new StateMachine();
 
