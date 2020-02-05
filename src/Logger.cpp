@@ -9,3 +9,7 @@ Logger::Logger(string name) {
 	Log->set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
 	Log->info("Welcome to spdlog! {}", 8);
 }
+
+Logger* Logger::get(std::string name) {
+	return new Logger (spdlog::get(name));
+}
