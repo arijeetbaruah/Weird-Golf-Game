@@ -13,7 +13,7 @@
 #include <map>
 #include <enet/enet.h>
 #include <iostream>
-#include "Logger.h"
+#include "./Logger/Logger.h"
 
 enum BasicNetworkMessages {
 	None,

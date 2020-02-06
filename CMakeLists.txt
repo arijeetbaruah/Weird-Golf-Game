@@ -23,11 +23,17 @@ add_executable(weird_golf_game
 	src/AI/StateMachine.cpp
 	src/AI/PushdownState.cpp
 	src/AI/PushdownMachine.cpp
+	src/Network/GameServer.cpp
+	src/Network/GameClient.cpp
+	src/Network/NetworkBase.cpp
 	include/Logger/Logger.h
 	include/Logger/FileLogger.h
 	include/AI/State.h
 	include/AI/StateTransition.h
 	include/AI/StateMachine.h
 	include/AI/PushdownState.h
-	include/AI/PushdownMachine.h)
+	include/AI/PushdownMachine.h
+	include/Network/GameServer.h
+	include/Network/NetworkBase.h
+	include/Network/GameClient.h)
 target_link_libraries(weird_golf_game spdlog::spdlog enet)

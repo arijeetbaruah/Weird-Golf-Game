@@ -2,7 +2,7 @@
 
 #include <enet/enet.h>
 #include"./NetworkBase.h"
-#include "Logger.h"
+#include "./Logger/Logger.h"
 
 class GameClient : public NetworkBase {
 	ENetHost* client;

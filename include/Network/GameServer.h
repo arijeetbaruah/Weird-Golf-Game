@@ -1,8 +1,8 @@
 #pragma once
 
 #include <enet/enet.h>
-#include"./NetworkBase.h"
-#include "Logger.h"
+#include"./Network/NetworkBase.h"
+#include "./Logger/Logger.h"
 
 class GameServer : public NetworkBase {
 public:
