@@ -1,5 +1,5 @@
-#include "PushdownMachine.h"
-#include "PushdownState.h"
+#include "./AI/PushdownMachine.h"
+#include "./AI/PushdownState.h"
 
 PushdownMachine::PushdownMachine()
 {

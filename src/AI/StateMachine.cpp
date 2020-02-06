@@ -1,6 +1,6 @@
-#include "StateMachine.h"
-#include "State.h"
-#include "StateTransition.h"
+#include "./AI/StateMachine.h"
+#include "./AI/State.h"
+#include "./AI/StateTransition.h"
 
 StateMachine::StateMachine()
 {

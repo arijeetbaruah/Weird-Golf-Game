@@ -16,18 +16,18 @@ add_subdirectory(submodules/enet)
 
 add_executable(weird_golf_game
 	src/Main.cpp
-	src/Logger.cpp
-	src/FileLogger.cpp
-	src/State.cpp
-	src/StateTransition.cpp
-	src/StateMachine.cpp
-	src/PushdownState.cpp
-	src/PushdownMachine.cpp
-	include/Logger.h
-	include/FileLogger.h
-	include/State.h
-	include/StateTransition.h
-	include/StateMachine.h
-	include/PushdownState.h
-	include/PushdownMachine.h)
+	src/Logger/Logger.cpp
+	src/Logger/FileLogger.cpp
+	src/AI/State.cpp
+	src/AI/StateTransition.cpp
+	src/AI/StateMachine.cpp
+	src/AI/PushdownState.cpp
+	src/AI/PushdownMachine.cpp
+	include/Logger/Logger.h
+	include/Logger/FileLogger.h
+	include/AI/State.h
+	include/AI/StateTransition.h
+	include/AI/StateMachine.h
+	include/AI/PushdownState.h
+	include/AI/PushdownMachine.h)
 target_link_libraries(weird_golf_game spdlog::spdlog enet)
