@@ -9,8 +9,15 @@ class Script : Component {
 		std::function<void(GameObject*)> lateLambda;
 	
 	public:
-		void setFunction(std::function<void(GameObject*)> func);
-		void nullFunction();
+		Script();
+		Script(std::function<void(GameObject*)> script);
+
+		void setLambda(std::function<void(GameObject*)> func);
+		void nullLambda();
+
+		void setLateLambda(std::function<void(GameObject*)> func);
+		void nullLateLambda();
+
 		void Update();
 		void LateUpdate();
 };
