@@ -48,6 +48,7 @@ public:
 	}
 
 	void addComponent(Component* component) {
+		component->setParent(this);
 		components.insert(std::pair<std::string, Component*>(component->getName(), component));
 	}
 
