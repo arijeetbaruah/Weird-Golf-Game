@@ -2,6 +2,9 @@
 //
 
 #include <iostream>
+
+#include "./Common/Window.h"
+
 #include "./Logger/Logger.h"
 
 #include "./AI/StateMachine.h"
@@ -86,11 +89,34 @@ int TestNetwork() {
 int main()
 {
 	Logger* log = new Logger("console");
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
+
+	if (!w->HasInitialised()) {
+		return -1;
+	}
+
+	w->ShowOSPointer(false);
+	w->LockMouseToWindow(true);
+
+	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
+		float dt = w->GetTimer()->GetTimeDeltaSeconds();
+
+		if (dt > 1.0f) {
+			log->info("Skipping large time delta");
+			continue; //must have hit a breakpoint or something to have a 1 second frame time!
+		}
+
+		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+	}
+
+	Window::DestroyGameWindow();
+	delete log;
+	/*Logger* log = new Logger("console");
 	log->info("starting State Machine Test");
 	TestStateMachine();
 	log->info("ending State Machine Test");
 
 	TestNetwork();
 
-	delete log;
+	delete log;*/
 }
