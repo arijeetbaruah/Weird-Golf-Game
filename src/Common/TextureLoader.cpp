@@ -16,7 +16,7 @@ https://research.ncl.ac.uk/game/
 
 #ifdef WIN32
 #include <filesystem>
-using namespace std::experimental::filesystem::v1;
+using namespace std::filesystem;
 #endif
 
 using namespace NCL;

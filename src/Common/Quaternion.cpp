@@ -6,11 +6,11 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
-#include "Quaternion.h"
-#include "Matrix4.h"
-#include "Matrix3.h"
-#include "Vector3.h"
-#include "Maths.h"
+#include "Common/Quaternion.h"
+#include "Common/Matrix4.h"
+#include "Common/Matrix3.h"
+#include "Common/Vector3.h"
+#include "Common/Maths.h"
 #include <algorithm>
 #include <cmath>
 

@@ -6,12 +6,12 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
-#include "Matrix4.h"
-#include "Matrix3.h"
-#include "Maths.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "Quaternion.h"
+#include "Common/Matrix4.h"
+#include "Common/Matrix3.h"
+#include "Common/Maths.h"
+#include "Common/Vector3.h"
+#include "Common/Vector4.h"
+#include "Common/Quaternion.h"
 
 using namespace NCL;
 using namespace NCL::Maths;

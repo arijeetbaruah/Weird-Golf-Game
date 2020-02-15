@@ -29,6 +29,8 @@ file(GLOB SRC_OPENGLRENDERING_FILES ${PROJECT_SOURCE_DIR}/src/OpenGLRendering/*.
 file(GLOB HEADER_OPENGLRENDERING_FILES ${PROJECT_SOURCE_DIR}/include/OpenGLRendering/*.h)
 file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
+file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
+file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -49,5 +51,7 @@ add_executable(weird_golf_game
 	${SRC_OPENGLRENDERING_FILES}
 	${HEADER_GLAD_FILES}
 	${HEADER_KHR_FILES}
+	${SRC_ComponentSystem_FILES}
+	${HEADER_ComponentSystem_FILES}
 )
 target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)

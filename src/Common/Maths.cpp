@@ -6,9 +6,9 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
-#include "Maths.h"
-#include "../Common/Vector2.h"
-#include "../Common/Vector3.h"
+#include "Common/Maths.h"
+#include "Common/Vector2.h"
+#include "Common/Vector3.h"
 
 namespace NCL {
 	namespace Maths {
