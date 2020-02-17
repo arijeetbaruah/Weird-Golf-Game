@@ -11,9 +11,7 @@
 #include "./AI//StateTransition.h"
 #include "./AI//State.h"
 
-#include "./Network/NetworkBase.h"
-#include "./Network/GameServer.h"
-#include "./Network/GameClient.h"
+#include "GolfGame.h"
 
 void TestStateMachine() {
 	StateMachine* testMachine = new StateMachine();
@@ -88,7 +86,7 @@ int TestNetwork() {
 
 int main()
 {
-	Logger* log = new Logger("console");
+	std::unique_ptr<Logger> log = std::unique_ptr<Logger>(new Logger("main"));
 	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
 
 	if (!w->HasInitialised()) {
@@ -97,6 +95,13 @@ int main()
 
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
+
+	std::unique_ptr<GolfGame> g = std::unique_ptr<GolfGame>(new GolfGame());
+
+	if (g->hasError() != 0) {
+		log->error(g->hasError());
+		return g->hasError();
+	}
 
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
@@ -107,16 +112,9 @@ int main()
 		}
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+
+		g->UpdateGame(dt);
 	}
 
 	Window::DestroyGameWindow();
-	delete log;
-	/*Logger* log = new Logger("console");
-	log->info("starting State Machine Test");
-	TestStateMachine();
-	log->info("ending State Machine Test");
-
-	TestNetwork();
-
-	delete log;*/
 }
