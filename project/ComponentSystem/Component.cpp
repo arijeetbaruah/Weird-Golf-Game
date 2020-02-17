@@ -20,3 +20,11 @@ void Component::Start() {}
 void Component::Update() {}
 
 void Component::LateUpdate() {}
+
+void Component::setParent(GameObject* go) {
+	parent = go;
+}
+
+GameObject* Component::getParent() {
+	return parent;
+}
