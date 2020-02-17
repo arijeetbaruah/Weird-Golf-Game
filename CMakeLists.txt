@@ -14,26 +14,44 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/enet)
 
+file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/include/*.h)
+file(GLOB SRC_AI_FILES ${PROJECT_SOURCE_DIR}/src/AI/*.cpp)
+file(GLOB HEADER_AI_FILES ${PROJECT_SOURCE_DIR}/include/AI/*.h)
+file(GLOB SRC_NETWORK_FILES ${PROJECT_SOURCE_DIR}/src/Network/*.cpp)
+file(GLOB HEADER_NETWORK_FILES ${PROJECT_SOURCE_DIR}/include/Network/*.h)
+file(GLOB SRC_LOGGER_FILES ${PROJECT_SOURCE_DIR}/src/Logger/*.cpp)
+file(GLOB HEADER_LOGGER_FILES ${PROJECT_SOURCE_DIR}/include/Logger/*.h)
+file(GLOB SRC_COMMON_FILES ${PROJECT_SOURCE_DIR}/src/Common/*.cpp)
+file(GLOB HEADER_COMMON_FILES ${PROJECT_SOURCE_DIR}/include/Common/*.h)
+file(GLOB HEADER_COMMON_SUBFILES ${PROJECT_SOURCE_DIR}/include/Common/stb/*.h)
+file(GLOB SRC_OPENGLRENDERING_FILES ${PROJECT_SOURCE_DIR}/src/OpenGLRendering/*.cpp ${PROJECT_SOURCE_DIR}/src/OpenGLRendering/*.c)
+file(GLOB HEADER_OPENGLRENDERING_FILES ${PROJECT_SOURCE_DIR}/include/OpenGLRendering/*.h)
+file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
+file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
+file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
+file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
+
+# OpenGL
+find_package(OpenGL REQUIRED)
+
 add_executable(weird_golf_game
-	src/Main.cpp
-	src/Logger/Logger.cpp
-	src/Logger/FileLogger.cpp
-	src/AI/State.cpp
-	src/AI/StateTransition.cpp
-	src/AI/StateMachine.cpp
-	src/AI/PushdownState.cpp
-	src/AI/PushdownMachine.cpp
-	src/Network/GameServer.cpp
-	src/Network/GameClient.cpp
-	src/Network/NetworkBase.cpp
-	include/Logger/Logger.h
-	include/Logger/FileLogger.h
-	include/AI/State.h
-	include/AI/StateTransition.h
-	include/AI/StateMachine.h
-	include/AI/PushdownState.h
-	include/AI/PushdownMachine.h
-	include/Network/GameServer.h
-	include/Network/NetworkBase.h
-	include/Network/GameClient.h)
-target_link_libraries(weird_golf_game spdlog::spdlog enet)
+	${SRC_FILES}
+	${HEADER_FILES}
+	${SRC_LOGGER_FILES}
+	${SRC_AI_FILES}
+	${SRC_NETWORK_FILES}
+	${HEADER_LOGGER_FILES}
+	${HEADER_AI_FILES}
+	${HEADER_NETWORK_FILES}
+	${SRC_COMMON_FILES}
+	${HEADER_COMMON_FILES}
+	${HEADER_COMMON_SUBFILES}
+	${HEADER_OPENGLRENDERING_FILES}
+	${SRC_OPENGLRENDERING_FILES}
+	${HEADER_GLAD_FILES}
+	${HEADER_KHR_FILES}
+	${SRC_ComponentSystem_FILES}
+	${HEADER_ComponentSystem_FILES}
+)
+target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
