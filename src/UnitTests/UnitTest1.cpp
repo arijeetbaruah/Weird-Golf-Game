@@ -8,5 +8,5 @@ using namespace NCL::Maths;
 
 int main() {
 	Vector2* vec = new Vector2(3, 4);
-	ASSERT_WITH_FAILEXIT((vec->x == 3) && (vec->y == 5));
+	ASSERT_WITH_FAILEXIT((vec->x == 3) && (vec->y == 4));
 }
