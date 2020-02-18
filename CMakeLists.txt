@@ -34,7 +34,7 @@ file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
-file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} tests/*.cpp)
+file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} /project/UnitTest1/*.cpp)
 
 #Unit Testing
 #Run through each source
@@ -48,8 +48,8 @@ foreach(testSrc ${TEST_SRCS})
 	#Finally add it to test execution - 
         #Notice the WORKING_DIRECTORY and COMMAND
         add_test(NAME ${testName} 
-                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-                 COMMAND ${PROJECT_SOURCE_DIR}/tests/${testName} 
+                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/project/UnitTest1/
+                 COMMAND ${PROJECT_SOURCE_DIR}/project/UnitTest1/${testName} 
 )
 endforeach(testSrc)
 
