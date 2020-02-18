@@ -4,9 +4,6 @@
     <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\GolfGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Logger\FileLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

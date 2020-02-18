@@ -1,6 +1,7 @@
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/test1.dir
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/lib.dir
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/weird_golf_game.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/test2.dir
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/RUN_TESTS.dir
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/ALL_BUILD.dir
 C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/ZERO_CHECK.dir

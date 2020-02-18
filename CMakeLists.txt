@@ -6,17 +6,17 @@ project(weird_golf_game)
 enable_testing()
 
 ## Including headers, from both the current project and from the imported libraries
-include_directories(include)
-include_directories(submodules/spdlog)
-include_directories(submodules/enet/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/submodules/spdlog/include)
+include_directories(${PROJECT_SOURCE_DIR}/submodules/enet/include)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(BUILD_TESTING ON)
 
-add_subdirectory(submodules/spdlog)
-add_subdirectory(submodules/enet)
+add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/spdlog)
+add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/enet)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/include/*.h)
@@ -36,12 +36,13 @@ file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
 file(GLOB TEST_SRCS ${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp)
+file(GLOB MAIN ${PROJECT_SOURCE_DIR} Main.cpp)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
 
-add_executable(weird_golf_game
-	${SRC_FILES} # remove the main.cpp
+add_library(lib
+	${SRC_FILES} # removed the main.cpp
 	${HEADER_FILES}
 	${SRC_LOGGER_FILES}
 	${SRC_AI_FILES}
@@ -59,13 +60,18 @@ add_executable(weird_golf_game
 	${SRC_ComponentSystem_FILES}
 	${HEADER_ComponentSystem_FILES}
 )
+add_executable(weird_golf_game
+	#added the main
+	${MAIN}
+)
 
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
 
-add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp)
-add_executable(test2 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest2.cpp)
+target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32)
 
+add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(test1 spdlog::spdlog enet opengl32)
-
 add_test(NAME test1 COMMAND test1.exe)
+
+add_executable(test2 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest2.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(test2 spdlog::spdlog enet opengl32)
 add_test(NAME test2 COMMAND test2.exe)

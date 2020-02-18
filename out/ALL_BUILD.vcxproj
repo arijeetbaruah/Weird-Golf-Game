@@ -66,7 +66,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -76,7 +76,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -86,7 +86,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -96,7 +96,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -184,6 +184,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\test1.vcxproj">
       <Project>{1F3F4490-36DD-3C61-84AC-A48452998FCD}</Project>
       <Name>test1</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\test2.vcxproj">
+      <Project>{336CF525-AC25-3226-A6A0-D105CAAC8E87}</Project>
+      <Name>test2</Name>
     </ProjectReference>
     <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\weird_golf_game.vcxproj">
       <Project>{43BA6CCF-441C-387B-8A4B-AA7E49338B80}</Project>

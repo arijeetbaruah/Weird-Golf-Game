@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -98,10 +98,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -134,10 +134,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -150,7 +150,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -170,10 +170,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -186,7 +186,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -205,10 +205,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
