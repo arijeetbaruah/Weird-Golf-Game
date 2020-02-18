@@ -1,0 +1,10 @@
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/CMakeFiles/weird_golf_game.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/CMakeFiles/RUN_TESTS.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/spdlog/CMakeFiles/spdlog.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/spdlog/CMakeFiles/RUN_TESTS.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/spdlog/CMakeFiles/ALL_BUILD.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/enet/CMakeFiles/enet.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/enet/CMakeFiles/RUN_TESTS.dir
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/build/submodules/enet/CMakeFiles/ALL_BUILD.dir
