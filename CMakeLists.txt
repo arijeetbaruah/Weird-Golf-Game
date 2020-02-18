@@ -65,7 +65,7 @@ target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
 add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp)
 add_executable(test2 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest2.cpp)
 
-target_link_libraries(test1 test2 spdlog::spdlog enet opengl32)
+target_link_libraries(test1 spdlog::spdlog enet opengl32)
 
 add_test(NAME test1 COMMAND test1.exe)
 add_test(NAME test2 COMMAND test2.exe)
