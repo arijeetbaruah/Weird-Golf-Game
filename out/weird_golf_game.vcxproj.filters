@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Logger\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Logger\FileLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\AI\State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\AI\StateTransition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\AI\StateMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\AI\PushdownState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\AI\PushdownMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Network\GameServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Network\GameClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\src\Network\NetworkBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\Logger\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\Logger\FileLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\AI\State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\AI\StateTransition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\AI\StateMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\AI\PushdownState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\AI\PushdownMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\Network\GameServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\Network\NetworkBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\include\Network\GameClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B91FDE50-C017-37AF-9516-104F0343E552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{80A07838-6E2E-3B48-841A-ECA5049EE3D5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

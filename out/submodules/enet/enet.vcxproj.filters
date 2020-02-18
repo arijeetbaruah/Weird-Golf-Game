@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\callbacks.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\compress.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\host.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\list.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\packet.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\peer.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\protocol.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\unix.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\win32.c">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\callbacks.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\enet.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\list.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\protocol.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\time.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\unix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\utility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include\enet\win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{E7886F1E-2BAA-37A4-B4B9-EE5607862ABF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{8BA5BE08-CBC6-3E47-80E9-0EB64C1BDF0E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
