@@ -1,4 +1,4 @@
-#include "Script.h"
+#include "ComponentSystem/Script.h"
 
 Script::Script() {
 	this->lambda = [](GameObject*){};

@@ -1,4 +1,4 @@
-#include "Component.h"
+#include "ComponentSystem/Component.h"
 
 Component::Component() {
 	this->name = "";

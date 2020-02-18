@@ -1,5 +1,5 @@
 #pragma once
-#include "..//Common/Matrix4.h"
+#include "Common/Matrix4.h"
 #include "Component.h"
 
 //@Author: David Towers

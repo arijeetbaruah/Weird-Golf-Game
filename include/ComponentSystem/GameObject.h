@@ -1,10 +1,10 @@
 #pragma once
 #include <unordered_map>
-#include "..//Common//Quaternion.h"
-#include "..//Common//Matrix4.h"
-#include "..//Common//Matrix3.h"
-#include "..//Common//Vector3.h"
-#include "..//Common//Maths.h"
+#include "Common/Quaternion.h"
+#include "Common/Matrix4.h"
+#include "Common/Matrix3.h"
+#include "Common/Vector3.h"
+#include "Common/Maths.h"
 #include <algorithm>
 #include <cmath>
 #include "Component.h"
