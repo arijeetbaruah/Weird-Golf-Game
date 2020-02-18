@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1F3F4490-36DD-3C61-84AC-A48452998FCD}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>test1</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">test1.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">test1</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">test1.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">test1</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">test1.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">test1</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">test1.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">test1</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;SPDLOG_COMPILED_LIB;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>submodules\spdlog\Debug\spdlogd.lib;submodules\enet\Debug\enet.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/Debug/test1.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/Debug/test1.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>submodules\spdlog\Release\spdlog.lib;submodules\enet\Release\enet.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/Release/test1.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/Release/test1.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>submodules\spdlog\MinSizeRel\spdlog.lib;submodules\enet\MinSizeRel\enet.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/MinSizeRel/test1.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/MinSizeRel/test1.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPDLOG_COMPILED_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b6038386\Documents\GitHub\weird-golf-game\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\enet\include;C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>submodules\spdlog\RelWithDebInfo\spdlog.lib;submodules\enet\RelWithDebInfo\enet.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/RelWithDebInfo/test1.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/RelWithDebInfo/test1.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/b6038386/Documents/GitHub/weird-golf-game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/b6038386/Documents/GitHub/weird-golf-game -BC:/Users/b6038386/Documents/GitHub/weird-golf-game/out --check-stamp-file C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCXXCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeRCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/b6038386/Documents/GitHub/weird-golf-game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/b6038386/Documents/GitHub/weird-golf-game -BC:/Users/b6038386/Documents/GitHub/weird-golf-game/out --check-stamp-file C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCXXCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeRCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/b6038386/Documents/GitHub/weird-golf-game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/b6038386/Documents/GitHub/weird-golf-game -BC:/Users/b6038386/Documents/GitHub/weird-golf-game/out --check-stamp-file C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCXXCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeRCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/b6038386/Documents/GitHub/weird-golf-game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/b6038386/Documents/GitHub/weird-golf-game -BC:/Users/b6038386/Documents/GitHub/weird-golf-game/out --check-stamp-file C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeCXXCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeRCCompiler.cmake;C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\3.17.0-rc1\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\project\UnitTest1\UnitTest1.cpp" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\GolfGame.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Main.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\FileLogger.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Logger.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\PushdownMachine.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\PushdownState.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\State.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\StateMachine.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\StateTransition.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\GameClient.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\GameServer.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\NetworkBase.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Assets.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Camera.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\GameTimer.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Keyboard.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Maths.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Matrix2.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Matrix3.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Matrix4.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\MeshGeometry.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Mouse.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Plane.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Quaternion.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\RendererBase.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\ShaderBase.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\SimpleFont.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\TextureBase.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\TextureLoader.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\TextureWriter.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Vector2.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Vector3.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Vector4.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Win32Keyboard.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Win32Mouse.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Win32Window.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Window.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\OGLComputeShader.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\OGLMesh.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\OGLRenderer.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\OGLShader.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\OGLTexture.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\glad.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Component.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\GameObject.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Scene.obj" />
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Transform.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\ZERO_CHECK.vcxproj">
+      <Project>{64FB28F2-F2E1-334D-AFEB-F0F88DDF7843}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\submodules\enet\enet.vcxproj">
+      <Project>{753A8408-E346-342F-9B78-05C1C7ECA832}</Project>
+      <Name>enet</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.vcxproj">
+      <Project>{7041F5AB-9E60-3DCF-B62B-315A77FDDD2F}</Project>
+      <Name>lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\submodules\spdlog\spdlog.vcxproj">
+      <Project>{47DE0E89-2833-3FEA-9A19-2EFBCB0C0365}</Project>
+      <Name>spdlog</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

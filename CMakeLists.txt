@@ -13,6 +13,7 @@ include_directories(submodules/enet/include)
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_TESTING ON)
 
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/enet)
@@ -34,11 +35,12 @@ file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
-file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} /project/UnitTest1/*.cpp)
+file(GLOB TEST_SRCS /project/UnitTest1/*.cpp)
 
 #Unit Testing
 #Run through each source
 foreach(testSrc ${TEST_SRCS})
+        message(${testSrc})
         #Extract the filename without an extension (NAME_WE)
         get_filename_component(testName ${testSrc} NAME_WE)
 
@@ -49,13 +51,31 @@ foreach(testSrc ${TEST_SRCS})
         #Notice the WORKING_DIRECTORY and COMMAND
         add_test(NAME ${testName} 
                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/project/UnitTest1/
-                 COMMAND ${PROJECT_SOURCE_DIR}/project/UnitTest1/${testName} 
-)
+                 COMMAND ${PROJECT_SOURCE_DIR}/project/UnitTest1/${testName})
 endforeach(testSrc)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
 
+add_library(lib
+	${SRC_FILES}
+	${HEADER_FILES}
+	${SRC_LOGGER_FILES}
+	${SRC_AI_FILES}
+	${SRC_NETWORK_FILES}
+	${HEADER_LOGGER_FILES}
+	${HEADER_AI_FILES}
+	${HEADER_NETWORK_FILES}
+	${SRC_COMMON_FILES}
+	${HEADER_COMMON_FILES}
+	${HEADER_COMMON_SUBFILES}
+	${HEADER_OPENGLRENDERING_FILES}
+	${SRC_OPENGLRENDERING_FILES}
+	${HEADER_GLAD_FILES}
+	${HEADER_KHR_FILES}
+	${SRC_ComponentSystem_FILES}
+	${HEADER_ComponentSystem_FILES}
+)
 add_executable(weird_golf_game
 	${SRC_FILES}
 	${HEADER_FILES}
@@ -75,4 +95,10 @@ add_executable(weird_golf_game
 	${SRC_ComponentSystem_FILES}
 	${HEADER_ComponentSystem_FILES}
 )
+
+
 target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
+
+add_executable(test1 ${PROJECT_SOURCE_DIR}/project/UnitTest1/UnitTest1.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(test1 spdlog::spdlog enet opengl32)
+add_test(NAME test1 COMMAND test1.exe)

@@ -173,9 +173,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{753A8408-E346-342F-9B78-05C1C7ECA832}</Project>
       <Name>enet</Name>
     </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.vcxproj">
+      <Project>{7041F5AB-9E60-3DCF-B62B-315A77FDDD2F}</Project>
+      <Name>lib</Name>
+    </ProjectReference>
     <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\submodules\spdlog\spdlog.vcxproj">
       <Project>{47DE0E89-2833-3FEA-9A19-2EFBCB0C0365}</Project>
       <Name>spdlog</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\test1.vcxproj">
+      <Project>{1F3F4490-36DD-3C61-84AC-A48452998FCD}</Project>
+      <Name>test1</Name>
     </ProjectReference>
     <ProjectReference Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\weird_golf_game.vcxproj">
       <Project>{43BA6CCF-441C-387B-8A4B-AA7E49338B80}</Project>

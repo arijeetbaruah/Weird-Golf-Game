@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\project\UnitTest1\UnitTest1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{A78AC15C-D586-36CE-9448-51965F1982DE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
