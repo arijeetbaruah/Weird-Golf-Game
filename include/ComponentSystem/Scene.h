@@ -1,10 +1,16 @@
 #pragma once
 #include <vector>
-#include "ComponentSystem/GameObject.h"
+#include <memory>
+#include "GameObject.h"
+
+//@Author: David Towers
+
+using std::shared_ptr;
+using std::vector;
 
 class Scene {
 private:
-	std::vector<GameObject*> objects;
+	vector<shared_ptr<GameObject>> objects;
 
 public:
 	Scene() {
@@ -16,17 +22,14 @@ public:
 	}
 
 	Scene& operator=(Scene S) {
-		for (GameObject* i : S.objects) {
+		for (shared_ptr<GameObject> i : S.objects) {
 			objects.emplace_back(i);
 		}
 		return *this;
 	}
 
 	~Scene() {
-		for (GameObject* i : objects) {
-			delete i;
-			i = nullptr;
-		}
+
 	}
 
 	void addGameObject(GameObject* go) {
@@ -34,19 +37,19 @@ public:
 	}
 
 	void Start() {
-		for (GameObject* i : objects) {
+		for (shared_ptr<GameObject> i : objects) {
 			i->Start();
 		}
 	}
 
 	void Update() {
-		for (GameObject* i : objects) {
+		for (shared_ptr<GameObject> i : objects) {
 			i->Update();
 		}
 	}
 
 	void LateUpdate() {
-		for (GameObject* i : objects) {
+		for (shared_ptr<GameObject> i : objects) {
 			i->LateUpdate();
 		}
 	}

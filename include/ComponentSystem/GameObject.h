@@ -7,8 +7,10 @@
 #include "Common/Maths.h"
 #include <algorithm>
 #include <cmath>
-#include "ComponentSystem/Component.h"
-#include "ComponentSystem/Transform.h"
+#include "Component.h"
+#include "Transform.h"
+
+//@Author: David Towers
 
 using namespace NCL::Maths;
 
@@ -48,6 +50,7 @@ public:
 	}
 
 	void addComponent(Component* component) {
+		component->setParent(this);
 		components.insert(std::pair<std::string, Component*>(component->getName(), component));
 	}
 
