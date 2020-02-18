@@ -2,10 +2,30 @@ cmake_minimum_required(VERSION 3.14)
 ## Giving a name to the project
 project(weird_golf_game)
 
+set(PhysX_include_files submodules/PhysX/physx/include)
+
 ## Including headers, from both the current project and from the imported libraries
 include_directories(include)
 include_directories(submodules/spdlog)
 include_directories(submodules/enet/include)
+include_directories(${PhysX_include_files})
+include_directories(${PhysX_include_files}/characterkinematic)
+include_directories(${PhysX_include_files}/collision)
+include_directories(${PhysX_include_files}/common)
+include_directories(${PhysX_include_files}/cooking)
+include_directories(${PhysX_include_files}/cudamanager)
+include_directories(${PhysX_include_files}/extensions)
+include_directories(${PhysX_include_files}/filebuf)
+include_directories(${PhysX_include_files}/foundation)
+include_directories(${PhysX_include_files}/geometry)
+include_directories(${PhysX_include_files}/geomutils)
+include_directories(${PhysX_include_files}/gpu)
+include_directories(${PhysX_include_files}/pvd)
+include_directories(${PhysX_include_files}/solver)
+include_directories(${PhysX_include_files}/task)
+include_directories(${PhysX_include_files}/vehicle)
+include_directories(${PhysX_include_files}/../../pxshared/include)
+include_directories(${PhysX_include_files}/../../source)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
