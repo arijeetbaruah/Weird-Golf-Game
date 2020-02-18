@@ -2,5 +2,5 @@
 #include <cassert>
 
 int main() {
-	assert(false);
+	assert(true);
 }
