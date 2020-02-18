@@ -2,6 +2,8 @@
 #include "..//Common/Matrix4.h"
 #include "Component.h"
 
+//@Author: David Towers
+
 using namespace NCL::Maths;
 
 class Transform : public Component {

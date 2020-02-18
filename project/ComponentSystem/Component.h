@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+//@Author: David Towers
+
 class GameObject;
 class Component {
 	private:
@@ -10,9 +12,7 @@ class Component {
 	public:
 		Component();
 		Component(std::string name);
-		virtual ~Component() {
-		
-		};
+		virtual ~Component() {};
 
 		std::string getName();
 		void setName(std::string name);
