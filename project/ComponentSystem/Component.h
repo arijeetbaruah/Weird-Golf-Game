@@ -10,13 +10,15 @@ class Component {
 	public:
 		Component();
 		Component(std::string name);
-		virtual ~Component() = 0;
+		virtual ~Component() {
+		
+		};
 
 		std::string getName();
 		void setName(std::string name);
 
 		virtual void Start();
-		virtual void Update();
+		virtual void Update() = 0;
 		virtual void LateUpdate();
 
 		void setParent(GameObject* go);

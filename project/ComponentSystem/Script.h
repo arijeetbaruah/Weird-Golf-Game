@@ -3,7 +3,7 @@
 #include "Component.h"
 #include <functional>
 
-class Script : Component {
+class Script : public Component {
 	private:
 		std::function<void(GameObject*)> lambda;
 		std::function<void(GameObject*)> lateLambda;
@@ -11,6 +11,7 @@ class Script : Component {
 	public:
 		Script();
 		Script(std::function<void(GameObject*)> script);
+		~Script() {};
 
 		void setLambda(std::function<void(GameObject*)> func);
 		void nullLambda();

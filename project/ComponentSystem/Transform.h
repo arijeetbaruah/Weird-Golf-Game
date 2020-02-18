@@ -18,4 +18,6 @@ class Transform : public Component {
 			setName("Transform");
 			transformationMatrix = transMatrix;
 		}
+
+		void Update() {};
 };
