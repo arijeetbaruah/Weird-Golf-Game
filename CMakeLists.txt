@@ -14,6 +14,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/enet)
 
+# PhysX-specific CMake project setup
+set(NV_USE_DEBUG_WINCRT ON CACHE BOOL "Use the debug version of the CRT")
+set(PHYSX_ROOT_DIR ${CMAKE_SOURCE_DIR}/submodules/PhysX/physx)
+set(PXSHARED_PATH ${PHYSX_ROOT_DIR}/../pxshared)
+set(PXSHARED_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+set(CMAKEMODULES_VERSION "1.27")
+set(TARGET_BUILD_PLATFORM "windows")
+set(CMAKEMODULES_PATH ${PHYSX_ROOT_DIR}/../externals/cmakemodules)
+set(PX_OUTPUT_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/externals/physx)
+set(PX_OUTPUT_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/externals/physx)
+
+# Call into PhysX's CMake scripts
+add_subdirectory(${PHYSX_ROOT_DIR}/compiler/public externals/physx)
+
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/include/*.h)
 file(GLOB SRC_AI_FILES ${PROJECT_SOURCE_DIR}/src/AI/*.cpp)
@@ -54,4 +68,7 @@ add_executable(weird_golf_game
 	${SRC_ComponentSystem_FILES}
 	${HEADER_ComponentSystem_FILES}
 )
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
+
+##submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/PhysXDevice64.dll
+
+target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 PhysX)
