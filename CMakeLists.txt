@@ -35,7 +35,7 @@ file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
-file(GLOB TEST_SRCS /project/UnitTest1/*.cpp)
+file(GLOB TEST_SRCS ${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -60,9 +60,8 @@ add_executable(weird_golf_game
 	${HEADER_ComponentSystem_FILES}
 )
 
-
 target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32)
 
-add_executable(test1 ${PROJECT_SOURCE_DIR}/project/UnitTest1/UnitTest1.cpp)
+add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp)
 target_link_libraries(test1 spdlog::spdlog enet opengl32)
 add_test(NAME test1 COMMAND test1.exe)
