@@ -102,7 +102,7 @@ add_executable(weird_golf_game
 	${MAIN}
 )
 
-target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32)
+target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 Physx)
 
 add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(test1 spdlog::spdlog enet opengl32)
