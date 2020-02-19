@@ -144,6 +144,9 @@
     <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Scene.obj">
       <Filter>Object Libraries</Filter>
     </Object>
+    <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Script.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
     <Object Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\lib.dir\$(Configuration)\Transform.obj">
       <Filter>Object Libraries</Filter>
     </Object>
