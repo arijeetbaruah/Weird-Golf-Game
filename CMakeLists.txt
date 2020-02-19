@@ -11,6 +11,7 @@ set(PhysX_include_files submodules/PhysX/physx/include)
 enable_testing()
 
 ## Including headers, from both the current project and from the imported libraries
+include_directories(${PROJECT_SOURCE_DIR}/patches)
 include_directories(${PhysX_include_files})
 include_directories(${PhysX_include_files}/characterkinematic)
 include_directories(${PhysX_include_files}/collision)
