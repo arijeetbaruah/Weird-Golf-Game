@@ -8,9 +8,6 @@ set(PhysX_include_files submodules/PhysX/physx/include)
 enable_testing()
 
 ## Including headers, from both the current project and from the imported libraries
-include_directories(include)
-include_directories(submodules/spdlog)
-include_directories(submodules/enet/include)
 include_directories(${PhysX_include_files})
 include_directories(${PhysX_include_files}/characterkinematic)
 include_directories(${PhysX_include_files}/collision)
@@ -29,13 +26,17 @@ include_directories(${PhysX_include_files}/task)
 include_directories(${PhysX_include_files}/vehicle)
 include_directories(${PhysX_include_files}/../../pxshared/include)
 include_directories(${PhysX_include_files}/../../source)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/submodules/spdlog/include)
+include_directories(${PROJECT_SOURCE_DIR}/submodules/enet/include)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_TESTING ON)
 
-add_subdirectory(submodules/spdlog)
-add_subdirectory(submodules/enet)
+add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/spdlog)
+add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/enet)
 
 # PhysX-specific CMake project setup
 set(NV_USE_DEBUG_WINCRT ON CACHE BOOL "Use the debug version of the CRT")
@@ -68,30 +69,14 @@ file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
-file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} tests/*.cpp)
-
-#Unit Testing
-#Run through each source
-foreach(testSrc ${TEST_SRCS})
-        #Extract the filename without an extension (NAME_WE)
-        get_filename_component(testName ${testSrc} NAME_WE)
-
-        #Add compile target
-        add_executable(${testName} ${testSrc})
-
-	#Finally add it to test execution - 
-        #Notice the WORKING_DIRECTORY and COMMAND
-        add_test(NAME ${testName} 
-                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-                 COMMAND ${PROJECT_SOURCE_DIR}/tests/${testName} 
-)
-endforeach(testSrc)
+file(GLOB TEST_SRCS ${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp)
+file(GLOB MAIN ${PROJECT_SOURCE_DIR} Main.cpp)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
 
-add_executable(weird_golf_game
-	${SRC_FILES}
+add_library(lib
+	${SRC_FILES} # removed the main.cpp
 	${HEADER_FILES}
 	${SRC_LOGGER_FILES}
 	${SRC_AI_FILES}
@@ -112,4 +97,17 @@ add_executable(weird_golf_game
 
 ##submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/PhysXDevice64.dll
 
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 PhysX)
+add_executable(weird_golf_game
+	#added the main
+	${MAIN}
+)
+
+target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 PhysX)
+
+add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(test1 spdlog::spdlog enet opengl32)
+add_test(NAME test1 COMMAND test1.exe)
+
+add_executable(test2 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest2.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(test2 spdlog::spdlog enet opengl32)
+add_test(NAME test2 COMMAND test2.exe)
