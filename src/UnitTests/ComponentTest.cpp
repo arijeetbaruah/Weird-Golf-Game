@@ -7,5 +7,5 @@
 int main() {
 	GameObject go = GameObject();
 	Component* tf = go.getComponent("Transform");
-	ASSERT_WITH_FAILEXIT(tf != nullptr);
+	ASSERT_WITH_FAILEXIT(tf != nullptr && tf->getName() == "Transform");
 }
