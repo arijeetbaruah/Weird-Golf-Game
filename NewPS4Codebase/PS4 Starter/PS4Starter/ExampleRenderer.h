@@ -36,6 +36,8 @@ namespace NCL {
 			PS4Mesh* newMesh;
 			OBJMesh* mesh;
 			EnjoyColladaMesh* enjoyCollada;
+
+			PS4Texture* chairTexture;
 		};
 	}
 }

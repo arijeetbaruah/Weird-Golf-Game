@@ -19,13 +19,15 @@ ExampleRenderer::ExampleRenderer(PS4Window* window) : PS4RendererBase(window)	{
 	defaultMesh = PS4Mesh::GenerateTriangle();
 	defaultTexture = PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/doge.gnf");
 
+	chairTexture = PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/chair.gnf");
+
 	viewProjMat = (Matrix4*)onionAllocator.allocate(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
 	*viewProjMat = Matrix4();
 
 	cameraBuffer.initAsConstantBuffer(viewProjMat, sizeof(Matrix4));
 	cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
-	defaultObject[0] = new RenderObject((MeshGeometry*)enjoyCollada->ChildMeshes[0], (ShaderBase*)defaultShader, (TextureBase*)defaultTexture);
+	defaultObject[0] = new RenderObject((MeshGeometry*)enjoyCollada->ChildMeshes[0], (ShaderBase*)defaultShader, (TextureBase*)chairTexture);
 	defaultObject[1] = new RenderObject((MeshGeometry*)defaultMesh, (ShaderBase*)defaultShader, (TextureBase*)defaultTexture);
 
 	computeResult = (float*)onionAllocator.allocate(4, Gnm::kEmbeddedDataAlignment4);
@@ -40,13 +42,14 @@ ExampleRenderer::~ExampleRenderer()	{
 	delete defaultTexture;
 	delete defaultShader;
 	delete computeTest;
+	delete chairTexture;
 }
 
 void ExampleRenderer::Update(float dt)	{
 	time = dt;
 	
 	// defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, 0)) * Matrix4::Rotation(*computeResult, Vector3(1,0,0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 1.0f)));
-	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(*computeResult, Vector3(0,1,0)) * Matrix4::Rotation(270, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 0.1f))  );
+	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(*computeResult, Vector3(0,1,0)) * Matrix4::Rotation(270, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(0.08f, 0.1f, 0.1f))  );
 	defaultObject[1]->SetLocalTransform(Matrix4::Translation(Vector3(0.4, 0, 0)));
 }
 
@@ -91,6 +94,13 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	int objIndex = realShader->GetConstantBuffer("RenderObjectData");
 	int camIndex = realShader->GetConstantBuffer("CameraData");
 
+	Gnm::Sampler trilinearSampler;
+	trilinearSampler.init();
+	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+	PS4Texture* tex = (PS4Texture*)o->GetTexture(0);
+	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &tex->GetAPITexture());
+	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+
 	*viewProjMat = mainCamera.BuildProjectionMatrix() * mainCamera.BuildViewMatrix();
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);
@@ -118,12 +128,12 @@ void ExampleRenderer::RenderFrame() {
 	dsc.setDepthEnable(true);
 	currentGFXContext->setDepthStencilControl(dsc);
 
-	Gnm::Sampler trilinearSampler;
-	trilinearSampler.init();
-	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+	//Gnm::Sampler trilinearSampler;
+	//trilinearSampler.init();
+	//trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
 
-	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &defaultTexture->GetAPITexture());
-	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+	//currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &defaultTexture->GetAPITexture());
+	//currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
 
 	*viewProjMat = Matrix4();
 
