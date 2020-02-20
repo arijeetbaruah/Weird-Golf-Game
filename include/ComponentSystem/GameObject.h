@@ -13,65 +13,29 @@
 //@Author: David Towers
 
 using namespace NCL::Maths;
+using std::unordered_map;
+using std::string;
+using std::pair;
 
 class GameObject {
 public:
-	GameObject() {
-		Transform* tf = new Transform();
-		addComponent(tf);
+	GameObject();
+	GameObject(Matrix4 transMatrix);
+	GameObject(const GameObject& go);
+	GameObject& operator=(GameObject go);
+	~GameObject();
+
+	template <typename T>
+	T getComponent(string name) {
+		return static_cast<T>(components.at(name));
 	}
 
-	GameObject(Matrix4 transMatrix) {
-		Transform* tf = new Transform(transMatrix);
-		addComponent(tf);
-	}
+	void addComponent(Component* component);
 
-	GameObject(const GameObject& go) {
-		*this = go;
-	}
-
-	GameObject& operator=(GameObject go) {
-		for (std::pair<std::string, Component*> i : go.components) {
-			components.insert(std::pair<std::string, Component*>(i.first, i.second));
-		}
-		return *this;
-	}
-
-	~GameObject() {
-		for (std::pair<std::string, Component*> i : components) {
-			delete i.second;
-			i.second = nullptr;
-		}
-	}
-
-
-	Component* getComponent(std::string name) {
-		return components.at(name);
-	}
-
-	void addComponent(Component* component) {
-		component->setParent(this);
-		components.insert(std::pair<std::string, Component*>(component->getName(), component));
-	}
-
-	void Start() {
-		for (std::pair<std::string, Component*> component : components) {
-			component.second->Start();
-		}
-	}
-
-	void Update() {
-		for (std::pair<std::string, Component*> component : components) {
-			component.second->Update();
-		}
-	}
-
-	void LateUpdate() {
-		for (std::pair<std::string, Component*> component : components) {
-			component.second->LateUpdate();
-		}
-	}
+	void Start();
+	void Update();
+	void LateUpdate();
 
 private:
-	std::unordered_map<std::string, Component*> components;
+	unordered_map<string, Component*> components;
 };
