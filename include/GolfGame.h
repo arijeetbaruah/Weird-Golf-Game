@@ -3,6 +3,7 @@
 #include "Logger/Logger.h"
 #include "Network/GameServer.h"
 #include "Network/GameClient.h"
+#include "../src/Physics/PhysxController.h"
 #include <memory>
 
 class ServerPacketReceiver : public PacketReceiver
@@ -41,10 +42,8 @@ public:
 	}
 };
 
-
 class GolfGame : public PacketReceiver
 {
-public:
 public:
 	GolfGame();
 	~GolfGame();
@@ -55,6 +54,7 @@ public:
 
 	int hasError() const { return errorFlag; }
 protected:
+	PhysxController physxC = PhysxController::getInstance();
 	std::unique_ptr<Logger> log;
 	int port;
 	int errorFlag = 0;

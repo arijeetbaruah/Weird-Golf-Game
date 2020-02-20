@@ -37,6 +37,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/enet)
 
+#Giacomo's Fix
+#add_subdirectory(submodules/PhysX/physx/samples/compiler/cmake/windows)
+
 # PhysX-specific CMake project setup
 set(NV_USE_DEBUG_WINCRT ON CACHE BOOL "Use the debug version of the CRT")
 set(PHYSX_ROOT_DIR ${CMAKE_SOURCE_DIR}/submodules/PhysX/physx)
@@ -68,24 +71,9 @@ file(GLOB HEADER_GLAD_FILES ${PROJECT_SOURCE_DIR}/include/glad/*.h)
 file(GLOB HEADER_KHR_FILES ${PROJECT_SOURCE_DIR}/include/KHR/*.h)
 file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.cpp)
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
+file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/Physics/*.cpp)
+file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/Physics/*.h)
 file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} tests/*.cpp)
-
-#Unit Testing
-#Run through each source
-foreach(testSrc ${TEST_SRCS})
-        #Extract the filename without an extension (NAME_WE)
-        get_filename_component(testName ${testSrc} NAME_WE)
-
-        #Add compile target
-        add_executable(${testName} ${testSrc})
-
-	#Finally add it to test execution - 
-        #Notice the WORKING_DIRECTORY and COMMAND
-        add_test(NAME ${testName} 
-                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-                 COMMAND ${PROJECT_SOURCE_DIR}/tests/${testName} 
-)
-endforeach(testSrc)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -110,6 +98,6 @@ add_executable(weird_golf_game
 	${HEADER_ComponentSystem_FILES}
 )
 
-##submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/PhysXDevice64.dll
+##submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/PhysXDevice64.dll
 
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 PhysX)
+target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 PhysX PhysXCommon PhysXCooking PhysXFoundation)

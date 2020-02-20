@@ -3,7 +3,7 @@
 
 GolfGame::GolfGame() {
 	log = std::unique_ptr<Logger>(new Logger("Golf Game"));
-
+	
 	port = NetworkBase::GetDefaultPort();
 
 	if (NetworkBase::Initialise() != 0) {
@@ -24,7 +24,10 @@ void GolfGame::UpdateGame(float dt) {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
 		StartAsClient(127, 0, 0, 1);
 	}
-
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM3)) {
+		physxC.spawnBall();
+	}
+	physxC.stepPhysics(true, dt);
 	UpdateNetwork();
 }
 
