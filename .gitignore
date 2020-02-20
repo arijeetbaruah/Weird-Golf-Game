@@ -346,4 +346,4 @@ MigrationBackup/
 .ionide/
 
 out/
-
+!submodules/FMOD/windows/api/*/lib/x64

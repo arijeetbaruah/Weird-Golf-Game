@@ -42,6 +42,8 @@ set(BUILD_TESTING ON)
 add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/spdlog)
 add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/enet)
 
+option(IsWindows "Is Windows" ON)
+
 # PhysX-specific CMake project setup
 set(NV_USE_DEBUG_WINCRT ON CACHE BOOL "Use the debug version of the CRT")
 set(PHYSX_ROOT_DIR ${CMAKE_SOURCE_DIR}/submodules/PhysX/physx)
@@ -99,14 +101,64 @@ add_library(lib OBJECT
 	${HEADER_ComponentSystem_FILES}
 )
 
-##submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86_64.vc142.mt/debug/PhysXDevice64.dll
+set(CMAKE_EXE_LINKER_FLAGS_CHECKED true)
+set(CMAKE_EXE_LINKER_FLAGS_PROFILE true)
 
-add_executable(weird_golf_game
-	#added the main
-	${MAIN}
-)
+if (IsWindows)
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/core/inc)
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/fsbank/inc)
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/studio/inc)
 
-target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 PhysX)
+	find_library(
+		 fmod_core_windows NAMES fmodL_vc fmod_vc HINTS "${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/core/lib/x64"
+	)
+
+	find_library(
+		fmod_fsbank_windows NAMES fsbank_vc HINTS "${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/fsbank/lib/x64"
+	)
+
+	find_library(
+		fmod_studio_windows NAMES fmodstudio_vc fmodstudioL_vc HINTS "${PROJECT_SOURCE_DIR}/submodules/FMOD/windows/api/studio/lib/x64"
+	)
+
+	add_executable(weird_golf_game
+		#added the main
+		${MAIN}
+	)
+
+	target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 PhysX
+		${fmod_core_windows}
+		${fmod_fsbank_windows}
+		${fmod_studio_windows}
+	)
+
+else()
+
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/core/inc)
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/fsbank/inc)
+	include_directories(${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/studio/inc)
+
+	set (fmod_core_PS4
+		${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/core/lib/libfmod_stub_weak.a
+		${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/core/lib/libfmodL_stub_weak.a
+	)
+
+	set (fmod_studio_PS4
+		${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/studio/lib/libfmodstudio_stub_weak.a
+		${PROJECT_SOURCE_DIR}/submodules/FMOD/PS4/api/studio/lib/libfmodstudioL_stub_weak.a
+	)
+
+	add_executable(weird_golf_game
+		#added the main
+		${MAIN}
+	)
+
+	target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 PhysX
+		${fmod_core_PS4}
+		${fmod_studio_PS4}
+	)
+
+endif()
 
 add_executable(test1 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest1.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(test1 spdlog::spdlog enet opengl32)
