@@ -37,9 +37,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/enet)
 
-#Giacomo's Fix
-#add_subdirectory(submodules/PhysX/physx/samples/compiler/cmake/windows)
-
 # PhysX-specific CMake project setup
 set(NV_USE_DEBUG_WINCRT ON CACHE BOOL "Use the debug version of the CRT")
 set(PHYSX_ROOT_DIR ${CMAKE_SOURCE_DIR}/submodules/PhysX/physx)
@@ -53,6 +50,8 @@ set(PX_OUTPUT_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/externals/physx)
 
 # Call into PhysX's CMake scripts
 add_subdirectory(${PHYSX_ROOT_DIR}/compiler/public externals/physx)
+#Giacomo's Fix
+#add_subdirectory(${PHYSX_ROOT_DIR}/snippets/compiler/cmake/${TARGET_BUILD_PLATFORM})
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/include/*.h)
@@ -100,4 +99,17 @@ add_executable(weird_golf_game
 
 ##submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/PhysXDevice64.dll
 
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 PhysX PhysXCommon PhysXCooking PhysXFoundation)
+target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevel_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelAABB_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelDynamics_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysX_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCharacterKinematic_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCommon_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCooking_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXExtensions_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXFoundation_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXPvdSDK_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXTask_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXVehicle_static_64.lib
+${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/SceneQuery_static_64.lib)
