@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ORBIS">
+      <Configuration>Debug</Configuration>
+      <Platform>ORBIS</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ORBIS">
+      <Configuration>Release</Configuration>
+      <Platform>ORBIS</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CF8D3D3B-5D93-4F04-A28D-E1166A9D023F}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)_builds\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)_builds\$(ProjectName)\$(Configuration)\</IntDir>
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\inc;$(SCE_ORBIS_SDK_DIR)/target/samples/sample_code/graphics/api_gnm</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;FMOD_LIB_PATH="/app0/libfmodL.prx";%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Warnings>NormalWarnings</Warnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /D /Y "..\..\lib\libfmodL.prx" "$(OutDir)"
+xcopy /D /Y /S ..\media "$(OutDir)media\"
+      </Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>-lSceAudioOut_stub_weak;-lScePad_stub_weak;-lSceNet_stub_weak; -lSceVideoOut_stub_weak; -lSceGnm;-lSceGnmx; -lSceGpuAddress; -lSceGnmDriver_stub_weak; -lSceShaderBinary; -lSceUserService_stub_weak; -lScePerf_stub_weak; -lSceAjm_stub_weak; -lSceRazorCpu_stub_weak; -lfmodL_stub_weak </AdditionalDependencies>
+    </Link>    
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\inc;$(SCE_ORBIS_SDK_DIR)/target/samples/sample_code/graphics/api_gnm</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;FMOD_LIB_PATH="/app0/libfmod.prx";%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <OptimizationLevel>Level2</OptimizationLevel>
+      <Warnings>NormalWarnings</Warnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /D /Y "..\..\lib\libfmod.prx" "$(OutDir)"
+xcopy /D /Y /S ..\media "$(OutDir)media\"
+      </Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>-lSceAudioOut_stub_weak;-lScePad_stub_weak;-lSceNet_stub_weak; -lSceVideoOut_stub_weak; -lSceGnm;-lSceGnmx; -lSceGpuAddress; -lSceGnmDriver_stub_weak; -lSceShaderBinary; -lSceUserService_stub_weak; -lScePerf_stub_weak; -lSceAjm_stub_weak; -lSceRazorCpu_stub_weak; -lfmod_stub_weak</AdditionalDependencies>
+    </Link>    
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common.h" />
+    <ClCompile Include="..\common.cpp" />
+    <ClInclude Include="..\common_platform.h" />
+    <ClCompile Include="..\common_platform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\gapless_playback.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(SCE_ORBIS_SDK_DIR)\target\samples\sample_code\graphics\api_gnm\dbg_font\dbg_font.vcxproj">
+      <Project>{43565ad8-688c-4451-a81f-2aba8e957753}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(SCE_ORBIS_SDK_DIR)\target\samples\sample_code\graphics\api_gnm\toolkit\toolkit.vcxproj">
+      <Project>{2f4ccf89-7649-4c7f-8cbf-f976b4fbc2b6}</Project>
+    </ProjectReference>    
+  </ItemGroup>  
+  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
