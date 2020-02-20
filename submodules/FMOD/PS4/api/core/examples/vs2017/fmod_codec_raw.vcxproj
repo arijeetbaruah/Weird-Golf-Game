@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ORBIS">
+      <Configuration>Debug</Configuration>
+      <Platform>ORBIS</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ORBIS">
+      <Configuration>Release</Configuration>
+      <Platform>ORBIS</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D487A0B2-C9B6-4C02-90E4-BD66A895619B}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" /> 
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)_builds\$(ProjectName)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)_builds\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalIncludeDirectories>..\..\inc</AdditionalIncludeDirectories>
+      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</GenerateDebugInformation>
+    </ClCompile>
+    <Link>
+    </Link>
+  </ItemDefinitionGroup>  
+  <ItemGroup>
+    <ClCompile Include="..\plugins\fmod_codec_raw.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
