@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/b6038386/Documents/GitHub/weird-golf-game/submodules/enet
+# Install script for directory: C:/Users/b6024306/source/Group Work/weird-golf-game/submodules/enet
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

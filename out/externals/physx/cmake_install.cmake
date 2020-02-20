@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/b6038386/Documents/GitHub/weird-golf-game/submodules/PhysX/physx/compiler/public
+# Install script for directory: C:/Users/b6024306/source/Group Work/weird-golf-game/submodules/PhysX/PhysX/compiler/public
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/externals/physx/sdk_source_bin/cmake_install.cmake")
+  include("C:/Users/b6024306/source/Group Work/weird-golf-game/out/externals/physx/sdk_source_bin/cmake_install.cmake")
 
 endif()
 

@@ -1,185 +1,185 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Adjacencies.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Adjacencies.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Cooking.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Cooking.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\CookingUtils.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\CookingUtils.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\EdgeList.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\EdgeList.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\MeshCleaner.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\MeshCleaner.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Quantizer.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Quantizer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\BVHStructureBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\BVHStructureBuilder.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\HeightFieldCooking.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\HeightFieldCooking.cpp">
       <Filter>src\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\RTreeCooking.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\RTreeCooking.cpp">
       <Filter>src\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\MeshBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\MeshBuilder.cpp">
       <Filter>src\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\TriangleMeshBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\TriangleMeshBuilder.cpp">
       <Filter>src\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\GrbTriangleMeshCooking.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\GrbTriangleMeshCooking.cpp">
       <Filter>src\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\BigConvexDataBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\BigConvexDataBuilder.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullBuilder.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullLib.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullLib.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullUtils.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullUtils.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexMeshBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexMeshBuilder.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexPolygonsBuilder.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexPolygonsBuilder.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\QuickHullConvexHullLib.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\QuickHullConvexHullLib.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\VolumeIntegration.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\VolumeIntegration.cpp">
       <Filter>src\convex</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\windows\WindowsCookingDelayLoadHook.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\windows\WindowsCookingDelayLoadHook.cpp">
       <Filter>src\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxBVH33MidphaseDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxBVH33MidphaseDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxBVH34MidphaseDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxBVH34MidphaseDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\Pxc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\Pxc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxConvexMeshDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxConvexMeshDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxCooking.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxCooking.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxMidphaseDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxMidphaseDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxTriangleMeshDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxTriangleMeshDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\cooking\PxBVHStructureDesc.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\cooking\PxBVHStructureDesc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Adjacencies.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Adjacencies.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Cooking.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Cooking.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\CookingUtils.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\CookingUtils.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\EdgeList.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\EdgeList.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\MeshCleaner.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\MeshCleaner.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\Quantizer.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\Quantizer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\BVHStructureBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\BVHStructureBuilder.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\GrbTriangleMeshCooking.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\GrbTriangleMeshCooking.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\HeightFieldCooking.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\HeightFieldCooking.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\QuickSelect.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\QuickSelect.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\RTreeCooking.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\RTreeCooking.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\MeshBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\MeshBuilder.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\mesh\TriangleMeshBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\mesh\TriangleMeshBuilder.h">
       <Filter>src\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\BigConvexDataBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\BigConvexDataBuilder.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullBuilder.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullLib.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullLib.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexHullUtils.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexHullUtils.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexMeshBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexMeshBuilder.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\ConvexPolygonsBuilder.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\ConvexPolygonsBuilder.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\QuickHullConvexHullLib.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\QuickHullConvexHullLib.h">
       <Filter>src\convex</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxcooking\src\convex\VolumeIntegration.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxcooking\src\convex\VolumeIntegration.h">
       <Filter>src\convex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\compiler\cmake\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\compiler\cmake\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\compiler\resource_x64\PhysXCooking.rc">
+    <ResourceCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\compiler\resource_x64\PhysXCooking.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
-      <UniqueIdentifier>{E7886F1E-2BAA-37A4-B4B9-EE5607862ABF}</UniqueIdentifier>
+      <UniqueIdentifier>{131467DC-20A7-3616-A94B-EFFF4414E107}</UniqueIdentifier>
     </Filter>
     <Filter Include="resource">
-      <UniqueIdentifier>{B076D148-C745-3797-9B74-8AB11CEDF747}</UniqueIdentifier>
+      <UniqueIdentifier>{8C643C77-088E-3189-8081-4CA644DD63AD}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{FA19699A-0476-397A-9EE9-887B2E9C2E12}</UniqueIdentifier>
+      <UniqueIdentifier>{83D8F5CD-FE00-3B92-8DF3-6FA4FAFDCC54}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\convex">
-      <UniqueIdentifier>{4D73F1A8-2305-3DFA-A7DC-0C33F89FEC9E}</UniqueIdentifier>
+      <UniqueIdentifier>{E0362BF0-F10D-3E0A-921D-C9292FF1EDED}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\mesh">
-      <UniqueIdentifier>{2F89499D-E581-3E03-82B4-5C826A52C3BA}</UniqueIdentifier>
+      <UniqueIdentifier>{D3DCC5C8-C3D3-33EE-9925-FDAC5E4651C7}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\windows">
-      <UniqueIdentifier>{7D79A48B-377C-3568-92C8-5BA73BCCB9E3}</UniqueIdentifier>
+      <UniqueIdentifier>{DB9E54E5-2EC5-3688-B0CC-77AC5CC77BC5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
