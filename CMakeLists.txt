@@ -119,3 +119,7 @@ add_test(NAME test2 COMMAND test2.exe)
 add_executable(ComponentTest ${PROJECT_SOURCE_DIR}/src/UnitTests/ComponentTest.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(ComponentTest spdlog::spdlog enet opengl32)
 add_Test(NAME ComponentTest COMMAND ComponentTest.exe)
+
+add_executable(AITest ${PROJECT_SOURCE_DIR}/src/UnitTests/AITest.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(AITest spdlog::spdlog enet opengl32)
+add_Test(NAME AITest COMMAND AITest.exe)
