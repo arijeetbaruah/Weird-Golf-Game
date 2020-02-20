@@ -79,7 +79,7 @@ file(GLOB MAIN ${PROJECT_SOURCE_DIR} Main.cpp)
 # OpenGL
 find_package(OpenGL REQUIRED)
 
-add_library(lib
+add_library(lib OBJECT
 	${SRC_FILES} # removed the main.cpp
 	${HEADER_FILES}
 	${SRC_LOGGER_FILES}
@@ -115,3 +115,7 @@ add_test(NAME test1 COMMAND test1.exe)
 add_executable(test2 ${PROJECT_SOURCE_DIR}/src/UnitTests/UnitTest2.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(test2 spdlog::spdlog enet opengl32)
 add_test(NAME test2 COMMAND test2.exe)
+
+add_executable(ComponentTest ${PROJECT_SOURCE_DIR}/src/UnitTests/ComponentTest.cpp $<TARGET_OBJECTS:lib>)
+target_link_libraries(ComponentTest spdlog::spdlog enet opengl32)
+add_Test(NAME ComponentTest COMMAND ComponentTest.exe)

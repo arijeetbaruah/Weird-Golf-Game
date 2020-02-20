@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\out\CMakeFiles\5eb4122e1823e9e71aceebcf17967732\RUN_TESTS_force.rule">
+    <CustomBuild Include="C:\Users\b6024306\source\Group Work\weird-golf-game\out\CMakeFiles\2cd50dfd094ab2bc81fed3e052ecf092\RUN_TESTS_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{5AE92FC3-AAEC-3535-906E-790176C71A2E}</UniqueIdentifier>
+      <UniqueIdentifier>{92732265-FED2-33A3-A9B5-801CF845501A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

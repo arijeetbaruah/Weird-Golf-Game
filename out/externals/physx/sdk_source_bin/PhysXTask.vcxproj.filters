@@ -1,33 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\task\src\TaskManager.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\task\src\TaskManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\task\PxCpuDispatcher.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\task\PxCpuDispatcher.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\task\PxTask.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\task\PxTask.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\task\PxTaskDefine.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\task\PxTaskDefine.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\task\PxTaskManager.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\task\PxTaskManager.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\compiler\cmake\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\compiler\cmake\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
-      <UniqueIdentifier>{E7886F1E-2BAA-37A4-B4B9-EE5607862ABF}</UniqueIdentifier>
+      <UniqueIdentifier>{131467DC-20A7-3616-A94B-EFFF4414E107}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{FA19699A-0476-397A-9EE9-887B2E9C2E12}</UniqueIdentifier>
+      <UniqueIdentifier>{83D8F5CD-FE00-3B92-8DF3-6FA4FAFDCC54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

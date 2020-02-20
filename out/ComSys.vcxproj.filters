@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\src\ComponentSystem\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\src\ComponentSystem\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\src\ComponentSystem\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\src\ComponentSystem\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\src\ComponentSystem\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\include\ComponentSystem\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\include\ComponentSystem\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\include\ComponentSystem\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\include\ComponentSystem\Script.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\include\ComponentSystem\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b6024306\source\Group Work\weird-golf-game\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{035FC0F4-F70E-3E71-BBD7-A64BD291D2F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1F547B63-DC0C-31D5-9BFF-2F66990C2746}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

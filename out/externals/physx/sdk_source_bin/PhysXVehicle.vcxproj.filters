@@ -1,150 +1,150 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleComponents.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleComponents.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleDrive.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleDrive.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleDrive4W.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleDrive4W.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleDriveNW.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleDriveNW.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleDriveTank.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleDriveTank.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleMetaData.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleMetaData.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleNoDrive.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleNoDrive.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSDK.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSDK.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSerialization.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSerialization.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSuspWheelTire4.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSuspWheelTire4.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleTireFriction.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleTireFriction.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleUpdate.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleUpdate.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleWheels.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleWheels.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\VehicleUtilControl.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\VehicleUtilControl.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\VehicleUtilSetup.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\VehicleUtilSetup.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\VehicleUtilTelemetry.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\VehicleUtilTelemetry.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\physxmetadata\src\PxVehicleAutoGeneratedMetaDataObjects.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\physxmetadata\src\PxVehicleAutoGeneratedMetaDataObjects.cpp">
       <Filter>metadata\src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\physxmetadata\src\PxVehicleMetaDataObjects.cpp">
+    <ClCompile Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\physxmetadata\src\PxVehicleMetaDataObjects.cpp">
       <Filter>metadata\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleDefaults.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleDefaults.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleLinearMath.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleLinearMath.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSerialization.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSerialization.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSuspLimitConstraintShader.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSuspLimitConstraintShader.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\PxVehicleSuspWheelTire4.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\PxVehicleSuspWheelTire4.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleComponents.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleComponents.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleDrive.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleDrive.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleDrive4W.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleDrive4W.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleDriveNW.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleDriveNW.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleDriveTank.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleDriveTank.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleNoDrive.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleNoDrive.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleSDK.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleSDK.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleShaders.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleShaders.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleTireFriction.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleTireFriction.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleUpdate.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleUpdate.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleUtil.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleUtil.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleUtilControl.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleUtilControl.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleUtilSetup.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleUtilSetup.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleUtilTelemetry.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleUtilTelemetry.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\include\vehicle\PxVehicleWheels.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\include\vehicle\PxVehicleWheels.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\physxmetadata\include\PxVehicleAutoGeneratedMetaDataObjectNames.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\physxmetadata\include\PxVehicleAutoGeneratedMetaDataObjectNames.h">
       <Filter>metadata\include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\physxmetadata\include\PxVehicleAutoGeneratedMetaDataObjects.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\physxmetadata\include\PxVehicleAutoGeneratedMetaDataObjects.h">
       <Filter>metadata\include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\physxvehicle\src\physxmetadata\include\PxVehicleMetaDataObjects.h">
+    <ClInclude Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\physxvehicle\src\physxmetadata\include\PxVehicleMetaDataObjects.h">
       <Filter>metadata\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\b6038386\Documents\GitHub\weird-golf-game\submodules\PhysX\physx\source\compiler\cmake\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b6024306\source\Group Work\weird-golf-game\submodules\PhysX\PhysX\source\compiler\cmake\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
-      <UniqueIdentifier>{E7886F1E-2BAA-37A4-B4B9-EE5607862ABF}</UniqueIdentifier>
+      <UniqueIdentifier>{131467DC-20A7-3616-A94B-EFFF4414E107}</UniqueIdentifier>
     </Filter>
     <Filter Include="metadata">
-      <UniqueIdentifier>{EE4CB57F-7D5F-3989-891A-290681A25F6A}</UniqueIdentifier>
+      <UniqueIdentifier>{397D04CB-BA4E-3832-A6AC-736A9DADF022}</UniqueIdentifier>
     </Filter>
     <Filter Include="metadata\include">
-      <UniqueIdentifier>{6541481F-34BF-3E85-8DE9-740CAA27EDC0}</UniqueIdentifier>
+      <UniqueIdentifier>{80570338-CD16-321F-B774-B9588B259D62}</UniqueIdentifier>
     </Filter>
     <Filter Include="metadata\src">
-      <UniqueIdentifier>{512A80DE-C264-3291-BDBE-7198ABAAEFB4}</UniqueIdentifier>
+      <UniqueIdentifier>{6DCA2D10-1C84-31B4-B02F-7F3BB077F0FC}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{FA19699A-0476-397A-9EE9-887B2E9C2E12}</UniqueIdentifier>
+      <UniqueIdentifier>{83D8F5CD-FE00-3B92-8DF3-6FA4FAFDCC54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

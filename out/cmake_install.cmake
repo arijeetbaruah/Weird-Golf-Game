@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/b6038386/Documents/GitHub/weird-golf-game
+# Install script for directory: C:/Users/b6024306/source/Group Work/weird-golf-game
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,17 +34,17 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/submodules/spdlog/cmake_install.cmake")
+  include("C:/Users/b6024306/source/Group Work/weird-golf-game/out/submodules/spdlog/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/submodules/enet/cmake_install.cmake")
+  include("C:/Users/b6024306/source/Group Work/weird-golf-game/out/submodules/enet/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/externals/physx/cmake_install.cmake")
+  include("C:/Users/b6024306/source/Group Work/weird-golf-game/out/externals/physx/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/b6038386/Documents/GitHub/weird-golf-game/out/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/b6024306/source/Group Work/weird-golf-game/out/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
