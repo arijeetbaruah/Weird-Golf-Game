@@ -345,4 +345,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-
+out/
+!submodules\FMOD\windows\api
