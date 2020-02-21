@@ -11,7 +11,10 @@
 #include "./AI//StateTransition.h"
 #include "./AI//State.h"
 
+#include "PxPhysicsAPI.h"
 #include "GolfGame.h"
+
+using namespace physx;
 
 int main()
 {
@@ -23,7 +26,7 @@ int main()
 	}
 
 	w->ShowOSPointer(false);
-	w->LockMouseToWindow(true);
+	w->LockMouseToWindow(false);
 
 	std::unique_ptr<GolfGame> g = std::unique_ptr<GolfGame>(new GolfGame());
 

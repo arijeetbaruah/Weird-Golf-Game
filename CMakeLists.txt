@@ -57,6 +57,8 @@ set(PX_OUTPUT_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/externals/physx)
 
 # Call into PhysX's CMake scripts
 add_subdirectory(${PHYSX_ROOT_DIR}/compiler/public externals/physx)
+#Giacomo's Fix
+#add_subdirectory(${PHYSX_ROOT_DIR}/snippets/compiler/cmake/${TARGET_BUILD_PLATFORM})
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/include/*.h)
@@ -77,6 +79,8 @@ file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
 file(GLOB TEST_SRCS ${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp)
 file(GLOB MAIN ${PROJECT_SOURCE_DIR} Main.cpp)
+file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/Physics/*.cpp)
+file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/Physics/*.h)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -175,3 +179,21 @@ add_Test(NAME ComponentTest COMMAND ComponentTest.exe)
 add_executable(AITest ${PROJECT_SOURCE_DIR}/src/UnitTests/AITest.cpp $<TARGET_OBJECTS:lib>)
 target_link_libraries(AITest spdlog::spdlog enet opengl32)
 add_Test(NAME AITest COMMAND AITest.exe)
+##submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/PhysXDevice64.dll
+
+
+target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevel_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelAABB_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelDynamics_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysX_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCharacterKinematic_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCommon_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCooking_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXExtensions_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXFoundation_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXPvdSDK_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXTask_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXVehicle_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/SceneQuery_static_64.lib)
+
