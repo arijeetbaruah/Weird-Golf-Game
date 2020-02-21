@@ -99,17 +99,19 @@ add_executable(weird_golf_game
 
 ##submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/PhysXDevice64.dll
 
+
 target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevel_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelAABB_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelDynamics_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysX_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCharacterKinematic_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCommon_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCooking_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXExtensions_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXFoundation_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXPvdSDK_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXTask_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXVehicle_static_64.lib
-${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/SceneQuery_static_64.lib)
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevel_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelAABB_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelDynamics_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysX_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCharacterKinematic_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCommon_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXCooking_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXExtensions_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXFoundation_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXPvdSDK_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXTask_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/PhysXVehicle_static_64.lib
+	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/SceneQuery_static_64.lib)
+

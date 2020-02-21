@@ -11,6 +11,8 @@ GolfGame::GolfGame() {
 		errorFlag = EXIT_FAILURE;
 		return;
 	}
+
+	physxC.spawnBall();
 }
 
 GolfGame::~GolfGame() {
