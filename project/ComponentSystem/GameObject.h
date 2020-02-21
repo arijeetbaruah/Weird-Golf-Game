@@ -10,6 +10,8 @@
 #include "Component.h"
 #include "Transform.h"
 
+//@Author: David Towers
+
 using namespace NCL::Maths;
 
 class GameObject {

@@ -2,6 +2,8 @@
 #include "..//Common/Matrix4.h"
 #include "Component.h"
 
+//@Author: David Towers
+
 using namespace NCL::Maths;
 
 class Transform : public Component {
@@ -18,4 +20,6 @@ class Transform : public Component {
 			setName("Transform");
 			transformationMatrix = transMatrix;
 		}
+
+		void Update() {};
 };

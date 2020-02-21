@@ -1,0 +1,9 @@
+# CMake generation dependency list for this directory.
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckCSourceCompiles.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckCXXSourceCompiles.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckFunctionExists.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckIncludeFile.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckIncludeFileCXX.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckStructHasMember.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/cmake-toolchain/share/cmake-3.17/Modules/CheckTypeSize.cmake
+C:/Users/b6038386/Documents/GitHub/weird-golf-game/submodules/enet/CMakeLists.txt
