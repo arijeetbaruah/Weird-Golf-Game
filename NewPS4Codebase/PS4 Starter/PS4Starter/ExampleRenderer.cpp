@@ -51,10 +51,10 @@ void ExampleRenderer::Update(float dt)	{
 	time = dt;
 	
 	// defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, 0)) * Matrix4::Rotation(*computeResult, Vector3(1,0,0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 1.0f)));
-	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(*computeResult, Vector3(0,1,0)) * Matrix4::Rotation(270, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 0.1f))  );
-	defaultObject[2]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(*computeResult, Vector3(0,1,0)) * Matrix4::Rotation(270, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 0.1f))  );
-	defaultObject[3]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(*computeResult, Vector3(0,1,0)) * Matrix4::Rotation(270, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 0.1f))  );
-	defaultObject[1]->SetLocalTransform(Matrix4::Translation(Vector3(0.4, 0, 0)));
+	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
+	defaultObject[2]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
+	defaultObject[3]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
+	defaultObject[1]->SetLocalTransform(Matrix4::Translation(Vector3(0.4, 20, 0)) * mainCamera.BuildViewMatrix().GetTransposedRotation() * Matrix4::Scale(Vector3(20, 20, 20)));
 }
 
 void ExampleRenderer::UpdateRotationAmount(float dt) {

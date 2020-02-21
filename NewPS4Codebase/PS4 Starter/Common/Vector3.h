@@ -36,7 +36,7 @@ namespace NCL {
 
 			~Vector3(void) {}
 
-			Vector3 Normalised() const {
+			Vector3 Normalized() const {
 				Vector3 temp(x, y, z);
 				temp.Normalise();
 				return temp;
