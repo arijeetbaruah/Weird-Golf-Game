@@ -182,7 +182,7 @@ add_Test(NAME AITest COMMAND AITest.exe)
 ##submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/glut32.dll submodules/PhysX/physx/bin/win.x86.vc142.mt/debug/PhysXDevice64.dll
 
 
-target_link_libraries(weird_golf_game spdlog::spdlog enet opengl32 
+target_link_libraries(weird_golf_game lib spdlog::spdlog enet opengl32 
 	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevel_static_64.lib
 	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelAABB_static_64.lib
 	${PROJECT_SOURCE_DIR}/submodules/physx_req/lib/LowLevelDynamics_static_64.lib
