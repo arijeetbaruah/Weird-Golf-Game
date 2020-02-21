@@ -758,3 +758,6 @@
 463	626	603997911	ComponentTest.exe	cbc9e4c670957a81
 2	521	603997948	CMakeFiles/lib.dir/src/ComponentSystem/Transform.cpp.obj	85c691ce70d94e3d
 521	690	603997948	ComponentTest.exe	cbc9e4c670957a81
+5	740	603998795	CMakeFiles/lib.dir/src/ComponentSystem/Transform.cpp.obj	85c691ce70d94e3d
+3	512	603998810	CMakeFiles/ComponentTest.dir/src/UnitTests/ComponentTest.cpp.obj	51a75d83cf7ed333
+512	690	603998811	ComponentTest.exe	cbc9e4c670957a81
