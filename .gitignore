@@ -347,3 +347,5 @@ MigrationBackup/
 
 out/
 
+# PS4 Debug
+ORBIS_Debug/

@@ -13,7 +13,7 @@ EnjoyColladaMesh::EnjoyColladaMesh(const char* path): EnjoyCollada(path)
 		{
 			vertices.push_back(NCL::Maths::Vector3(item.vertices[i].x, item.vertices[i].y, item.vertices[i].z));
 			normals.push_back(NCL::Maths::Vector3(item.normals[i].x, item.normals[i].y, item.normals[i].z));
-			texcoords.push_back(NCL::Maths::Vector2(item.texcoords[i].x, item.texcoords[i].y));
+			texcoords.push_back(NCL::Maths::Vector2(item.texcoords[i].x, 1 - item.texcoords[i].y));
 			indicies.push_back(item.indices[i]);
 			colors.push_back(NCL::Maths::Vector4(1, 1, 1, 1));
 		}

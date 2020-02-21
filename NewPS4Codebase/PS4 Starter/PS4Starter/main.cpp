@@ -43,7 +43,7 @@ int main(void) {
 		{
 			axisL.y = 0;
 		}
-		currentPos.z += axisL.y;
+		currentPos.z += axisL.y * 0.1f;
 		renderer.mainCamera.SetPosition(currentPos);
 
 		auto axisR = input.GetAxis(1);
