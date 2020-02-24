@@ -164,6 +164,7 @@
     <ClInclude Include="GameTechRenderer.h" />
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
+    <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>

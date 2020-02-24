@@ -56,7 +56,7 @@ namespace NCL {
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			//IT'S HAPPENING
-			GameObject* AddGooseToWorld(const Vector3& position);
+			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddPlayerTwoToWorld(const Vector3& position);
 			Enemy*		AddParkKeeperToWorld(const Vector3& position);
 			GameObject* AddCharacterToWorld(const Vector3& position);
@@ -113,6 +113,8 @@ namespace NCL {
 			OGLMesh*	appleMesh	= nullptr;
 			OGLMesh*	charA		= nullptr;
 			OGLMesh*	charB		= nullptr;
+			OGLMesh* testLevel = nullptr;
+			OGLMesh* playerMesh = nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
