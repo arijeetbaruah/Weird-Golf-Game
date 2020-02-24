@@ -62,7 +62,7 @@ void TutorialGame::InitialiseAssets() {
 		objl::Loader loader;
 		bool loadout = loader.LoadFile(name);
 
-		if (!loadout)
+		if (!loadout) 
 		{
 			return;
 		}
@@ -75,7 +75,7 @@ void TutorialGame::InitialiseAssets() {
 		vector<Vector3> verts;
 		vector<Vector3> normals;
 		vector<Vector2> texCoords;
-
+		
 		for (int i = 0; i < curMesh.Vertices.size(); i++)
 		{
 			Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
@@ -105,7 +105,10 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
 	//objLoadFunc("TestLevel.obj", &testLevel);
-	objLoadFunc("Assets/Ball.obj", &playerMesh);
+	//loadFunc("TestLevel.msh", &testLevel);
+	//objLoadFunc("Assets/Ball.obj", &playerMesh);
+
+	playerMesh->GetPositionData();
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
@@ -1047,7 +1050,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
 	else 
 		goose->GetTransform().SetWorldPosition(position - offSet);
 
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, nullptr, basicShader));
+	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), cubeMesh, nullptr, basicShader));
 	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
 
 	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
