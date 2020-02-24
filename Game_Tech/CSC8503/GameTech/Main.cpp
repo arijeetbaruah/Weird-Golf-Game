@@ -12,8 +12,11 @@
 #include "TutorialGame.h"
 #include "NetworkedGame.h"
 
+#include "PxPhysicsAPI.h"
+
 using namespace NCL;
 using namespace CSC8503;
+using namespace physx;
 
 class TestPacketReceiver : public PacketReceiver {
 public:
@@ -171,6 +174,12 @@ int main() {
 	if (!w->HasInitialised()) {
 		return -1;
 	}	
+
+	// TEST FOR PHYSX
+	PxDefaultAllocator		gAllocator;
+	PxDefaultErrorCallback	gErrorCallback;
+
+	PxFoundation* f = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 
 	//TestStateMachine();
 	//TestNetworking();
