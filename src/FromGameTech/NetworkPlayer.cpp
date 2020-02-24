@@ -1,5 +1,5 @@
-#include "NetworkPlayer.h"
-#include "NetworkedGame.h"
+#include "FromGameTech/NetworkPlayer.h"
+#include "FromGameTech/NetworkedGame.h"
 
 using namespace NCL;
 using namespace CSC8503;

@@ -1,10 +1,10 @@
 #pragma once
-#include "../../Plugins/OpenGLRendering/OGLRenderer.h"
-#include "../../Plugins/OpenGLRendering/OGLShader.h"
-#include "../../Plugins/OpenGLRendering/OGLTexture.h"
-#include "../../Plugins/OpenGLRendering/OGLMesh.h"
+#include "OpenGLRendering/OGLRenderer.h"
+#include "OpenGLRendering/OGLShader.h"
+#include "OpenGLRendering/OGLTexture.h"
+#include "OpenGLRendering/OGLMesh.h"
 
-#include "../CSC8503Common/GameWorld.h"
+#include "FromGameTech/GameWorld.h"
 
 namespace NCL {
 	class Maths::Vector3;

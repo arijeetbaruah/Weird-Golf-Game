@@ -1,19 +1,16 @@
 #pragma once
-#include "..\CSC8503Common\GameObject.h"
-#include "..\CSC8503Common\Debug.h"
-#include "../../Common/Window.h"
-#include "../../Common/Camera.h"
-#include "../CSC8503Common/NavigationGrid.h"
-#include "../CSC8503Common/StateMachine.h"
-#include "../CSC8503Common/StateTransition.h"
-#include "../CSC8503Common/State.h"
+#include "ComponentSystem\GameObject.h"
+#include "FromGameTech\GameWorld.h"
+#include "Common/Window.h"
+#include "Common/Camera.h"
+#include "AI/StateMachine.h"
+#include "AI//StateTransition.h"
+#include "AI//State.h"
 #include "EnemyPatrolSuperState.h"
 #include "EnemyChaseSuperState.h"
 #include <cmath>
 #include "Player.h"
 #define PI 3.14159265
-namespace NCL {
-	namespace CSC8503 {
 
 		class Enemy : public GameObject
 		{
@@ -84,11 +81,8 @@ namespace NCL {
 
 			StateMachine* stateMachine;
 
-			vector<Vector3> pathNodes;
+			std::vector<Vector3> pathNodes;
 			int index;
-			NavigationGrid* grid;
 			Vector3 pathfindingOffSet;
 			Vector3 currentDirection;
 		};
-	}
-}

@@ -1,6 +1,6 @@
-#include "Common/Player.h"
+#include "FromGameTech/Player.h"
 
-Player::Player(int id) : GameObject("PLAYER")
+Player::Player(int id) : GameObject()
 {
 	speed = 500;
 	camOffset = Vector3(0, 15, -10);
@@ -20,8 +20,8 @@ Player::Player(int id) : GameObject("PLAYER")
 	for (int i = 0; i < 6; i++)
 		buttonStates[i] = false;
 
-	layer = 2;
-	layerMask = 0; // Collide with everything
+	//layer = 2;
+	//layerMask = 0; // Collide with everything
 }
 
 Player::~Player() 
@@ -46,32 +46,32 @@ void Player::Trigger(GameObject& obj)
 
 void Player::UpdateCamera(float dt)
 {
-	Vector3 pos = transform.GetWorldPosition();
+	//Vector3 pos = transform.GetWorldPosition();
 
-	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
+	//Vector4 f = transform.GetWorldMatrix().GetColumn(2);
 
-	Vector3 forward = Vector3(f.x, f.y, f.z);
+	//Vector3 forward = Vector3(f.x, f.y, f.z);
 
-	Vector3 camPos = pos;
+	//Vector3 camPos = pos;
 
-	camPos -= forward * 10;
-	camPos.y += 2;
+	//camPos -= forward * 10;
+	//camPos.y += 2;
 
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
+	//Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
 
-	Matrix4 modelMat = temp.Inverse();
+	//Matrix4 modelMat = temp.Inverse();
 
-	Quaternion q(modelMat);
-	Vector3 angles = q.ToEuler(); //nearly there now!
+	//Quaternion q(modelMat);
+	//Vector3 angles = q.ToEuler(); //nearly there now!
 
-	mainCamera->SetPosition(camPos);
-	//mainCamera->SetPitch(angles.x);
-	mainCamera->SetYaw(angles.y);
+	//mainCamera->SetPosition(camPos);
+	////mainCamera->SetPitch(angles.x);
+	//mainCamera->SetYaw(angles.y);
 }
 
 void Player::UpdateServerPlayerKeys(float dt)
 {
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	/*yaw -= (Window::GetMouse()->GetRelativePosition().x);
 	jumpTimer -= dt;
 
 	if (yaw < 0) {
@@ -120,12 +120,12 @@ void Player::UpdateServerPlayerKeys(float dt)
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D) && !isSwimming) {
 		physicsObject->AddForce(-right * speed);
-	}
+	}*/
 }
 
 void Player::UpdateClientPlayerKeys(float dt)
 {
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	/*yaw -= (Window::GetMouse()->GetRelativePosition().x);
 	jumpTimer -= dt;
 
 	if (yaw < 0) {
@@ -204,15 +204,15 @@ void Player::UpdateClientPlayerKeys(float dt)
 	else
 	{
 		buttonStates[3] = false;
-	}
+	}*/
 }
 
 void Player::OnCollisionBegin(GameObject* otherObject) {
-	if (otherObject->getLayer() == 6)
-		isSwimming = true;
+	/*if (otherObject->getLayer() == 6)
+		isSwimming = true;*/
 }
 
 void Player::OnCollisionEnd(GameObject* otherObject) {
-	if (otherObject->getLayer() == 6)
-		isSwimming = false;
+	/*if (otherObject->getLayer() == 6)
+		isSwimming = false;*/
 }

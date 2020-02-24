@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.14)
 ## Giving a name to the project
 project(weird_golf_game)
 
-SET(CMAKE_EXE_LINKER_FLAGS_CHECKED "")
-SET(CMAKE_EXE_LINKER_FLAGS_PROFILE "")
-
 set(PhysX_include_files submodules/PhysX/physx/include)
 
 #Setup CMake to run tests
@@ -79,8 +76,10 @@ file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/ComponentSystem/*.
 file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/ComponentSystem/*.h)
 file(GLOB TEST_SRCS ${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp)
 file(GLOB MAIN ${PROJECT_SOURCE_DIR} Main.cpp)
-file(GLOB SRC_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/src/Physics/*.cpp)
-file(GLOB HEADER_ComponentSystem_FILES ${PROJECT_SOURCE_DIR}/include/Physics/*.h)
+file(GLOB SRC_Physics_FILES ${PROJECT_SOURCE_DIR}/src/Physics/*.cpp)
+file(GLOB HEADER_Physics_FILES ${PROJECT_SOURCE_DIR}/include/Physics/*.h)
+file(GLOB SRC_FromGameTech_FILES ${PROJECT_SOURCE_DIR}/src/FromGameTech/*.cpp)
+file(GLOB HEADER_FromGameTech_FILES ${PROJECT_SOURCE_DIR}/include/FromGameTech/*.h)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -103,6 +102,10 @@ add_library(lib OBJECT
 	${HEADER_KHR_FILES}
 	${SRC_ComponentSystem_FILES}
 	${HEADER_ComponentSystem_FILES}
+	${SRC_Physics_FILES}
+	${HEADER_Physics_FILES}
+	${SRC_FromGameTech_FILES}
+	${HEADER_FromGameTech_FILES}
 )
 
 set(CMAKE_EXE_LINKER_FLAGS_CHECKED true)

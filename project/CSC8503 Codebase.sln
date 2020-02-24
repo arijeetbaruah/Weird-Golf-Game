@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{7A22CD41-A2EE-49F0-8B06-E01B4526CA41}"
 EndProject
@@ -28,8 +28,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Networking-ENet", "Plugins\Networking-ENet\Networking-ENet.vcxproj", "{124740DA-B6CB-4D9B-8C79-B8358B2A1D9F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{DB1FD93F-A6D5-4D11-B943-66975CF9372D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{BA23774A-B0FE-45BC-A171-0C03FC093E63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,26 +100,6 @@ Global
 		{124740DA-B6CB-4D9B-8C79-B8358B2A1D9F}.Release|Win32.Build.0 = Release|Win32
 		{124740DA-B6CB-4D9B-8C79-B8358B2A1D9F}.Release|x64.ActiveCfg = Release|x64
 		{124740DA-B6CB-4D9B-8C79-B8358B2A1D9F}.Release|x64.Build.0 = Release|x64
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Debug|ORBIS.ActiveCfg = Debug|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Debug|Win32.ActiveCfg = Debug|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Debug|Win32.Build.0 = Debug|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Debug|x64.ActiveCfg = Debug|x64
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Debug|x64.Build.0 = Debug|x64
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Release|ORBIS.ActiveCfg = Release|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Release|Win32.ActiveCfg = Release|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Release|Win32.Build.0 = Release|Win32
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Release|x64.ActiveCfg = Release|x64
-		{344C4D39-7849-4D02-BB6C-981356333B02}.Release|x64.Build.0 = Release|x64
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Debug|ORBIS.ActiveCfg = Debug|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Debug|Win32.Build.0 = Debug|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Debug|x64.ActiveCfg = Debug|x64
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Debug|x64.Build.0 = Debug|x64
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Release|ORBIS.ActiveCfg = Release|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Release|Win32.ActiveCfg = Release|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Release|Win32.Build.0 = Release|Win32
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Release|x64.ActiveCfg = Release|x64
-		{BA23774A-B0FE-45BC-A171-0C03FC093E63}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,7 @@
 #pragma once
-#include "..\CSC8503Common\GameObject.h"
-#include "../CSC8503Common/PhysicsSystem.h"
+#include "ComponentSystem/GameObject.h"
 #include "Player.h"
-#include "../CSC8503Common/PositionConstraint.h"
 
-namespace NCL {
-	namespace CSC8503 {
 		class Collectable : public GameObject
 		{
 		public:
@@ -14,8 +10,8 @@ namespace NCL {
 			virtual void Update(float dt);
 			virtual void Trigger(GameObject& obj);
 
-			void SetConstraint(PositionConstraint* c) { constraint = c; };
-			PositionConstraint* GetConstraint() { return constraint; };
+			/*void SetConstraint(PositionConstraint* c) { constraint = c; };
+			PositionConstraint* GetConstraint() { return constraint; };*/
 
 			Vector3 GetOriginalPosition() { return originalPosition; };
 
@@ -23,12 +19,10 @@ namespace NCL {
 
 		protected:
 
-			PositionConstraint* constraint;
+			//PositionConstraint* constraint;
 
 			Vector3 originalPosition;
 
 			int points;
 		};
-	}
-}
 

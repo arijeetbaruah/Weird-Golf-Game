@@ -1,5 +1,5 @@
 #pragma once
-//#include "GameObject.h"
+#include "ComponentSystem/GameObject.h"
 #include "Common/Window.h"
 #include "Common/Camera.h"
 #include <cmath>

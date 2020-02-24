@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "FromGameTech/Enemy.h"
 
 using namespace NCL;
 using namespace CSC8503;

@@ -1,16 +1,18 @@
 #pragma once
 #include <vector>
+#include "Common/Camera.h"
+#include "ComponentSystem/GameObject.h"
+#include <algorithm>
 namespace NCL {
-		class Camera;
-
+	class Camera;
 	namespace CSC8503 {
 		class GameObject;
 		class Constraint;
 
-		typedef std::function<void(GameObject*)> GameObjectFunc;
+		//typedef std::function<void(GameObject*)> GameObjectFunc;
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
-		class GameWorld	{
+		class GameWorld {
 		public:
 			GameWorld();
 			~GameWorld();
@@ -43,7 +45,7 @@ namespace NCL {
 
 			virtual void UpdateWorld(float dt);
 
-			void OperateOnContents(GameObjectFunc f);
+			//void OperateOnContents(GameObjectFunc f);
 
 			void GetObjectIterators(
 				GameObjectIterator& first,
@@ -110,4 +112,3 @@ namespace NCL {
 		};
 	}
 }
-

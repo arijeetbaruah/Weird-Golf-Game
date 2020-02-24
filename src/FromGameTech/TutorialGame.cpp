@@ -1,11 +1,9 @@
-#include "TutorialGame.h"
-#include "../CSC8503Common/GameWorld.h"
-#include "../../Plugins/OpenGLRendering/OGLMesh.h"
-#include "../../Plugins/OpenGLRendering/OGLShader.h"
-#include "../../Plugins/OpenGLRendering/OGLTexture.h"
-#include "../../Common/TextureLoader.h"
-
-#include "../CSC8503Common/PositionConstraint.h"
+#include "FromGameTech/TutorialGame.h"
+#include "FromGameTech/GameWorld.h"
+#include "OpenGLRendering/OGLMesh.h"
+#include "OpenGLRendering/OGLShader.h"
+#include "OpenGLRendering/OGLTexture.h"
+#include "Common/TextureLoader.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -13,7 +11,6 @@ using namespace CSC8503;
 TutorialGame::TutorialGame()	{
 	world = new GameWorld();
 	renderer = new GameTechRenderer(*world);
-	physics = new PhysicsSystem(*world);
 
 	forceMagnitude	= 10.0f;
 	useGravity		= false;
@@ -35,8 +32,6 @@ TutorialGame::TutorialGame()	{
 
 	isNetworkedGame = false;
 	isServer = false;
-
-	Debug::SetRenderer(renderer);
 
 	InitialiseAssets();
 }
@@ -105,9 +100,9 @@ void TutorialGame::StartGame()
 			(*i)->SetNetworkObject(new NetworkObject(*(*i), playerID));
 			continue;
 		}*/
-		
+		/*
 		if (!(*i)->GetNetworkObject())
-			(*i)->SetNetworkObject(new NetworkObject(*(*i), counter));
+			(*i)->SetNetworkObject(new NetworkObject(*(*i), counter));*/
 		counter++;
 	}
 }
@@ -121,14 +116,14 @@ void TutorialGame::RestartNetworkedGame()
 	world->setPlayerTwoScore(0);
 	Vector3 offSet(275, 10, 195);
 	matchTimer = 100;
-	goose->GetNetworkObject()->resetScore();
-	playerTwo->GetNetworkObject()->resetScore();
+	/*goose->GetNetworkObject()->resetScore();
+	playerTwo->GetNetworkObject()->resetScore();*/
 	physics->Clear();
 
 	if (isServer)
 	{
-		goose->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
-		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));
+		/*goose->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
+		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));*/
 	}
 
 	std::vector < GameObject* >::const_iterator first;
@@ -138,26 +133,26 @@ void TutorialGame::RestartNetworkedGame()
 
 	int collectableCounter = 0;
 
-	for (auto i = first; i != last; ++i)
-	{
-		// Reset Collectables
-		if ((*i)->getLayer() == 4)
-		{
-			(*i)->setLayerMask(4);
-			int xPos = rand() % 480;
-			int zPos = rand() % 420;
-			(*i)->GetTransform().SetWorldPosition(Vector3(xPos, 10, zPos));
-			(*i)->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
-			collectableCounter++;
-		}
+	//for (auto i = first; i != last; ++i)
+	//{
+	//	// Reset Collectables
+	//	if ((*i)->getLayer() == 4)
+	//	{
+	//		(*i)->setLayerMask(4);
+	//		int xPos = rand() % 480;
+	//		int zPos = rand() % 420;
+	//		(*i)->GetTransform().SetWorldPosition(Vector3(xPos, 10, zPos));
+	//		(*i)->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+	//		collectableCounter++;
+	//	}
 
-		// Reset Enemies
-		if ((*i)->getLayer() == 3)
-		{
-			Enemy* e = (Enemy*)(*i);
-			e->resetPosition();
-		}
-	}
+	//	// Reset Enemies
+	//	if ((*i)->getLayer() == 3)
+	//	{
+	//		Enemy* e = (Enemy*)(*i);
+	//		e->resetPosition();
+	//	}
+	//}
 
 	world->SetCollectableCount(collectableCounter);
 }
@@ -405,10 +400,6 @@ void TutorialGame::UpdateGame(float dt) {
 	MoveSelectedObject();
 	//SeenObjects();
 
-	Debug::DrawLine(Vector3(0, 0, 0), Vector3(0, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 0), Vector3(480, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 420), Vector3(480, 50, 420), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(0, 0, 420), Vector3(0, 50, 420), Vector4(1, 0, 0, 1));
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -418,7 +409,6 @@ void TutorialGame::UpdateGame(float dt) {
 	else if (isServer && isNetworkedGame)
 		physics->Update(dt);
 
-	Debug::FlushRenderables();
 	renderer->Render();
 }
 
@@ -475,76 +465,38 @@ void TutorialGame::LockedObjectMovement() {
 	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		selectionObject->GetPhysicsObject()->AddForce(-rightAxis);
+		//selectionObject->GetPhysicsObject()->AddForce(-rightAxis);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		selectionObject->GetPhysicsObject()->AddForce(rightAxis);
+		//selectionObject->GetPhysicsObject()->AddForce(rightAxis);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
+		//selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+		//selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
 	}
 }
 
 void  TutorialGame::LockedCameraMovement() {
-	if (lockedObject != nullptr) {
-		Vector3 objPos = lockedObject->GetTransform().GetWorldPosition();
-		Vector3 camPos = objPos + lockedOffset;
+	//if (lockedObject != nullptr) {
+	//	Vector3 objPos = lockedObject->GetTransform().GetWorldPosition();
+	//	Vector3 camPos = objPos + lockedOffset;
 
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
+	//	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 
-		Matrix4 modelMat = temp.Inverse();
+	//	Matrix4 modelMat = temp.Inverse();
 
-		Quaternion q(modelMat);
-		Vector3 angles = q.ToEuler(); //nearly there now!
+	//	Quaternion q(modelMat);
+	//	Vector3 angles = q.ToEuler(); //nearly there now!
 
-		world->GetMainCamera()->SetPosition(camPos);
-		world->GetMainCamera()->SetPitch(angles.x);
-		world->GetMainCamera()->SetYaw(angles.y);
-	}
-}
-
-void TutorialGame::DebugObjectMovement() {
-//If we've selected an object, we can manipulate it with some key presses
-	if (inSelectionMode && selectionObject) {
-		//Twist the selected object!
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
-		}
-	}
+	//	world->GetMainCamera()->SetPosition(camPos);
+	//	world->GetMainCamera()->SetPitch(angles.x);
+	//	world->GetMainCamera()->SetYaw(angles.y);
+	//}
 }
 
 /*
@@ -556,65 +508,65 @@ letting you move the camera around.
 
 */
 bool TutorialGame::SelectObject() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
-		inSelectionMode = !inSelectionMode;
-		if (inSelectionMode) {
-			Window::GetWindow()->ShowOSPointer(true);
-			Window::GetWindow()->LockMouseToWindow(false);
-		}
-		else {
-			Window::GetWindow()->ShowOSPointer(false);
-			Window::GetWindow()->LockMouseToWindow(true);
-		}
-	}
-	if (inSelectionMode) {
-		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
+	//	inSelectionMode = !inSelectionMode;
+	//	if (inSelectionMode) {
+	//		Window::GetWindow()->ShowOSPointer(true);
+	//		Window::GetWindow()->LockMouseToWindow(false);
+	//	}
+	//	else {
+	//		Window::GetWindow()->ShowOSPointer(false);
+	//		Window::GetWindow()->LockMouseToWindow(true);
+	//	}
+	//}
+	//if (inSelectionMode) {
+	//	renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
 
-		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
-			if (selectionObject) {	//set colour to deselected;
-				//selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+	//	if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
+	//		if (selectionObject) {	//set colour to deselected;
+	//			//selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
 
-				renderer->DrawString("DEBUG INFO: ",
-					Vector2(10, 300), Vector4(0, 0, 1, 1));
-				renderer->DrawString("POSITION: " + selectionObject->GetTransform().GetWorldPosition().ToString(),
-					Vector2(10, 200), Vector4(0, 0, 1, 1));
-				renderer->DrawString("SIZE: " + selectionObject->GetTransform().GetLocalScale().ToString(),
-					Vector2(10, 100), Vector4(0, 0, 1, 1));
-				selectionObject = nullptr;
-			}
+	//			renderer->DrawString("DEBUG INFO: ",
+	//				Vector2(10, 300), Vector4(0, 0, 1, 1));
+	//			renderer->DrawString("POSITION: " + selectionObject->GetTransform().GetWorldPosition().ToString(),
+	//				Vector2(10, 200), Vector4(0, 0, 1, 1));
+	//			renderer->DrawString("SIZE: " + selectionObject->GetTransform().GetLocalScale().ToString(),
+	//				Vector2(10, 100), Vector4(0, 0, 1, 1));
+	//			selectionObject = nullptr;
+	//		}
 
-			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+	//		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 
-			RayCollision closestCollision;
-			if (world->Raycast(ray, closestCollision, true)) {
-				selectionObject = (GameObject*)closestCollision.node;
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
-			if (selectionObject) {
-				if (lockedObject == selectionObject) {
-					lockedObject = nullptr;
-				}
-				else {
-					lockedObject = selectionObject;
-				}
-			}
-		}
-	}
-	else {
-		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
-	}
-	return false;
+	//		RayCollision closestCollision;
+	//		if (world->Raycast(ray, closestCollision, true)) {
+	//			selectionObject = (GameObject*)closestCollision.node;
+	//			return true;
+	//		}
+	//		else {
+	//			return false;
+	//		}
+	//	}
+	//	if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
+	//		if (selectionObject) {
+	//			if (lockedObject == selectionObject) {
+	//				lockedObject = nullptr;
+	//			}
+	//			else {
+	//				lockedObject = selectionObject;
+	//			}
+	//		}
+	//	}
+	//}
+	//else {
+	//	renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
+	//}
+	//return false;
 }
 
 void TutorialGame::SeenObjects() {
 	
 
-	GameObjectIterator first;
+	/*GameObjectIterator first;
 	GameObjectIterator last;
 	world->GetObjectIterators(first, last);
 
@@ -634,42 +586,7 @@ void TutorialGame::SeenObjects() {
 		{
 			obj->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
 		}
-	}
-}
-
-/*
-If an object has been clicked, it can be pushed with the right mouse button, by an amount
-determined by the scroll wheel. In the first tutorial this won't do anything, as we haven't
-added linear motion into our physics system. After the second tutorial, objects will move in a straight
-line - after the third, they'll be able to twist under torque aswell.
-*/
-
-void TutorialGame::MoveSelectedObject() {
-	renderer -> DrawString(" Click Force :" + std::to_string(forceMagnitude),
-		Vector2(10, 20)); // Draw debug text at 10 ,20
-	forceMagnitude += Window::GetMouse() -> GetWheelMovement() * 100.0f;
-	
-	if (!selectionObject) {
-		return;// we haven �t selected anything !
-
-	}
-	// Push the selected object !
-	if (Window::GetMouse() -> ButtonPressed(NCL::MouseButtons::RIGHT)) {
-		Ray ray = CollisionDetection::BuildRayFromMouse(
-			* world -> GetMainCamera());
-		
-		RayCollision closestCollision;
-		if (world -> Raycast(ray, closestCollision, true)) {
-			if (closestCollision.node == selectionObject) {
-				selectionObject -> GetPhysicsObject() -> AddForceAtPosition(
-					ray.GetDirection() * forceMagnitude,
-					closestCollision.collidedAt);
-				
-			}
-
-		}
-
-	}
+	}*/
 }
 
 void TutorialGame::InitCamera() {
@@ -693,8 +610,6 @@ void TutorialGame::ResetCamera() {
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
-
-	grid = NavigationGrid("TestGrid3.txt");
 
 	Vector3 offSet(220, 0, 195);
 
@@ -754,8 +669,8 @@ void TutorialGame::InitWorld() {
 	AddTerrainToWorld(offSet + Vector3(20, 98, -195), Vector3(240, 100, 2), brown); // North wall
 
 	GameObject* island = AddTerrainToWorld(offSet + Vector3(20, -11, 15), Vector3(20, 20, 20), green); // Island
-	island->setLayer(5);
-	island->setLayerMask(49);
+	//island->setLayer(5);
+	//island->setLayerMask(49);
 	
 	AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
 }
@@ -793,7 +708,7 @@ A single function to add a large immoveable cube to the bottom of our world
 
 */
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
-	GameObject* floor = new GameObject("FLOOR");
+	/*GameObject* floor = new GameObject("FLOOR");
 
 	Vector3 floorSize = Vector3(300, 2, 300);
 	AABBVolume* volume = new AABBVolume(floorSize);
@@ -811,11 +726,11 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 
 	world->AddGameObject(floor);
 
-	return floor;
+	return floor;*/
 }
 
 GameObject* TutorialGame::AddTerrainToWorld(const Vector3& position, const Vector3& size, const Vector4& colour) {
-	GameObject* floor = new GameObject("FLOOR");
+	/*GameObject* floor = new GameObject("FLOOR");
 
 	floor->setLayer(1);
 	floor->setLayerMask(49);
@@ -835,11 +750,11 @@ GameObject* TutorialGame::AddTerrainToWorld(const Vector3& position, const Vecto
 
 	world->AddGameObject(floor);
 
-	return floor;
+	return floor;*/
 }
 
 GameObject* TutorialGame::AddLakeToWorld(const Vector3& position, const Vector3& size, const Vector4& colour) {
-	GameObject* floor = new GameObject("LAKE");
+	/*GameObject* floor = new GameObject("LAKE");
 
 	floor->setLayer(6);
 	floor->setLayerMask(49);
@@ -861,72 +776,72 @@ GameObject* TutorialGame::AddLakeToWorld(const Vector3& position, const Vector3&
 
 	world->AddGameObject(floor);
 
-	return floor;
+	return floor;*/
 }
 
 void TutorialGame::AddBridgeToWorld(Vector3 startPos, int num) {
-	Vector3 cubeSize = Vector3(1, 1, 10);
+	//Vector3 cubeSize = Vector3(1, 1, 10);
 
-	float	invCubeMass = 0.01;
-	int		numLinks = 55;
-	float	maxDistance = 1.2;
-	float	cubeDistance = 2;
+	//float	invCubeMass = 0.01;
+	//int		numLinks = 55;
+	//float	maxDistance = 1.2;
+	//float	cubeDistance = 2;
 
-	int layerMask = 53;
+	//int layerMask = 53;
 
-	Vector4 brown = Vector4(0.58, 0.29, 0, 1);
+	//Vector4 brown = Vector4(0.58, 0.29, 0, 1);
 
-	//Vector3 startPos = Vector3(36, 7, 15);
+	////Vector3 startPos = Vector3(36, 7, 15);
 
-	Vector3 endPos = startPos;
+	//Vector3 endPos = startPos;
 
-	if (num == 1)
-	{
-		endPos.y += 19;
-	}
-	else if (num == 2)
-	{
-		startPos.y += 19;
-		numLinks = 47;
-	}
-	else 
-	{
-		startPos.y += 19;
-		endPos.y += 19;
-		numLinks = 100;
-	}
+	//if (num == 1)
+	//{
+	//	endPos.y += 19;
+	//}
+	//else if (num == 2)
+	//{
+	//	startPos.y += 19;
+	//	numLinks = 47;
+	//}
+	//else 
+	//{
+	//	startPos.y += 19;
+	//	endPos.y += 19;
+	//	numLinks = 100;
+	//}
 
-	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
+	//GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
 
-	start->setLayer(1);
-	start->setLayerMask(layerMask);
+	//start->setLayer(1);
+	//start->setLayerMask(layerMask);
 
-	start->GetRenderObject()->SetColour(brown);
-	
+	//start->GetRenderObject()->SetColour(brown);
+	//
 
-	GameObject* end = AddCubeToWorld(endPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
+	//GameObject* end = AddCubeToWorld(endPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
 
-	end->setLayer(1);
-	end->setLayerMask(layerMask);
+	//end->setLayer(1);
+	//end->setLayerMask(layerMask);
 
-	end->GetRenderObject()->SetColour(brown);
+	//end->GetRenderObject()->SetColour(brown);
 
-	GameObject* previous = start;
+	//GameObject* previous = start;
 
-	for (int i = 0; i < numLinks; ++i) {
-		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
-		
-		block->setLayer(1);
-		block->setLayerMask(layerMask);
-		
-		block->GetRenderObject()->SetColour(brown);
-		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
-		world->AddConstraint(constraint);
-		previous = block;
-	}
+	//for (int i = 0; i < numLinks; ++i) {
+	//	GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
+	//	
+	//	block->setLayer(1);
+	//	block->setLayerMask(layerMask);
+	//	
+	//	block->GetRenderObject()->SetColour(brown);
+	//	PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
+	//	world->AddConstraint(constraint);
+	//	previous = block;
+	//}
 
-	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
-	world->AddConstraint(constraint);
+	//PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
+	//world->AddConstraint(constraint);
 }
 
 /*
@@ -937,7 +852,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 */
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
-	GameObject* sphere = new GameObject("SPHERE");
+	/*GameObject* sphere = new GameObject("SPHERE");
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
@@ -953,35 +868,35 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 
 	world->AddGameObject(sphere);
 
-	return sphere;
+	return sphere;*/
 }
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
-	GameObject* cube = new GameObject("CUBE");
+	//GameObject* cube = new GameObject("CUBE");
 
-	AABBVolume* volume = new AABBVolume(dimensions);
+	//AABBVolume* volume = new AABBVolume(dimensions);
 
-	//SphereVolume* volume = new SphereVolume(dimensions.x);
+	////SphereVolume* volume = new SphereVolume(dimensions.x);
 
-	cube->SetBoundingVolume((CollisionVolume*)volume);
+	//cube->SetBoundingVolume((CollisionVolume*)volume);
 
-	cube->GetTransform().SetWorldPosition(position);
-	cube->GetTransform().SetWorldScale(dimensions);
+	//cube->GetTransform().SetWorldPosition(position);
+	//cube->GetTransform().SetWorldScale(dimensions);
 
-	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
-	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+	//cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	//cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
 
-	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
-	cube->GetPhysicsObject()->InitCubeInertia();
+	//cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	//cube->GetPhysicsObject()->InitCubeInertia();
 
-	world->AddGameObject(cube);
+	/*world->AddGameObject(cube);
 
-	return cube;
+	return cube;*/
 }
 
 GameObject* TutorialGame::AddGooseToWorld(const Vector3& position)
 {
-	float size			= 1.0f;
+	/*float size			= 1.0f;
 	float inverseMass	= 0.1f;
 
 	goose = new Player(playerID);
@@ -1019,12 +934,12 @@ GameObject* TutorialGame::AddGooseToWorld(const Vector3& position)
 
 	world->AddGameObject(goose);
 
-	return goose;
+	return goose;*/
 }
 
 GameObject* TutorialGame::AddPlayerTwoToWorld(const Vector3& position)
 {
-	float inverseMass = 0.1f;
+	/*float inverseMass = 0.1f;
 
 	playerTwo->SetRenderObject(new RenderObject(&playerTwo->GetTransform(), gooseMesh, nullptr, basicShader));
 	playerTwo->SetPhysicsObject(new PhysicsObject(&playerTwo->GetTransform(), playerTwo->GetBoundingVolume()));
@@ -1048,33 +963,7 @@ GameObject* TutorialGame::AddPlayerTwoToWorld(const Vector3& position)
 
 	world->AddGameObject(playerTwo);
 
-	return playerTwo;
-}
-
-Enemy* TutorialGame::AddParkKeeperToWorld(const Vector3& position)
-{
-	float meshSize = 4.0f;
-	float inverseMass = 0.5f;
-
-	Enemy* keeper = new Enemy(position, world, isServer);
-
-	keeper->setPlayer(goose);
-	keeper->setPlayerTwo(playerTwo);
-	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
-	keeper->SetBoundingVolume((CollisionVolume*)volume);
-
-	keeper->GetTransform().SetWorldScale(Vector3(meshSize, meshSize, meshSize));
-
-	keeper->SetRenderObject(new RenderObject(&keeper->GetTransform(), keeperMesh, nullptr, basicShader));
-	keeper->SetPhysicsObject(new PhysicsObject(&keeper->GetTransform(), keeper->GetBoundingVolume()));
-
-	keeper->GetPhysicsObject()->SetInverseMass(inverseMass);
-	keeper->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(keeper);
-
-	return keeper;
-	
+	return playerTwo;*/
 }
 
 GameObject* TutorialGame::AddCharacterToWorld(const Vector3& position) {
@@ -1091,32 +980,32 @@ GameObject* TutorialGame::AddCharacterToWorld(const Vector3& position) {
 		minVal.y = min(minVal.y, i.y);
 	}
 
-	GameObject* character = new GameObject("CHARACTER");
+	//GameObject* character = new GameObject("CHARACTER");
 
 	float r = rand() / (float)RAND_MAX;
 
 
-	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	//AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
+	//character->SetBoundingVolume((CollisionVolume*)volume);
 
-	character->GetTransform().SetWorldScale(Vector3(meshSize, meshSize, meshSize));
-	character->GetTransform().SetWorldPosition(position);
+	//character->GetTransform().SetWorldScale(Vector3(meshSize, meshSize, meshSize));
+	//character->GetTransform().SetWorldPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), r > 0.5f ? charA : charB, nullptr, basicShader));
-	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+	//character->SetRenderObject(new RenderObject(&character->GetTransform(), r > 0.5f ? charA : charB, nullptr, basicShader));
+	//character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
-	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitCubeInertia();
+	//character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	//character->GetPhysicsObject()->InitCubeInertia();
 
-	world->AddGameObject(character);
+	//world->AddGameObject(character);
 
-	return character;
+	//return character;
 }
 
 GameObject* TutorialGame::AddAppleToWorld(const Vector3& position) {
 	Collectable* apple = new Collectable(10, position);
 
-	SphereVolume* volume = new SphereVolume(0.7f);
+	/*SphereVolume* volume = new SphereVolume(0.7f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform().SetWorldScale(Vector3(4, 4, 4));
 	apple->GetTransform().SetWorldPosition(position);
@@ -1126,7 +1015,7 @@ GameObject* TutorialGame::AddAppleToWorld(const Vector3& position) {
 
 	apple->GetPhysicsObject()->SetInverseMass(100.0f);
 	apple->GetPhysicsObject()->InitSphereInertia();
-	apple->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+	apple->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));*/
 
 	world->AddGameObject(apple);
 
@@ -1136,7 +1025,7 @@ GameObject* TutorialGame::AddAppleToWorld(const Vector3& position) {
 GameObject* TutorialGame::AddBonusItemToWorld(const Vector3& position) {
 	Collectable* box = new Collectable(20, position);
 
-	AABBVolume* volume = new AABBVolume(Vector3(0.8, 0.8, 0.8));
+	/*AABBVolume* volume = new AABBVolume(Vector3(0.8, 0.8, 0.8));
 	box->SetBoundingVolume((CollisionVolume*)volume);
 	box->GetTransform().SetWorldScale(Vector3(0.8, 0.8, 0.8));
 	box->GetTransform().SetWorldPosition(position);
@@ -1146,7 +1035,7 @@ GameObject* TutorialGame::AddBonusItemToWorld(const Vector3& position) {
 	box->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
 
 	box->GetPhysicsObject()->SetInverseMass(100.0f);
-	box->GetPhysicsObject()->InitSphereInertia();
+	box->GetPhysicsObject()->InitSphereInertia();*/
 
 	world->AddGameObject(box);
 
@@ -1199,11 +1088,11 @@ void TutorialGame::SimpleGJKTest() {
 	GameObject* fallingCube = AddCubeToWorld(Vector3(0, 20, 0), dimensions, 10.0f);
 	GameObject* newFloor	= AddCubeToWorld(Vector3(0, 0, 0), floorDimensions, 0.0f);
 
-	delete fallingCube->GetBoundingVolume();
+	/*delete fallingCube->GetBoundingVolume();
 	delete newFloor->GetBoundingVolume();
 
 	fallingCube->SetBoundingVolume((CollisionVolume*)new OBBVolume(dimensions));
-	newFloor->SetBoundingVolume((CollisionVolume*)new OBBVolume(floorDimensions));
+	newFloor->SetBoundingVolume((CollisionVolume*)new OBBVolume(floorDimensions));*/
 
 }
 

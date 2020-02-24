@@ -1,10 +1,9 @@
-#include "GameTechRenderer.h"
-#include "../CSC8503Common/GameObject.h"
-#include "../../Common/Camera.h"
-#include "../../Common/Vector2.h"
-#include "../../Common/Vector3.h"
+#include "FromGameTech/GameTechRenderer.h"
+#include "ComponentSystem/GameObject.h"
+#include "Common/Camera.h"
+#include "Common/Vector2.h"
+#include "Common/Vector3.h"
 using namespace NCL;
-using namespace Rendering;
 using namespace CSC8503;
 
 #define SHADOWSIZE 4096
