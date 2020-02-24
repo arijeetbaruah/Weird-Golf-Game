@@ -57,8 +57,6 @@ artifacts/
 # StyleCop
 StyleCopReport.xml
 
-# Keep these .obj
-!*/Game_Tech/CSC8503/GameTech/Assets/*
 
 # Files built by Visual Studio
 *_i.c
@@ -88,6 +86,9 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+
+# Keep these .obj
+!*/Game_Tech/CSC8503/GameTech/Assets/*
 
 # Chutzpah Test files
 _Chutzpah*
