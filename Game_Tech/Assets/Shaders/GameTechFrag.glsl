@@ -41,9 +41,11 @@ void main(void)
 	float sFactor = pow ( rFactor , 80.0 );
 	
 	vec4 albedo = IN.colour;
+
+	vec2 v = vec2(IN.texCoord.x, 1 - IN.texCoord.y);
 	
 	if(hasTexture) {
-	 albedo *= texture(mainTex, IN.texCoord);
+	 albedo *= texture(mainTex, v);
 	}
 	
 	albedo.rgb = pow(albedo.rgb, vec3(2.2));
