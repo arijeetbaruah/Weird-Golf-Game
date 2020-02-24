@@ -155,11 +155,12 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("Apple.msh"	 , &appleMesh);
 	objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball.obj", &playerMesh);
+	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
 
 	std::vector<PxVec3> verts;
 	std::vector<PxU32> tris;
 
-	for each(OGLMesh* mesh in golfLevelMeshes) {
+	for each (OGLMesh * mesh in golfLevelMeshes) {
 		for each (Vector3 vert in mesh->GetPositionData()) {
 			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		}
@@ -171,7 +172,6 @@ void TutorialGame::InitialiseAssets() {
 		tris.clear();
 	}
 	physxC.spawnBall();
-	
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 }
@@ -817,7 +817,7 @@ void TutorialGame::InitWorld() {
 	// Add all modular golf level subsections to world
 	for (int i = 0; i < golfLevelMeshes.size(); i++) 
 	{
-		AddGolfLevelToWorld(Vector3(0, -12, 0), Vector3(1, 1, 1), green, i);
+		AddGolfLevelToWorld(Vector3(300, -70, 0), Vector3(100, 100, 100), green, i);
 	}
 	
 
@@ -892,10 +892,8 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	floor->GetTransform().SetWorldScale(size);
 	floor->GetTransform().SetWorldPosition(position);
 
-	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], basicTex, basicShader));
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
-
-	floor->GetRenderObject()->SetColour(colour);
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
 	floor->GetPhysicsObject()->InitCubeInertia();
