@@ -63,7 +63,7 @@ namespace NCL {
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 
-			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
 			Player* goose;
 			GameObject* playerTwo;
@@ -117,6 +117,8 @@ namespace NCL {
 			OGLMesh*	charB		= nullptr;
 			OGLMesh* testLevel = nullptr;
 			OGLMesh* playerMesh = nullptr;
+
+			vector<OGLMesh*> golfLevelMeshes;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
