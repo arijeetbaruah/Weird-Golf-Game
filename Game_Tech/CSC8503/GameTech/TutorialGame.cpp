@@ -104,8 +104,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
 	//loadFunc("TestLevel.msh", &testLevel);
-	objLoadFunc("Ball.obj", &playerMesh);
-	objLoadFunc("box_stack.obj", &playerMesh);
+	objLoadFunc("Assets/Ball.obj", &playerMesh);
 
 	playerMesh->GetPositionData();
 
