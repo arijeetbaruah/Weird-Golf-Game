@@ -8,6 +8,7 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
+#include "PhysxController.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -68,6 +69,8 @@ namespace NCL {
 			Player* goose;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
+
+			PhysxController physxC = PhysxController::getInstance();
 
 			void StoreHighScore();
 			std::string fileName;

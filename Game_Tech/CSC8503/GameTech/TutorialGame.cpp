@@ -112,6 +112,17 @@ void TutorialGame::InitialiseAssets() {
 
 	playerMesh->GetPositionData();
 
+	std::vector<PxVec3> verts;
+	std::vector<PxU32> tris;
+
+	for each (Vector3 vert in playerMesh->GetPositionData()) {
+		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+	}
+	for each (unsigned int index in playerMesh->GetIndexData()) {
+		tris.push_back(index);
+	}
+	physxC.addTriangleMeshToScene(verts, tris);
+
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 }
