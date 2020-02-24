@@ -67,8 +67,10 @@ void TutorialGame::InitialiseAssets() {
 			return;
 		}
 
-		*into = new OGLMesh();
+		*into = new OGLMesh(name);
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+		int size = loader.LoadedMeshes.size();
 
 		for (int j = 0; j < loader.LoadedMeshes.size(); j++) 
 		{
@@ -97,7 +99,51 @@ void TutorialGame::InitialiseAssets() {
 
 			(*into)->UploadToGPU();
 		}
+	};
 
+	auto objLoadLevelFunc = [this](const string& name) {
+		objl::Loader loader;
+		bool loadout = loader.LoadFile(name);
+
+		if (!loadout)
+		{
+			return;
+		}
+
+
+		int size = loader.LoadedMeshes.size();
+
+		for (int j = 0; j < loader.LoadedMeshes.size(); j++)
+		{
+			OGLMesh* playerMesh = new OGLMesh();
+			playerMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+			objl::Mesh curMesh = loader.LoadedMeshes[j];
+
+			vector<Vector3> verts;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+
+			for (int i = 0; i < curMesh.Vertices.size(); i++)
+			{
+				Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
+				verts.push_back(v);
+
+				Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
+				normals.push_back(n);
+
+				Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
+				texCoords.push_back(t);
+			}
+
+			playerMesh->SetVertexPositions(verts);
+			playerMesh->SetVertexNormals(normals);
+			playerMesh->SetVertexTextureCoords(texCoords);
+			playerMesh->SetVertexIndices(curMesh.Indices);
+
+			playerMesh->UploadToGPU();
+			golfLevelMeshes.push_back(playerMesh);
+		}
 	};
 
 	loadFunc("cube.msh"		 , &cubeMesh);
@@ -107,21 +153,8 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterM.msh", &charA);
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
-	objLoadFunc("Assets/TestLevel.obj", &testLevel);
+	objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball.obj", &playerMesh);
-
-	playerMesh->GetPositionData();
-
-	std::vector<PxVec3> verts;
-	std::vector<PxU32> tris;
-
-	for each (Vector3 vert in playerMesh->GetPositionData()) {
-		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-	}
-	for each (unsigned int index in playerMesh->GetIndexData()) {
-		tris.push_back(index);
-	}
-	physxC.addTriangleMeshToScene(verts, tris);
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
@@ -765,7 +798,12 @@ void TutorialGame::InitWorld() {
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
-	AddGolfLevelToWorld(Vector3(0, -12, 0), Vector3(80, 20, 50), green); // West floor
+	// Add all modular golf level subsections to world
+	for (int i = 0; i < golfLevelMeshes.size(); i++) 
+	{
+		AddGolfLevelToWorld(Vector3(0, -12, 0), Vector3(1, 1, 1), green, i);
+	}
+	
 
 	/*if (isNetworkedGame)
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
@@ -827,7 +865,7 @@ void TutorialGame::InitWorld() {
 	//AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
 }
 
-GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour) {
+GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
 	GameObject* floor = new GameObject("FLOOR");
 
 	floor->setLayer(1);
@@ -838,7 +876,7 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	floor->GetTransform().SetWorldScale(size);
 	floor->GetTransform().SetWorldPosition(position);
 
-	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), testLevel, basicTex, basicShader));
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], basicTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetRenderObject()->SetColour(colour);
