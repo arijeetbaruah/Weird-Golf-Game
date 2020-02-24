@@ -155,8 +155,23 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("Apple.msh"	 , &appleMesh);
 	objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball.obj", &playerMesh);
-
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
+
+	std::vector<PxVec3> verts;
+	std::vector<PxU32> tris;
+
+	for each (OGLMesh * mesh in golfLevelMeshes) {
+		for each (Vector3 vert in mesh->GetPositionData()) {
+			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		}
+		for each (unsigned int index in mesh->GetIndexData()) {
+			tris.push_back(index);
+		}
+		physxC.addTriangleMeshToScene(verts, tris);
+		verts.clear();
+		tris.clear();
+	}
+	physxC.spawnBall();
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 }
