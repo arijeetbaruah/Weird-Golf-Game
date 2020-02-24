@@ -60,33 +60,38 @@ void TutorialGame::InitialiseAssets() {
 
 	auto objLoadFunc = [](const string& name, OGLMesh** into) {
 		objl::Loader loader;
-		loader.LoadFile(name);
+		bool loadout = loader.LoadFile(name);
+
+		if (!loadout) 
+		{
+			return;
+		}
 
 		*into = new OGLMesh();
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+		objl::Mesh curMesh = loader.LoadedMeshes[0];
 
 		vector<Vector3> verts;
 		vector<Vector3> normals;
 		vector<Vector2> texCoords;
 		
-		for (int i = 0; i < loader.LoadedVertices.size(); i++) 
+		for (int i = 0; i < curMesh.Vertices.size(); i++)
 		{
-			verts[i].x = loader.LoadedVertices[i].Position.X;
-			verts[i].y = loader.LoadedVertices[i].Position.Y;
-			verts[i].z = loader.LoadedVertices[i].Position.Z;
+			Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
+			verts.push_back(v);
 
-			normals[i].x = loader.LoadedVertices[i].Normal.X;
-			normals[i].y = loader.LoadedVertices[i].Normal.Y;
-			normals[i].z = loader.LoadedVertices[i].Normal.Z;
+			Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
+			normals.push_back(n);
 
-			texCoords[i].x = loader.LoadedVertices[i].TextureCoordinate.X;
-			texCoords[i].y = loader.LoadedVertices[i].TextureCoordinate.Y;
+			Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
+			texCoords.push_back(t);
 		}
 
 		(*into)->SetVertexPositions(verts);
 		(*into)->SetVertexNormals(normals);
 		(*into)->SetVertexTextureCoords(texCoords);
-		(*into)->SetVertexIndices(loader.LoadedIndices);
+		(*into)->SetVertexIndices(curMesh.Indices);
 
 		(*into)->UploadToGPU();
 	};
@@ -100,6 +105,9 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("Apple.msh"	 , &appleMesh);
 	//loadFunc("TestLevel.msh", &testLevel);
 	objLoadFunc("Ball.obj", &playerMesh);
+	objLoadFunc("box_stack.obj", &playerMesh);
+
+	playerMesh->GetPositionData();
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
