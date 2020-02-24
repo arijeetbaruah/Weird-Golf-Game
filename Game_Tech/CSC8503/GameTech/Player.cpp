@@ -34,10 +34,13 @@ Player::~Player()
 
 void Player::Update(float dt)
 {
-	if (playerID == 1000)
+	UpdateServerPlayerKeys(dt);
+
+
+	/*if (playerID == 1000)
 		UpdateServerPlayerKeys(dt);
 	else
-		UpdateClientPlayerKeys(dt);
+		UpdateClientPlayerKeys(dt);*/
 
 	UpdateCamera(dt);
 }
