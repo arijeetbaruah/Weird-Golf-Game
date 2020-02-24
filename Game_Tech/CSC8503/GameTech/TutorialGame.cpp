@@ -70,30 +70,33 @@ void TutorialGame::InitialiseAssets() {
 		*into = new OGLMesh();
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
 
-		objl::Mesh curMesh = loader.LoadedMeshes[0];
-
-		vector<Vector3> verts;
-		vector<Vector3> normals;
-		vector<Vector2> texCoords;
-		
-		for (int i = 0; i < curMesh.Vertices.size(); i++)
+		for (int j = 0; j < loader.LoadedMeshes.size(); j++) 
 		{
-			Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
-			verts.push_back(v);
+			objl::Mesh curMesh = loader.LoadedMeshes[j];
 
-			Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
-			normals.push_back(n);
+			vector<Vector3> verts;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
 
-			Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
-			texCoords.push_back(t);
+			for (int i = 0; i < curMesh.Vertices.size(); i++)
+			{
+				Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
+				verts.push_back(v);
+
+				Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
+				normals.push_back(n);
+
+				Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
+				texCoords.push_back(t);
+			}
+
+			(*into)->SetVertexPositions(verts);
+			(*into)->SetVertexNormals(normals);
+			(*into)->SetVertexTextureCoords(texCoords);
+			(*into)->SetVertexIndices(curMesh.Indices);
+
+			(*into)->UploadToGPU();
 		}
-
-		(*into)->SetVertexPositions(verts);
-		(*into)->SetVertexNormals(normals);
-		(*into)->SetVertexTextureCoords(texCoords);
-		(*into)->SetVertexIndices(curMesh.Indices);
-
-		(*into)->UploadToGPU();
 
 	};
 
@@ -104,9 +107,8 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterM.msh", &charA);
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
-	//objLoadFunc("TestLevel.obj", &testLevel);
-	//loadFunc("TestLevel.msh", &testLevel);
-	//objLoadFunc("Assets/Ball.obj", &playerMesh);
+	objLoadFunc("Assets/TestLevel.obj", &testLevel);
+	objLoadFunc("Assets/Ball.obj", &playerMesh);
 
 	playerMesh->GetPositionData();
 
@@ -750,6 +752,10 @@ void TutorialGame::InitWorld() {
 	// The player to act as the server
 	AddPlayerToWorld(offSet + Vector3(50, 10, 0));
 
+	Vector4 green = Vector4(0, 0.6, 0, 1);
+
+	AddGolfLevelToWorld(Vector3(0, -12, 0), Vector3(80, 20, 50), green); // West floor
+
 	/*if (isNetworkedGame)
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
 
@@ -808,6 +814,30 @@ void TutorialGame::InitWorld() {
 	//island->setLayerMask(49);
 	//
 	//AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
+}
+
+GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour) {
+	GameObject* floor = new GameObject("FLOOR");
+
+	floor->setLayer(1);
+	floor->setLayerMask(49);
+
+	AABBVolume* volume = new AABBVolume(size);
+	floor->SetBoundingVolume((CollisionVolume*)volume);
+	floor->GetTransform().SetWorldScale(size);
+	floor->GetTransform().SetWorldPosition(position);
+
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), testLevel, basicTex, basicShader));
+	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
+
+	floor->GetRenderObject()->SetColour(colour);
+
+	floor->GetPhysicsObject()->SetInverseMass(0);
+	floor->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(floor);
+
+	return floor;
 }
 
 //From here on it's functions to add in objects to the world!
@@ -1050,7 +1080,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
 	else 
 		goose->GetTransform().SetWorldPosition(position - offSet);
 
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), cubeMesh, nullptr, basicShader));
+	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, nullptr, basicShader));
 	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
 
 	goose->GetPhysicsObject()->SetInverseMass(inverseMass);

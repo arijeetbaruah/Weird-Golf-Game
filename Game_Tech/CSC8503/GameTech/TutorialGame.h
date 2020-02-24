@@ -63,6 +63,8 @@ namespace NCL {
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
+
 			Player* goose;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
