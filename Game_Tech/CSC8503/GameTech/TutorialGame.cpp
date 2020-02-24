@@ -104,7 +104,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
 	//loadFunc("TestLevel.msh", &testLevel);
-	objLoadFunc("Assets/Ball.obj", &playerMesh);
+	//objLoadFunc("Assets/Ball.obj", &playerMesh);
 
 	playerMesh->GetPositionData();
 
@@ -1048,7 +1048,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
 	else 
 		goose->GetTransform().SetWorldPosition(position - offSet);
 
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, nullptr, basicShader));
+	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), cubeMesh, nullptr, basicShader));
 	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
 
 	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
