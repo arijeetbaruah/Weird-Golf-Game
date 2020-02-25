@@ -15,6 +15,7 @@
 #include "NetworkedGame.h"
 
 #include "PhysxController.h"
+#include "SpherePhysicsComponent.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -139,6 +140,8 @@ int main() {
 	}	
 
 	PhysxController c = PhysxController::getInstance();
+	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(0, 10, 0)), 10.0f, 0.5f);
+	sphere->Start();
 	
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(false);
@@ -169,7 +172,11 @@ int main() {
 
 		g->UpdateGame(dt);
 		c.stepPhysics(true, dt);
+		sphere->Update();
 
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F)) {
+			sphere->addForce(PxVec3(10000, 10, 0));
+		}
 	}
 	Window::DestroyGameWindow();
 }

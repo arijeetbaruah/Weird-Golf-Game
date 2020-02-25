@@ -231,6 +231,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collectable.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyChaseSuperState.cpp" />
     <ClCompile Include="EnemyPatrolSuperState.cpp" />
@@ -238,12 +239,16 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NetworkedGame.cpp" />
     <ClCompile Include="NetworkPlayer.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PhysxController.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SpherePhysicsComponent.cpp" />
+    <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectable.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyChaseSuperState.h" />
     <ClInclude Include="EnemyPatrolSuperState.h" />
@@ -251,8 +256,11 @@
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
     <ClInclude Include="OBJ_Loader.h" />
+    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PhysxController.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SpherePhysicsComponent.h" />
+    <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>
   <ItemGroup>

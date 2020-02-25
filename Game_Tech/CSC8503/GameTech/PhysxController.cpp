@@ -2,9 +2,6 @@
 
 #include "PhysxController.h"
 
-#include "PhysxController.h"
-#include "PxPhysicsAPI.h"
-
 PhysxController::PhysxController() {
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 
@@ -43,42 +40,6 @@ void PhysxController::createDefaultScene() {
 	actualScene->addActor(*groundPlane);
 }
 
-void PhysxController::addTriangleMeshToScene(std::vector<PxVec3> verts, std::vector<PxU32> tris) {
-	PxTriangleMeshDesc meshDesc;
-
-	meshDesc.points.count = verts.size();
-	meshDesc.points.stride = sizeof(PxVec3);
-	meshDesc.points.data = &verts[0];
-
-	meshDesc.triangles.count = tris.size() / 3;
-	meshDesc.triangles.stride = 3 * sizeof(PxU32);
-	meshDesc.triangles.data = &tris[0];
-
-	PxDefaultMemoryOutputStream writeBuffer;
-	PxTriangleMeshCookingResult::Enum result;
-	bool status = gCooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
-
-	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-	PxTriangleMesh* mesh = gPhysics->createTriangleMesh(readBuffer);
-	PxTriangleMeshGeometry geom(mesh);
-
-	PxTransform t = PxTransform(PxVec3(0, 0, 0));
-	PxTransform localTm(PxVec3(0, 0, 0));
-	PxRigidDynamic* meshActor = gPhysics->createRigidDynamic(t.transform(localTm));
-	PxShape* meshShape;
-	if (meshActor) {
-		meshActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-		meshShape = PxRigidActorExt::createExclusiveShape(*meshActor, geom, *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-		actualScene->addActor(*meshActor);
-	}
-}
-
-void PhysxController::spawnBall() {
-	PxShape* shape = gPhysics->createShape(PxSphereGeometry(3.0), *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-	PxTransform localTm(PxVec3(0, 0, 0));
-	PxTransform t();
-	PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(localTm));
-	body->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	actualScene->addActor(*body);
+void PhysxController::addActor(PxActor* actor) {
+	actualScene->addActor(*actor);
 }

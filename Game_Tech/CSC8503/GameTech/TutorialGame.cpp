@@ -167,11 +167,11 @@ void TutorialGame::InitialiseAssets() {
 		for each (unsigned int index in mesh->GetIndexData()) {
 			tris.push_back(index);
 		}
-		physxC.addTriangleMeshToScene(verts, tris);
+		//physxC.addTriangleMeshToScene(verts, tris);
 		verts.clear();
 		tris.clear();
 	}
-	physxC.spawnBall();
+	//physxC.spawnBall();
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 }
