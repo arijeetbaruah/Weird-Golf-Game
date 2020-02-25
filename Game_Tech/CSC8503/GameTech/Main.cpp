@@ -144,7 +144,7 @@ int main() {
 	sphere->Start();
 	
 	w->ShowOSPointer(false);
-	w->LockMouseToWindow(false);
+	w->LockMouseToWindow(true);
 
 	NetworkedGame* g = new NetworkedGame();
 

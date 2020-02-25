@@ -28,27 +28,16 @@ namespace NCL {
 
 			virtual void OnCollisionEnd(GameObject* otherObject);
 
-			bool IsSwimming() { return isSwimming; };
-
 			bool* getButtonStates() { return buttonStates; };
 			
 		protected:
-			void UpdateServerPlayerKeys(float dt);
 			void UpdateClientPlayerKeys(float dt);
 			void UpdateCamera(float dt);
 			float speed;
 
 			//vector<GameObject> collectables;
-			float swimPower;
-			float swimTimer;
-			float swimCoolDown;
-			bool isSwimming;
 			Camera* mainCamera;
 			Vector3 camOffset;
-			float jumpPower;
-			float jumpTimer;
-			float jumpCoolDown;
-
 			int playerID;
 
 			bool buttonStates[6];
