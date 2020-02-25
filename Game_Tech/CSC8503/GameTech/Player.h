@@ -35,6 +35,8 @@ namespace NCL {
 			void UpdateCamera(float dt);
 			float speed;
 
+			Vector2 initialMousePos;
+
 			//vector<GameObject> collectables;
 			Camera* mainCamera;
 			Vector3 camOffset;

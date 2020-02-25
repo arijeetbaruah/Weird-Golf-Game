@@ -17,6 +17,8 @@ Player::Player(int id) : GameObject("PLAYER")
 
 	layer = 2;
 	layerMask = 0; // Collide with everything
+
+	initialMousePos = Vector2(0, 0);
 }
 
 Player::~Player() 
@@ -65,6 +67,8 @@ void Player::UpdateClientPlayerKeys(float dt)
 {
 	yaw -= (Window::GetMouse()->GetRelativePosition().x);
 
+	//physicsObject->AddForce(Vector3(1, 0, 0) * 100);
+
 	if (yaw < 0) {
 		yaw += 360.0f;
 	}
@@ -74,13 +78,46 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 	transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
 
-	Vector4 z = transform.GetWorldMatrix().GetColumn(2);
+	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
+	{
+		initialMousePos = Window::GetMouse()->GetAbsolutePosition();
+	}
+	else if (!Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x != 0 && initialMousePos.y != 0))
+	{
+		Vector2 currentMousePos = Window::GetMouse()->GetAbsolutePosition();
+		Vector2 direction = currentMousePos - initialMousePos;
+
+		float distance = direction.Length();
+
+		// Minimum distance
+		if (distance < 50) 
+		{
+			initialMousePos.x = 0;
+			initialMousePos.y = 0;
+			return;
+		}
+
+		direction.Normalise();
+
+		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
+
+		physicsObject->AddForce(threeDimDir * distance * 1000);
+
+		initialMousePos.x = 0;
+		initialMousePos.y = 0;
+	}
+	else 
+	{
+		return;
+	}
+
+	/*Vector4 z = transform.GetWorldMatrix().GetColumn(2);
 
 	Vector3 forward = Vector3(z.x, z.y, z.z);
 
 	Vector4 x = transform.GetWorldMatrix().GetColumn(0);
 
-	Vector3 right = Vector3(x.x, x.y, x.z);
+	Vector3 right = Vector3(x.x, x.y, x.z);*/
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LBUTTON)) {
 		buttonStates[4] = true;
