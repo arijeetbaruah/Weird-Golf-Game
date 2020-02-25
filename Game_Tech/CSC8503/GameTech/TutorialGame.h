@@ -8,6 +8,7 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
+#include "PhysxController.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -63,9 +64,13 @@ namespace NCL {
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+
 			Player* goose;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
+
+			PhysxController physxC = PhysxController::getInstance();
 
 			void StoreHighScore();
 			std::string fileName;
@@ -103,6 +108,7 @@ namespace NCL {
 			OGLMesh*	cubeMesh	= nullptr;
 			OGLMesh*	sphereMesh	= nullptr;
 			OGLTexture* basicTex	= nullptr;
+			OGLTexture* golfLevelTex = nullptr;
 			OGLShader*	basicShader = nullptr;
 
 			NavigationGrid grid;
@@ -115,6 +121,8 @@ namespace NCL {
 			OGLMesh*	charB		= nullptr;
 			OGLMesh* testLevel = nullptr;
 			OGLMesh* playerMesh = nullptr;
+
+			vector<OGLMesh*> golfLevelMeshes;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
