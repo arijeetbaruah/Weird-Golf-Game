@@ -7,6 +7,8 @@ set(PhysX_include_files submodules/PhysX/physx/include)
 #Setup CMake to run tests
 enable_testing()
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
 ## Including headers, from both the current project and from the imported libraries
 include_directories(${PROJECT_SOURCE_DIR}/patches)
 include_directories(${PhysX_include_files})

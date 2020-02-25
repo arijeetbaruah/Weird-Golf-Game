@@ -14,7 +14,7 @@
 #include "TutorialGame.h"
 #include "NetworkedGame.h"
 
-#include "PxPhysicsAPI.h"
+#include "PhysxController.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -118,46 +118,6 @@ void DisplayPathfinding() {
 	}
 }
 
-//void TestStateMachine() {
-//	StateMachine* testMachine = new StateMachine();
-//
-//	int someData = 0;
-//
-//	StateFunc AFunc = [](void* data) {
-//		int* realData = (int*)data;
-//		(*realData)++;
-//		std::cout << "In State A!" << std::endl;
-//	};
-//	StateFunc BFunc = [](void* data) {
-//		int* realData = (int*)data;
-//		(*realData)--;
-//		std::cout << "In State B!" << std::endl;
-//	};
-//
-//	GenericState* stateA = new GenericState(AFunc, (void*)& someData);
-//	GenericState* stateB = new GenericState(BFunc, (void*)& someData);
-//	testMachine->AddState(stateA);
-//	testMachine->AddState(stateB);
-//
-//	GenericTransition <int&, int >* transitionA =
-//		new GenericTransition <int&, int >(
-//			GenericTransition <int&, int >::GreaterThanTransition,
-//			someData, 10, stateA, stateB); // if greater than 10 , A to B
-//
-//	GenericTransition <int&, int >* transitionB =
-//		new GenericTransition <int&, int >(
-//			GenericTransition <int&, int >::EqualsTransition,
-//			someData, 0, stateB, stateA); // if equals 0 , B to A
-//
-//	testMachine->AddTransition(transitionA);
-//	testMachine->AddTransition(transitionB);
-//
-//	for (int i = 0; i < 100; ++i) {
-//		testMachine->Update(1); // run the state machine !
-//	}
-//	delete testMachine;
-//}
-
 /*
 
 The main function should look pretty familar to you!
@@ -178,16 +138,7 @@ int main() {
 		return -1;
 	}	
 
-	// TEST FOR PHYSX
-	PxDefaultAllocator		gAllocator;
-	PxDefaultErrorCallback	gErrorCallback;
-
-	PxFoundation* f = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
-
-	//TestStateMachine();
-	//TestNetworking();
-	//TestPathfinding();
-	//TestNetworking();
+	PhysxController c = PhysxController::getInstance();
 	
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
@@ -195,11 +146,6 @@ int main() {
 	NetworkedGame* g = new NetworkedGame();
 
 	NetworkBase::Initialise();
-
-	//TestStateMachine();
-
-	//TestPathfinding();
-	//DisplayPathfinding();
 
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
@@ -222,6 +168,7 @@ int main() {
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
 		g->UpdateGame(dt);
+		c.stepPhysics(true, dt);
 
 	}
 	Window::DestroyGameWindow();

@@ -230,6 +230,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyChaseSuperState.cpp" />
@@ -238,10 +239,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NetworkedGame.cpp" />
     <ClCompile Include="NetworkPlayer.cpp" />
+    <ClCompile Include="PhysxController.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyChaseSuperState.h" />
@@ -250,7 +254,9 @@
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
     <ClInclude Include="OBJ_Loader.h" />
+    <ClInclude Include="PhysxController.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>
   <ItemGroup>
