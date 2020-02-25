@@ -42,7 +42,7 @@ public:
 	ColladaBase(const char* path);
 
 	vector<EnjoyMesh> GetMeshes(){	return meshes;		}
-	auto GetNumMeshes()			{	return numMeshes;	}
+	int GetNumMeshes()			{	return numMeshes;	}
 protected:
 	vector<meshTemp> temp_meshes;
 	vector<meshInfor> meshes;

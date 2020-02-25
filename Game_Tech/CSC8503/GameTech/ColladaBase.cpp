@@ -1,8 +1,10 @@
 #include "ColladaBase.h"
-
+#include"..\..\Common\Assets.h"
 ColladaBase::ColladaBase(const char* path)
 {
 	tinyxml2::XMLDocument xml;
+	std::string tempS = NCL::Assets::MESHDIR + path;
+	const char* tempC = tempS.c_str();
 	xml.LoadFile(path);
 	auto* COLLADA = xml.FirstChildElement("COLLADA");
 	std::cout << COLLADA->FirstAttribute()->Value() << std::endl;

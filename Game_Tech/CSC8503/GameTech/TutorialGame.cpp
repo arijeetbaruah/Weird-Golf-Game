@@ -146,6 +146,41 @@ void TutorialGame::InitialiseAssets() {
 		}
 	};
 
+	auto colladaLoadFunc = [this](const char* meshName,const char* textureName, OGLShader* shader, Transform* transform,RenderObject** renderName) {
+		ColladaBase* tempMesh = new ColladaBase(meshName);
+
+		int meshSize = tempMesh->GetNumMeshes();
+		vector<OGLMesh*> tempMeshList;
+		vector<meshInfor> tempInfor = tempMesh->GetMeshes();
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		for(meshInfor tempIn : tempInfor){
+			OGLMesh* tempOGLMesh = new OGLMesh();
+			vector<Vector3> vertics;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+			vector<unsigned int> indices;
+			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++){
+				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+				indices.push_back(i);
+			}
+
+			tempOGLMesh->SetVertexPositions(vertics);
+			tempOGLMesh->SetVertexNormals(normals);
+			tempOGLMesh->SetVertexTextureCoords(texCoords);
+			tempOGLMesh->SetVertexIndices(indices);
+
+			tempOGLMesh->UploadToGPU();
+			tempMeshList.push_back(playerMesh);
+		}
+		(*renderName) = new RenderObject(transform, tempMeshList[meshSize], tempTexture, shader);
+	};
+
 	loadFunc("cube.msh"		 , &cubeMesh);
 	loadFunc("sphere.msh"	 , &sphereMesh);
 	loadFunc("goose.msh"	 , &gooseMesh);
@@ -153,6 +188,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterM.msh", &charA);
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
+
 	objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball.obj", &playerMesh);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
@@ -174,6 +210,8 @@ void TutorialGame::InitialiseAssets() {
 	physxC.spawnBall();
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
+
+	//colladaLoadFunc("TestLevel.dae", "tex_MinigolfPack.png", basicShader, &(lockedObject->GetTransform()), &gameLevelMap);
 }
 
 TutorialGame::~TutorialGame()	{
