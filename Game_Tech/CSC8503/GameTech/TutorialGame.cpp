@@ -881,6 +881,40 @@ void TutorialGame::InitWorld() {
 	//AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
 }
 
+GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
+{
+	float size = 70.0f;
+	float inverseMass = 0.1f;
+
+	goose = new Player(playerID);
+
+	Vector3 offSet(5, 0, 5);
+
+	goose->setCamera(world->GetMainCamera());
+
+	SphereVolume* volume = new SphereVolume(size);
+	goose->SetBoundingVolume((CollisionVolume*)volume);
+
+	goose->GetTransform().SetWorldScale(Vector3(size, size, size));
+
+	if (playerID == 1000)
+		goose->GetTransform().SetWorldPosition(position + offSet);
+	else
+		goose->GetTransform().SetWorldPosition(position - offSet);
+
+	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, golfLevelTex, basicShader));
+	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
+
+	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
+	goose->GetPhysicsObject()->InitSphereInertia();
+
+	goose->SetNetworkObject(new NetworkObject(*goose, playerID));
+
+	world->AddGameObject(goose);
+
+	return goose;
+}
+
 GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
 	GameObject* floor = new GameObject("FLOOR");
 
@@ -888,7 +922,7 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	floor->setLayerMask(49);
 
 	AABBVolume* volume = new AABBVolume(size);
-	floor->SetBoundingVolume((CollisionVolume*)volume);
+	//floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform().SetWorldScale(size);
 	floor->GetTransform().SetWorldPosition(position);
 
@@ -1120,49 +1154,6 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	world->AddGameObject(cube);
 
 	return cube;
-}
-
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
-{
-	float size			= 1.0f;
-	float inverseMass	= 0.1f;
-
-	goose = new Player(playerID);
-
-	Vector3 offSet(5, 0, 5);
-
-	goose->setCamera(world->GetMainCamera());
-
-	SphereVolume* volume = new SphereVolume(size);
-	goose->SetBoundingVolume((CollisionVolume*)volume);
-
-	goose->GetTransform().SetWorldScale(Vector3(size,size,size) );
-
-	if (playerID == 1000)
-		goose->GetTransform().SetWorldPosition(position + offSet);
-	else 
-		goose->GetTransform().SetWorldPosition(position - offSet);
-
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, nullptr, basicShader));
-	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
-
-	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
-	goose->GetPhysicsObject()->InitSphereInertia();
-
-	if (playerID == 1000)
-	{
-		goose->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	}
-	else
-	{
-		goose->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
-	}
-
-	goose->SetNetworkObject(new NetworkObject(*goose, playerID));
-
-	world->AddGameObject(goose);
-
-	return goose;
 }
 
 GameObject* TutorialGame::AddPlayerTwoToWorld(const Vector3& position)

@@ -148,9 +148,6 @@ void Enemy::Chase(float dt)
 
 	Player* p = static_cast<Player*>(&(*closestPlayer));
 
-	if (p->IsSwimming())
-		return;
-
 	Vector3 playerPos = closestPlayer->GetTransform().GetWorldPosition();
 
 	RotateTowards(playerPos);

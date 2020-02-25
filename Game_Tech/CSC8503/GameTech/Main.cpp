@@ -141,7 +141,7 @@ int main() {
 	PhysxController c = PhysxController::getInstance();
 	
 	w->ShowOSPointer(false);
-	w->LockMouseToWindow(false);
+	w->LockMouseToWindow(true);
 
 	NetworkedGame* g = new NetworkedGame();
 
