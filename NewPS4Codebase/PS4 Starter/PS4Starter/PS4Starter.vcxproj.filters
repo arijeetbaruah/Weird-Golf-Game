@@ -41,6 +41,9 @@
     <ClCompile Include="EnjoyColladaMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExampleRenderer.h">
@@ -62,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnjoyColladaMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -87,6 +93,9 @@
       <Filter>Textures</Filter>
     </CustomBuild>
     <CustomBuild Include="..\Assets\Textures\tex_MinigolfPack.png">
+      <Filter>Textures</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Assets\Textures\monu10.png">
       <Filter>Textures</Filter>
     </CustomBuild>
   </ItemGroup>

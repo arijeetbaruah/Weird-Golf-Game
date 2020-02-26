@@ -1,15 +1,18 @@
 #pragma once
+#include <move.h>
 #include "../Plugins/PlayStation4/PS4RendererBase.h"
+#include "../Plugins/PlayStation4/PS4Input.h"
 #include "../Common/Camera.h"
 #include "OBJMesh.h"
 #include "EnjoyColladaMesh.h"
+#include "SceneNode.h"
 
 namespace NCL {
 	namespace PS4 {
 		class ExampleRenderer : public PS4RendererBase
 		{
 		public:
-			ExampleRenderer(PS4Window* window);
+			ExampleRenderer(PS4Window* window, PS4Input* input);
 			~ExampleRenderer();
 
 			void Update(float dt)	 override;
@@ -38,6 +41,11 @@ namespace NCL {
 			EnjoyColladaMesh* enjoyCollada;
 
 			PS4Texture* testlevelTexture;
+
+			PS4Input* input;
+			int32_t handle;
+			SceneNode* golfLevel;
+			SceneNode* building;
 		};
 	}
 }

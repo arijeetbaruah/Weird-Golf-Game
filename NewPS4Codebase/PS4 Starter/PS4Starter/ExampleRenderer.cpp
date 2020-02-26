@@ -7,7 +7,8 @@
 using namespace NCL;
 using namespace NCL::PS4;
 
-ExampleRenderer::ExampleRenderer(PS4Window* window) : PS4RendererBase(window)
+ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) : 
+	PS4RendererBase(window), input(input)
 {
 	enjoyCollada = new EnjoyColladaMesh("/app0/Assets/Meshes/TestLevel.dae");
 	defaultShader = PS4Shader::GenerateShader(
@@ -35,6 +36,18 @@ ExampleRenderer::ExampleRenderer(PS4Window* window) : PS4RendererBase(window)
 	computeResult = (float*)onionAllocator.allocate(4, Gnm::kEmbeddedDataAlignment4);
 
 	mainCamera = Camera(0, 0, Vector3(0, 0, 0));
+	scePadSetMotionSensorState(input->GetPadHandle(), true);
+	scePadResetOrientation(input->GetPadHandle());
+
+	golfLevel = new SceneNode("/app0/Assets/Meshes/TestLevel.dae", defaultShader, testlevelTexture);
+	golfLevel->SetScale(Matrix4::Scale(Vector3(20, 20, 20)));
+	golfLevel->Translate(Vector3(0, -10, 0));
+	//int ret = sceUserServiceGetInitialUser(&userId);
+	//handle = sceMoveOpen(userId, SCE_MOVE_TYPE_STANDARD, 0);
+	building = new SceneNode("/app0/Assets/Meshes/building.dae", defaultShader, PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/monu10.gnf"));
+	building->SetScale(Matrix4::Scale(Vector3(1, 1, 1)));
+	building->Translate(Vector3(0, -10, -5));
+	golfLevel->AddChild(building);
 }
 
 ExampleRenderer::~ExampleRenderer()	{
@@ -45,16 +58,58 @@ ExampleRenderer::~ExampleRenderer()	{
 	delete defaultShader;
 	delete computeTest;
 	delete testlevelTexture;
+	delete golfLevel;
+	delete building;
 }
 
 void ExampleRenderer::Update(float dt)	{
 	time = dt;
-	
+	//SceMoveData data;
+	//sceMoveReadStateLatest(handle, &data);
+	//std::cout << data.gyro[0] << std::endl;
 	// defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, 0)) * Matrix4::Rotation(*computeResult, Vector3(1,0,0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 1.0f)));
+	golfLevel->Update();
 	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
 	defaultObject[2]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
 	defaultObject[3]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
 	defaultObject[1]->SetLocalTransform(Matrix4::Translation(Vector3(0.4, 20, 0)) * mainCamera.BuildViewMatrix().GetTransposedRotation() * Matrix4::Scale(Vector3(20, 20, 20)));
+	input->Poll();
+
+	if (input->GetButton(0)) 
+	{
+		std::cout << "LOL BUTTON" << std::endl;
+		golfLevel->Translate(Vector3(0, 0, 0.1f));
+	}
+	auto axisL = input->GetAxis(0);
+	auto currentPos = mainCamera.GetPosition();
+	if (abs(axisL.y) < 0.1f)
+	{
+		axisL.y = 0;
+	}
+	if (abs(axisL.x) < 0.1f)
+	{
+		axisL.x = 0;
+	}
+	currentPos += mainCamera.BuildViewMatrix().GetTransposedRotation() *
+		NCL::Vector3(0, 0, 1) * axisL.y * 0.2f;
+	currentPos += mainCamera.BuildViewMatrix().GetTransposedRotation() * NCL::Vector3(1, 0, 0) * axisL.x * 0.2f;
+	mainCamera.SetPosition(currentPos);
+
+	auto axisR = input->GetAxis(1);
+	if (abs(axisR.y) < 0.1f)
+	{
+		axisR.y = 0;
+	}
+	if (abs(axisR.x) < 0.1f)
+	{
+		axisR.x = 0;
+	}
+	auto pitch = mainCamera.GetPitch();
+	auto yaw = mainCamera.GetYaw();
+	pitch -= axisR.y;
+	yaw -= axisR.x;
+	mainCamera.SetPitch(pitch);
+	mainCamera.SetYaw(yaw);
 }
 
 void ExampleRenderer::UpdateRotationAmount(float dt) {
@@ -77,14 +132,23 @@ void ExampleRenderer::UpdateRotationAmount(float dt) {
 
 	computeTest->Bind(*currentGFXContext);
 	computeTest->Execute(*currentGFXContext, 1,1,1);
-	computeTest->Synchronise(*currentGFXContext);	//at this point, our rotation value will have been calculated by the compute shader...
+	computeTest->Synchronize(*currentGFXContext);	//at this point, our rotation value will have been calculated by the compute shader...
 }
 
-void ExampleRenderer::RenderActiveScene() {
-	DrawRenderObject(defaultObject[0]);
+void ExampleRenderer::RenderActiveScene() 
+{
+	// DrawRenderObject(defaultObject[0]);
 	DrawRenderObject(defaultObject[1]);
-	DrawRenderObject(defaultObject[2]);
-	DrawRenderObject(defaultObject[3]);
+	// DrawRenderObject(defaultObject[2]);
+	// DrawRenderObject(defaultObject[3]);
+	for (const auto& item : golfLevel->GetRenderObjects())
+	{
+		DrawRenderObject(item.get());
+	}	
+	for (const auto& item : building->GetRenderObjects())
+	{
+		DrawRenderObject(item.get());
+	}
 }
 
 void ExampleRenderer::DrawRenderObject(RenderObject* o) {
@@ -122,7 +186,7 @@ void ExampleRenderer::RenderFrame() {
 	//Primitive Setup State
 	Gnm::PrimitiveSetup primitiveSetup;
 	primitiveSetup.init();
-	primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceNone);
+	primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceBack);
 	primitiveSetup.setFrontFace(Gnm::kPrimitiveSetupFrontFaceCcw);
 	//primitiveSetup.setPolygonMode()
 	currentGFXContext->setPrimitiveSetup(primitiveSetup);
@@ -133,15 +197,6 @@ void ExampleRenderer::RenderFrame() {
 	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
 	dsc.setDepthEnable(true);
 	currentGFXContext->setDepthStencilControl(dsc);
-
-	//Gnm::Sampler trilinearSampler;
-	//trilinearSampler.init();
-	//trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
-
-	//currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &defaultTexture->GetAPITexture());
-	//currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
-
-	*viewProjMat = Matrix4();
 
 	RenderActiveScene();
 }
