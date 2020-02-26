@@ -1,5 +1,7 @@
 // @Author: Christopher Cometto
 #include "PhysicsComponent.h"
+#include "../../Common/Vector3.h"
+#include "../CSC8503Common/GameObject.h"
 #include <iostream>
 
 PhysicsComponent::PhysicsComponent(std::string name) : Component(name) {
@@ -13,6 +15,7 @@ void PhysicsComponent::Start() {
 void PhysicsComponent::Update() {
 	PxTransform tran = actor->getGlobalPose();
 	std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
+	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
 }
 
 void PhysicsComponent::addForce(PxVec3 force) {

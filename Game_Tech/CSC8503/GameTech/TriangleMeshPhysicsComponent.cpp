@@ -25,7 +25,7 @@ TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform
 	if (meshActor) {
 		meshActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
 		meshShape = PxRigidActorExt::createExclusiveShape(*meshActor, geom, *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-		PhysxController::getInstance().addActor(meshActor);
+		actor = meshActor;
 	}
 }
 

@@ -1,7 +1,10 @@
 // @Author: Christopher Cometto
 #pragma once
-#include "Component.h"
+#include "../CSC8503Common/Component.h"
 #include "PhysxController.h"
+
+using namespace NCL;
+using namespace CSC8503;
 
 class PhysicsComponent : public Component {
 public:

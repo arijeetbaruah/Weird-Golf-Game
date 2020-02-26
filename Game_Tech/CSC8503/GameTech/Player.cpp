@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "SpherePhysicsComponent.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -31,6 +32,7 @@ void Player::DuringUpdate(float dt)
 	UpdateClientPlayerKeys(dt);
 
 	UpdateCamera(dt);
+	std::cout << "Player: " << transform.GetWorldPosition().x << std::endl;
 }
 
 void Player::Trigger(GameObject& obj)
@@ -101,7 +103,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
 
-		physicsObject->AddForce(threeDimDir * distance * 1000);
+		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+		Vector3 vec = threeDimDir * distance * 0.001;
+		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;

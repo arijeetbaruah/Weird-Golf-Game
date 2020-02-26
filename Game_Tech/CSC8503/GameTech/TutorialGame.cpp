@@ -11,6 +11,9 @@
 
 #include "OBJ_Loader.h"
 
+#include "SpherePhysicsComponent.h"
+#include "TriangleMeshPhysicsComponent.h"
+
 #include <functional>
 
 using namespace NCL;
@@ -564,7 +567,7 @@ void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
-	physics->Update(dt);
+	//physics->Update(dt);
 
 	/*if (!isNetworkedGame)
 		physics->Update(dt);
@@ -849,17 +852,17 @@ void TutorialGame::InitWorld() {
 
 	grid = NavigationGrid("TestGrid3.txt");
 
-	Vector3 offSet(270, 10, -60);
+	//Vector3 offSet(270, 10, -60);
 
 	// The player to act as the server
-	AddPlayerToWorld(offSet, 1);
+	AddPlayerToWorld(Vector3(0,1,0), 1);
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
 	// Add all modular golf level subsections to world
 	for (int i = 0; i < golfLevelMeshes.size(); i++) 
 	{
-		AddGolfLevelToWorld(Vector3(300, -70, 0), Vector3(100, 100, 100), green, i);
+		AddGolfLevelToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), green, i);
 	}
 	
 
@@ -877,6 +880,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	auto script = [](GameObject* (Ball)){std::cout << "I am a Player" << std::endl; };
 	test->setLambda(std::function<void(GameObject*)>(script));
 	Ball->addComponent(test);
+
+	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05);
+	Ball->addComponent(sphere);
 
 	Vector3 offSet(5, 0, 5);
 
@@ -914,7 +920,20 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	AABBVolume* volume = new AABBVolume(size);
 	//floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform().SetWorldScale(size);
-	floor->GetTransform().SetWorldPosition(position);
+	floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+
+	std::vector<PxVec3> verts;
+	std::vector<PxU32> tris;
+
+	for each (Vector3 vert in golfLevelMeshes[index]->GetPositionData()) {
+		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+	}
+	for each (unsigned int index in golfLevelMeshes[index]->GetIndexData()) {
+		tris.push_back(index);
+	}
+
+	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
+	floor->addComponent(physicsC);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
