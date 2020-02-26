@@ -135,6 +135,7 @@
     <ClInclude Include="PowerUp.h">
       <Filter>ComponentSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Targeted.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -218,8 +219,6 @@
     <ClCompile Include="Script.cpp">
       <Filter>ComponentSystem</Filter>
     </ClCompile>
-    <ClCompile Include="PowerUp.cpp">
-      <Filter>ComponentSystem</Filter>
-    </ClCompile>
+    <ClCompile Include="Targeted.cpp" />
   </ItemGroup>
 </Project>

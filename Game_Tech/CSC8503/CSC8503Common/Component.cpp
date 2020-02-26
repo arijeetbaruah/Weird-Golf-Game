@@ -1,6 +1,5 @@
 #include "Component.h"
-using namespace NCL;
-using namespace CSC8503;
+
 Component::Component() {
 	this->name = "";
 }
