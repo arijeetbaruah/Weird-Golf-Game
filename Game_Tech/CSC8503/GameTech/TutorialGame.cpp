@@ -849,10 +849,10 @@ void TutorialGame::InitWorld() {
 
 	grid = NavigationGrid("TestGrid3.txt");
 
-	Vector3 offSet(220, 0, 195);
+	Vector3 offSet(270, 10, -60);
 
 	// The player to act as the server
-	AddPlayerToWorld(offSet + Vector3(50, 10, 0));
+	AddPlayerToWorld(offSet, 1);
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
@@ -865,65 +865,9 @@ void TutorialGame::InitWorld() {
 
 	/*if (isNetworkedGame)
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-
-	//	AddAppleToWorld(Vector3(xPos, 40, zPos));
-	//	world->IncrementCollectableCount();
-	//}
-
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-
-	//	AddBonusItemToWorld(Vector3(xPos, 40, zPos));
-	//	world->IncrementCollectableCount();
-	//}
-
-	//for (int i = 0; i < 8; i++) 
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-	//	enemies.push_back(AddParkKeeperToWorld(Vector3(xPos, 12, zPos)));
-	//}
-
-	//Vector3 westBridgeStartPos = Vector3(42, 8, 15);
-	//Vector3 eastBridgeStartPos = Vector3(-100, 8, 15);
-	//Vector3 bigBridgeStartPos = Vector3(-50, 8, -35);
-
-	//AddBridgeToWorld(offSet + westBridgeStartPos, 1);
-	//AddBridgeToWorld(offSet + eastBridgeStartPos, 2);
-	//AddBridgeToWorld(offSet + bigBridgeStartPos, 3);
-
-	//Vector4 green = Vector4(0, 0.6, 0, 1);
-	//Vector4 blue = Vector4(0, 0, 1, 1);
-	//Vector4 grey = Vector4(0.41, 0.41, 0.41, 1);
-	//Vector4 brown = Vector4(0.58, 0.29, 0, 1);
-
-	//AddObstacles();
-
-	//AddTerrainToWorld(offSet + Vector3(180, -12, 15), Vector3(80, 20, 50), green); // West floor
-	//AddTerrainToWorld(offSet + Vector3(-140, -12, 15), Vector3(80, 20, 50), green); // East floor
-	//AddTerrainToWorld(offSet + Vector3(20, -12, -115), Vector3(240, 20, 80), green); // South floor
-	//AddTerrainToWorld(offSet + Vector3(20, -12, 145), Vector3(240, 20, 80), green); // North floor
-
-	//AddTerrainToWorld(offSet + Vector3(260, 98, 15), Vector3(2, 100, 240), brown); // West wall
-	//AddTerrainToWorld(offSet + Vector3(-220, 98, 15), Vector3(2, 100, 240), brown); // East wall
-	//AddTerrainToWorld(offSet + Vector3(20, 98, 225), Vector3(240, 100, 2), brown); // South wall
-	//AddTerrainToWorld(offSet + Vector3(20, 98, -195), Vector3(240, 100, 2), brown); // North wall
-
-	//GameObject* island = AddTerrainToWorld(offSet + Vector3(20, -11, 15), Vector3(20, 20, 20), green); // Island
-	//island->setLayer(5);
-	//island->setLayerMask(49);
-	//
-	//AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
+GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNum)
 {
 	float size = 70.0f;
 	float inverseMass = 0.1f;
@@ -940,7 +884,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
 
 	SphereVolume* volume = new SphereVolume(size);
 	Ball->SetBoundingVolume((CollisionVolume*)volume);
-
+	
 	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 	if (playerID == 1000)
