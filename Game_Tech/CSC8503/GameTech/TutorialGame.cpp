@@ -917,7 +917,6 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	floor->setLayer(1);
 	floor->setLayerMask(49);
 
-	AABBVolume* volume = new AABBVolume(size);
 	//floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 	floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
