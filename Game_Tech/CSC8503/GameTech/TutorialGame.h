@@ -67,7 +67,7 @@ namespace NCL {
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
-			Player* goose;
+			Player* Ball;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
 

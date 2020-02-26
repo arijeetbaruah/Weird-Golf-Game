@@ -19,7 +19,7 @@ GameObject::~GameObject()	{
 	delete networkObject;
 }
 
-void GameObject::Update(float dt)
+void GameObject::DuringUpdate(float dt)
 {
 
 }

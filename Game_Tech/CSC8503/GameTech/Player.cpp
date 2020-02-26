@@ -24,7 +24,7 @@ Player::~Player()
 
 }
 
-void Player::Update(float dt)
+void Player::DuringUpdate(float dt)
 {
 	UpdateClientPlayerKeys(dt);
 

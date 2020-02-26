@@ -4,10 +4,14 @@
 #include "../../Plugins/OpenGLRendering/OGLShader.h"
 #include "../../Plugins/OpenGLRendering/OGLTexture.h"
 #include "../../Common/TextureLoader.h"
+#include "../CSC8503Common/Component.h"
+#include "../CSC8503Common/Script.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
 #include "OBJ_Loader.h"
+
+#include <functional>
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,7 +29,7 @@ TutorialGame::TutorialGame()	{
 
 	fileName = "highscores";
 
-	goose = nullptr;
+	Ball = nullptr;
 
 	matchTimer = -1;
 	gameOverScreenCoolDown = 20.0f;
@@ -221,7 +225,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicTex;
 	delete basicShader;
 
-	delete goose;
+	delete Ball;
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		delete enemies[i];
@@ -268,13 +272,13 @@ void TutorialGame::RestartNetworkedGame()
 	world->setPlayerTwoScore(0);
 	Vector3 offSet(275, 10, 195);
 	matchTimer = 100;
-	goose->GetNetworkObject()->resetScore();
+	Ball->GetNetworkObject()->resetScore();
 	playerTwo->GetNetworkObject()->resetScore();
 	physics->Clear();
 
 	if (isServer)
 	{
-		goose->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
+		Ball->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
 		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));
 	}
 
@@ -924,33 +928,37 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
 	float size = 70.0f;
 	float inverseMass = 0.1f;
 
-	goose = new Player(playerID);
+	Ball = new Player(playerID);
+	Script* test = new Script();
+	auto script = [](GameObject* (Ball)){std::cout << "I am a Player" << std::endl; };
+	test->setLambda(std::function<void(GameObject*)>(script));
+	Ball->addComponent(test);
 
 	Vector3 offSet(5, 0, 5);
 
-	goose->setCamera(world->GetMainCamera());
+	Ball->setCamera(world->GetMainCamera());
 
 	SphereVolume* volume = new SphereVolume(size);
-	goose->SetBoundingVolume((CollisionVolume*)volume);
+	Ball->SetBoundingVolume((CollisionVolume*)volume);
 
-	goose->GetTransform().SetWorldScale(Vector3(size, size, size));
+	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 	if (playerID == 1000)
-		goose->GetTransform().SetWorldPosition(position + offSet);
+		Ball->GetTransform().SetWorldPosition(position + offSet);
 	else
-		goose->GetTransform().SetWorldPosition(position - offSet);
+		Ball->GetTransform().SetWorldPosition(position - offSet);
 
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, golfLevelTex, basicShader));
-	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
+	Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh, golfLevelTex, basicShader));
+	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
 
-	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
-	goose->GetPhysicsObject()->InitSphereInertia();
+	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
+	Ball->GetPhysicsObject()->InitSphereInertia();
 
-	goose->SetNetworkObject(new NetworkObject(*goose, playerID));
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 
-	world->AddGameObject(goose);
+	world->AddGameObject(Ball);
 
-	return goose;
+	return Ball;
 }
 
 GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
@@ -1230,7 +1238,7 @@ Enemy* TutorialGame::AddParkKeeperToWorld(const Vector3& position)
 
 	Enemy* keeper = new Enemy(position, world, isServer);
 
-	keeper->setPlayer(goose);
+	keeper->setPlayer(Ball);
 	keeper->setPlayerTwo(playerTwo);
 	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
 	keeper->SetBoundingVolume((CollisionVolume*)volume);

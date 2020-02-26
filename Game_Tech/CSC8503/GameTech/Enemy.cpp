@@ -70,7 +70,7 @@ void Enemy::resetPosition()
 	transform.SetWorldPosition(position);
 }
 
-void Enemy::Update(float dt)
+void Enemy::DuringUpdate(float dt)
 {
 	if (!isServerEnemy)
 		return;
