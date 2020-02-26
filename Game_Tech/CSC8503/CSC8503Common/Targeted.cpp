@@ -3,6 +3,6 @@
 void Targeted::Update(float dt) {
 	if (!applied)
 		this->Apply();
-	if (conditionCheck)
+	if (conditionCheck())
 		this->remove();
 }

@@ -7,7 +7,7 @@ class Targeted : public PowerUp {
 		void setTarget(GameObject* target) {
 			this->target = target;
 		}
-		virtual void Update(float dt);
+		void Update(float dt);
 		virtual bool conditionCheck() = 0;
 	protected:
 		GameObject* target;
