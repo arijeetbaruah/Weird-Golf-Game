@@ -37,6 +37,11 @@ TutorialGame::TutorialGame()	{
 	buttonSelected = 1;
 	playing = true;
 
+	playerPos1 = Vector3(260, 10, -60);
+	playerPos2 = Vector3(280, 10, -60);
+	playerPos3 = Vector3(300, 10, -60);
+	playerPos4 = Vector3(320, 10, -60);
+
 	playerID = 0;
 
 	isNetworkedGame = false;
@@ -180,7 +185,7 @@ void TutorialGame::InitialiseAssets() {
 			tempOGLMesh->SetVertexIndices(indices);
 
 			tempOGLMesh->UploadToGPU();
-			tempMeshList.push_back(playerMesh);
+			tempMeshList.push_back(playerMesh1);
 		}
 		(*renderName) = new RenderObject(transform, tempMeshList[meshSize], tempTexture, shader);
 	};
@@ -194,7 +199,10 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("Apple.msh"	 , &appleMesh);
 
 	objLoadLevelFunc("Assets/TestLevel.obj");
-	objLoadFunc("Assets/Ball.obj", &playerMesh);
+	objLoadFunc("Assets/Ball3.obj", &playerMesh1);
+	objLoadFunc("Assets/Ball6.obj", &playerMesh2);
+	objLoadFunc("Assets/Ball9.obj", &playerMesh3);
+	objLoadFunc("Assets/Ball10.obj", &playerMesh4);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
 
 	std::vector<PxVec3> verts;
@@ -849,10 +857,18 @@ void TutorialGame::InitWorld() {
 
 	grid = NavigationGrid("TestGrid3.txt");
 
-	Vector3 offSet(270, 10, -60);
+	int thisPlayerNum = 1;
 
 	// The player to act as the server
-	AddPlayerToWorld(offSet, 1);
+	AddPlayerToWorld(thisPlayerNum);
+
+	for (int i = 0; i < 4; i++) 
+	{
+		if ((i + 1) == thisPlayerNum)
+			continue;
+
+		AddOtherPlayerToWorld(i + 1);
+	}
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
@@ -867,7 +883,8 @@ void TutorialGame::InitWorld() {
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNum)
+// Player num is the number of the player in a networked game
+GameObject* TutorialGame::AddPlayerToWorld(int playerNum)
 {
 	float size = 70.0f;
 	float inverseMass = 0.1f;
@@ -882,17 +899,27 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 
 	Ball->setCamera(world->GetMainCamera());
 
-	SphereVolume* volume = new SphereVolume(size);
-	Ball->SetBoundingVolume((CollisionVolume*)volume);
+	/*SphereVolume* volume = new SphereVolume(size);
+	Ball->SetBoundingVolume((CollisionVolume*)volume);*/
 	
 	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
 
-	if (playerID == 1000)
-		Ball->GetTransform().SetWorldPosition(position + offSet);
-	else
-		Ball->GetTransform().SetWorldPosition(position - offSet);
+	switch (playerNum) 
+	{
+		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+			Ball->GetTransform().SetWorldPosition(playerPos1);
+		break;
+		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
+			Ball->GetTransform().SetWorldPosition(playerPos2);
+		break;
+		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
+			Ball->GetTransform().SetWorldPosition(playerPos3);
+		break;
+		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
+			Ball->GetTransform().SetWorldPosition(playerPos4);
+		break;
+	}
 
-	Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh, golfLevelTex, basicShader));
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
 
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -903,6 +930,46 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	world->AddGameObject(Ball);
 
 	return Ball;
+}
+
+GameObject* TutorialGame::AddOtherPlayerToWorld(int playerNum)
+{
+	float size = 70.0f;
+	float inverseMass = 0.1f;
+
+	GameObject* otherBall = new GameObject();
+
+	/*SphereVolume* volume = new SphereVolume(size);
+	otherBall->SetBoundingVolume((CollisionVolume*)volume);*/
+
+	otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
+
+	switch (playerNum)
+	{
+	case 1: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+		otherBall->GetTransform().SetWorldPosition(playerPos1);
+		break;
+	case 2: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh2, golfLevelTex, basicShader));
+		otherBall->GetTransform().SetWorldPosition(playerPos2);
+		break;
+	case 3: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh3, golfLevelTex, basicShader));
+		otherBall->GetTransform().SetWorldPosition(playerPos3);
+		break;
+	case 4: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh4, golfLevelTex, basicShader));
+		otherBall->GetTransform().SetWorldPosition(playerPos4);
+		break;
+	}
+
+	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
+
+	otherBall->GetPhysicsObject()->SetInverseMass(inverseMass);
+	otherBall->GetPhysicsObject()->InitSphereInertia();
+
+	otherBall->SetNetworkObject(new NetworkObject(*otherBall, playerID));
+
+	world->AddGameObject(otherBall);
+
+	return otherBall;
 }
 
 GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {

@@ -46,24 +46,28 @@ namespace NCL {
 			void LockedObjectMovement();
 			void LockedCameraMovement();
 
+			// Stuff from goose game
 			GameObject* AddFloorToWorld(const Vector3& position);
-
 			void AddObstacles();
-
 			GameObject* AddTerrainToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
 			GameObject* AddLakeToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
-
 			void AddBridgeToWorld(Vector3 startPos, int num);
-
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
-			//IT'S HAPPENING
-			GameObject* AddPlayerToWorld(const Vector3& position, int playerNum);
 			GameObject* AddPlayerTwoToWorld(const Vector3& position);
 			Enemy*		AddParkKeeperToWorld(const Vector3& position);
 			GameObject* AddCharacterToWorld(const Vector3& position);
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
+
+
+			GameObject* AddPlayerToWorld(int playerNum);
+			GameObject* AddOtherPlayerToWorld(int playerNum);
+
+			Vector3 playerPos1;
+			Vector3 playerPos2;
+			Vector3 playerPos3;
+			Vector3 playerPos4;
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
@@ -121,7 +125,10 @@ namespace NCL {
 			OGLMesh*	charA		= nullptr;
 			OGLMesh*	charB		= nullptr;
 			OGLMesh* testLevel = nullptr;
-			OGLMesh* playerMesh = nullptr;
+			OGLMesh* playerMesh1 = nullptr;
+			OGLMesh* playerMesh2 = nullptr;
+			OGLMesh* playerMesh3 = nullptr;
+			OGLMesh* playerMesh4 = nullptr;
 
 			vector<OGLMesh*> golfLevelMeshes;
 
