@@ -20,7 +20,7 @@ namespace NCL {
 		public:
 			Enemy(Vector3 position, GameWorld* world, bool& isServer);
 			~Enemy();
-			virtual void Update(float dt);
+			virtual void DuringUpdate(float dt);
 			virtual void Trigger(GameObject& obj);
 
 			void Patrol(float dt);

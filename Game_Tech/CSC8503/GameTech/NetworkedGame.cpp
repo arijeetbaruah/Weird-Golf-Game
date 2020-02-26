@@ -183,7 +183,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	ClientPacketReceiver* serverReceiver = new ClientPacketReceiver(*world, true, goose, playerTwo);
+	ClientPacketReceiver* serverReceiver = new ClientPacketReceiver(*world, true, Ball, playerTwo);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
@@ -192,7 +192,7 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
 
-	FullPacketReceiver* clientReceiver = new FullPacketReceiver(*world, isServer, goose, playerTwo);
+	FullPacketReceiver* clientReceiver = new FullPacketReceiver(*world, isServer, Ball, playerTwo);
 	thisClient->RegisterPacketHandler(Full_State, &(*clientReceiver));
 
 	CollectableCountReceiver* countReceiver = new CollectableCountReceiver(*world);
@@ -200,7 +200,7 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 
 	thisClient->Connect(127, 0, 0, 1, port);
 
-	serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)goose));
+	serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));
 }
 
 void NetworkedGame::UpdateGame(float dt)
@@ -287,7 +287,7 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		newPacket.buttonstates[i] = false;
 	}
 
-	newPacket.orientation = goose->GetTransform().GetLocalOrientation();
+	newPacket.orientation = Ball->GetTransform().GetLocalOrientation();
 
 	if (isServer)
 	{
@@ -314,7 +314,7 @@ void NetworkedGame::UpdateAsClient(float dt) {
 	{
 		newPacket.objectID = 2000;
 
-		bool* buttonStates = goose->getButtonStates();
+		bool* buttonStates = Ball->getButtonStates();
 
 		if (buttonStates[0]) {
 			newPacket.buttonstates[0] = true;

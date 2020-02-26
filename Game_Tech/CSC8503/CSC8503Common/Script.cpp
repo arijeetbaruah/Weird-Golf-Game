@@ -1,5 +1,6 @@
-#include "ComponentSystem/Script.h"
-
+#include "Script.h"
+using namespace NCL;
+using namespace CSC8503;
 Script::Script() {
 	this->lambda = [](GameObject*){};
 }

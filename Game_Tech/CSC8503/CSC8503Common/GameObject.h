@@ -5,9 +5,13 @@
 #include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "NetworkObject.h"
+#include "Component.h"
 
+#include <iostream>
+#include <unordered_map>
 #include <vector>
 
+using std::pair;
 using std::vector;
 
 namespace NCL {
@@ -19,7 +23,34 @@ namespace NCL {
 			GameObject(string name = "");
 			~GameObject();
 
-			virtual void Update(float dt);
+			virtual void DuringUpdate(float dt);
+
+			template <typename T>
+			T getComponent(string name) {
+				return static_cast<T>(components.at(name));
+			}
+
+			void addComponent(Component* component) {
+				component->setParent(this);
+				components.insert(pair<string, Component*>(component->getName(), component));
+			}
+
+			void Start() {
+				for (pair<string, Component*> component : components) {
+					component.second->Start();
+				}
+			}
+			void Update(float dt) {
+				DuringUpdate(dt);
+				for (pair<string, Component*> component : components) {
+					component.second->Update();
+				}
+			}
+			void LateUpdate(float dt) {
+				for (pair<string, Component*> component : components) {
+					component.second->LateUpdate();
+				}
+			}
 
 			virtual void Trigger(GameObject& obj);
 
@@ -102,6 +133,8 @@ namespace NCL {
 
 			bool	isActive;
 			string	name;
+
+			std::unordered_map<string, Component*> components;
 
 			Vector3 broadphaseAABB;
 

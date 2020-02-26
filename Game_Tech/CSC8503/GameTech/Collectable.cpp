@@ -14,7 +14,7 @@ Collectable::~Collectable()
 
 }
 
-void Collectable::Update(float dt)
+void Collectable::DuringUpdate(float dt)
 {
 
 }

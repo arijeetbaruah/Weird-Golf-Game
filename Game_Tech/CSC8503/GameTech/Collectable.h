@@ -11,7 +11,7 @@ namespace NCL {
 		public:
 			Collectable(int p, Vector3 pos);
 			~Collectable();
-			virtual void Update(float dt);
+			virtual void DuringUpdate(float dt);
 			virtual void Trigger(GameObject& obj);
 
 			void SetConstraint(PositionConstraint* c) { constraint = c; };
