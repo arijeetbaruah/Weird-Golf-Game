@@ -143,8 +143,8 @@ int main() {
 	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(0, 10, 0)), 10.0f, 0.5f);
 	sphere->Start();
 	
-	w->ShowOSPointer(false);
-	w->LockMouseToWindow(true);
+	w->ShowOSPointer(true);
+	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();
 

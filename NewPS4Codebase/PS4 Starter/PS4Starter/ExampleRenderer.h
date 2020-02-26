@@ -20,7 +20,7 @@ namespace NCL {
 			void	RenderFrame()	override;
 			void RenderActiveScene() override;
 
-			RenderObject* defaultObject[3];
+			RenderObject* defaultObject[4];
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
@@ -36,6 +36,8 @@ namespace NCL {
 			PS4Mesh* newMesh;
 			OBJMesh* mesh;
 			EnjoyColladaMesh* enjoyCollada;
+
+			PS4Texture* testlevelTexture;
 		};
 	}
 }

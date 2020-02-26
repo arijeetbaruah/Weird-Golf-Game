@@ -1,5 +1,9 @@
 #pragma once
 #include "Common/Matrix4.h"
+#include "Common/Vector3.h"
+#include "Common/Vector4.h"
+#include "Common/Maths.h"
+#include "Common/Quaternion.h"
 #include "Component.h"
 
 //@Author: David Towers
@@ -11,15 +15,12 @@ class Transform : public Component {
 		Matrix4 transformationMatrix;
 	
 	public:
-		Transform() {
-			setName("Transform");
-			transformationMatrix = Matrix4();
-		}
+		Transform();
 
-		Transform(Matrix4 transMatrix) {
-			setName("Transform");
-			transformationMatrix = transMatrix;
-		}
+		Transform(Matrix4 transMatrix);
+
+		Vector3 getPositionVec();
+		Vector3 getRotationVec();
 
 		void Update() {};
 };

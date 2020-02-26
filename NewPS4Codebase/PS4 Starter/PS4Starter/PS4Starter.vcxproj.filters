@@ -83,6 +83,12 @@
     <CustomBuild Include="..\Assets\Textures\sky.jpg">
       <Filter>Textures</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\Assets\Textures\chair.png">
+      <Filter>Textures</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Assets\Textures\tex_MinigolfPack.png">
+      <Filter>Textures</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\Textures\chr_knight.png">

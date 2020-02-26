@@ -230,6 +230,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -244,9 +245,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpherePhysicsComponent.cpp" />
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Enemy.h" />
@@ -261,6 +264,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpherePhysicsComponent.h" />
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>
   <ItemGroup>

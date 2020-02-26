@@ -39,11 +39,18 @@ int main(void) {
 		}
 		auto axisL = input.GetAxis(0);
 		auto currentPos = renderer.mainCamera.GetPosition();
+		std::cout << axisL.x << std::endl;
 		if (abs(axisL.y) < 0.1f)
 		{
 			axisL.y = 0;
 		}
-		currentPos.z += axisL.y;
+		if (abs(axisL.x) < 0.1f)
+		{
+			axisL.x = 0;
+		}
+		currentPos += renderer.mainCamera.BuildViewMatrix().GetTransposedRotation() *
+			NCL::Vector3(0, 0, 1) * axisL.y * 0.2f;
+		currentPos += renderer.mainCamera.BuildViewMatrix().GetTransposedRotation() * NCL::Vector3(1, 0, 0) * axisL.x * 0.2f;
 		renderer.mainCamera.SetPosition(currentPos);
 
 		auto axisR = input.GetAxis(1);
@@ -51,9 +58,16 @@ int main(void) {
 		{
 			axisR.y = 0;
 		}
+		if (abs(axisR.x) < 0.1f)
+		{
+			axisR.x = 0;
+		}
 		auto pitch = renderer.mainCamera.GetPitch();
-		pitch += axisR.y;
+		auto yaw = renderer.mainCamera.GetYaw();
+		pitch -= axisR.y;
+		yaw -= axisR.x;
 		renderer.mainCamera.SetPitch(pitch);
+		renderer.mainCamera.SetYaw(yaw);
 		//renderer.mainCamera.UpdateCamera
 	}
 

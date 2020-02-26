@@ -4,10 +4,14 @@
 #include "../../Plugins/OpenGLRendering/OGLShader.h"
 #include "../../Plugins/OpenGLRendering/OGLTexture.h"
 #include "../../Common/TextureLoader.h"
+#include "../CSC8503Common/Component.h"
+#include "../CSC8503Common/Script.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
 #include "OBJ_Loader.h"
+
+#include <functional>
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,7 +29,7 @@ TutorialGame::TutorialGame()	{
 
 	fileName = "highscores";
 
-	goose = nullptr;
+	Ball = nullptr;
 
 	matchTimer = -1;
 	gameOverScreenCoolDown = 20.0f;
@@ -146,6 +150,41 @@ void TutorialGame::InitialiseAssets() {
 		}
 	};
 
+	auto colladaLoadFunc = [this](const char* meshName,const char* textureName, OGLShader* shader, Transform* transform,RenderObject** renderName) {
+		ColladaBase* tempMesh = new ColladaBase(meshName);
+
+		int meshSize = tempMesh->GetNumMeshes();
+		vector<OGLMesh*> tempMeshList;
+		vector<meshInfor> tempInfor = tempMesh->GetMeshes();
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		for(meshInfor tempIn : tempInfor){
+			OGLMesh* tempOGLMesh = new OGLMesh();
+			vector<Vector3> vertics;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+			vector<unsigned int> indices;
+			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++){
+				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+				indices.push_back(i);
+			}
+
+			tempOGLMesh->SetVertexPositions(vertics);
+			tempOGLMesh->SetVertexNormals(normals);
+			tempOGLMesh->SetVertexTextureCoords(texCoords);
+			tempOGLMesh->SetVertexIndices(indices);
+
+			tempOGLMesh->UploadToGPU();
+			tempMeshList.push_back(playerMesh);
+		}
+		(*renderName) = new RenderObject(transform, tempMeshList[meshSize], tempTexture, shader);
+	};
+
 	loadFunc("cube.msh"		 , &cubeMesh);
 	loadFunc("sphere.msh"	 , &sphereMesh);
 	loadFunc("goose.msh"	 , &gooseMesh);
@@ -153,6 +192,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterM.msh", &charA);
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
+
 	objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball.obj", &playerMesh);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
@@ -174,6 +214,8 @@ void TutorialGame::InitialiseAssets() {
 	//physxC.spawnBall();
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
+
+	//colladaLoadFunc("TestLevel.dae", "tex_MinigolfPack.png", basicShader, &(lockedObject->GetTransform()), &gameLevelMap);
 }
 
 TutorialGame::~TutorialGame()	{
@@ -183,7 +225,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicTex;
 	delete basicShader;
 
-	delete goose;
+	delete Ball;
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		delete enemies[i];
@@ -230,13 +272,13 @@ void TutorialGame::RestartNetworkedGame()
 	world->setPlayerTwoScore(0);
 	Vector3 offSet(275, 10, 195);
 	matchTimer = 100;
-	goose->GetNetworkObject()->resetScore();
+	Ball->GetNetworkObject()->resetScore();
 	playerTwo->GetNetworkObject()->resetScore();
 	physics->Clear();
 
 	if (isServer)
 	{
-		goose->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
+		Ball->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
 		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));
 	}
 
@@ -807,10 +849,10 @@ void TutorialGame::InitWorld() {
 
 	grid = NavigationGrid("TestGrid3.txt");
 
-	Vector3 offSet(220, 0, 195);
+	Vector3 offSet(270, 10, -60);
 
 	// The player to act as the server
-	AddPlayerToWorld(offSet + Vector3(50, 10, 0));
+	AddPlayerToWorld(offSet, 1);
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
@@ -823,96 +865,44 @@ void TutorialGame::InitWorld() {
 
 	/*if (isNetworkedGame)
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-
-	//	AddAppleToWorld(Vector3(xPos, 40, zPos));
-	//	world->IncrementCollectableCount();
-	//}
-
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-
-	//	AddBonusItemToWorld(Vector3(xPos, 40, zPos));
-	//	world->IncrementCollectableCount();
-	//}
-
-	//for (int i = 0; i < 8; i++) 
-	//{
-	//	int xPos = rand() % 480;
-	//	int zPos = rand() % 420;
-	//	enemies.push_back(AddParkKeeperToWorld(Vector3(xPos, 12, zPos)));
-	//}
-
-	//Vector3 westBridgeStartPos = Vector3(42, 8, 15);
-	//Vector3 eastBridgeStartPos = Vector3(-100, 8, 15);
-	//Vector3 bigBridgeStartPos = Vector3(-50, 8, -35);
-
-	//AddBridgeToWorld(offSet + westBridgeStartPos, 1);
-	//AddBridgeToWorld(offSet + eastBridgeStartPos, 2);
-	//AddBridgeToWorld(offSet + bigBridgeStartPos, 3);
-
-	//Vector4 green = Vector4(0, 0.6, 0, 1);
-	//Vector4 blue = Vector4(0, 0, 1, 1);
-	//Vector4 grey = Vector4(0.41, 0.41, 0.41, 1);
-	//Vector4 brown = Vector4(0.58, 0.29, 0, 1);
-
-	//AddObstacles();
-
-	//AddTerrainToWorld(offSet + Vector3(180, -12, 15), Vector3(80, 20, 50), green); // West floor
-	//AddTerrainToWorld(offSet + Vector3(-140, -12, 15), Vector3(80, 20, 50), green); // East floor
-	//AddTerrainToWorld(offSet + Vector3(20, -12, -115), Vector3(240, 20, 80), green); // South floor
-	//AddTerrainToWorld(offSet + Vector3(20, -12, 145), Vector3(240, 20, 80), green); // North floor
-
-	//AddTerrainToWorld(offSet + Vector3(260, 98, 15), Vector3(2, 100, 240), brown); // West wall
-	//AddTerrainToWorld(offSet + Vector3(-220, 98, 15), Vector3(2, 100, 240), brown); // East wall
-	//AddTerrainToWorld(offSet + Vector3(20, 98, 225), Vector3(240, 100, 2), brown); // South wall
-	//AddTerrainToWorld(offSet + Vector3(20, 98, -195), Vector3(240, 100, 2), brown); // North wall
-
-	//GameObject* island = AddTerrainToWorld(offSet + Vector3(20, -11, 15), Vector3(20, 20, 20), green); // Island
-	//island->setLayer(5);
-	//island->setLayerMask(49);
-	//
-	//AddLakeToWorld(offSet + Vector3(20, -12, 15), Vector3(80, 20, 50), Vector4(0, 0.41, 0.58, 1)); // Lake
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position)
+GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNum)
 {
 	float size = 70.0f;
 	float inverseMass = 0.1f;
 
-	goose = new Player(playerID);
+	Ball = new Player(playerID);
+	Script* test = new Script();
+	auto script = [](GameObject* (Ball)){std::cout << "I am a Player" << std::endl; };
+	test->setLambda(std::function<void(GameObject*)>(script));
+	Ball->addComponent(test);
 
 	Vector3 offSet(5, 0, 5);
 
-	goose->setCamera(world->GetMainCamera());
+	Ball->setCamera(world->GetMainCamera());
 
 	SphereVolume* volume = new SphereVolume(size);
-	goose->SetBoundingVolume((CollisionVolume*)volume);
-
-	goose->GetTransform().SetWorldScale(Vector3(size, size, size));
+	Ball->SetBoundingVolume((CollisionVolume*)volume);
+	
+	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 	if (playerID == 1000)
-		goose->GetTransform().SetWorldPosition(position + offSet);
+		Ball->GetTransform().SetWorldPosition(position + offSet);
 	else
-		goose->GetTransform().SetWorldPosition(position - offSet);
+		Ball->GetTransform().SetWorldPosition(position - offSet);
 
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), playerMesh, golfLevelTex, basicShader));
-	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
+	Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh, golfLevelTex, basicShader));
+	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
 
-	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
-	goose->GetPhysicsObject()->InitSphereInertia();
+	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
+	Ball->GetPhysicsObject()->InitSphereInertia();
 
-	goose->SetNetworkObject(new NetworkObject(*goose, playerID));
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 
-	world->AddGameObject(goose);
+	world->AddGameObject(Ball);
 
-	return goose;
+	return Ball;
 }
 
 GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
@@ -1192,7 +1182,7 @@ Enemy* TutorialGame::AddParkKeeperToWorld(const Vector3& position)
 
 	Enemy* keeper = new Enemy(position, world, isServer);
 
-	keeper->setPlayer(goose);
+	keeper->setPlayer(Ball);
 	keeper->setPlayerTwo(playerTwo);
 	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
 	keeper->SetBoundingVolume((CollisionVolume*)volume);

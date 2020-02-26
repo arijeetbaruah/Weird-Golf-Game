@@ -15,7 +15,7 @@ namespace NCL {
 			Player(int id);
 			~Player();
 			//void UpdatePlayer(float dt);
-			virtual void Update(float dt);
+			virtual void DuringUpdate(float dt);
 			virtual void Trigger(GameObject& obj);
 
 			void setCamera(Camera* c) { mainCamera = c; };
@@ -34,6 +34,8 @@ namespace NCL {
 			void UpdateClientPlayerKeys(float dt);
 			void UpdateCamera(float dt);
 			float speed;
+
+			Vector2 initialMousePos;
 
 			//vector<GameObject> collectables;
 			Camera* mainCamera;
