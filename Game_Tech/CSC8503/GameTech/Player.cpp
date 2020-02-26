@@ -65,18 +65,6 @@ void Player::UpdateCamera(float dt)
 
 void Player::UpdateClientPlayerKeys(float dt)
 {
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
-
-	//physicsObject->AddForce(Vector3(1, 0, 0) * 100);
-
-	if (yaw < 0) {
-		yaw += 360.0f;
-	}
-	if (yaw > 360.0f) {
-		yaw -= 360.0f;
-	}
-
-	transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
 
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
 	{
@@ -101,13 +89,30 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
 
+		// Rotate direction to match current object direction
+		Quaternion q = Quaternion(threeDimDir.x, threeDimDir.y, threeDimDir.z, 0);
+		Quaternion c = transform.GetLocalOrientation().Conjugate();
+		q = transform.GetLocalOrientation() * q * c;
+		threeDimDir = Vector3(q.x, q.y, q.z);
+
 		physicsObject->AddForce(threeDimDir * distance * 1000);
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;
 	}
-	else 
+	else if(!Window::GetMouse()->ButtonDown(MouseButtons::LEFT))
 	{
+		// Camera only rotates when mouse button not pressed down
+		yaw -= (Window::GetMouse()->GetRelativePosition().x);
+
+		if (yaw < 0) {
+			yaw += 360.0f;
+		}
+		if (yaw > 360.0f) {
+			yaw -= 360.0f;
+		}
+
+		transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
 		return;
 	}
 
