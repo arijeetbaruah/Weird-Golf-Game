@@ -51,7 +51,7 @@ void Player::UpdateCamera(float dt)
 	Vector3 camPos = pos;
 
 	camPos -= forward * 1.04;
-	camPos.y += 40;
+	camPos.y += 0.5;
 
 	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
 
@@ -104,7 +104,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
 
 		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
-		Vector3 vec = threeDimDir * distance * 0.001;
+		Vector3 vec = threeDimDir * distance * 0.005;
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 
 		initialMousePos.x = 0;

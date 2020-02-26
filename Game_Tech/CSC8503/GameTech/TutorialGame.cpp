@@ -889,9 +889,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	Ball->setCamera(world->GetMainCamera());
 
 	SphereVolume* volume = new SphereVolume(size);
-	Ball->SetBoundingVolume((CollisionVolume*)volume);
+	//Ball->SetBoundingVolume((CollisionVolume*)volume);
 	
-	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
+	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
 	if (playerID == 1000)
 		Ball->GetTransform().SetWorldPosition(position + offSet);
@@ -919,7 +919,7 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 
 	AABBVolume* volume = new AABBVolume(size);
 	//floor->SetBoundingVolume((CollisionVolume*)volume);
-	floor->GetTransform().SetWorldScale(size);
+	floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 	floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
 
 	std::vector<PxVec3> verts;
