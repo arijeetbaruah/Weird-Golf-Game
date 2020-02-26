@@ -138,8 +138,8 @@ Matrix4 Matrix4::BuildViewMatrix(const Vector3& from, const Vector3& lookingAt, 
 	Vector3 f = (lookingAt - from);
 	f.Normalise();
 
-	Vector3 s = Vector3::Cross(f,up).Normalised();
-	Vector3 u = Vector3::Cross(s,f).Normalised();
+	Vector3 s = Vector3::Cross(f,up).Normalized();
+	Vector3 u = Vector3::Cross(s,f).Normalized();
 
 	m.array[0] = s.x;
 	m.array[4] = s.y;

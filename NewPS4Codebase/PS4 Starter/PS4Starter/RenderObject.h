@@ -28,7 +28,10 @@ namespace NCL {
 			{
 				return mesh;
 			}
-
+			Rendering::TextureBase* GetTexture(unsigned int index)
+			{
+				return textures[index];
+			}
 		protected:
 			MeshGeometry*	mesh;
 			Rendering::ShaderBase*		shader;
