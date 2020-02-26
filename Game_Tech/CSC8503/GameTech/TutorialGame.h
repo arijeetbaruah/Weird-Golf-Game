@@ -61,8 +61,8 @@ namespace NCL {
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 
 
-			GameObject* AddPlayerToWorld(int playerNum);
-			GameObject* AddOtherPlayerToWorld(int playerNum);
+			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
+			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 
 			Vector3 playerPos1;
 			Vector3 playerPos2;

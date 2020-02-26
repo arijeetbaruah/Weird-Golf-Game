@@ -40,10 +40,10 @@ TutorialGame::TutorialGame()	{
 	buttonSelected = 1;
 	playing = true;
 
-	playerPos1 = Vector3(260, 10, -60);
-	playerPos2 = Vector3(280, 10, -60);
-	playerPos3 = Vector3(300, 10, -60);
-	playerPos4 = Vector3(320, 10, -60);
+	playerPos1 = Vector3(-0.4, 1, 0);
+	playerPos2 = Vector3(-0.2, 1, 0);
+	playerPos3 = Vector3(0.2, 1, 0);
+	playerPos4 = Vector3(0.4, 1, 0);
 
 	playerID = 0;
 
@@ -863,18 +863,15 @@ void TutorialGame::InitWorld() {
 	int thisPlayerNum = 1;
 
 	// The player to act as the server
-	AddPlayerToWorld(thisPlayerNum);
-	//AddPlayerToWorld(Vector3(0,1,0), 1);
+	AddPlayerToWorld(Vector3(0,1,0), thisPlayerNum);
 	
 	for (int i = 0; i < 4; i++) 
 	{
 		if ((i + 1) == thisPlayerNum)
 			continue;
 
-		AddOtherPlayerToWorld(i + 1);
+		AddOtherPlayerToWorld(Vector3(0, 1, 0), i + 1);
 	}
-	//Vector3 offSet(270, 10, -60);
-
 	
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
@@ -891,7 +888,7 @@ void TutorialGame::InitWorld() {
 }
 
 // Player num is the number of the player in a networked game
-GameObject* TutorialGame::AddPlayerToWorld(int playerNum)
+GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 {
 	float size = 70.0f;
 	float inverseMass = 0.1f;
@@ -902,9 +899,6 @@ GameObject* TutorialGame::AddPlayerToWorld(int playerNum)
 	test->setLambda(std::function<void(GameObject*)>(script));
 	Ball->addComponent(test);
 
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05);
-	Ball->addComponent(sphere);
-
 	Vector3 offSet(5, 0, 5);
 
 	Ball->setCamera(world->GetMainCamera());
@@ -914,21 +908,26 @@ GameObject* TutorialGame::AddPlayerToWorld(int playerNum)
 	
 	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
+
+	SpherePhysicsComponent* sphere = nullptr;
+	
 	switch (playerNum) 
 	{
 		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-			Ball->GetTransform().SetWorldPosition(playerPos1);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
 		break;
 		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-			Ball->GetTransform().SetWorldPosition(playerPos2);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
 		break;
 		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-			Ball->GetTransform().SetWorldPosition(playerPos3);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
 		break;
 		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-			Ball->GetTransform().SetWorldPosition(playerPos4);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
 		break;
 	}
+
+	Ball->addComponent(sphere);
 
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
 
@@ -942,9 +941,9 @@ GameObject* TutorialGame::AddPlayerToWorld(int playerNum)
 	return Ball;
 }
 
-GameObject* TutorialGame::AddOtherPlayerToWorld(int playerNum)
+GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 {
-	float size = 70.0f;
+	float size = 1.0f;
 	float inverseMass = 0.1f;
 
 	GameObject* otherBall = new GameObject();
@@ -954,21 +953,24 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(int playerNum)
 
 	otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
 
+	SpherePhysicsComponent* sphere = nullptr;
 	switch (playerNum)
 	{
 	case 1: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-		otherBall->GetTransform().SetWorldPosition(playerPos1);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
 		break;
 	case 2: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-		otherBall->GetTransform().SetWorldPosition(playerPos2);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
 		break;
 	case 3: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-		otherBall->GetTransform().SetWorldPosition(playerPos3);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
 		break;
 	case 4: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-		otherBall->GetTransform().SetWorldPosition(playerPos4);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
 		break;
 	}
+
+	otherBall->addComponent(sphere);
 
 	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
 
