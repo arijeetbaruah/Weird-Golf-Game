@@ -101,8 +101,19 @@ void GameTechRenderer::RenderShadowMap() {
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
 		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
 		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
-		BindMesh((*i).GetMesh());
-		DrawBoundMesh();
+		if ((*i).GetMesh() != NULL)
+		{
+			BindMesh((*i).GetMesh());
+			DrawBoundMesh();
+		}
+		else{
+			for (MeshGeometry* tempMesh : (*i).GetMeshList())
+			{
+				BindMesh(tempMesh);
+				DrawBoundMesh();
+			}
+		}
+
 	}
 
 	glViewport(0, 0, currentWidth, currentHeight);
@@ -179,12 +190,30 @@ void GameTechRenderer::RenderCamera() {
 
 		glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 
-		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+		//glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
+		//glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
 
-		BindMesh((*i).GetMesh());
-		DrawBoundMesh();
+		if ((*i).GetMesh() != NULL)
+		{
+			glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+
+			glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
+
+			BindMesh((*i).GetMesh());
+			DrawBoundMesh();
+		}
+		else {
+			for (MeshGeometry* tempMesh : (*i).GetMeshList())
+			{
+				glUniform1i(hasVColLocation, !tempMesh->GetColourData().empty());
+
+				glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
+
+				BindMesh(tempMesh);
+				DrawBoundMesh();
+			}
+		}
 	}
 }
 

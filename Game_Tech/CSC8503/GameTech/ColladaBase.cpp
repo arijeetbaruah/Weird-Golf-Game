@@ -3,9 +3,10 @@
 ColladaBase::ColladaBase(const char* path)
 {
 	tinyxml2::XMLDocument xml;
-	std::string tempS = NCL::Assets::MESHDIR + path;
+	std::string a("Assets/");
+	std::string tempS = a + path;
 	const char* tempC = tempS.c_str();
-	xml.LoadFile(path);
+	xml.LoadFile(tempC);
 	auto* COLLADA = xml.FirstChildElement("COLLADA");
 	std::cout << COLLADA->FirstAttribute()->Value() << std::endl;
 	auto* library_geometries = COLLADA->FirstChildElement("library_geometries");
@@ -70,7 +71,7 @@ ColladaBase::ColladaBase(const char* path)
 		{
 			Float2 newTexcoord;
 			ss >> newTexcoord.x >> newTexcoord.y;
-			newTexcoord.y = 1 - newTexcoord.y;
+			newTexcoord.y =newTexcoord.y;
 			newMesh.texcoords.push_back(newTexcoord);
 		}
 		// End of Texcoords
