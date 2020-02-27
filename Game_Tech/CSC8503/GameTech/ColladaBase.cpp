@@ -108,3 +108,9 @@ ColladaBase::ColladaBase(const char* path)
 		meshes.push_back(result_mesh);
 	}
 }
+
+ColladaBase::~ColladaBase()
+{
+	meshes.clear();
+	temp_meshes.clear();
+}

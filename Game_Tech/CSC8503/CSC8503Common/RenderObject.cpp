@@ -12,13 +12,6 @@ RenderObject::RenderObject(Transform* parentTransform, MeshGeometry* mesh, Textu
 	this->colour	= Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-RenderObject::RenderObject(Transform* parentTransform, std::vector<MeshGeometry*> meshList, TextureBase* tex, ShaderBase* shader) {
-	this->transform = parentTransform;
-	this->meshList = meshList;
-	this->texture = tex;
-	this->shader = shader;
-	this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-}
 
 RenderObject::~RenderObject() {
 

@@ -10,6 +10,7 @@
 #include <fstream>
 #include "PhysxController.h"
 #include "ColladaBase.h"
+#include "MeshSceneNode.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -141,12 +142,11 @@ namespace NCL {
 
 
 
-			void LoadColladaGameObjects();
 			void LoadColladaRenderObjects();
 
 
 			//list of renderObject
-			RenderObject* gameLevelMap;
+			MeshSceneNode* GameLevelMapMesh;
 			PhysicsObject* temp;
 
 			//list of 

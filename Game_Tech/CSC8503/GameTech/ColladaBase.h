@@ -40,7 +40,7 @@ class ColladaBase
 {
 public:
 	ColladaBase(const char* path);
-
+	~ColladaBase();
 	vector<EnjoyMesh> GetMeshes(){	return meshes;		}
 	int GetNumMeshes()			{	return numMeshes;	}
 protected:

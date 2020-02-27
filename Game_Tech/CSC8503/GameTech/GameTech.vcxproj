@@ -237,6 +237,7 @@
     <ClCompile Include="EnemyPatrolSuperState.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MeshSceneNode.cpp" />
     <ClCompile Include="NetworkedGame.cpp" />
     <ClCompile Include="NetworkPlayer.cpp" />
     <ClCompile Include="OpenGLScene.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="EnemyChaseSuperState.h" />
     <ClInclude Include="EnemyPatrolSuperState.h" />
     <ClInclude Include="GameTechRenderer.h" />
+    <ClInclude Include="MeshSceneNode.h" />
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
     <ClInclude Include="OBJ_Loader.h" />
