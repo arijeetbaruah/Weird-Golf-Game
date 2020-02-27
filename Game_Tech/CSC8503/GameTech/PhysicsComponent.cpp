@@ -18,8 +18,8 @@ void PhysicsComponent::Update() {
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
 
 	// Not really working
-	/*Quaternion orientation = Quaternion(tran.q.x, tran.q.y, tran.q.z, tran.q.w);
-	getParent()->GetTransform().SetLocalOrientation(orientation);*/
+	Quaternion orientation = Quaternion(tran.q.x, tran.q.y, tran.q.z, tran.q.w);
+	getParent()->GetTransform().SetLocalOrientation(orientation);
 }
 
 void PhysicsComponent::addForce(PxVec3 force) {

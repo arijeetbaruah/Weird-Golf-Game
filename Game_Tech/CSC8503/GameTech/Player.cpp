@@ -11,6 +11,9 @@ Player::Player(int id) : GameObject("PLAYER")
 	yaw = 0.0f;
 	mainCamera = nullptr;
 
+	orbitSpeed = 1.0f;
+	orbitDistance = 1.0f;
+
 	playerID = id;
 
 	for (int i = 0; i < 6; i++)
@@ -20,6 +23,17 @@ Player::Player(int id) : GameObject("PLAYER")
 	layerMask = 0; // Collide with everything
 
 	initialMousePos = Vector2(0, 0);
+
+	// Initial cam position
+	Vector3 pos = transform.GetWorldPosition();
+	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
+	Vector3 forward = Vector3(f.x, f.y, f.z);
+	camPos = pos;
+	camPos -= forward * 1.04;
+	camPos.y += 0.5;
+
+	direction = transform.GetWorldPosition() - camPos;
+
 }
 
 Player::~Player() 
@@ -42,21 +56,46 @@ void Player::Trigger(GameObject& obj)
 
 void Player::UpdateCamera(float dt)
 {
+	float angle = 0.1;
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A))
+	{
+		Vector3 rot;
+		rot.x = direction.x * cosf(-angle) + direction.z * sinf(-angle);
+		rot.y = direction.y;
+		rot.z = -direction.x * sinf(-angle) + direction.z * cosf(-angle);
+
+		direction = rot;
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D))
+	{
+		Vector3 rot;
+		rot.x = direction.x * cosf(angle) + direction.z * sinf(angle);
+		rot.y = direction.y;
+		rot.z = -direction.x * sinf(angle) + direction.z * cosf(angle);
+
+		direction = rot;
+	}
+
 	Vector3 pos = transform.GetWorldPosition();
 
 	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
+	/*Quaternion orientation = transform.GetWorldOrientation();
+	orientation.Normalise();
+	Matrix4 mat = orientation.ToMatrix4();
+	Vector4 f = mat.GetColumn(2);*/
 
 	Vector3 forward = Vector3(f.x, f.y, f.z);
 
-	Vector3 camPos = pos;
+	camPos = pos;
+	camPos -= direction;
 
-	camPos -= forward * 1.04;
-	camPos.y += 0.5;
+	/*camPos -= forward * 1.04;
+	camPos.y += 0.5;*/
 
 	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
-
 	Matrix4 modelMat = temp.Inverse();
-
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler(); //nearly there now!
 
@@ -67,7 +106,6 @@ void Player::UpdateCamera(float dt)
 
 void Player::UpdateClientPlayerKeys(float dt)
 {
-
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
 	{
 		initialMousePos = Window::GetMouse()->GetAbsolutePosition();
@@ -116,7 +154,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 			yaw -= 360.0f;
 		}
 
-		transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
+		//transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
 		return;
 	}
 

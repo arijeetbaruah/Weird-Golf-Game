@@ -6,6 +6,7 @@
 #include <list> 
 #include <queue>
 #include "Collectable.h"
+#include <math.h>
 #define PI 3.14159265
 namespace NCL {
 	namespace CSC8503 {
@@ -33,7 +34,13 @@ namespace NCL {
 		protected:
 			void UpdateClientPlayerKeys(float dt);
 			void UpdateCamera(float dt);
+
+			float orbitSpeed;
+			float orbitDistance;
 			float speed;
+
+			Vector3 camPos;
+			Vector3 direction;
 
 			Vector2 initialMousePos;
 
