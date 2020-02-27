@@ -10,6 +10,7 @@
 #include <fstream>
 #include "PhysxController.h"
 #include "ColladaBase.h"
+#include "PhysxController.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -138,8 +139,6 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
-
-
 
 			void LoadColladaGameObjects();
 			void LoadColladaRenderObjects();

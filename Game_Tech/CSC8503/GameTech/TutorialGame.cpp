@@ -40,10 +40,10 @@ TutorialGame::TutorialGame()	{
 	buttonSelected = 1;
 	playing = true;
 
-	playerPos1 = Vector3(-0.4, 1, -0.9);
-	playerPos2 = Vector3(-0.2, 1, -0.9);
-	playerPos3 = Vector3(0.2, 1, -0.9);
-	playerPos4 = Vector3(0.4, 1, -0.9);
+	playerPos1 = Vector3(-0.4, 0.1, -0.9);
+	playerPos2 = Vector3(-0.2, 0.1, -0.9);
+	playerPos3 = Vector3(0.2, 0.1, -0.9);
+	playerPos4 = Vector3(0.4, 0.1, -0.9);
 
 	playerID = 0;
 
@@ -817,22 +817,25 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 
 	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(2, 0.5, 1);
 	
 	switch (playerNum) 
 	{
 		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
 		break;
 		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
 		break;
 		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
 		break;
 		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
 		break;
 	}
+	
 
 	Ball->addComponent(sphere);
 
@@ -861,19 +864,22 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 	otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(2, 0.5, 1);
+
 	switch (playerNum)
 	{
 	case 1: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
 		break;
 	case 2: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
 		break;
 	case 3: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
 		break;
 	case 4: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
 		break;
 	}
 
@@ -911,7 +917,11 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 		tris.push_back(index);
 	}
 
-	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
+	TriangleMeshPhysicsComponent* physicsC = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(100.0f, 100.5f, 0.5f);
+
+	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 	floor->addComponent(physicsC);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
