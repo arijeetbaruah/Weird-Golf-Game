@@ -113,9 +113,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 	else if (!Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x != 0 && initialMousePos.y != 0))
 	{
 		Vector2 currentMousePos = Window::GetMouse()->GetAbsolutePosition();
-		Vector2 direction = currentMousePos - initialMousePos;
+		Vector2 dir = currentMousePos - initialMousePos;
 
-		float distance = direction.Length();
+		float distance = dir.Length();
 
 		// Minimum distance
 		if (distance < 50) 
@@ -125,14 +125,16 @@ void Player::UpdateClientPlayerKeys(float dt)
 			return;
 		}
 
-		direction.Normalise();
+		dir.Normalise();
 
-		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
+		Vector3 threeDimDir = Vector3(-dir.x, 0, -dir.y);
 
-		// Rotate direction to match current object direction
+		Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, mainCamera->GetYaw(), 0);
+
+		// Rotate drag direction to match camera direction
 		Quaternion q = Quaternion(threeDimDir.x, threeDimDir.y, threeDimDir.z, 0);
-		Quaternion c = transform.GetLocalOrientation().Conjugate();
-		q = transform.GetLocalOrientation() * q * c;
+		Quaternion c = cameraRot.Conjugate();
+		q = cameraRot * q * c;
 		threeDimDir = Vector3(q.x, q.y, q.z);
 
 		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");

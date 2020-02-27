@@ -40,10 +40,10 @@ TutorialGame::TutorialGame()	{
 	buttonSelected = 1;
 	playing = true;
 
-	playerPos1 = Vector3(-0.4, 1, 0);
-	playerPos2 = Vector3(-0.2, 1, 0);
-	playerPos3 = Vector3(0.2, 1, 0);
-	playerPos4 = Vector3(0.4, 1, 0);
+	playerPos1 = Vector3(-0.4, 1, -0.9);
+	playerPos2 = Vector3(-0.2, 1, -0.9);
+	playerPos3 = Vector3(0.2, 1, -0.9);
+	playerPos4 = Vector3(0.4, 1, -0.9);
 
 	playerID = 0;
 
