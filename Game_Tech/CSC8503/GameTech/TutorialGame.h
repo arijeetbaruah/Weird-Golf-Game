@@ -141,8 +141,19 @@ namespace NCL {
 
 
 
+			void LoadColladaGameObjects();
+			void LoadColladaRenderObjects();
+
+
 			//list of renderObject
 			RenderObject* gameLevelMap;
+			PhysicsObject* temp;
+
+			//list of 
+			GameObject* gameLevelOBJ;
+
+			//list of mesh
+			OGLMesh* playerMesh = nullptr;
 		};
 	}
 }
