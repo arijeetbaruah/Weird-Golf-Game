@@ -474,11 +474,6 @@ void TutorialGame::UpdateGame(float dt) {
 	MoveSelectedObject();
 	//SeenObjects();
 
-	Debug::DrawLine(Vector3(0, 0, 0), Vector3(0, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 0), Vector3(480, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 420), Vector3(480, 50, 420), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(0, 0, 420), Vector3(0, 50, 420), Vector4(1, 0, 0, 1));
-
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
@@ -818,8 +813,8 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	SpherePhysicsComponent* sphere = nullptr;
 
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(2, 0.5, 1);
-	
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+
 	switch (playerNum) 
 	{
 		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
@@ -840,6 +835,9 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->addComponent(sphere);
 
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
+
+	sphere->setLinearDamping(0.5);
+	sphere->setAngularDamping(2);
 
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
 	Ball->GetPhysicsObject()->InitSphereInertia();
@@ -885,6 +883,9 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 
 	otherBall->addComponent(sphere);
 
+	sphere->setLinearDamping(0.5);
+	sphere->setAngularDamping(2);
+
 	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
 
 	otherBall->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -919,7 +920,7 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 
 	TriangleMeshPhysicsComponent* physicsC = nullptr;
 
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(100.0f, 100.5f, 0.5f);
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 
 	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 	floor->addComponent(physicsC);

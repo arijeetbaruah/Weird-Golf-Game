@@ -46,6 +46,10 @@ void Player::DuringUpdate(float dt)
 	UpdateClientPlayerKeys(dt);
 
 	UpdateCamera(dt);
+
+	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+
+
 	std::cout << "Player: " << transform.GetWorldPosition().x << std::endl;
 }
 
@@ -81,18 +85,11 @@ void Player::UpdateCamera(float dt)
 	Vector3 pos = transform.GetWorldPosition();
 
 	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
-	/*Quaternion orientation = transform.GetWorldOrientation();
-	orientation.Normalise();
-	Matrix4 mat = orientation.ToMatrix4();
-	Vector4 f = mat.GetColumn(2);*/
 
 	Vector3 forward = Vector3(f.x, f.y, f.z);
 
 	camPos = pos;
 	camPos -= direction;
-
-	/*camPos -= forward * 1.04;
-	camPos.y += 0.5;*/
 
 	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
 	Matrix4 modelMat = temp.Inverse();

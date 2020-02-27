@@ -25,3 +25,11 @@ void PhysicsComponent::Update() {
 void PhysicsComponent::addForce(PxVec3 force) {
 	actor->addForce(force);
 }
+
+void PhysicsComponent::setLinearDamping(PxReal value) {
+	actor->setLinearDamping(value);
+}
+
+void PhysicsComponent::setAngularDamping(PxReal value) {
+	actor->setAngularDamping(value);
+}

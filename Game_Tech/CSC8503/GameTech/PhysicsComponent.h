@@ -11,6 +11,9 @@ public:
 	PhysicsComponent(std::string name);
 	void addForce(PxVec3 force);
 
+	void setLinearDamping(PxReal value);
+	void setAngularDamping(PxReal value);
+
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
