@@ -4,6 +4,15 @@
 #include "NetworkState.h"
 namespace NCL {
 	namespace CSC8503 {
+		struct PlayerPacket : public GamePacket {
+			int		objectID = -1;
+			NetworkState fullState;
+			PlayerPacket() {
+				type = Received_State;
+				size = sizeof(PlayerPacket) - sizeof(GamePacket);
+			}
+		};
+
 		struct FullPacket : public GamePacket {
 			int		objectID = -1;
 			NetworkState fullState;

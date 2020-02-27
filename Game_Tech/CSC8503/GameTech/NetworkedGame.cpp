@@ -5,6 +5,24 @@
 
 #define COLLISION_MSG 30
 
+class PlayerPacketReceiver : public PacketReceiver {
+public:
+	PlayerPacketReceiver(GameWorld& w, bool p, Player* player) : controlledplayer(player){}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Received_State) {
+			PlayerPacket* realPacket = (PlayerPacket*)payload;
+
+			packet = realPacket->fullState;
+
+			controlledplayer->GetTransform().SetWorldPosition(packet.position);
+			controlledplayer->GetTransform().SetLocalOrientation(packet.orientation);
+		}
+	}
+	NetworkState packet;
+	Player* controlledplayer;
+};
+
 class FullPacketReceiver : public PacketReceiver {
 public:
 	FullPacketReceiver(GameWorld& w, bool p, GameObject* controlled, GameObject* ghost) : world(w), isPlayerServer(p), controlledGoose(controlled), ghostGoose(ghost) {
@@ -183,7 +201,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	ClientPacketReceiver* serverReceiver = new ClientPacketReceiver(*world, true, Ball, playerTwo);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, true, Ball, playerTwo);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
