@@ -25,18 +25,17 @@ EnjoyCollada::EnjoyCollada(const char* path)
 		auto* normals = sources;
 		sources = sources->NextSiblingElement();
 
-		auto* texCoords = sources;
+		std::vector<tinyxml2::XMLElement*> texCoords;
 
-		auto* faces = mesh->FirstChildElement("triangles");
-
-		tinyxml2::XMLElement* indices = nullptr;
-
-		if (faces != nullptr)
+		for (;
+			sources != nullptr;
+			sources = sources->NextSiblingElement("source"))
 		{
-			indices = faces->FirstChildElement("p");
+			texCoords.push_back(sources);
 		}
+
 		#pragma region Read Temp Mesh
-		Temp_Mesh newMesh;
+		TempMesh newMesh;
 		#pragma region MeshData
 		// Vertices
 		auto* vertex_array = vertices->FirstChildElement("float_array")->GetText();
@@ -61,23 +60,44 @@ EnjoyCollada::EnjoyCollada(const char* path)
 		// End of Normals
 
 		// Texcoords
-		auto* texcoord_array = texCoords->FirstChildElement("float_array")->GetText();
-		ss = std::stringstream(texcoord_array);
-		while (!ss.eof())
+		std::vector<const char*> texcoord_arries;
+		for (auto* item : texCoords)
 		{
-			Float2 newTexcoord;
-			ss >> newTexcoord.x >> newTexcoord.y;
-			newMesh.texcoords.push_back(newTexcoord);
+			texcoord_arries.push_back(item->FirstChildElement("float_array")->GetText());
+		}
+
+		for (auto* item : texcoord_arries)
+		{
+			ss = std::stringstream(item);
+			newMesh.texcoords.push_back(vector<Float2>());
+			while (!ss.eof())
+			{
+				Float2 newTexcoord;
+				ss >> newTexcoord.x >> newTexcoord.y;
+				newMesh.texcoords.back().push_back(newTexcoord);
+			}
 		}
 		// End of Texcoords
 
 		// Indices
-		ss = std::stringstream(indices->GetText());
-		while (!ss.eof())
+		for (auto* faces = mesh->FirstChildElement("triangles");
+			faces != nullptr;
+			faces = faces->NextSiblingElement("triangles"))
 		{
-			Int3 newIndex;
-			ss >> newIndex.x >> newIndex.y >> newIndex.z;
-			newMesh.indices.push_back(newIndex);
+			tinyxml2::XMLElement* indices = nullptr;
+
+			if (faces != nullptr)
+			{
+				indices = faces->FirstChildElement("p");
+			}
+			newMesh.indices.push_back(vector<Int3>());
+			ss = std::stringstream(indices->GetText());
+			while (!ss.eof())
+			{
+				Int3 newIndex;
+				ss >> newIndex.x >> newIndex.y >> newIndex.z;
+				newMesh.indices.back().push_back(newIndex);
+			}
 		}
 		// End of indices
 		#pragma endregion MeshData
@@ -89,16 +109,22 @@ EnjoyCollada::EnjoyCollada(const char* path)
 		{
 			int index = 0;
 			EnjoyMesh result_mesh;
-			for (auto index_item : mesh_item.indices)
+			int texIndex = 0;
+			for (auto index_item_group : mesh_item.indices)
 			{
-				Float3 vert = mesh_item.vertices[index_item.x];
-				Float3 norm = mesh_item.normals[index_item.y];
-				Float2 texc = mesh_item.texcoords[index_item.z];
+				for (auto index_item : index_item_group)
+				{
 
-				result_mesh.vertices.push_back(vert);
-				result_mesh.normals.push_back(norm);
-				result_mesh.texcoords.push_back(texc);
-				result_mesh.indices.push_back(index ++);
+					Float3 vert = mesh_item.vertices[index_item.x];
+					Float3 norm = mesh_item.normals[index_item.y];
+					Float2 texc = mesh_item.texcoords[texIndex][index_item.z];
+
+					result_mesh.vertices.push_back(vert);
+					result_mesh.normals.push_back(norm);
+					result_mesh.texcoords.push_back(texc);
+					result_mesh.indices.push_back(index++);
+				}
+				texIndex++;
 			}
 			meshes.push_back(result_mesh);
 		}

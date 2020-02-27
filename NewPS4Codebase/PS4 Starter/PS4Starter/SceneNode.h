@@ -62,6 +62,11 @@ namespace NCL
 
 		auto GetWorldTransform();
 
+		auto& GetChildren()
+		{
+			return children;
+		}
+
 		Matrix4 GetWorldPosition();
 
 		Matrix4 GetWorldOrientation();

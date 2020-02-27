@@ -6,6 +6,7 @@
 #include "OBJMesh.h"
 #include "EnjoyColladaMesh.h"
 #include "SceneNode.h"
+#include <queue>
 
 namespace NCL {
 	namespace PS4 {
@@ -23,8 +24,6 @@ namespace NCL {
 			void	RenderFrame()	override;
 			void RenderActiveScene() override;
 
-			RenderObject* defaultObject[4];
-
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
 			PS4Mesh*	defaultMesh;
@@ -38,7 +37,6 @@ namespace NCL {
 
 			PS4Mesh* newMesh;
 			OBJMesh* mesh;
-			EnjoyColladaMesh* enjoyCollada;
 
 			PS4Texture* testlevelTexture;
 

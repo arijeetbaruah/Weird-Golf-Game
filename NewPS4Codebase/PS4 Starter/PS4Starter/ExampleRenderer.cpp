@@ -10,7 +10,6 @@ using namespace NCL::PS4;
 ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) : 
 	PS4RendererBase(window), input(input)
 {
-	enjoyCollada = new EnjoyColladaMesh("/app0/Assets/Meshes/TestLevel.dae");
 	defaultShader = PS4Shader::GenerateShader(
 		"/app0/Assets/Shaders/PS4/VertexShader.sb",
 		"/app0/Assets/Shaders/PS4/PixelShader.sb"
@@ -29,30 +28,24 @@ ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) :
 	cameraBuffer.initAsConstantBuffer(viewProjMat, sizeof(Matrix4));
 	cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
-	defaultObject[0] = new RenderObject((MeshGeometry*)enjoyCollada->ChildMeshes[0], (ShaderBase*)defaultShader, (TextureBase*)testlevelTexture);
-	defaultObject[1] = new RenderObject((MeshGeometry*)defaultMesh, (ShaderBase*)defaultShader, (TextureBase*)defaultTexture);
-	defaultObject[2] = new RenderObject((MeshGeometry*)enjoyCollada->ChildMeshes[1], (ShaderBase*)defaultShader, (TextureBase*)testlevelTexture);
-	defaultObject[3] = new RenderObject((MeshGeometry*)enjoyCollada->ChildMeshes[2], (ShaderBase*)defaultShader, (TextureBase*)testlevelTexture);
 	computeResult = (float*)onionAllocator.allocate(4, Gnm::kEmbeddedDataAlignment4);
 
 	mainCamera = Camera(0, 0, Vector3(0, 0, 0));
 	scePadSetMotionSensorState(input->GetPadHandle(), true);
 	scePadResetOrientation(input->GetPadHandle());
 
-	golfLevel = new SceneNode("/app0/Assets/Meshes/TestLevel.dae", defaultShader, testlevelTexture);
+	building = new SceneNode("/app0/Assets/Meshes/building.dae", defaultShader, PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/monu10.gnf"));
+	golfLevel = new SceneNode("/app0/Assets/Meshes/TestLevel2.dae", defaultShader, testlevelTexture);
+	
 	golfLevel->SetScale(Matrix4::Scale(Vector3(20, 20, 20)));
 	golfLevel->Translate(Vector3(0, -10, 0));
-	//int ret = sceUserServiceGetInitialUser(&userId);
-	//handle = sceMoveOpen(userId, SCE_MOVE_TYPE_STANDARD, 0);
-	building = new SceneNode("/app0/Assets/Meshes/building.dae", defaultShader, PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/monu10.gnf"));
 	building->SetScale(Matrix4::Scale(Vector3(1, 1, 1)));
 	building->Translate(Vector3(0, -10, -5));
 	golfLevel->AddChild(building);
 }
 
-ExampleRenderer::~ExampleRenderer()	{
-	delete defaultObject[0];
-	delete defaultObject[1];
+ExampleRenderer::~ExampleRenderer()	
+{
 	delete defaultMesh;
 	delete defaultTexture;
 	delete defaultShader;
@@ -64,15 +57,7 @@ ExampleRenderer::~ExampleRenderer()	{
 
 void ExampleRenderer::Update(float dt)	{
 	time = dt;
-	//SceMoveData data;
-	//sceMoveReadStateLatest(handle, &data);
-	//std::cout << data.gyro[0] << std::endl;
-	// defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, 0)) * Matrix4::Rotation(*computeResult, Vector3(1,0,0)) * Matrix4::Scale(Vector3(0.1f, 0.1f, 1.0f)));
 	golfLevel->Update();
-	defaultObject[0]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
-	defaultObject[2]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
-	defaultObject[3]->SetLocalTransform(Matrix4::Translation(Vector3(-0.4, 0, -5)) * Matrix4::Rotation(0, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(10, 10, 10))  );
-	defaultObject[1]->SetLocalTransform(Matrix4::Translation(Vector3(0.4, 20, 0)) * mainCamera.BuildViewMatrix().GetTransposedRotation() * Matrix4::Scale(Vector3(20, 20, 20)));
 	input->Poll();
 
 	if (input->GetButton(0)) 
@@ -137,17 +122,20 @@ void ExampleRenderer::UpdateRotationAmount(float dt) {
 
 void ExampleRenderer::RenderActiveScene() 
 {
-	// DrawRenderObject(defaultObject[0]);
-	DrawRenderObject(defaultObject[1]);
-	// DrawRenderObject(defaultObject[2]);
-	// DrawRenderObject(defaultObject[3]);
-	for (const auto& item : golfLevel->GetRenderObjects())
+	std::queue<SceneNode*> q;
+	q.push(golfLevel);
+	while (!q.empty())
 	{
-		DrawRenderObject(item.get());
-	}	
-	for (const auto& item : building->GetRenderObjects())
-	{
-		DrawRenderObject(item.get());
+		auto* item = q.front();
+		q.pop();
+		for (auto* child : item->GetChildren())
+		{
+			q.push(child);
+		}
+		for (const auto& object : item->GetRenderObjects())
+		{
+			DrawRenderObject(object.get());
+		}
 	}
 }
 
