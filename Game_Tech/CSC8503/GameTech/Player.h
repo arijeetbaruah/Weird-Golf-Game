@@ -7,6 +7,7 @@
 #include <queue>
 #include "Collectable.h"
 #include <math.h>
+#include <iostream>
 #define PI 3.14159265
 namespace NCL {
 	namespace CSC8503 {

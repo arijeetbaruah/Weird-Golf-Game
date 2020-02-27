@@ -103,6 +103,16 @@ void Player::UpdateCamera(float dt)
 
 void Player::UpdateClientPlayerKeys(float dt)
 {
+	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+
+	float x = (float)sphere->getVelocity().x;
+	float y = (float)sphere->getVelocity().y;
+	float z = (float)sphere->getVelocity().z;
+
+	if ((x > 0) || (y > 0) || (z > 0))
+		return;
+
+
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
 	{
 		initialMousePos = Window::GetMouse()->GetAbsolutePosition();
@@ -134,39 +144,12 @@ void Player::UpdateClientPlayerKeys(float dt)
 		q = cameraRot * q * c;
 		threeDimDir = Vector3(q.x, q.y, q.z);
 
-		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+		sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
 		Vector3 vec = threeDimDir * distance * 0.005;
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;
-	}
-	else if(!Window::GetMouse()->ButtonDown(MouseButtons::LEFT))
-	{
-		// Camera only rotates when mouse button not pressed down
-		yaw -= (Window::GetMouse()->GetRelativePosition().x);
-
-		if (yaw < 0) {
-			yaw += 360.0f;
-		}
-		if (yaw > 360.0f) {
-			yaw -= 360.0f;
-		}
-
-		//transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
-		return;
-	}
-
-	/*Vector4 z = transform.GetWorldMatrix().GetColumn(2);
-
-	Vector3 forward = Vector3(z.x, z.y, z.z);
-
-	Vector4 x = transform.GetWorldMatrix().GetColumn(0);
-
-	Vector3 right = Vector3(x.x, x.y, x.z);*/
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LBUTTON)) {
-		buttonStates[4] = true;
 	}
 }
 

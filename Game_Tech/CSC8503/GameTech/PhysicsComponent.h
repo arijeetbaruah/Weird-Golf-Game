@@ -14,6 +14,8 @@ public:
 	void setLinearDamping(PxReal value);
 	void setAngularDamping(PxReal value);
 
+	PxVec3 getVelocity();
+
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;

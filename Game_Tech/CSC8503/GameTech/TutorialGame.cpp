@@ -836,7 +836,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
 
-	sphere->setLinearDamping(0.5);
+	sphere->setLinearDamping(0.8);
 	sphere->setAngularDamping(2);
 
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -883,7 +883,7 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 
 	otherBall->addComponent(sphere);
 
-	sphere->setLinearDamping(0.5);
+	sphere->setLinearDamping(0.8);
 	sphere->setAngularDamping(2);
 
 	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
