@@ -46,10 +46,6 @@ void Player::DuringUpdate(float dt)
 	UpdateClientPlayerKeys(dt);
 
 	UpdateCamera(dt);
-
-	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
-
-
 	std::cout << "Player: " << transform.GetWorldPosition().x << std::endl;
 }
 
