@@ -14,7 +14,7 @@ void PhysicsComponent::Start() {
 
 void PhysicsComponent::Update(float dt) {
 	PxTransform tran = actor->getGlobalPose();
-	std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
+	//std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
 
 	// Not really working

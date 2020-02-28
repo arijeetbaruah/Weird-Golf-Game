@@ -5,8 +5,8 @@ void Targeted::Update(float dt) {
 		this->Apply();
 		applied = true;
 	}
-	if (conditionCheck() && !removed) {
+	if (conditionCheck()) {
 		this->Remove();
-		removed = true;
+		this->toRemove = true;
 	}
 }

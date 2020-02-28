@@ -38,8 +38,15 @@ namespace NCL {
 
 			void Update(float dt) {
 				DuringUpdate(dt);
+				vector<string> todelete;
 				for (pair<string, Component*> component : components) {
 					component.second->Update(dt);
+					if (component.second->toRemove)
+						todelete.emplace_back(component.second->getName());
+				}
+				for (string s : todelete) {
+					delete components.at(s);
+					components.erase(s);
 				}
 			}
 			void LateUpdate(float dt) {

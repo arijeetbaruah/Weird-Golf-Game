@@ -6,7 +6,9 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/Component.h"
 #include "../CSC8503Common/Script.h"
+
 #include "../CSC8503Common/cubeDebuff.h"
+#include "../CSC8503Common/TestBuff.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -960,10 +962,13 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
 	test->setLambda(std::function<void(GameObject*)>(script));
-	Ball->addComponent(test);
+	//Ball->addComponent(test);
 
 	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
 	Ball->addComponent(cubed);
+
+	TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);
 
 	world->AddGameObject(Ball);
 

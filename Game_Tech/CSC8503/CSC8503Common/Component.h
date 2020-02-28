@@ -30,6 +30,8 @@ public:
 
 	void setParent(GameObject* go);
 	GameObject* getParent();
+
+	bool toRemove = false;
 };
 
 

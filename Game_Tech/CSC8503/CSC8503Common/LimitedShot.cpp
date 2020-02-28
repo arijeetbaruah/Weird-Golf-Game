@@ -3,7 +3,7 @@
 #include "ShotTracker.h"
 
 void LimitedShot::setTakenShots() {
-	startingShots = this->getParent()->getComponent<ShotTracker>("ShotTracker").getShots();
+	startingShots = this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots();
 }
 
 void LimitedShot::Start() {
@@ -15,5 +15,5 @@ void LimitedShot::Update(float dt) {
 }
 
 bool LimitedShot::conditionCheck() {
-	return this->getParent()->getComponent<ShotTracker>("ShotTracker").getShots() >= startingShots + maxShots;
+	return this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots() >= startingShots + maxShots;
 }
