@@ -141,6 +141,7 @@
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
+    <ClInclude Include="ShotTracker.h" />
     <ClInclude Include="Timed.h" />
     <ClInclude Include="NavigationGrid.h" />
     <ClInclude Include="NavigationMap.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ShotTracker.cpp" />
     <ClCompile Include="Targeted.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
