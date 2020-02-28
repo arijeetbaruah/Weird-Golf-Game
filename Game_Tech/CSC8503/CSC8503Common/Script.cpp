@@ -1,6 +1,4 @@
 #include "Script.h"
-using namespace NCL;
-using namespace CSC8503;
 Script::Script() {
 	this->lambda = [](GameObject*){};
 }
@@ -31,7 +29,7 @@ void Script::nullLateLambda() {
 }
 
 //Call the Lambda when the Update method is called
-void Script::Update() {
+void Script::Update(float dt) {
 	this->lambda(this->getParent());
 }
 

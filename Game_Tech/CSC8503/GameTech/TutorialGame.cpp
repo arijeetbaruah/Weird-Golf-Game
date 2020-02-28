@@ -6,6 +6,7 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/Component.h"
 #include "../CSC8503Common/Script.h"
+#include "../CSC8503Common/cubeDebuff.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -40,10 +41,10 @@ TutorialGame::TutorialGame()	{
 	buttonSelected = 1;
 	playing = true;
 
-	playerPos1 = Vector3(-0.4, 1, 0);
-	playerPos2 = Vector3(-0.2, 1, 0);
-	playerPos3 = Vector3(0.2, 1, 0);
-	playerPos4 = Vector3(0.4, 1, 0);
+	playerPos1 = Vector3(-0.4, 0.1, -0.9);
+	playerPos2 = Vector3(-0.2, 0.1, -0.9);
+	playerPos3 = Vector3(0.2, 0.1, -0.9);
+	playerPos4 = Vector3(0.4, 0.1, -0.9);
 
 	playerID = 0;
 
@@ -510,11 +511,6 @@ void TutorialGame::UpdateGame(float dt) {
 	MoveSelectedObject();
 	//SeenObjects();
 
-	Debug::DrawLine(Vector3(0, 0, 0), Vector3(0, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 0), Vector3(480, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 420), Vector3(480, 50, 420), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(0, 0, 420), Vector3(0, 50, 420), Vector4(1, 0, 0, 1));
-
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
@@ -865,10 +861,9 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	float inverseMass = 0.1f;
 
 	Ball = new Player(playerID);
-	Script* test = new Script();
-	auto script = [](GameObject* (Ball)){std::cout << "I am a Player" << std::endl; };
-	test->setLambda(std::function<void(GameObject*)>(script));
-	Ball->addComponent(test);
+
+	
+	
 
 	Vector3 offSet(5, 0, 5);
 
@@ -881,26 +876,32 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 
 	SpherePhysicsComponent* sphere = nullptr;
-	
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+
 	switch (playerNum) 
 	{
 		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
 		break;
 		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
 		break;
 		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
 		break;
 		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
 		break;
 	}
+	
 
 	Ball->addComponent(sphere);
 
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
 
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
 	Ball->GetPhysicsObject()->InitSphereInertia();
@@ -908,6 +909,14 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 
 	world->AddGameObject(Ball);
+
+	Script* test = new Script();
+	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
+	test->setLambda(std::function<void(GameObject*)>(script));
+	Ball->addComponent(test);
+
+	cubeDebuff* cubed = new cubeDebuff(playerMesh, cubeMesh);
+	//Ball->addComponent(cubed);
 
 	return Ball;
 }
@@ -925,23 +934,29 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 	otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(2, 0.5, 1);
+
 	switch (playerNum)
 	{
 	case 1: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
 		break;
 	case 2: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh2, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
 		break;
 	case 3: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh3, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
 		break;
 	case 4: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh4, golfLevelTex, basicShader));
-		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
 		break;
 	}
 
 	otherBall->addComponent(sphere);
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
 
 	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
 
@@ -969,8 +984,24 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
 
+
 		//build object list
 		GameObject* floor = new GameObject("FLOOR");
+
+	for each (Vector3 vert in golfLevelMeshes[index]->GetPositionData()) {
+		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+	}
+	for each (unsigned int index in golfLevelMeshes[index]->GetIndexData()) {
+		tris.push_back(index);
+	}
+
+	TriangleMeshPhysicsComponent* physicsC = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+
+	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
+	floor->addComponent(physicsC);
+
 
 		floor->setLayer(1);
 		floor->setLayerMask(49);

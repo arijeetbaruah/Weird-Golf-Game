@@ -19,6 +19,9 @@ namespace NCL {
 			TutorialGame();
 			~TutorialGame();
 
+			OGLMesh* cubeMesh = nullptr;
+			OGLMesh* sphereMesh = nullptr;
+
 			virtual void UpdateGame(float dt);
 
 		protected:
@@ -113,8 +116,7 @@ namespace NCL {
 
 			GameObject* selectionObject = nullptr;
 
-			OGLMesh*	cubeMesh	= nullptr;
-			OGLMesh*	sphereMesh	= nullptr;
+			
 			OGLTexture* basicTex	= nullptr;
 			OGLTexture* golfLevelTex = nullptr;
 			OGLShader*	basicShader = nullptr;
@@ -141,8 +143,6 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
-
-
 
 			void LoadColladaRenderObjects();
 

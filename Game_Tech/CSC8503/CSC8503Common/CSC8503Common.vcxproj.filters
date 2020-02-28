@@ -132,6 +132,18 @@
     <ClInclude Include="Script.h">
       <Filter>ComponentSystem</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUp.h">
+      <Filter>ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Targeted.h">
+      <Filter>ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Timed.h">
+      <Filter>ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="cubeDebuff.h">
+      <Filter>ComponentSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -213,6 +225,15 @@
       <Filter>ComponentSystem</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
+      <Filter>ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Timed.cpp">
+      <Filter>ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Targeted.cpp">
+      <Filter>ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="cubeDebuff.cpp">
       <Filter>ComponentSystem</Filter>
     </ClCompile>
   </ItemGroup>

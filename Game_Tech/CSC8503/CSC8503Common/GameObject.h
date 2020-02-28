@@ -33,17 +33,12 @@ namespace NCL {
 			void addComponent(Component* component) {
 				component->setParent(this);
 				components.insert(pair<string, Component*>(component->getName(), component));
-			}
-
-			void Start() {
-				for (pair<string, Component*> component : components) {
-					component.second->Start();
-				}
+				component->Start();
 			}
 			void Update(float dt) {
 				DuringUpdate(dt);
 				for (pair<string, Component*> component : components) {
-					component.second->Update();
+					component.second->Update(dt);
 				}
 			}
 			void LateUpdate(float dt) {

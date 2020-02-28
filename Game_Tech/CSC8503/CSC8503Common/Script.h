@@ -4,26 +4,24 @@
 #include <functional>
 
 //@Author: David Towers
-namespace NCL {
-	namespace CSC8503 {
-		class Script : public Component {
-		private:
-			std::function<void(GameObject*)> lambda;
-			std::function<void(GameObject*)> lateLambda;
+using namespace NCL;
+using namespace CSC8503;
+class Script : public Component {
+private:
+	std::function<void(GameObject*)> lambda;
+	std::function<void(GameObject*)> lateLambda;
 
-		public:
-			Script();
-			Script(std::function<void(GameObject*)> script);
-			~Script() {};
+public:
+	Script();
+	Script(std::function<void(GameObject*)> script);
+	~Script() {};
 
-			void setLambda(std::function<void(GameObject*)> func);
-			void nullLambda();
+	void setLambda(std::function<void(GameObject*)> func);
+	void nullLambda();
 
-			void setLateLambda(std::function<void(GameObject*)> func);
-			void nullLateLambda();
+	void setLateLambda(std::function<void(GameObject*)> func);
+	void nullLateLambda();
 
-			void Update();
-			void LateUpdate();
-		};
-	}
-}
+	void Update(float dt);
+	void LateUpdate();
+};

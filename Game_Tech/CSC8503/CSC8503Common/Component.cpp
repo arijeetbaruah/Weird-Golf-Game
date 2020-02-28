@@ -1,6 +1,5 @@
 #include "Component.h"
-using namespace NCL;
-using namespace CSC8503;
+
 Component::Component() {
 	this->name = "";
 }
@@ -18,7 +17,7 @@ void Component::setName(std::string name) {
 
 void Component::Start() {}
 
-void Component::Update() {}
+void Component::Update(float dt) {}
 
 void Component::LateUpdate() {}
 

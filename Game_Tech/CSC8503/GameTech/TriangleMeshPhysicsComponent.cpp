@@ -1,6 +1,6 @@
 #include "TriangleMeshPhysicsComponent.h"
 
-TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris)
+TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris, PxMaterial* mMaterial)
 	: PhysicsComponent("SpherePhysicsComponent") {
 	PxTriangleMeshDesc meshDesc;
 
@@ -24,7 +24,7 @@ TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform
 	PxShape* meshShape;
 	if (meshActor) {
 		meshActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-		meshShape = PxRigidActorExt::createExclusiveShape(*meshActor, geom, *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
+		meshShape = PxRigidActorExt::createExclusiveShape(*meshActor, geom, *mMaterial);
 		actor = meshActor;
 	}
 }
@@ -33,6 +33,6 @@ void TriangleMeshPhysicsComponent::Start() {
 	PhysicsComponent::Start();
 }
 
-void TriangleMeshPhysicsComponent::Update() {
-	PhysicsComponent::Update();
+void TriangleMeshPhysicsComponent::Update(float dt) {
+	PhysicsComponent::Update(dt);
 }
