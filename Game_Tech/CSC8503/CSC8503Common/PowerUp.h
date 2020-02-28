@@ -8,6 +8,6 @@ using namespace CSC8503;
 class PowerUp: public Component {
 	protected:
 		virtual void Apply() = 0;
-		virtual void remove() = 0;
+		virtual void Remove() = 0;
 };
 

@@ -22,6 +22,6 @@ public:
 	void setLateLambda(std::function<void(GameObject*)> func);
 	void nullLateLambda();
 
-	void Update();
+	void Update(float dt);
 	void LateUpdate();
 };

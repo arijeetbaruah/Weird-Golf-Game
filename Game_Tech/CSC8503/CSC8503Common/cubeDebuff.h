@@ -2,6 +2,7 @@
 #include "Timed.h"
 #include "GameObject.h"
 #include "RenderObject.h"
+#include "../GameTech/GameTechRenderer.h"
 namespace NCL {
 	namespace CSC8503 {
 		class GameObject;
@@ -9,11 +10,10 @@ namespace NCL {
 		class TutorialGame;
 	}
 }
-class TutorialGame;
 
 class cubeDebuff : public Timed {
 	public:
-		cubeDebuff();
+		cubeDebuff(OGLMesh* before, OGLMesh* after);
 
 		void Apply();
 		void Remove();
@@ -21,5 +21,7 @@ class cubeDebuff : public Timed {
 	protected:
 		GameObject* par;
 		RenderObject* ren;
+		OGLMesh* Before;
+		OGLMesh* After;
 };
 

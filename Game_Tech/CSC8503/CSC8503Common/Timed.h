@@ -3,7 +3,7 @@
 class Timed : public Targeted {
 	public:
 		void resetTime();
-		void virtual Update(float dt);
+		void Update(float dt);
 		bool conditionCheck();
 	protected:
 		float timeActive = 0;

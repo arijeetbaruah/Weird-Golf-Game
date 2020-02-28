@@ -24,7 +24,7 @@ public:
 	void setName(std::string name);
 
 	virtual void Start();
-	virtual void Update() = 0;
+	virtual void Update(float dt) = 0;
 	virtual void LateUpdate();
 
 	void setParent(GameObject* go);
