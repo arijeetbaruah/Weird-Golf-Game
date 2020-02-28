@@ -970,55 +970,31 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 	return otherBall;
 }
 
-GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, MeshSceneNode* sceneNode) {
-
-	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
-
-	for (RenderObject* tempRender : renderList)
-	{
-		//build physics volume
-		std::vector<PxVec3> verts;
-		std::vector<PxU32> tris;
-		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
-
-		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
-
-
-		//build object list
-		GameObject* floor = new GameObject("FLOOR");
-
+GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
+	GameObject* floor = new GameObject("FLOOR");
+	floor->setLayer(1);
+	floor->setLayerMask(49);
+	//floor->SetBoundingVolume((CollisionVolume*)volume);
+	floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
+	floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+	std::vector<PxVec3> verts;
+	std::vector<PxU32> tris;
 	for each (Vector3 vert in golfLevelMeshes[index]->GetPositionData()) {
 		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 	}
 	for each (unsigned int index in golfLevelMeshes[index]->GetIndexData()) {
 		tris.push_back(index);
 	}
-
 	TriangleMeshPhysicsComponent* physicsC = nullptr;
-
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
-
 	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 	floor->addComponent(physicsC);
-
-
-		floor->setLayer(1);
-		floor->setLayerMask(49);
-		floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
-		floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-
-		tempRender->SetParentTransform(&floor->GetTransform());
-		floor->SetRenderObject(tempRender);
-		floor->addComponent(physicsC);
-		floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
-
-		floor->GetPhysicsObject()->SetInverseMass(0);
-		floor->GetPhysicsObject()->InitCubeInertia();
-
-		world->AddGameObject(floor);
-	}
-	return 0;
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
+	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
+	floor->GetPhysicsObject()->SetInverseMass(0);
+	floor->GetPhysicsObject()->InitCubeInertia();
+	world->AddGameObject(floor);
+	return floor;
 }
 
 vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics, const Vector3& size, const Vector4& colour, std::string objectName)
@@ -1034,8 +1010,8 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		std::vector<PxU32> tris;
 		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
-
-		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 
 		//build object list
 		GameObject* tempObject = new GameObject(objectName);
