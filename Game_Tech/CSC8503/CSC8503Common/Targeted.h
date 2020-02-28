@@ -12,5 +12,6 @@ class Targeted : public PowerUp {
 	protected:
 		GameObject* target;
 		bool applied = false;
+		bool removed = false;
 };
 

@@ -45,10 +45,6 @@ namespace NCL {
 				for (pair<string, Component*> component : components) {
 					component.second->Update(dt);
 				}
-				for (pair<string, Component*> component : components) {
-					if (component.second->toRemove)
-						removeComponent(component.second->getName());
-				}
 			}
 			void LateUpdate(float dt) {
 				for (pair<string, Component*> component : components) {

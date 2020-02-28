@@ -1,4 +1,5 @@
 #include "cubeDebuff.h"
+
 using namespace NCL;
 using namespace CSC8503;
 cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
@@ -15,11 +16,11 @@ void cubeDebuff::Start() {
 
 
 void cubeDebuff::Apply() {
-	par->GetTransform().SetWorldScale(Vector3(5, 5, 5));
+	par->GetTransform().SetWorldScale(Vector3(0.05, 0.05, 0.05));
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), After, ren->GetDefaultTexture(), ren->GetShader()));
 }
 
 void cubeDebuff::Remove() {
-	par->GetTransform().SetWorldScale(Vector3(70, 70, 70));
+	par->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), Before, ren->GetDefaultTexture(), ren->GetShader()));
 }

@@ -815,10 +815,11 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 
-	OGLMesh* thisMesh = nullptr;
+	OGLMesh* thisMesh = playerMesh1;
 	switch (playerNum) 
 	{
-		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+		case 1 : Ball->SetRenderObject(
+			new RenderObject(&Ball->GetTransform(), playerMesh, golfLevelTex, basicShader));
 			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
 			thisMesh = playerMesh1;
 		break;
@@ -847,9 +848,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
 	Ball->GetPhysicsObject()->InitSphereInertia();
 
-	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
-
-	world->AddGameObject(Ball);
+	//Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 
 	Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
@@ -858,6 +857,10 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
 	Ball->addComponent(cubed);
+
+	world->AddGameObject(Ball);
+
+
 
 	return Ball;
 }
