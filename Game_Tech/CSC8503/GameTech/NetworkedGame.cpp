@@ -2,12 +2,16 @@
 #include "NetworkPlayer.h"
 #include "../CSC8503Common/GameServer.h"
 #include "../CSC8503Common/GameClient.h"
+#include "../../Plugins/Logger/Logger.h"
+#include <memory>
 
 #define COLLISION_MSG 30
 
 class PlayerPacketReceiver : public PacketReceiver {
 public:
-	PlayerPacketReceiver(GameWorld& w, bool p, Player* player) : controlledplayer(player){}
+	PlayerPacketReceiver(GameWorld& w, Player* player, GameObject* ghost) : world(w), controlledplayer(player), secondPlayer(ghost){
+		log = std::unique_ptr<Logger>(new Logger("Player Packet"));
+	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Received_State) {
@@ -17,10 +21,14 @@ public:
 
 			controlledplayer->GetTransform().SetWorldPosition(packet.position);
 			controlledplayer->GetTransform().SetLocalOrientation(packet.orientation);
+			log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
 		}
 	}
+	GameWorld& world;
 	NetworkState packet;
 	Player* controlledplayer;
+	GameObject* secondPlayer;
+	std::unique_ptr<Logger> log;
 };
 
 class FullPacketReceiver : public PacketReceiver {
@@ -201,7 +209,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, true, Ball, playerTwo);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, Ball, playerTwo);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
@@ -243,6 +251,18 @@ void NetworkedGame::UpdateGame(float dt)
 	
 	UpdateAsClient(dt);
 	
+}
+void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
+	if (!thisServer)
+		return;
+	PlayerPacket packet;
+
+	packet.fullState.position = Ball->GetTransform().GetWorldPosition();
+	packet.fullState.orientation = Ball->GetTransform().GetLocalOrientation();
+	log->info("({}, {}, {})", packet.fullState.position.x, packet.fullState.position.y, packet.fullState.position.z);
+
+	this->thisServer->SendGlobalPacket(packet);
+
 }
 
 void NetworkedGame::SpawnPlayer()

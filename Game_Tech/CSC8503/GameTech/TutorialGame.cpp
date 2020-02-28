@@ -32,6 +32,7 @@ TutorialGame::TutorialGame()	{
 	newSession = true;
 
 	fileName = "highscores";
+	log = std::unique_ptr<Logger>(new Logger("Tutorial Game"));
 
 	Ball = nullptr;
 
@@ -427,6 +428,9 @@ void TutorialGame::UpdateGame(float dt) {
 
 		if (!isNetworkedGame)
 		{
+			isNetworkedGame = true;
+			isServer = true;
+
 			matchTimer -= dt;
 			int seconds = matchTimer;
 			renderer->DrawString(std::to_string(seconds / 60) + "." + std::to_string(seconds % 60),
@@ -486,6 +490,8 @@ void TutorialGame::UpdateGame(float dt) {
 		physics->Update(dt);*/
 
 	Debug::FlushRenderables();
+	UpdateNetworkPostion(Ball);
+
 	renderer->Render();
 }
 
@@ -797,9 +803,6 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	float inverseMass = 0.1f;
 
 	Ball = new Player(playerID);
-
-	
-	
 
 	Vector3 offSet(5, 0, 5);
 

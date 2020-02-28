@@ -11,6 +11,7 @@
 #include "PhysxController.h"
 #include "ColladaBase.h"
 #include "PhysxController.h"
+#include "../../Plugins/Logger/Logger.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -75,11 +76,14 @@ namespace NCL {
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
+			std::unique_ptr<Logger> log;
 			Player* Ball;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
+
+			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
 			void StoreHighScore();
 			std::string fileName;
