@@ -230,6 +230,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoxPhysicsComponent.cpp" />
     <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxPhysicsComponent.h" />
     <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="Enemy.h" />

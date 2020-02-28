@@ -12,6 +12,7 @@
 #include "OBJ_Loader.h"
 
 #include "SpherePhysicsComponent.h"
+#include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
 #include <functional>
@@ -881,8 +882,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	test->setLambda(std::function<void(GameObject*)>(script));
 	Ball->addComponent(test);
 
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05);
-	Ball->addComponent(sphere);
+
+	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05, 0.05, 0.05);
+	Ball->addComponent(box);
 
 	Vector3 offSet(5, 0, 5);
 

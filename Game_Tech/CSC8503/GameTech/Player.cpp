@@ -103,7 +103,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
 
-		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+		SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("BoxPhysicsComponent");
 		Vector3 vec = threeDimDir * distance * 0.005;
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 
