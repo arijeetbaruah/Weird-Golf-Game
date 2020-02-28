@@ -1,5 +1,6 @@
 #pragma once
 #include "PhysicsComponent.h"
+#include "../CSC8503Common/Transform.h"
 
 class SpherePhysicsComponent : public PhysicsComponent {
 public:
@@ -7,5 +8,6 @@ public:
 
 	virtual void Start() override;
 	virtual void Update(float dt) override;
+
 };
 
