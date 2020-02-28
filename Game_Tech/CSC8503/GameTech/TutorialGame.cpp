@@ -13,6 +13,7 @@
 #include "OBJ_Loader.h"
 
 #include "SpherePhysicsComponent.h"
+#include "SpherePhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
 #include <functional>
@@ -167,7 +168,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("CharacterF.msh", &charB);
 	loadFunc("Apple.msh"	 , &appleMesh);
 
-	objLoadLevelFunc("Assets/TestLevel.obj");
+	//objLoadLevelFunc("Assets/TestLevel.obj");
 	objLoadFunc("Assets/Ball3.obj", &playerMesh1);
 	objLoadFunc("Assets/Ball6.obj", &playerMesh2);
 	objLoadFunc("Assets/Ball9.obj", &playerMesh3);
@@ -373,7 +374,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	};
 
 	//				target				mesh			texture					shader
-	colladaLoadFunc(&GameLevelMapMesh, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
 
 }
 

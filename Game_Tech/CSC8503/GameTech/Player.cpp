@@ -58,6 +58,8 @@ void Player::Trigger(GameObject& obj)
 
 }
 
+
+// Handles orbiting the camera around the player
 void Player::UpdateCamera(float dt)
 {
 	float angle = 0.1;
@@ -101,6 +103,8 @@ void Player::UpdateCamera(float dt)
 	mainCamera->SetYaw(angles.y);
 }
 
+
+// Handles click and drag movement
 void Player::UpdateClientPlayerKeys(float dt)
 {
 	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
@@ -109,16 +113,18 @@ void Player::UpdateClientPlayerKeys(float dt)
 	float y = (float)sphere->getVelocity().y;
 	float z = (float)sphere->getVelocity().z;
 
-	if ((x > 0) || (y > 0) || (z > 0))
-		return;
+	// Ball can only be moved when standing still
+	/*if ((x > 0) || (y > 0) || (z > 0))
+		return;*/
 
-
+	// Gets intitial mouse pos on first click
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
 	{
 		initialMousePos = Window::GetMouse()->GetAbsolutePosition();
 	}
 	else if (!Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x != 0 && initialMousePos.y != 0))
 	{
+		// Direction 
 		Vector2 currentMousePos = Window::GetMouse()->GetAbsolutePosition();
 		Vector2 dir = currentMousePos - initialMousePos;
 
@@ -150,6 +156,45 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;
+	}
+
+	if ((initialMousePos.x != 0 && initialMousePos.y != 0))
+	{
+		// Direction 
+		Vector2 currentMousePos = Window::GetMouse()->GetAbsolutePosition();
+		Vector2 dir = currentMousePos - initialMousePos;
+
+		Vector4 colour = Vector4(0, 0, 1, 0);
+
+		float distance = dir.Length();
+
+		// Minimum distance
+		if (distance < 50)
+		{
+			colour = Vector4(1, 0, 0, 0);
+		}
+
+		//dir.Normalise();
+
+		Vector3 threeDimDir = Vector3(-dir.x, 0, -dir.y);
+
+		Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, mainCamera->GetYaw(), 0);
+
+		// Rotate drag direction to match camera direction
+		Quaternion q = Quaternion(threeDimDir.x, threeDimDir.y, threeDimDir.z, 0);
+		Quaternion c = cameraRot.Conjugate();
+		q = cameraRot * q * c;
+		threeDimDir = Vector3(q.x, q.y, q.z);
+
+		threeDimDir.Normalise();
+		threeDimDir *= 0.001;
+
+		threeDimDir *= distance;
+
+
+		Vector3 pos = transform.GetWorldPosition() - threeDimDir;
+
+		Debug::DrawLine(transform.GetWorldPosition(), pos, colour);
 	}
 }
 
