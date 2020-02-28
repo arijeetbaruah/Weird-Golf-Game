@@ -103,6 +103,8 @@ void GameTechRenderer::RenderShadowMap() {
 		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();
+
+
 	}
 
 	glViewport(0, 0, currentWidth, currentHeight);
@@ -179,12 +181,17 @@ void GameTechRenderer::RenderCamera() {
 
 		glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 
+		//glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+
+		//glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
+
 		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
+		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
 
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();
+
 	}
 }
 

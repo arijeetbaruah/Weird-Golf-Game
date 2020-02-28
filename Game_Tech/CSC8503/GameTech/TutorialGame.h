@@ -10,7 +10,7 @@
 #include <fstream>
 #include "PhysxController.h"
 #include "ColladaBase.h"
-#include "PhysxController.h"
+#include "MeshSceneNode.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -49,7 +49,7 @@ namespace NCL {
 			void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
-
+			/*
 			// Stuff from goose game
 			GameObject* AddFloorToWorld(const Vector3& position);
 			void AddObstacles();
@@ -63,7 +63,7 @@ namespace NCL {
 			GameObject* AddCharacterToWorld(const Vector3& position);
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
-
+			*/
 
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
@@ -74,6 +74,8 @@ namespace NCL {
 			Vector3 playerPos4;
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics = true, const Vector3& size = Vector3(1,1,1), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
 			GameObject* playerTwo;
@@ -142,12 +144,11 @@ namespace NCL {
 				lockedObject = o;
 			}
 
-			void LoadColladaGameObjects();
 			void LoadColladaRenderObjects();
 
 
 			//list of renderObject
-			RenderObject* gameLevelMap;
+			MeshSceneNode* GameLevelMapMesh;
 			PhysicsObject* temp;
 
 			//list of 
@@ -155,6 +156,8 @@ namespace NCL {
 
 			//list of mesh
 			OGLMesh* playerMesh = nullptr;
+
+
 		};
 	}
 }
