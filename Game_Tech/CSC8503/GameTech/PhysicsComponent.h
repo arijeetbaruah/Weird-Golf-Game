@@ -21,6 +21,6 @@ protected:
 	PxPhysics* gPhysics;
 
 	virtual void Start() override;
-	virtual void Update() override;
+	virtual void Update(float dt) override;
 };
 

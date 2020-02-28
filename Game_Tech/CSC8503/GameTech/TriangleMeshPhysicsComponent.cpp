@@ -33,6 +33,6 @@ void TriangleMeshPhysicsComponent::Start() {
 	PhysicsComponent::Start();
 }
 
-void TriangleMeshPhysicsComponent::Update() {
-	PhysicsComponent::Update();
+void TriangleMeshPhysicsComponent::Update(float dt) {
+	PhysicsComponent::Update(dt);
 }
