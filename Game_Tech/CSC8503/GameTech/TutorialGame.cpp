@@ -815,19 +815,24 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 
+	OGLMesh* thisMesh = nullptr;
 	switch (playerNum) 
 	{
 		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
 			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
+			thisMesh = playerMesh1;
 		break;
 		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
 			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
+			thisMesh = playerMesh2;
 		break;
 		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
 			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
+			thisMesh = playerMesh3;
 		break;
 		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
 			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
+			thisMesh = playerMesh4;
 		break;
 	}
 	
@@ -851,7 +856,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	test->setLambda(std::function<void(GameObject*)>(script));
 	Ball->addComponent(test);
 
-	cubeDebuff* cubed = new cubeDebuff(playerMesh, cubeMesh);
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
 	Ball->addComponent(cubed);
 
 	return Ball;

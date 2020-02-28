@@ -12,7 +12,7 @@ void PhysicsComponent::Start() {
 	PhysxController::getInstance().addActor(actor);
 }
 
-void PhysicsComponent::Update() {
+void PhysicsComponent::Update(float dt) {
 	PxTransform tran = actor->getGlobalPose();
 	std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));

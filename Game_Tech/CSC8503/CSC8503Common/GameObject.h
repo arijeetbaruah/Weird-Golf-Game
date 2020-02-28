@@ -35,10 +35,19 @@ namespace NCL {
 				components.insert(pair<string, Component*>(component->getName(), component));
 				component->Start();
 			}
+			void removeComponent(string name) {
+				Component* toRemove = components.at(name);
+				components.erase(name);
+				delete toRemove;
+			}
 			void Update(float dt) {
 				DuringUpdate(dt);
 				for (pair<string, Component*> component : components) {
 					component.second->Update(dt);
+				}
+				for (pair<string, Component*> component : components) {
+					if (component.second->toRemove)
+						removeComponent(component.second->getName());
 				}
 			}
 			void LateUpdate(float dt) {

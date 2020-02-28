@@ -12,6 +12,6 @@ void SpherePhysicsComponent::Start() {
 	PhysicsComponent::Start();
 }
 
-void SpherePhysicsComponent::Update() {
-	PhysicsComponent::Update();
+void SpherePhysicsComponent::Update(float dt) {
+	PhysicsComponent::Update(dt);
 }

@@ -3,7 +3,7 @@ using namespace NCL;
 using namespace CSC8503;
 cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
 	setName("cubeDebuff");
-	maxTime = 30;
+	maxTime = 5;
 	this->Before = before;
 	this->After = after;
 }
