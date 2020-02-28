@@ -852,7 +852,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->addComponent(test);
 
 	cubeDebuff* cubed = new cubeDebuff(playerMesh, cubeMesh);
-	Ball->addComponent(cubed);
+	//Ball->addComponent(cubed);
 
 	return Ball;
 }
