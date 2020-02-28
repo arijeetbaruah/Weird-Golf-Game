@@ -15,6 +15,7 @@
 #include "NetworkedGame.h"
 
 #include "PhysxController.h"
+#include "SpherePhysicsComponent.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -169,7 +170,6 @@ int main() {
 
 		g->UpdateGame(dt);
 		c.stepPhysics(true, dt);
-
 	}
 	Window::DestroyGameWindow();
 }

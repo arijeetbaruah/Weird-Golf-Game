@@ -12,6 +12,9 @@
 
 #include "OBJ_Loader.h"
 
+#include "SpherePhysicsComponent.h"
+#include "TriangleMeshPhysicsComponent.h"
+
 #include <functional>
 
 using namespace NCL;
@@ -37,6 +40,11 @@ TutorialGame::TutorialGame()	{
 
 	buttonSelected = 1;
 	playing = true;
+
+	playerPos1 = Vector3(-0.4, 0.1, -0.9);
+	playerPos2 = Vector3(-0.2, 0.1, -0.9);
+	playerPos3 = Vector3(0.2, 0.1, -0.9);
+	playerPos4 = Vector3(0.4, 0.1, -0.9);
 
 	playerID = 0;
 
@@ -181,7 +189,7 @@ void TutorialGame::InitialiseAssets() {
 			tempOGLMesh->SetVertexIndices(indices);
 
 			tempOGLMesh->UploadToGPU();
-			tempMeshList.push_back(playerMesh);
+			tempMeshList.push_back(playerMesh1);
 		}
 		(*renderName) = new RenderObject(transform, tempMeshList[meshSize], tempTexture, shader);
 	};
@@ -195,7 +203,10 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("Apple.msh"	 , &appleMesh);
 
 	objLoadLevelFunc("Assets/TestLevel.obj");
-	objLoadFunc("Assets/Ball.obj", &playerMesh);
+	objLoadFunc("Assets/Ball3.obj", &playerMesh1);
+	objLoadFunc("Assets/Ball6.obj", &playerMesh2);
+	objLoadFunc("Assets/Ball9.obj", &playerMesh3);
+	objLoadFunc("Assets/Ball10.obj", &playerMesh4);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
 
 	std::vector<PxVec3> verts;
@@ -208,11 +219,11 @@ void TutorialGame::InitialiseAssets() {
 		for each (unsigned int index in mesh->GetIndexData()) {
 			tris.push_back(index);
 		}
-		physxC.addTriangleMeshToScene(verts, tris);
+		//physxC.addTriangleMeshToScene(verts, tris);
 		verts.clear();
 		tris.clear();
 	}
-	physxC.spawnBall();
+	//physxC.spawnBall();
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
@@ -329,99 +340,6 @@ void TutorialGame::RenderScoreBoard()
 			Vector2(400, 400), Vector4(1, 0, 0, 1));
 		renderer->DrawString("THEIR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
 			Vector2(400, 350), Vector4(0, 0, 1, 1));
-	}
-}
-
-void TutorialGame::StoreHighScore()
-{
-	std::ofstream myfile;
-	myfile.open(fileName, std::ifstream::out, std::ifstream::trunc);
-
-	myfile << "HIGH SCORES FROM LAST MATCH" << "\n";
-
-	myfile << "Player One (Blue): " << std::to_string(world->GetPlayerOneTotal()) << "\n";
-
-	myfile << "Player Two (Red): " << std::to_string(world->GetPlayerTwoTotal()) << "\n";
-
-	myfile.close();
-}
-
-void TutorialGame::RenderMenu()
-{
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN) && buttonSelected != 4) {
-
-		buttonSelected++;
-	}
-
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP) && buttonSelected != 1) {
-
-		buttonSelected--;
-	}
-
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
-
-		switch (buttonSelected)
-		{
-		case 1: playing = true;
-				playerID = 1000;
-				isServer = true;
-				StartGame();
-				return;
-		case 2: playerID = 2000;
-				playing = true;
-				isNetworkedGame = true;
-				world->SetIsNetworkedGame(true);
-				StartGame();
-				return;
-		case 3: playerID = 1000;
-				playing = true;
-				isNetworkedGame = true;
-				world->SetIsServer(true);
-				world->SetIsNetworkedGame(true);
-				isServer = true;
-				StartGame();
-				return;
-		case 4: exit(0);
-		}
-	}
-
-	switch (buttonSelected) 
-	{
-	case 1 : renderer->DrawString("Play Singleplayer",
-					Vector2(40, 600), Vector4(0, 0, 1, 1));
-			renderer->DrawString("Play Multiplayer",
-						Vector2(40, 500));
-			renderer->DrawString("Play Multiplayer as Server",
-				Vector2(40, 400));
-			renderer->DrawString("Exit",
-				Vector2(40, 300));
-			
-	case 2 : renderer->DrawString("Play Singleplayer",
-				Vector2(40, 600));
-			renderer->DrawString("Play Multiplayer",
-				Vector2(40, 500), Vector4(0, 0, 1, 1));
-			renderer->DrawString("Play Multiplayer as Server",
-				Vector2(40, 400));
-			renderer->DrawString("Exit",
-				Vector2(40, 300));
-
-	case 3 : renderer->DrawString("Play Singleplayer",
-				Vector2(40, 600));
-			renderer->DrawString("Play Multiplayer",
-				Vector2(40, 500));
-			renderer->DrawString("Play Multiplayer as Server",
-				Vector2(40, 400), Vector4(0, 0, 1, 1));
-			renderer->DrawString("Exit",
-				Vector2(40, 300));
-	case 4: renderer->DrawString("Play Singleplayer",
-			Vector2(40, 600));
-			renderer->DrawString("Play Multiplayer",
-				Vector2(40, 500));
-			renderer->DrawString("Play Multiplayer as Server",
-				Vector2(40, 400));
-			renderer->DrawString("Exit",
-				Vector2(40, 300), Vector4(0, 0, 1, 1));
-	
 	}
 }
 
@@ -557,15 +475,10 @@ void TutorialGame::UpdateGame(float dt) {
 	MoveSelectedObject();
 	//SeenObjects();
 
-	Debug::DrawLine(Vector3(0, 0, 0), Vector3(0, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 0), Vector3(480, 50, 0), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(480, 0, 420), Vector3(480, 50, 420), Vector4(1, 0, 0, 1));
-	Debug::DrawLine(Vector3(0, 0, 420), Vector3(0, 50, 420), Vector4(1, 0, 0, 1));
-
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
-	physics->Update(dt);
+	//physics->Update(dt);
 
 	/*if (!isNetworkedGame)
 		physics->Update(dt);
@@ -850,17 +763,26 @@ void TutorialGame::InitWorld() {
 
 	grid = NavigationGrid("TestGrid3.txt");
 
-	Vector3 offSet(270, 10, -60);
+	int thisPlayerNum = 1;
 
 	// The player to act as the server
-	AddPlayerToWorld(offSet, 1);
+	AddPlayerToWorld(Vector3(0,1,0), thisPlayerNum);
+	
+	for (int i = 0; i < 4; i++) 
+	{
+		if ((i + 1) == thisPlayerNum)
+			continue;
+
+		AddOtherPlayerToWorld(Vector3(0, 1, 0), i + 1);
+	}
+	
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
 	// Add all modular golf level subsections to world
 	for (int i = 0; i < golfLevelMeshes.size(); i++) 
 	{
-		AddGolfLevelToWorld(Vector3(300, -70, 0), Vector3(100, 100, 100), green, i);
+		AddGolfLevelToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), green, i);
 	}
 	
 
@@ -868,7 +790,8 @@ void TutorialGame::InitWorld() {
 		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNum)
+// Player num is the number of the player in a networked game
+GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 {
 	float size = 70.0f;
 	float inverseMass = 0.1f;
@@ -883,17 +806,38 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	Ball->setCamera(world->GetMainCamera());
 
 	SphereVolume* volume = new SphereVolume(size);
-	Ball->SetBoundingVolume((CollisionVolume*)volume);
+	//Ball->SetBoundingVolume((CollisionVolume*)volume);
 	
-	Ball->GetTransform().SetWorldScale(Vector3(size, size, size));
+	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
-	if (playerID == 1000)
-		Ball->GetTransform().SetWorldPosition(position + offSet);
-	else
-		Ball->GetTransform().SetWorldPosition(position - offSet);
 
-	Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh, golfLevelTex, basicShader));
+	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+
+	switch (playerNum) 
+	{
+		case 1 : Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
+		break;
+		case 2: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh2, golfLevelTex, basicShader));
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
+		break;
+		case 3: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh3, golfLevelTex, basicShader));
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
+		break;
+		case 4: Ball->SetRenderObject(new RenderObject(&Ball->GetTransform(), playerMesh4, golfLevelTex, basicShader));
+			sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
+		break;
+	}
+	
+
+	Ball->addComponent(sphere);
+
 	Ball->SetPhysicsObject(new PhysicsObject(&Ball->GetTransform(), Ball->GetBoundingVolume()));
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
 
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
 	Ball->GetPhysicsObject()->InitSphereInertia();
@@ -913,16 +857,81 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	return Ball;
 }
 
+GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
+{
+	float size = 1.0f;
+	float inverseMass = 0.1f;
+
+	GameObject* otherBall = new GameObject();
+
+	/*SphereVolume* volume = new SphereVolume(size);
+	otherBall->SetBoundingVolume((CollisionVolume*)volume);*/
+
+	otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
+
+	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(2, 0.5, 1);
+
+	switch (playerNum)
+	{
+	case 1: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
+		break;
+	case 2: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh2, golfLevelTex, basicShader));
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos2.x, playerPos2.y, playerPos2.z)), 10, 0.05, mMaterial);
+		break;
+	case 3: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh3, golfLevelTex, basicShader));
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos3.x, playerPos3.y, playerPos3.z)), 10, 0.05, mMaterial);
+		break;
+	case 4: otherBall->SetRenderObject(new RenderObject(&otherBall->GetTransform(), playerMesh4, golfLevelTex, basicShader));
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos4.x, playerPos4.y, playerPos4.z)), 10, 0.05, mMaterial);
+		break;
+	}
+
+	otherBall->addComponent(sphere);
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
+
+	otherBall->SetPhysicsObject(new PhysicsObject(&otherBall->GetTransform(), otherBall->GetBoundingVolume()));
+
+	otherBall->GetPhysicsObject()->SetInverseMass(inverseMass);
+	otherBall->GetPhysicsObject()->InitSphereInertia();
+
+	otherBall->SetNetworkObject(new NetworkObject(*otherBall, playerID));
+
+	world->AddGameObject(otherBall);
+
+	return otherBall;
+}
+
 GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index) {
 	GameObject* floor = new GameObject("FLOOR");
 
 	floor->setLayer(1);
 	floor->setLayerMask(49);
 
-	AABBVolume* volume = new AABBVolume(size);
 	//floor->SetBoundingVolume((CollisionVolume*)volume);
-	floor->GetTransform().SetWorldScale(size);
-	floor->GetTransform().SetWorldPosition(position);
+	floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
+	floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+
+	std::vector<PxVec3> verts;
+	std::vector<PxU32> tris;
+
+	for each (Vector3 vert in golfLevelMeshes[index]->GetPositionData()) {
+		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+	}
+	for each (unsigned int index in golfLevelMeshes[index]->GetIndexData()) {
+		tris.push_back(index);
+	}
+
+	TriangleMeshPhysicsComponent* physicsC = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+
+	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
+	floor->addComponent(physicsC);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
@@ -934,6 +943,180 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 
 	return floor;
 }
+
+
+
+
+void TutorialGame::LoadColladaGameObjects() {
+	auto gameObjectLoad = [this](const char* objectName, const Vector3& position, const Vector3& scale, const Vector4& colour, RenderObject* renderOBJ = NULL, PhysicsObject* physicsOBJ = NULL)->GameObject* {
+
+		GameObject* tempObject = new GameObject(objectName);
+		tempObject->setLayer(1);
+		tempObject->setLayerMask(49);
+		tempObject->GetTransform().SetWorldScale(scale);
+		tempObject->GetTransform().SetWorldPosition(position);
+		if (renderOBJ)tempObject->SetRenderObject(renderOBJ);
+
+
+		if (physicsOBJ) {
+			tempObject->SetPhysicsObject(physicsOBJ);
+			tempObject->GetPhysicsObject()->SetInverseMass(0);
+			tempObject->GetPhysicsObject()->InitCubeInertia();
+		}
+		else
+		{
+			tempObject->SetPhysicsObject(new PhysicsObject(&tempObject->GetTransform(), tempObject->GetBoundingVolume()));
+		}
+		world->AddGameObject(tempObject);
+		return tempObject;
+	};
+
+	gameLevelOBJ = gameObjectLoad("test", Vector3(300, -70, 0), Vector3(100, 100, 100), Vector4(1, 0, 0, 0), gameLevelMap);
+
+}
+
+void TutorialGame::LoadColladaRenderObjects() {
+	auto colladaLoadFunc = [this](RenderObject** renderName, const char* meshName, const char* textureName, OGLShader* shader, Transform* transform) {
+		ColladaBase* tempMesh = new ColladaBase(meshName);
+
+		int meshSize = tempMesh->GetNumMeshes();
+		vector<OGLMesh*> tempMeshList;
+		vector<meshInfor> tempInfor = tempMesh->GetMeshes();
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		for (meshInfor tempIn : tempInfor) {
+			OGLMesh* tempOGLMesh = new OGLMesh();
+			vector<Vector3> vertics;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+			vector<unsigned int> indices;
+			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++) {
+				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+				indices.push_back(i);
+			}
+
+			tempOGLMesh->SetVertexPositions(vertics);
+			tempOGLMesh->SetVertexNormals(normals);
+			tempOGLMesh->SetVertexTextureCoords(texCoords);
+			tempOGLMesh->SetVertexIndices(indices);
+
+			tempOGLMesh->UploadToGPU();
+			tempMeshList.push_back(playerMesh);
+		}
+		(*renderName) = new RenderObject(transform, tempMeshList[0], tempTexture, shader);
+	};
+
+	colladaLoadFunc(&gameLevelMap, "TestLevel.dae", "tex_MinigolfPack.png", basicShader, &(lockedObject->GetTransform()));
+
+}
+
+
+
+
+
+//followings codes are some useless code and check if can be deleted
+
+/*
+
+
+void TutorialGame::StoreHighScore()
+{
+	std::ofstream myfile;
+	myfile.open(fileName, std::ifstream::out, std::ifstream::trunc);
+
+	myfile << "HIGH SCORES FROM LAST MATCH" << "\n";
+
+	myfile << "Player One (Blue): " << std::to_string(world->GetPlayerOneTotal()) << "\n";
+
+	myfile << "Player Two (Red): " << std::to_string(world->GetPlayerTwoTotal()) << "\n";
+
+	myfile.close();
+}
+
+void TutorialGame::RenderMenu()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN) && buttonSelected != 4) {
+
+		buttonSelected++;
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP) && buttonSelected != 1) {
+
+		buttonSelected--;
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
+
+		switch (buttonSelected)
+		{
+		case 1: playing = true;
+				playerID = 1000;
+				isServer = true;
+				StartGame();
+				return;
+		case 2: playerID = 2000;
+				playing = true;
+				isNetworkedGame = true;
+				world->SetIsNetworkedGame(true);
+				StartGame();
+				return;
+		case 3: playerID = 1000;
+				playing = true;
+				isNetworkedGame = true;
+				world->SetIsServer(true);
+				world->SetIsNetworkedGame(true);
+				isServer = true;
+				StartGame();
+				return;
+		case 4: exit(0);
+		}
+	}
+
+	switch (buttonSelected)
+	{
+	case 1 : renderer->DrawString("Play Singleplayer",
+					Vector2(40, 600), Vector4(0, 0, 1, 1));
+			renderer->DrawString("Play Multiplayer",
+						Vector2(40, 500));
+			renderer->DrawString("Play Multiplayer as Server",
+				Vector2(40, 400));
+			renderer->DrawString("Exit",
+				Vector2(40, 300));
+
+	case 2 : renderer->DrawString("Play Singleplayer",
+				Vector2(40, 600));
+			renderer->DrawString("Play Multiplayer",
+				Vector2(40, 500), Vector4(0, 0, 1, 1));
+			renderer->DrawString("Play Multiplayer as Server",
+				Vector2(40, 400));
+			renderer->DrawString("Exit",
+				Vector2(40, 300));
+
+	case 3 : renderer->DrawString("Play Singleplayer",
+				Vector2(40, 600));
+			renderer->DrawString("Play Multiplayer",
+				Vector2(40, 500));
+			renderer->DrawString("Play Multiplayer as Server",
+				Vector2(40, 400), Vector4(0, 0, 1, 1));
+			renderer->DrawString("Exit",
+				Vector2(40, 300));
+	case 4: renderer->DrawString("Play Singleplayer",
+			Vector2(40, 600));
+			renderer->DrawString("Play Multiplayer",
+				Vector2(40, 500));
+			renderer->DrawString("Play Multiplayer as Server",
+				Vector2(40, 400));
+			renderer->DrawString("Exit",
+				Vector2(40, 300), Vector4(0, 0, 1, 1));
+
+	}
+}
+
 
 //From here on it's functions to add in objects to the world!
 void TutorialGame::AddObstacles()
@@ -962,11 +1145,7 @@ void TutorialGame::AddObstacles()
 	AddTerrainToWorld(offset + Vector3(455, 18, 230), Vector3(20, 10, 5), brown);
 }
 
-/*
-
-A single function to add a large immoveable cube to the bottom of our world
-
-*/
+//A single function to add a large immoveable cube to the bottom of our world
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject("FLOOR");
 
@@ -1104,13 +1283,10 @@ void TutorialGame::AddBridgeToWorld(Vector3 startPos, int num) {
 	world->AddConstraint(constraint);
 }
 
-/*
 
-Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its
-rigid body representation. This and the cube function will let you build a lot of 'simple' 
-physics worlds. You'll probably need another function for the creation of OBB cubes too.
-
-*/
+//Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its
+//rigid body representation. This and the cube function will let you build a lot of 'simple' 
+//physics worlds. You'll probably need another function for the creation of OBB cubes too.
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
 	GameObject* sphere = new GameObject("SPHERE");
 
@@ -1338,4 +1514,4 @@ void TutorialGame::SimpleGJKTest() {
 	newFloor->SetBoundingVolume((CollisionVolume*)new OBBVolume(floorDimensions));
 
 }
-
+*/

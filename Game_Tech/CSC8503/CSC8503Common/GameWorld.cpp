@@ -51,6 +51,7 @@ void GameWorld::ClearAndErase() {
 }
 
 void GameWorld::AddGameObject(GameObject* o) {
+	o->Start();
 	gameObjects.emplace_back(o);
 }
 

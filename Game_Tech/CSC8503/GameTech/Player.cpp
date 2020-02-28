@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "SpherePhysicsComponent.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -10,6 +11,9 @@ Player::Player(int id) : GameObject("PLAYER")
 	yaw = 0.0f;
 	mainCamera = nullptr;
 
+	orbitSpeed = 1.0f;
+	orbitDistance = 1.0f;
+
 	playerID = id;
 
 	for (int i = 0; i < 6; i++)
@@ -19,6 +23,17 @@ Player::Player(int id) : GameObject("PLAYER")
 	layerMask = 0; // Collide with everything
 
 	initialMousePos = Vector2(0, 0);
+
+	// Initial cam position
+	Vector3 pos = transform.GetWorldPosition();
+	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
+	Vector3 forward = Vector3(f.x, f.y, f.z);
+	camPos = pos;
+	camPos -= forward * 1.04;
+	camPos.y += 0.5;
+
+	direction = transform.GetWorldPosition() - camPos;
+
 }
 
 Player::~Player() 
@@ -31,6 +46,11 @@ void Player::DuringUpdate(float dt)
 	UpdateClientPlayerKeys(dt);
 
 	UpdateCamera(dt);
+
+	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+
+
+	std::cout << "Player: " << transform.GetWorldPosition().x << std::endl;
 }
 
 void Player::Trigger(GameObject& obj)
@@ -40,21 +60,39 @@ void Player::Trigger(GameObject& obj)
 
 void Player::UpdateCamera(float dt)
 {
+	float angle = 0.1;
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A))
+	{
+		Vector3 rot;
+		rot.x = direction.x * cosf(-angle) + direction.z * sinf(-angle);
+		rot.y = direction.y;
+		rot.z = -direction.x * sinf(-angle) + direction.z * cosf(-angle);
+
+		direction = rot;
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D))
+	{
+		Vector3 rot;
+		rot.x = direction.x * cosf(angle) + direction.z * sinf(angle);
+		rot.y = direction.y;
+		rot.z = -direction.x * sinf(angle) + direction.z * cosf(angle);
+
+		direction = rot;
+	}
+
 	Vector3 pos = transform.GetWorldPosition();
 
 	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
 
 	Vector3 forward = Vector3(f.x, f.y, f.z);
 
-	Vector3 camPos = pos;
-
-	camPos -= forward * 1.04;
-	camPos.y += 40;
+	camPos = pos;
+	camPos -= direction;
 
 	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
-
 	Matrix4 modelMat = temp.Inverse();
-
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler(); //nearly there now!
 
@@ -65,18 +103,15 @@ void Player::UpdateCamera(float dt)
 
 void Player::UpdateClientPlayerKeys(float dt)
 {
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
 
-	//physicsObject->AddForce(Vector3(1, 0, 0) * 100);
+	float x = (float)sphere->getVelocity().x;
+	float y = (float)sphere->getVelocity().y;
+	float z = (float)sphere->getVelocity().z;
 
-	if (yaw < 0) {
-		yaw += 360.0f;
-	}
-	if (yaw > 360.0f) {
-		yaw -= 360.0f;
-	}
+	if ((x > 0) || (y > 0) || (z > 0))
+		return;
 
-	transform.SetLocalOrientation(Quaternion::EulerAnglesToQuaternion(0, yaw, 0));
 
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
 	{
@@ -85,9 +120,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 	else if (!Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x != 0 && initialMousePos.y != 0))
 	{
 		Vector2 currentMousePos = Window::GetMouse()->GetAbsolutePosition();
-		Vector2 direction = currentMousePos - initialMousePos;
+		Vector2 dir = currentMousePos - initialMousePos;
 
-		float distance = direction.Length();
+		float distance = dir.Length();
 
 		// Minimum distance
 		if (distance < 50) 
@@ -97,30 +132,24 @@ void Player::UpdateClientPlayerKeys(float dt)
 			return;
 		}
 
-		direction.Normalise();
+		dir.Normalise();
 
-		Vector3 threeDimDir = Vector3(direction.x, 0, direction.y);
+		Vector3 threeDimDir = Vector3(-dir.x, 0, -dir.y);
 
-		physicsObject->AddForce(threeDimDir * distance * 1000);
+		Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, mainCamera->GetYaw(), 0);
+
+		// Rotate drag direction to match camera direction
+		Quaternion q = Quaternion(threeDimDir.x, threeDimDir.y, threeDimDir.z, 0);
+		Quaternion c = cameraRot.Conjugate();
+		q = cameraRot * q * c;
+		threeDimDir = Vector3(q.x, q.y, q.z);
+
+		sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+		Vector3 vec = threeDimDir * distance * 0.005;
+		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;
-	}
-	else 
-	{
-		return;
-	}
-
-	/*Vector4 z = transform.GetWorldMatrix().GetColumn(2);
-
-	Vector3 forward = Vector3(z.x, z.y, z.z);
-
-	Vector4 x = transform.GetWorldMatrix().GetColumn(0);
-
-	Vector3 right = Vector3(x.x, x.y, x.z);*/
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LBUTTON)) {
-		buttonStates[4] = true;
 	}
 }
 
