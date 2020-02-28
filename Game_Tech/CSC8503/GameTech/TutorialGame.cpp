@@ -955,14 +955,14 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->GetPhysicsObject()->SetInverseMass(inverseMass);
 	Ball->GetPhysicsObject()->InitSphereInertia();
 
-	//Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 
 	Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
 	test->setLambda(std::function<void(GameObject*)>(script));
 	Ball->addComponent(test);
 
-	cubeDebuff* cubed = new cubeDebuff(playerMesh, cubeMesh);
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
 	Ball->addComponent(cubed);
 
 	world->AddGameObject(Ball);
