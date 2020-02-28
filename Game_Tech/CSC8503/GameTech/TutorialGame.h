@@ -70,7 +70,9 @@ namespace NCL {
 			Vector3 playerPos3;
 			Vector3 playerPos4;
 
-			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, MeshSceneNode* sceneNode);
+
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics = true, const Vector3& size = Vector3(1,1,1), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
 			GameObject* playerTwo;

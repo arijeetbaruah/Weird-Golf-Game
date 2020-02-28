@@ -271,21 +271,110 @@ void TutorialGame::InitWorld() {
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
-	AddGolfLevelToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), green);
+	//			 RenderObject(must)	    Position(must)		Physics		scale						colour			 name
+	AddSomeObject(GameLevelMapMesh,		Vector3(0, 0, 0));
 
-	// Add all modular golf level subsections to world
-	/*
-	for (int i = 0; i < golfLevelMeshes.size(); i++)
-	{
-		AddGolfLevelToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), green, i);
-	}
-	*/
-
-	/*if (isNetworkedGame)
-		AddPlayerTwoToWorld(offSet + Vector3(50, 10, 0));*/
 }
 
+void TutorialGame::LoadColladaRenderObjects() {
 
+	auto mshLoadFunc =		[](MeshSceneNode** sceneNode, const char* meshName, const char* textureName, OGLShader* shader) {
+		(*sceneNode) = new MeshSceneNode();
+
+		OGLMesh* tempMesh = new OGLMesh(meshName);
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		tempMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+		tempMesh->UploadToGPU();
+
+		RenderObject* tempMe = new RenderObject(tempMesh, tempTexture, shader);
+		(*sceneNode)->AddMesh(tempMe);
+	};
+	auto colladaLoadFunc =	[](MeshSceneNode** sceneNode, const char* meshName, const char* textureName, OGLShader* shader) {
+		(*sceneNode) = new MeshSceneNode();
+
+		ColladaBase* tempMesh = new ColladaBase(meshName);
+
+		int meshSize = tempMesh->GetNumMeshes();
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		for (meshInfor tempIn : tempMesh->GetMeshes()) {
+
+			//build new array
+			OGLMesh* tempOGLMesh = new OGLMesh();
+			vector<Vector3> vertics;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+			vector<unsigned int> indices;
+
+			//transform information to vector format
+			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++)
+			{
+				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+				indices.push_back(i);
+			}
+
+			//set mesh information
+			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+			tempOGLMesh->SetVertexPositions(vertics);
+			tempOGLMesh->SetVertexNormals(normals);
+			tempOGLMesh->SetVertexTextureCoords(texCoords);
+			tempOGLMesh->SetVertexIndices(indices);
+			tempOGLMesh->UploadToGPU();
+
+			RenderObject* tempMe = new RenderObject(tempOGLMesh, tempTexture, shader);
+
+			(*sceneNode)->AddMesh(tempMe);
+		}
+	};
+	auto objLoadFunc =		[](MeshSceneNode** sceneNode, const char* meshName, const char* textureName, OGLShader* shader) {
+
+		objl::Loader loader;
+		bool loadout = loader.LoadFile(meshName);
+		if (!loadout) return;
+
+		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		for (objl::Mesh tempOriMesh : loader.LoadedMeshes)
+		{
+			OGLMesh* tempMesh = new OGLMesh(meshName);
+			tempMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+
+			vector<Vector3> verts;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+
+			for (int i = 0; i < tempOriMesh.Vertices.size(); i++) {
+				Vector3 v(tempOriMesh.Vertices[i].Position.X, tempOriMesh.Vertices[i].Position.Y, tempOriMesh.Vertices[i].Position.Z);
+				verts.push_back(v);
+
+				Vector3 n(tempOriMesh.Vertices[i].Normal.X, tempOriMesh.Vertices[i].Normal.Y, tempOriMesh.Vertices[i].Normal.Z);
+				normals.push_back(n);
+
+				Vector2 t(tempOriMesh.Vertices[i].TextureCoordinate.X, tempOriMesh.Vertices[i].TextureCoordinate.Y);
+				texCoords.push_back(t);
+
+				tempMesh->SetVertexPositions(verts);
+				tempMesh->SetVertexNormals(normals);
+				tempMesh->SetVertexTextureCoords(texCoords);
+				tempMesh->SetVertexIndices(tempOriMesh.Indices);
+			}
+
+			RenderObject* tempMe = new RenderObject(tempMesh, tempTexture, shader);
+
+			(*sceneNode)->AddMesh(tempMe);
+
+		}
+	};
+
+	//				target				mesh			texture					shader
+	colladaLoadFunc(&GameLevelMapMesh, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
+
+}
 
 
 
@@ -866,132 +955,84 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 	return otherBall;
 }
 
-GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour) {
-	std::vector<RenderObject*> renderList = GameLevelMapMesh->GetAllMesh();
-	std::vector<TriangleMeshPhysicsComponent*> physicsList;
+GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, MeshSceneNode* sceneNode) {
 
+	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
 
-	for (RenderObject* temp : renderList)
+	for (RenderObject* tempRender : renderList)
 	{
+		//build physics volume
 		std::vector<PxVec3> verts;
 		std::vector<PxU32> tris;
-		for each (Vector3 vert in temp->GetMesh()->GetPositionData()) {
-			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		}
-		for each (unsigned int index in temp->GetMesh()->GetIndexData()) {
-			tris.push_back(index);
-		}
+		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
+
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
-		physicsList.push_back(physicsC);
-	}
 
-	auto renderNow = renderList.begin();
-	auto physicsNow = physicsList.begin();
-
-	for (;renderNow != renderList.end(); renderNow++)
-	{
+		//build object list
 		GameObject* floor = new GameObject("FLOOR");
 
 		floor->setLayer(1);
 		floor->setLayerMask(49);
-
 		floor->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 		floor->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-		(*renderNow)->SetParentTransform(&floor->GetTransform());
-		floor->SetRenderObject((*renderNow));
 
-		floor->addComponent((*physicsNow));
+		tempRender->SetParentTransform(&floor->GetTransform());
+		floor->SetRenderObject(tempRender);
+		floor->addComponent(physicsC);
 		floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 		floor->GetPhysicsObject()->SetInverseMass(0);
 		floor->GetPhysicsObject()->InitCubeInertia();
 
 		world->AddGameObject(floor);
-		physicsNow++;
 	}
 	return 0;
+}
 
-	/*
-	std::vector<PxVec3> verts;
-	std::vector<PxU32> tris;
+vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics, const Vector3& size, const Vector4& colour, std::string objectName)
+{
+	std::vector<GameObject*> resultList;
 
-	for (MeshGeometry* tempMesh: gameLevelMap->GetMeshList())
+	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
+
+	for (RenderObject* tempRender : renderList)
 	{
-		for each (Vector3 vert in tempMesh->GetPositionData()) {
-			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		}
-		for each (unsigned int index in tempMesh->GetIndexData()) {
-			tris.push_back(index);
-		}
-	}
-	
-	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
-	floor->addComponent(physicsC);
-	*/
-	/*
-	std::vector<PxVec3> verts;
-	std::vector<PxU32> tris;
+		//build physics volume
+		std::vector<PxVec3> verts;
+		std::vector<PxU32> tris;
+		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
 
-	for each (Vector3 vert in golfLevelMeshes[0]->GetPositionData()) {
-		verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-	}
-	for each (unsigned int index in golfLevelMeshes[0]->GetIndexData()) {
-		tris.push_back(index);
-	}
-	
-	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
-	floor->addComponent(physicsC);
-	*/
+		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
+
+		//build object list
+		GameObject* tempObject = new GameObject(objectName);
+
+		tempObject->GetTransform().SetWorldScale(Vector3(1, 1, 1));
+		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+
+		tempRender->SetParentTransform(&tempObject->GetTransform());
+		tempObject->SetRenderObject(tempRender);
 
 
-}
+		tempObject->addComponent(physicsC);
 
-
-
-void TutorialGame::LoadColladaRenderObjects() {
-	auto colladaLoadFunc = [this](MeshSceneNode** sceneName, const char* meshName, const char* textureName, OGLShader* shader, Transform* transform) {
-		ColladaBase* tempMesh = new ColladaBase(meshName);
-
-		int meshSize = tempMesh->GetNumMeshes();
-		vector<MeshGeometry*> tempMeshList;
-		vector<meshInfor> tempInfor = tempMesh->GetMeshes();
-
-		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
-
-		for (meshInfor tempIn : tempInfor) {
-			OGLMesh* tempOGLMesh = new OGLMesh();
-			vector<Vector3> vertics;
-			vector<Vector3> normals;
-			vector<Vector2> texCoords;
-			vector<unsigned int> indices;
-			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
-
-			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++) {
-				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
-				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
-				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
-				indices.push_back(i);
-			}
-
-			tempOGLMesh->SetVertexPositions(vertics);
-			tempOGLMesh->SetVertexNormals(normals);
-			tempOGLMesh->SetVertexTextureCoords(texCoords);
-			tempOGLMesh->SetVertexIndices(indices);
-
-			tempOGLMesh->UploadToGPU();
-			tempMeshList.push_back(tempOGLMesh);
-		}
-		delete tempMesh;
-		for (MeshGeometry* temp : tempMeshList)
+		if (ifHasPhysics)
 		{
-			RenderObject* tempMe = new RenderObject(transform, temp, tempTexture, shader);
-			(*sceneName)->AddMesh(tempMe);
+			tempObject->SetPhysicsObject(new PhysicsObject(&tempObject->GetTransform(), tempObject->GetBoundingVolume()));
+			tempObject->GetPhysicsObject()->SetInverseMass(0);
+			tempObject->GetPhysicsObject()->InitCubeInertia();
 		}
-	};
 
-	colladaLoadFunc(&GameLevelMapMesh, "TestLevel.dae", "tex_MinigolfPack.png", basicShader, &(lockedObject->GetTransform()));
 
+		resultList.push_back(tempObject);
+		world->AddGameObject(tempObject);
+	}
+	return resultList;
 }
+
+
 
 
 

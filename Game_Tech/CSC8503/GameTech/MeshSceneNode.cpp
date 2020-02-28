@@ -3,7 +3,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-void MeshSceneNode::GetSubMeshes(std::vector<RenderObject*> tempMesh, MeshSceneNode* tempNode)
+void MeshSceneNode::GetSubMeshes(std::vector<RenderObject*> &tempMesh, MeshSceneNode* tempNode)
 {
 	if (tempNode->subNode.size() != 0)
 	{
