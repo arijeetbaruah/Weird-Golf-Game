@@ -298,10 +298,16 @@ void TutorialGame::LoadColladaRenderObjects() {
 		ColladaBase* tempMesh = new ColladaBase(meshName);
 
 		int meshSize = tempMesh->GetNumMeshes();
-
 		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
 
-		for (meshInfor tempIn : tempMesh->GetMeshes()) {
+		for (EnjoyMesh tempIn : tempMesh->GetMeshes()) {
+			float tempF[16];
+			for (size_t i = 0; i < 16; i++) tempF[i] = tempIn.transform[i];
+			Matrix4 tempMat(tempF);
+
+			tempMat.Transpose();
+
+			//tempMat = Matrix4::Scale(Vector3(0.01,0.01,0.01)) * tempMat;
 
 			//build new array
 			OGLMesh* tempOGLMesh = new OGLMesh();
@@ -309,11 +315,17 @@ void TutorialGame::LoadColladaRenderObjects() {
 			vector<Vector3> normals;
 			vector<Vector2> texCoords;
 			vector<unsigned int> indices;
+			
 
 			//transform information to vector format
 			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++)
 			{
-				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				Matrix4 temp;
+				Vector4 tempVec(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z, 1);
+
+				tempVec = tempMat * tempVec;
+
+				vertics.push_back(Vector3(tempVec) * 0.01);
 				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
 				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
 				indices.push_back(i);
@@ -373,7 +385,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	};
 
 	//				target				mesh			texture					shader
-	colladaLoadFunc(&GameLevelMapMesh, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh, "TestLevel222.dae", "tex_MinigolfPack.png", basicShader);
 
 }
 

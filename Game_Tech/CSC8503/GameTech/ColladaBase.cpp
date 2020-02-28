@@ -107,6 +107,39 @@ ColladaBase::ColladaBase(const char* path)
 		}
 		meshes.push_back(result_mesh);
 	}
+
+
+	auto* library_visual_scenes = COLLADA->FirstChildElement("library_visual_scenes");
+	auto* visual_scene = library_visual_scenes->FirstChildElement("visual_scene");
+
+	std::vector<tinyxml2::XMLElement*> transform;
+
+
+	for (auto* current_node = visual_scene->FirstChildElement("node");
+		current_node != nullptr;
+		current_node = current_node->NextSiblingElement("node"))
+	{
+		auto* matrixTem = current_node->FirstChildElement("matrix");
+		transform.push_back(matrixTem);
+	}
+
+
+	int i = 0;
+
+	for (auto* item : transform)
+	{
+		auto* vertex_array = item->GetText();
+		vector<float> tempVec;
+		float tempFloat ;
+		std::stringstream ss(vertex_array);
+		for (int i = 0; i < 16; i++)
+		{
+			ss >> tempFloat;
+			tempVec.push_back(tempFloat);
+		}
+		meshes[i].transform = tempVec;
+		i++;
+	}
 }
 
 ColladaBase::~ColladaBase()

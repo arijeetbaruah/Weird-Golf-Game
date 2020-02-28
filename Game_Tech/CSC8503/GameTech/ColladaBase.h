@@ -29,6 +29,7 @@ typedef struct  EnjoyMesh
 	vector<vertexInfor> vertices;
 	vector<vertexInfor> normals;
 	vector<textureInfor> texcoords;
+	vector<float> transform;
 	vector<int> indices;
 }meshInfor;
 
@@ -41,8 +42,9 @@ class ColladaBase
 public:
 	ColladaBase(const char* path);
 	~ColladaBase();
-	vector<EnjoyMesh> GetMeshes(){	return meshes;		}
-	int GetNumMeshes()			{	return numMeshes;	}
+	vector<EnjoyMesh> GetMeshes()	{	return meshes;		}
+	int GetNumMeshes()				{	return numMeshes;	}
+
 protected:
 	vector<meshTemp> temp_meshes;
 	vector<meshInfor> meshes;
