@@ -12,6 +12,7 @@ GameServer::GameServer(int onPort, int maxClients)	{
 	netHandle	= nullptr;
 	//threadAlive = false;
 	HasSecondPlayer = false;
+	log = std::unique_ptr<Logger>(new Logger("Game Server"));
 
 	Initialise();
 }
@@ -38,7 +39,7 @@ bool GameServer::Initialise() {
 	netHandle = enet_host_create(&address, clientMax, 1, 0, 0);
 
 	if (!netHandle) {
-		std::cout << __FUNCTION__ << " failed to create network handle!" << std::endl;
+		log->error("{} failed to create network handle!", __FUNCTION__);
 		return false;
 	}
 	//threadAlive		= true;
@@ -63,12 +64,11 @@ bool GameServer::SendGlobalPacket(GamePacket& packet) {
 bool GameServer::SendPacketToPeer(GamePacket& packet, int id) {
 	ENetPacket* dataPacket = enet_packet_create(&packet, packet.GetTotalSize(), 0);
 
-
-	if (id == 1 && playerOne)
-		enet_peer_send(playerOne, 0, dataPacket);
-	else if (id == 2 && playerTwo)
-		enet_peer_send(playerTwo, 0, dataPacket);
-	
+	std::map<int, ENetPeer*>::iterator it;
+	for (it = players.begin(); it != players.end(); it++) {
+		if (id == it->first)
+			enet_peer_send(it->second, 0, dataPacket);
+	}
 	
 	return true;
 }
@@ -86,39 +86,18 @@ void GameServer::UpdateServer() {
 		int peer = p->incomingPeerID;
 
 		if (type == ENetEventType::ENET_EVENT_TYPE_CONNECT) {
-			std::cout << "Server: New client connected" << std::endl;
+			log->info("Server: New client connected");
 			NewPlayerPacket player(peer);
 			SendGlobalPacket(player);
 
-			if (!playerOne)
-			{
-				playerOne = p;
-				players.insert(std::pair<int, ENetPeer*>(1, playerOne));
-			}
-			else if (!playerTwo)
-			{
-				HasSecondPlayer = true;
-				playerTwo = p;
-				players.insert(std::pair<int, ENetPeer*>(2, playerTwo));
-			}
-				
+			players.insert(std::pair<int, ENetPeer*>(peer, p));				
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_DISCONNECT) {
-			std::cout << "Server: A client has disconnected" << std::endl;
+			log->info("Server: A client has disconnected");
 			PlayerDisconnectPacket player(peer);
 			SendGlobalPacket(player);
 
-			if (playerOne == p)
-			{
-				playerOne = nullptr;
-				players.erase(players.begin(), players.find(1));
-			}
-			else if (playerTwo == p)
-			{
-				HasSecondPlayer = false;
-				playerTwo = nullptr;
-				players.erase(players.begin(), players.find(2));
-			}
+			players.erase(players.begin(), players.find(p->incomingPeerID));
 				
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_RECEIVE) {

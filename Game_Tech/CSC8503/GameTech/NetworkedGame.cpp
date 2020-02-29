@@ -253,7 +253,7 @@ void NetworkedGame::UpdateGame(float dt)
 	
 }
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
-	if (!thisServer)
+	if (!thisClient)
 		return;
 	PlayerPacket packet;
 
@@ -261,7 +261,7 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	packet.fullState.orientation = Ball->GetTransform().GetLocalOrientation();
 	log->info("({}, {}, {})", packet.fullState.position.x, packet.fullState.position.y, packet.fullState.position.z);
 
-	this->thisServer->SendGlobalPacket(packet);
+	this->thisClient->SendPacket(packet);
 
 }
 
