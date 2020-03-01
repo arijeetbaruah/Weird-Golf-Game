@@ -3,6 +3,7 @@
 #include "../../Common/TextureBase.h"
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
+#include <vector>
 
 namespace NCL {
 	using namespace NCL::Rendering;
@@ -16,6 +17,7 @@ namespace NCL {
 		{
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
+			RenderObject(MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
 			~RenderObject();
 
 			void SetDefaultTexture(TextureBase* t) {
@@ -46,6 +48,9 @@ namespace NCL {
 				return colour;
 			}
 
+			void SetParentTransform(Transform* parentTransform) {
+				this->transform = parentTransform;
+			}
 		protected:
 			MeshGeometry*	mesh;
 			TextureBase*	texture;

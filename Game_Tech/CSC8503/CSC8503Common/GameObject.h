@@ -35,6 +35,7 @@ namespace NCL {
 				components.insert(pair<string, Component*>(component->getName(), component));
 				component->Start();
 			}
+
 			void Update(float dt) {
 				DuringUpdate(dt);
 				for (pair<string, Component*> component : components) {
