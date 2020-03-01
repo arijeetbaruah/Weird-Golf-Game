@@ -21,6 +21,9 @@ bool NetworkObject::ReadPacket(GamePacket& p) {
 	if (p.type == Full_State) {
 		return ReadFullPacket((FullPacket&)p);
 	}
+	if (p.type == Received_State) {
+		return ReadPlayerPacket((PlayerPacket&)p);
+	}
 	return false; //this isn't a packet we care about!
 }
 
@@ -56,6 +59,51 @@ bool NetworkObject::ReadDeltaPacket(DeltaPacket &p) {
 	object.GetTransform().SetWorldPosition(fullPos);
 	object.GetTransform().SetLocalOrientation(fullOrientation);
 
+	return true;
+}
+
+bool NetworkObject::ReadPlayerPacket(PlayerPacket& p) {
+	if (p.fullState.stateID < lastFullState.stateID) {
+		return false; // received an 'old' packet, ignore!
+	}
+	lastFullState = p.fullState;
+
+	object.GetTransform().SetWorldPosition(lastFullState.position);
+	object.GetTransform().SetLocalOrientation(lastFullState.orientation);
+
+	stateHistory.emplace_back(lastFullState);
+
+	return true;
+}
+
+bool NetworkObject::WritePlayerPacket(GamePacket** p, int stateID) {
+	DeltaPacket* dp = new DeltaPacket();
+
+	dp->objectID = networkID;
+
+	NetworkState state;
+	if (!GetNetworkState(stateID, state)) {
+		return false; //can't delta!
+	}
+
+	dp->fullID = stateID;
+
+	Vector3		currentPos = object.GetTransform().GetWorldPosition();
+	Quaternion  currentOrientation = object.GetTransform().GetWorldOrientation();
+
+	currentPos -= state.position;
+	currentOrientation -= state.orientation;
+
+	dp->pos[0] = (char)currentPos.x;
+	dp->pos[1] = (char)currentPos.y;
+	dp->pos[2] = (char)currentPos.z;
+
+	dp->orientation[0] = (char)(currentOrientation.x * 127.0f);
+	dp->orientation[1] = (char)(currentOrientation.y * 127.0f);
+	dp->orientation[2] = (char)(currentOrientation.z * 127.0f);
+	dp->orientation[3] = (char)(currentOrientation.w * 127.0f);
+
+	*p = dp;
 	return true;
 }
 

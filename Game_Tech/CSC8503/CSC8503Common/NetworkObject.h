@@ -4,6 +4,15 @@
 #include "NetworkState.h"
 namespace NCL {
 	namespace CSC8503 {
+		struct PlayerPacket : public GamePacket {
+			int		objectID = -1;
+			NetworkState fullState;
+			PlayerPacket() {
+				type = Received_State;
+				size = sizeof(PlayerPacket) - sizeof(GamePacket);
+			}
+		};
+
 		struct FullPacket : public GamePacket {
 			int		objectID = -1;
 			NetworkState fullState;
@@ -78,10 +87,12 @@ namespace NCL {
 			bool GetNetworkState(int frameID, NetworkState& state);
 
 			virtual bool ReadDeltaPacket(DeltaPacket &p);
-			virtual bool ReadFullPacket(FullPacket &p);
+			virtual bool ReadFullPacket(FullPacket& p);
+			virtual bool ReadPlayerPacket(PlayerPacket &p);
 
 			virtual bool WriteDeltaPacket(GamePacket**p, int stateID);
 			virtual bool WriteFullPacket(GamePacket**p);
+			virtual bool WritePlayerPacket(GamePacket** p, int stateID);
 
 			GameObject& object;
 
