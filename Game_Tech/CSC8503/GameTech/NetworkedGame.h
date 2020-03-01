@@ -21,6 +21,8 @@ namespace NCL {
 			void StartLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
+			void InsertPlayer(int id, Player* p);
+			void RemovePlayer(int ID, Player* p);
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 

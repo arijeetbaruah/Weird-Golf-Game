@@ -31,6 +31,48 @@ public:
 	std::unique_ptr<Logger> log;
 };
 
+class NewPlayerPacketReceiver : public PacketReceiver {
+public:
+	NewPlayerPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
+		log = std::unique_ptr<Logger>(new Logger("New Player"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Connected) {
+			NewPlayerPacket* realPacket = (NewPlayerPacket*)payload;
+
+			log->info("New Player Connected");
+			game->InsertPlayer(realPacket->playerID, controlledplayer);
+		}
+	}
+
+	GameWorld& world;
+	Player* controlledplayer;
+	NetworkedGame* game;
+	std::unique_ptr<Logger> log;
+};
+
+class PlayerDisconnectPacketReceiver : public PacketReceiver {
+public:
+	PlayerDisconnectPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
+		log = std::unique_ptr<Logger>(new Logger("Player Disconnected"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Disconnected) {
+			PlayerDisconnectPacket* realPacket = (PlayerDisconnectPacket*)payload;
+
+			log->info("Player Disconnected");
+			game->RemovePlayer(realPacket->playerID, controlledplayer);
+		}
+	}
+
+	GameWorld& world;
+	Player* controlledplayer;
+	NetworkedGame* game;
+	std::unique_ptr<Logger> log;
+};
+
 class FullPacketReceiver : public PacketReceiver {
 public:
 	FullPacketReceiver(GameWorld& w, bool p, GameObject* controlled, GameObject* ghost) : world(w), isPlayerServer(p), controlledGoose(controlled), ghostGoose(ghost) {
@@ -224,9 +266,19 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	CollectableCountReceiver* countReceiver = new CollectableCountReceiver(*world);
 	thisClient->RegisterPacketHandler(Collectable_Count, &(*countReceiver));
 
-	thisClient->Connect(127, 0, 0, 1, port);
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, Ball, this);
+	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
 
+	thisClient->Connect(127, 0, 0, 1, port);
+}
+
+void NetworkedGame::InsertPlayer(int ID, Player* p) {
 	serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));
+}
+
+void NetworkedGame::RemovePlayer(int ID, Player* p) {
+	std::map<int, GameObject*>::iterator it = serverPlayers.find(1);
+	serverPlayers.erase(it);
 }
 
 void NetworkedGame::UpdateGame(float dt)
