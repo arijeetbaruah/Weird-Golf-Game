@@ -2,6 +2,8 @@
 #ifdef _ORBIS
 #include "pad.h"
 #include "InputBase.h"
+#include <move.h>
+#include <user_service.h>
 
 namespace NCL {
 	namespace PS4 {
@@ -13,10 +15,15 @@ namespace NCL {
 
 			void Poll();
 
+			auto GetPadHandle()
+			{
+				return padHandle;
+			}
 		protected:
 			void InitController();
 
 			int32_t padHandle;
+			int32_t motionHandle;
 			ScePadControllerInformation padInfo;
 		};
 	}

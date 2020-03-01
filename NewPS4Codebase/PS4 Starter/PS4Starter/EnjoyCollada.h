@@ -19,12 +19,12 @@ struct Float2
 {
 	float x, y;
 };
-struct  Temp_Mesh
+struct  TempMesh
 {
 	vector<Float3> vertices;
 	vector<Float3> normals;
-	vector<Float2> texcoords;
-	vector<Int3> indices;
+	vector<vector<Float2>> texcoords;
+	vector<vector<Int3>> indices;
 };
 struct  EnjoyMesh
 {
@@ -50,7 +50,7 @@ public:
 		return numMeshes;
 	}
 protected:
-	vector<Temp_Mesh> temp_meshes;
+	vector<TempMesh> temp_meshes;
 	vector<EnjoyMesh> meshes;
 	int numMeshes;
 };
