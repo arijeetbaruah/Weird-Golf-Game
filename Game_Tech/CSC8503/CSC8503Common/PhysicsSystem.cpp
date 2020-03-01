@@ -354,8 +354,8 @@ void PhysicsSystem::BroadPhase() {
 				if (!ShouldCollide((*i).object, (*j).object))
 					continue;
 					
-				//info.a = min((*i).object, (*j).object);
-				//info.b = max((*i).object, (*j).object);
+				info.a = min((*i).object, (*j).object);
+				info.b = max((*i).object, (*j).object);
 				broadphaseCollisions.insert(info);
 			}
 			
