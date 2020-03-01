@@ -3,6 +3,7 @@
 #include "../../Common/TextureBase.h"
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
+#include "../../Plugins/OpenGLRendering/OGLMesh.h"
 #include <vector>
 
 namespace NCL {
@@ -17,6 +18,7 @@ namespace NCL {
 		{
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
+			RenderObject(RenderObject* copyRender);
 			RenderObject(MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
 			~RenderObject();
 

@@ -275,7 +275,10 @@ void TutorialGame::InitWorld() {
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
 	//			 RenderObject(must)	    Position(must)		Physics		scale						colour			 name
-	AddSomeObject(GameLevelMapMesh,		Vector3(0, 0, 0));
+	AddSomeObject(GameLevelMapMesh1,		Vector3(0,  0, 0));
+	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -0.5, 2));
+	AddSomeObject(GameLevelMapMesh1,		Vector3(0, -1.5, 4));
+	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -2.0, 6));
 
 }
 
@@ -388,7 +391,8 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	//				target				mesh			texture					shader
 
-	colladaLoadFunc(&GameLevelMapMesh, "TestLevel222.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh1, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh2, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
 
 
 }
@@ -401,11 +405,13 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 	for (RenderObject* tempRender : renderList)
 	{
+		RenderObject* newRender = new RenderObject(tempRender);
+
 		//build physics volume
 		std::vector<PxVec3> verts;
 		std::vector<PxU32> tris;
-		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 
@@ -414,9 +420,8 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 		tempObject->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-
-		tempRender->SetParentTransform(&tempObject->GetTransform());
-		tempObject->SetRenderObject(tempRender);
+		newRender->SetParentTransform(&tempObject->GetTransform());
+		tempObject->SetRenderObject(newRender);
 
 
 		tempObject->addComponent(physicsC);

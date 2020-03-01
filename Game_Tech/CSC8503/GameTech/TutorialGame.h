@@ -153,7 +153,8 @@ namespace NCL {
 
 
 			//list of renderObject
-			MeshSceneNode* GameLevelMapMesh;
+			MeshSceneNode* GameLevelMapMesh1;
+			MeshSceneNode* GameLevelMapMesh2;
 			PhysicsObject* temp;
 
 			//list of 
