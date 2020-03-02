@@ -6,6 +6,7 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/Component.h"
 #include "../CSC8503Common/Script.h"
+#include "../CSC8503Common/offForward.h"
 
 #include "../CSC8503Common/cubeDebuff.h"
 #include "../CSC8503Common/TestBuff.h"
@@ -992,7 +993,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	TestBuff* testBuff = new TestBuff();
 	Ball->addComponent(testBuff);
-
+	Ball->addComponent(new offForward());
 	world->AddGameObject(Ball);
 
 
