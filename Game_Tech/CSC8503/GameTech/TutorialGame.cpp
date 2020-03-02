@@ -942,6 +942,8 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	
 	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
+	Ball->SetCubeMesh(cubeMesh);
+	Ball->SetPlayerMesh(playerMesh1);
 
 	SpherePhysicsComponent* sphere = nullptr;
 
@@ -987,7 +989,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	test->setLambda(std::function<void(GameObject*)>(script));
 	//Ball->addComponent(test);
 
-	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, Ball->GetCubeMesh());
 	Ball->addComponent(cubed);
 
 	TestBuff* testBuff = new TestBuff();
