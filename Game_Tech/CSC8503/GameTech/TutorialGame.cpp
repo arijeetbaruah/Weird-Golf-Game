@@ -6,6 +6,7 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/Component.h"
 #include "../CSC8503Common/Script.h"
+#include "../CSC8503Common/offForward.h"
 
 #include "../CSC8503Common/cubeDebuff.h"
 #include "../CSC8503Common/TestBuff.h"
@@ -276,11 +277,13 @@ void TutorialGame::InitWorld() {
 
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
-	//			 RenderObject(must)	    Position(must)		Physics		scale						colour			 name
-	AddSomeObject(GameLevelMapMesh1,		Vector3(0,  0, 0));
-	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -0.5, 2));
-	AddSomeObject(GameLevelMapMesh1,		Vector3(0, -1.5, 4));
-	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -2.0, 6));
+	//			 RenderObject(must)	    Position(must)					scale					rotation											colour					name
+	AddSomeObject(GameLevelMapMesh1,	Vector3(  0,   0,    0));
+	AddSomeObject(GameLevelMapMesh2,	Vector3(  0, -0.5,   2));
+	AddSomeObject(GameLevelMapMesh1,	Vector3(  0, -1.5,   4));
+	AddSomeObject(GameLevelMapMesh2,	Vector3(  0, -2.0,   6));
+	AddSomeObject(GameLevelMapMesh3,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+
 }
 
 void TutorialGame::LoadColladaRenderObjects() {
@@ -394,11 +397,12 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	colladaLoadFunc(&GameLevelMapMesh1, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
 	colladaLoadFunc(&GameLevelMapMesh2, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh3, "tree.dae", "tex_MinigolfPack.png", basicShader);
 
 
 }
 
-vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics, const Vector3& size, const Vector4& colour, std::string objectName)
+vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate,const Vector4& colour, std::string objectName)
 {
 	std::vector<GameObject*> resultList;
 
@@ -406,7 +410,6 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 	for (RenderObject* tempRender : renderList)
 	{
-		RenderObject* newRender = new RenderObject(tempRender);
 
 		//build physics volume
 		std::vector<PxVec3> verts;
@@ -420,20 +423,34 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		//build object list
 		GameObject* tempObject = new GameObject(objectName);
 
-		tempObject->GetTransform().SetWorldScale(Vector3(1, 1, 1));
+
+		//build rander object
+		RenderObject* newRender = new RenderObject(tempRender);
+		
+		tempObject->GetTransform().SetWorldScale(size);
+
 		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+		
 		newRender->SetParentTransform(&tempObject->GetTransform());
 		tempObject->SetRenderObject(newRender);
 
 		tempObject->addComponent(physicsC);
 
-		if (ifHasPhysics)
+		//build physics volume
+		std::vector<PxVec3> verts;
+		std::vector<PxU32> tris;
+		Matrix4 tempScale = Matrix4::Scale(size);
+
+		for each (Vector3 vert in newRender->GetMesh()->GetPositionData()) 
 		{
-			tempObject->SetPhysicsObject(new PhysicsObject(&tempObject->GetTransform(), tempObject->GetBoundingVolume()));
-			tempObject->GetPhysicsObject()->SetInverseMass(0);
-			tempObject->GetPhysicsObject()->InitCubeInertia();
+			vert = tempScale * vert;
+			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		}
 
+		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 10000, verts, tris, mMaterial);
+		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
 		world->AddGameObject(tempObject);
@@ -941,6 +958,8 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	
 	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
+	Ball->SetCubeMesh(cubeMesh);
+	Ball->SetPlayerMesh(playerMesh1);
 
 	SpherePhysicsComponent* sphere = nullptr;
 
@@ -986,12 +1005,12 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	test->setLambda(std::function<void(GameObject*)>(script));
 	//Ball->addComponent(test);
 
-	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, Ball->GetCubeMesh());
 	Ball->addComponent(cubed);
 
 	TestBuff* testBuff = new TestBuff();
 	Ball->addComponent(testBuff);
-
+	Ball->addComponent(new offForward());
 	world->AddGameObject(Ball);
 
 
