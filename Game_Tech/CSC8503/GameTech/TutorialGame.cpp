@@ -282,7 +282,9 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(GameLevelMapMesh2,	Vector3(  0, -0.5,   2));
 	AddSomeObject(GameLevelMapMesh1,	Vector3(  0, -1.5,   4));
 	AddSomeObject(GameLevelMapMesh2,	Vector3(  0, -2.0,   6));
-	AddSomeObject(GameLevelMapMesh3,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+	AddSomeObject(GameLevelMapMesh3,	Vector3(  0,    0,   0.5),		Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+	AddSomeObject(GameLevelMapMesh4,	Vector3(  0,    0,   0),				Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+	AddSomeObject(GameLevelMapMesh5,	Vector3(0, 0, -0.3), Vector3(10, 10, 10), Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
 
 }
 
@@ -393,11 +395,81 @@ void TutorialGame::LoadColladaRenderObjects() {
 		}
 	};
 
-	//				target				mesh			texture					shader
+	auto colladaLoadFuncMulTex = [](MeshSceneNode** sceneNode, const char* meshName, vector<char*> textureName, OGLShader* shader) {
+		(*sceneNode) = new MeshSceneNode();
 
-	colladaLoadFunc(&GameLevelMapMesh1, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
-	colladaLoadFunc(&GameLevelMapMesh2, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
-	colladaLoadFunc(&GameLevelMapMesh3, "tree.dae", "tex_MinigolfPack.png", basicShader);
+		ColladaBase* tempMesh = new ColladaBase(meshName);
+
+		int meshSize = tempMesh->GetNumMeshes();
+
+		std::vector<OGLTexture*> tempTexture;
+		for (const char* tempName : textureName)
+		{
+			OGLTexture* tempTex = (OGLTexture*)TextureLoader::LoadAPITexture(tempName);
+			tempTexture.push_back(tempTex);
+		}
+
+		std::vector<EnjoyMesh> meshList = tempMesh->GetMeshes();
+		for (int j = 0; j < meshList.size(); j++)
+		{
+			float tempF[16];
+			for (size_t i = 0; i < 16; i++) tempF[i] = meshList[j].transform[i];
+			Matrix4 tempMat(tempF);
+
+			tempMat.Transpose();
+
+			//tempMat = Matrix4::Scale(Vector3(0.01,0.01,0.01)) * tempMat;
+
+			//build new array
+			OGLMesh* tempOGLMesh = new OGLMesh();
+			vector<Vector3> vertics;
+			vector<Vector3> normals;
+			vector<Vector2> texCoords;
+			vector<unsigned int> indices;
+
+
+			//transform information to vector format
+			for (int i = meshList[j].indices[0]; i < meshList[j].indices.size(); i++)
+			{
+				Matrix4 temp;
+				Vector4 tempVec(meshList[j].vertices[i].x, meshList[j].vertices[i].y, meshList[j].vertices[i].z, 1);
+
+				tempVec = tempMat * tempVec;
+
+				vertics.push_back(Vector3(tempVec) * 0.01);
+				normals.push_back(Vector3(meshList[j].normals[i].x, meshList[j].normals[i].y, meshList[j].normals[i].z));
+				texCoords.push_back(Vector2(meshList[j].texcoords[i].x, meshList[j].texcoords[i].y));
+				indices.push_back(i);
+			}
+
+			//set mesh information
+			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
+			tempOGLMesh->SetVertexPositions(vertics);
+			tempOGLMesh->SetVertexNormals(normals);
+			tempOGLMesh->SetVertexTextureCoords(texCoords);
+			tempOGLMesh->SetVertexIndices(indices);
+			tempOGLMesh->UploadToGPU();
+
+			RenderObject* tempMe = new RenderObject(tempOGLMesh, tempTexture[j], shader);
+
+			(*sceneNode)->AddMesh(tempMe);
+		}
+	};
+
+	//				target					mesh				texture						shader
+	colladaLoadFunc(&GameLevelMapMesh1,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&GameLevelMapMesh2,		"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
+
+
+	colladaLoadFunc(&GameLevelMapMesh3,		"tree.dae",			"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&GameLevelMapMesh5,		"enjoyTree.dae",	"tex_tree.png", basicShader);
+
+	std::vector<char*> temp;
+	temp.push_back("brick.png");
+	temp.push_back("greenglass.jpg");
+
+	colladaLoadFuncMulTex(&GameLevelMapMesh4, "tree.dae", temp, basicShader);
+
 
 
 }

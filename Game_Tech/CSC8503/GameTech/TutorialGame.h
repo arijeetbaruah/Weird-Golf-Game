@@ -156,6 +156,8 @@ namespace NCL {
 			MeshSceneNode* GameLevelMapMesh1;
 			MeshSceneNode* GameLevelMapMesh2;
 			MeshSceneNode* GameLevelMapMesh3;
+			MeshSceneNode* GameLevelMapMesh4;
+			MeshSceneNode* GameLevelMapMesh5;
 			PhysicsObject* temp;
 
 			//list of 
