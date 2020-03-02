@@ -17,7 +17,6 @@ void PhysicsComponent::Update(float dt) {
 	std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
 
-	// Not really working
 	Quaternion orientation = Quaternion(tran.q.x, tran.q.y, tran.q.z, tran.q.w);
 	getParent()->GetTransform().SetLocalOrientation(orientation);
 }
