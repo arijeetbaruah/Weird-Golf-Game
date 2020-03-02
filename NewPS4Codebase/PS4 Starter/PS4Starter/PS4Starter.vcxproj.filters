@@ -81,6 +81,9 @@
     <WavePsslc Include="..\Assets\Shaders\PS4\ComputeShader.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
+      <Filter>Shaders</Filter>
+    </WavePsslc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\Assets\Textures\doge.png">
