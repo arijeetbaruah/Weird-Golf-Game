@@ -3,6 +3,7 @@
 #include "../CSC8503Common/GameServer.h"
 #include "../CSC8503Common/GameClient.h"
 #include "../../Plugins/Logger/Logger.h"
+#include "../CSC8503Common/cubeDebuff.h"
 #include <memory>
 
 #define COLLISION_MSG 30
@@ -22,8 +23,18 @@ public:
 			controlledplayer->GetTransform().SetWorldPosition(packet.position);
 			controlledplayer->GetTransform().SetLocalOrientation(packet.orientation);
 			log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
+
+			AddComponent(realPacket->powerUps);
 		}
 	}
+
+	void AddComponent(NetworkPowerUps powerUps) {
+		if (powerUps == NetworkPowerUps::SQUARE) {
+			cubeDebuff* cubed = new cubeDebuff(controlledplayer->GetPlayerMesh(), controlledplayer->GetCubeMesh());
+			controlledplayer->addComponent(cubed);
+		}
+	}
+
 	GameWorld& world;
 	NetworkState packet;
 	Player* controlledplayer;
@@ -307,7 +318,7 @@ void NetworkedGame::UpdateGame(float dt)
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	if (!thisClient)
 		return;
-	PlayerPacket packet;
+	PlayerPacket packet(NetworkPowerUps::NONE);
 
 	packet.fullState.position = Ball->GetTransform().GetWorldPosition();
 	packet.fullState.orientation = Ball->GetTransform().GetLocalOrientation();

@@ -178,6 +178,9 @@ void TutorialGame::InitialiseAssets() {
 	objLoadFunc("Assets/Ball10.obj", &playerMesh4);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
 
+	Ball->SetCubeMesh(cubeMesh);
+	Ball->SetPlayerMesh(playerMesh1);
+
 	std::vector<PxVec3> verts;
 	std::vector<PxU32> tris;
 
@@ -987,7 +990,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	test->setLambda(std::function<void(GameObject*)>(script));
 	//Ball->addComponent(test);
 
-	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, Ball->GetCubeMesh());
 	Ball->addComponent(cubed);
 
 	TestBuff* testBuff = new TestBuff();

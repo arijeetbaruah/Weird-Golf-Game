@@ -31,6 +31,12 @@ namespace NCL {
 			virtual void OnCollisionEnd(GameObject* otherObject);
 
 			bool* getButtonStates() { return buttonStates; };
+
+			OGLMesh* GetCubeMesh() { return cubeMesh; }
+			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
+
+			OGLMesh* GetPlayerMesh() { return playerMesh; }
+			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -51,6 +57,8 @@ namespace NCL {
 			int playerID;
 
 			bool buttonStates[6];
+			OGLMesh* cubeMesh = nullptr;
+			OGLMesh* playerMesh = nullptr;
 
 			std::queue<GameObject*> collectables;
 		};
