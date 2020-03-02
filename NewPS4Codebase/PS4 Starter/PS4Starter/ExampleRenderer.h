@@ -39,11 +39,13 @@ namespace NCL {
 			OBJMesh* mesh;
 
 			PS4Texture* testlevelTexture;
+			PS4Texture* treeTex;
 
 			PS4Input* input;
 			int32_t handle;
 			SceneNode* golfLevel;
 			SceneNode* building;
+			SceneNode* tree;
 		};
 	}
 }
