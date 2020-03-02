@@ -146,11 +146,12 @@ void Player::UpdateClientPlayerKeys(float dt)
 		Quaternion q = Quaternion(threeDimDir.x, threeDimDir.y, threeDimDir.z, 0);
 		Quaternion c = cameraRot.Conjugate();
 		q = cameraRot * q * c;
-		threeDimDir = Vector3(q.x, q.y, q.z);
+		shotDir = Vector3(q.x, q.y, q.z);
 
-		Vector3 vec = threeDimDir * distance * 0.005;
-		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
+		Vector3 vec = getShotDir() * distance * 0.005;
 		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
+		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
+		
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;

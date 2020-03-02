@@ -4,11 +4,19 @@
 #include "NetworkState.h"
 namespace NCL {
 	namespace CSC8503 {
+		enum NetworkPowerUps {
+			NONE,
+			SQUARE
+		};
+
 		struct PlayerPacket : public GamePacket {
 			int		objectID = -1;
 			NetworkState fullState;
-			PlayerPacket() {
+			NetworkPowerUps powerUps;
+
+			PlayerPacket(NetworkPowerUps pu) {
 				type = Received_State;
+				powerUps = pu;
 				size = sizeof(PlayerPacket) - sizeof(GamePacket);
 			}
 		};

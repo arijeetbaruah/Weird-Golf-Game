@@ -142,6 +142,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
     <ClInclude Include="LimitedShot.h" />
+    <ClInclude Include="offForward.h" />
     <ClInclude Include="ShotTracker.h" />
     <ClInclude Include="TestBuff.h" />
     <ClInclude Include="Timed.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="NetworkObject.cpp" />
     <ClCompile Include="NetworkState.cpp" />
+    <ClCompile Include="offForward.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PositionConstraint.cpp" />
