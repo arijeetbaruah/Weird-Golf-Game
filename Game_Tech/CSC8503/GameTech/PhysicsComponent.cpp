@@ -14,8 +14,14 @@ void PhysicsComponent::Start() {
 
 void PhysicsComponent::Update() {
 	PxTransform tran = actor->getGlobalPose();
-	std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
+}
+
+void PhysicsComponent::setAsTrigger() {
+	PxShape* shape;
+	actor->getShapes(&shape, 1);
+	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 }
 
 void PhysicsComponent::addForce(PxVec3 force) {

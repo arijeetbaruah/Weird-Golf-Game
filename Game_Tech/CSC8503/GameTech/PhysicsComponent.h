@@ -10,11 +10,14 @@ class PhysicsComponent : public Component {
 public:
 	PhysicsComponent(std::string name);
 	void addForce(PxVec3 force);
+	PxRigidDynamic* getActor() const { return actor; }
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
 
 	virtual void Start() override;
 	virtual void Update() override;
+
+	void setAsTrigger();
 };
 

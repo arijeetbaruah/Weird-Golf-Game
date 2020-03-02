@@ -884,6 +884,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 
 
 	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05, 0.05, 0.05);
+	PhysxController::getInstance().setupFiltering(box->getActor(), FilterGroup::eBALL, FilterGroup::eLEVEL);
 	Ball->addComponent(box);
 
 	Vector3 offSet(5, 0, 5);
