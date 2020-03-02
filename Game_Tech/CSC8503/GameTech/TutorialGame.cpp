@@ -178,9 +178,6 @@ void TutorialGame::InitialiseAssets() {
 	objLoadFunc("Assets/Ball10.obj", &playerMesh4);
 	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
 
-	Ball->SetCubeMesh(cubeMesh);
-	Ball->SetPlayerMesh(playerMesh1);
-
 	std::vector<PxVec3> verts;
 	std::vector<PxU32> tris;
 
@@ -945,6 +942,8 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	
 	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 
+	Ball->SetCubeMesh(cubeMesh);
+	Ball->SetPlayerMesh(playerMesh1);
 
 	SpherePhysicsComponent* sphere = nullptr;
 
