@@ -32,11 +32,27 @@ namespace NCL {
 
 			bool* getButtonStates() { return buttonStates; };
 
+
+			Vector3 getShotDir() {
+				if (isOffset)
+					return Vector3(shotDir.z, shotDir.y, shotDir.x);
+				return shotDir;
+			}
+
+			void setShotDir(Vector3 v) {
+				shotDir = v;
+			}
+
+			void setIsOffset(bool b) {
+				isOffset = b;
+			}
+
 			OGLMesh* GetCubeMesh() { return cubeMesh; }
 			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
 
 			OGLMesh* GetPlayerMesh() { return playerMesh; }
 			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
+
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -46,8 +62,11 @@ namespace NCL {
 			float orbitDistance;
 			float speed;
 
+			bool isOffset = false;
+
 			Vector3 camPos;
 			Vector3 direction;
+			Vector3 shotDir;
 
 			Vector2 initialMousePos;
 

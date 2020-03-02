@@ -162,6 +162,9 @@
     <ClInclude Include="LimitedShot.h">
       <Filter>PowerUpBase</Filter>
     </ClInclude>
+    <ClInclude Include="offForward.h">
+      <Filter>Debuffs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="LimitedShot.cpp">
       <Filter>PowerUpBase</Filter>
+    </ClCompile>
+    <ClCompile Include="offForward.cpp">
+      <Filter>Debuffs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
