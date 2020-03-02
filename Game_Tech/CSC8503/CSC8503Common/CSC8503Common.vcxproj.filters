@@ -22,6 +22,15 @@
     <Filter Include="ComponentSystem">
       <UniqueIdentifier>{1128895f-f5d4-4ba5-8c1c-33e794fb9717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PowerUpBase">
+      <UniqueIdentifier>{dd1e01ea-950e-4e80-b50d-60d46ba7b98c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debuffs">
+      <UniqueIdentifier>{36d3e3d2-b79e-4012-801f-6d324988542c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffs">
+      <UniqueIdentifier>{d9bdc679-24ce-4486-8551-1fe1175fdc00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionDetection.h">
@@ -132,17 +141,26 @@
     <ClInclude Include="Script.h">
       <Filter>ComponentSystem</Filter>
     </ClInclude>
-    <ClInclude Include="PowerUp.h">
-      <Filter>ComponentSystem</Filter>
+    <ClInclude Include="Timed.h">
+      <Filter>PowerUpBase</Filter>
     </ClInclude>
     <ClInclude Include="Targeted.h">
-      <Filter>ComponentSystem</Filter>
+      <Filter>PowerUpBase</Filter>
     </ClInclude>
-    <ClInclude Include="Timed.h">
-      <Filter>ComponentSystem</Filter>
+    <ClInclude Include="PowerUp.h">
+      <Filter>PowerUpBase</Filter>
     </ClInclude>
     <ClInclude Include="cubeDebuff.h">
+      <Filter>Debuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotTracker.h">
       <Filter>ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBuff.h">
+      <Filter>Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitedShot.h">
+      <Filter>PowerUpBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,13 +246,19 @@
       <Filter>ComponentSystem</Filter>
     </ClCompile>
     <ClCompile Include="Timed.cpp">
-      <Filter>ComponentSystem</Filter>
+      <Filter>PowerUpBase</Filter>
     </ClCompile>
     <ClCompile Include="Targeted.cpp">
-      <Filter>ComponentSystem</Filter>
+      <Filter>PowerUpBase</Filter>
     </ClCompile>
     <ClCompile Include="cubeDebuff.cpp">
-      <Filter>ComponentSystem</Filter>
+      <Filter>Debuffs</Filter>
+    </ClCompile>
+    <ClCompile Include="TestBuff.cpp">
+      <Filter>Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="LimitedShot.cpp">
+      <Filter>PowerUpBase</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

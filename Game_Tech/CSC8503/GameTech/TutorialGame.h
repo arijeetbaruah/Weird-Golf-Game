@@ -10,6 +10,8 @@
 #include <fstream>
 #include "PhysxController.h"
 #include "ColladaBase.h"
+#include "PhysxController.h"
+#include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
 
 namespace NCL {
@@ -75,6 +77,7 @@ namespace NCL {
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
+			std::unique_ptr<Logger> log;
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics = true, const Vector3& size = Vector3(1,1,1), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
@@ -82,6 +85,8 @@ namespace NCL {
 			vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
+
+			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
 			void StoreHighScore();
 			std::string fileName;
@@ -148,7 +153,8 @@ namespace NCL {
 
 
 			//list of renderObject
-			MeshSceneNode* GameLevelMapMesh;
+			MeshSceneNode* GameLevelMapMesh1;
+			MeshSceneNode* GameLevelMapMesh2;
 			PhysicsObject* temp;
 
 			//list of 

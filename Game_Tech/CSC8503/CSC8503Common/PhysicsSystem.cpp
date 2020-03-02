@@ -11,6 +11,7 @@
 #include <functional>
 using namespace NCL;
 using namespace CSC8503;
+using namespace Maths;
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= true;
@@ -354,8 +355,8 @@ void PhysicsSystem::BroadPhase() {
 				if (!ShouldCollide((*i).object, (*j).object))
 					continue;
 					
-				info.a = min((*i).object, (*j).object);
-				info.b = max((*i).object, (*j).object);
+				//info.a = min((*i).object, (*j).object);
+				//info.b = max((*i).object, (*j).object);
 				broadphaseCollisions.insert(info);
 			}
 			

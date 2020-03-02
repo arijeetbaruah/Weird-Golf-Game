@@ -20,6 +20,14 @@ RenderObject::RenderObject(MeshGeometry* mesh, TextureBase* tex, ShaderBase* sha
 	this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+RenderObject::RenderObject(RenderObject* copyRender) {
+	this->mesh = new OGLMesh();
+	this->mesh = copyRender->mesh;
+	this->texture = copyRender->texture;
+	this->shader = copyRender->shader;
+	this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
 RenderObject::~RenderObject() {
 
 }

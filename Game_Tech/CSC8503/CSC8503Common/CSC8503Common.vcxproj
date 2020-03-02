@@ -141,6 +141,9 @@
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
+    <ClInclude Include="LimitedShot.h" />
+    <ClInclude Include="ShotTracker.h" />
+    <ClInclude Include="TestBuff.h" />
     <ClInclude Include="Timed.h" />
     <ClInclude Include="NavigationGrid.h" />
     <ClInclude Include="NavigationMap.h" />
@@ -188,6 +191,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="LimitedShot.cpp" />
     <ClCompile Include="NavigationGrid.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
@@ -204,6 +208,7 @@
     <ClCompile Include="Targeted.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
+    <ClCompile Include="TestBuff.cpp" />
     <ClCompile Include="Timed.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

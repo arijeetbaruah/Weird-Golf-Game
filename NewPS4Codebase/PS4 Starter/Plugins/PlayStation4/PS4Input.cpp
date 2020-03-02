@@ -32,7 +32,7 @@ void PS4Input::InitController() {
 
 	if (ret == SCE_OK) {
 		padHandle = scePadOpen(userId, SCE_PAD_PORT_TYPE_STANDARD, 0, NULL);
-
+		//motionHandle = sceMoveOpen(userId, SCE_MOVE_TYPE_STANDARD, 0);
 		//Can get connectivity / deadzone info from this structure.
 		int ret = scePadGetControllerInformation(padHandle, &padInfo);
 		if (ret == SCE_OK) {
@@ -43,9 +43,12 @@ void PS4Input::InitController() {
 
 void PS4Input::Poll() {
 	ScePadData data;
+	// SceMoveData motionData;
+
+	//sceMoveReadStateLatest(motionHandle, &motionData);
 
 	int ret = scePadReadState(padHandle, &data);
-
+	// std::cout << motionData.gyro[0] << std::endl;
 	if (ret == SCE_OK) {
 		if (data.connected) {
 			axis[0].x = (((data.leftStick.x / 255.0f) * 2) - 1.0f);

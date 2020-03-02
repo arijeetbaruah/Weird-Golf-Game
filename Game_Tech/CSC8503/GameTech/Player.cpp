@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "SpherePhysicsComponent.h"
+#include "../CSC8503Common/ShotTracker.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -33,7 +34,8 @@ Player::Player(int id) : GameObject("PLAYER")
 	camPos.y += 0.5;
 
 	direction = transform.GetWorldPosition() - camPos;
-
+	
+	this->addComponent(new ShotTracker());
 }
 
 Player::~Player() 
@@ -146,9 +148,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 		q = cameraRot * q * c;
 		threeDimDir = Vector3(q.x, q.y, q.z);
 
-		sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
 		Vector3 vec = threeDimDir * distance * 0.005;
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
+		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;

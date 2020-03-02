@@ -3,6 +3,7 @@
 #include <enet/enet.h>
 #include <map>
 #include <string>
+#include <iterator>
 
 enum BasicNetworkMessages {
 	None,
@@ -89,6 +90,10 @@ public:
 		packetHandlers.insert(std::make_pair(msgID, receiver));
 	}
 
+	std::map<int, ENetPeer*>::const_iterator GetPlayerIterator() const {
+		return players.begin();
+	}
+
 protected:
 	NetworkBase();
 	~NetworkBase();
@@ -109,9 +114,7 @@ protected:
 	}
 
 	ENetHost* netHandle;
-	ENetPeer* playerOne;
-	ENetPeer* playerTwo;
-
+	
 	std::map<int, ENetPeer*> players;
 
 	std::multimap<int, PacketReceiver*> packetHandlers;

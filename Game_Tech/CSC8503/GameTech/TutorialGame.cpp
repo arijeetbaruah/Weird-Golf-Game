@@ -6,7 +6,9 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/Component.h"
 #include "../CSC8503Common/Script.h"
+
 #include "../CSC8503Common/cubeDebuff.h"
+#include "../CSC8503Common/TestBuff.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -33,6 +35,7 @@ TutorialGame::TutorialGame()	{
 	newSession = true;
 
 	fileName = "highscores";
+	log = std::unique_ptr<Logger>(new Logger("Tutorial Game"));
 
 	Ball = nullptr;
 
@@ -274,7 +277,10 @@ void TutorialGame::InitWorld() {
 	Vector4 green = Vector4(0, 0.6, 0, 1);
 
 	//			 RenderObject(must)	    Position(must)		Physics		scale						colour			 name
-	AddSomeObject(GameLevelMapMesh,		Vector3(0, 0, 0));
+	AddSomeObject(GameLevelMapMesh1,		Vector3(0,  0, 0));
+	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -0.5, 2));
+	AddSomeObject(GameLevelMapMesh1,		Vector3(0, -1.5, 4));
+	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -2.0, 6));
 
 }
 
@@ -299,10 +305,16 @@ void TutorialGame::LoadColladaRenderObjects() {
 		ColladaBase* tempMesh = new ColladaBase(meshName);
 
 		int meshSize = tempMesh->GetNumMeshes();
-
 		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
 
-		for (meshInfor tempIn : tempMesh->GetMeshes()) {
+		for (EnjoyMesh tempIn : tempMesh->GetMeshes()) {
+			float tempF[16];
+			for (size_t i = 0; i < 16; i++) tempF[i] = tempIn.transform[i];
+			Matrix4 tempMat(tempF);
+
+			tempMat.Transpose();
+
+			//tempMat = Matrix4::Scale(Vector3(0.01,0.01,0.01)) * tempMat;
 
 			//build new array
 			OGLMesh* tempOGLMesh = new OGLMesh();
@@ -310,11 +322,17 @@ void TutorialGame::LoadColladaRenderObjects() {
 			vector<Vector3> normals;
 			vector<Vector2> texCoords;
 			vector<unsigned int> indices;
+			
 
 			//transform information to vector format
 			for (int i = tempIn.indices[0]; i < tempIn.indices.size(); i++)
 			{
-				vertics.push_back(Vector3(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z));
+				Matrix4 temp;
+				Vector4 tempVec(tempIn.vertices[i].x, tempIn.vertices[i].y, tempIn.vertices[i].z, 1);
+
+				tempVec = tempMat * tempVec;
+
+				vertics.push_back(Vector3(tempVec) * 0.01);
 				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
 				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
 				indices.push_back(i);
@@ -374,7 +392,10 @@ void TutorialGame::LoadColladaRenderObjects() {
 	};
 
 	//				target				mesh			texture					shader
-	colladaLoadFunc(&GameLevelMapMesh, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
+
+	colladaLoadFunc(&GameLevelMapMesh1, "TestLevel.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh2, "TestLevel2.dae", "tex_MinigolfPack.png", basicShader);
+
 
 }
 
@@ -386,11 +407,13 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 	for (RenderObject* tempRender : renderList)
 	{
+		RenderObject* newRender = new RenderObject(tempRender);
+
 		//build physics volume
 		std::vector<PxVec3> verts;
 		std::vector<PxU32> tris;
-		for each (Vector3 vert in tempRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		for each (unsigned int index in tempRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 
@@ -399,9 +422,8 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 		tempObject->GetTransform().SetWorldScale(Vector3(1, 1, 1));
 		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-
-		tempRender->SetParentTransform(&tempObject->GetTransform());
-		tempObject->SetRenderObject(tempRender);
+		newRender->SetParentTransform(&tempObject->GetTransform());
+		tempObject->SetRenderObject(newRender);
 
 
 		tempObject->addComponent(physicsC);
@@ -507,6 +529,9 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (!isNetworkedGame)
 	{
+		isNetworkedGame = true;
+		isServer = true;
+
 		matchTimer -= dt;
 		int seconds = matchTimer;
 		renderer->DrawString(std::to_string(seconds / 60) + "." + std::to_string(seconds % 60),
@@ -566,6 +591,8 @@ void TutorialGame::UpdateGame(float dt) {
 		physics->Update(dt);*/
 
 	Debug::FlushRenderables();
+	UpdateNetworkPostion(Ball);
+
 	renderer->Render();
 }
 
@@ -906,9 +933,6 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	Ball = new Player(playerID);
 
-	
-	
-
 	Vector3 offSet(5, 0, 5);
 
 	Ball->setCamera(world->GetMainCamera());
@@ -961,10 +985,13 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
 	test->setLambda(std::function<void(GameObject*)>(script));
-	Ball->addComponent(test);
+	//Ball->addComponent(test);
 
 	cubeDebuff* cubed = new cubeDebuff(thisMesh, cubeMesh);
 	Ball->addComponent(cubed);
+
+	TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);
 
 	world->AddGameObject(Ball);
 
