@@ -32,6 +32,7 @@ namespace NCL {
 
 			bool* getButtonStates() { return buttonStates; };
 
+
 			Vector3 getShotDir() {
 				if (isOffset)
 					return Vector3(shotDir.z, shotDir.y, shotDir.x);
@@ -45,6 +46,13 @@ namespace NCL {
 			void setIsOffset(bool b) {
 				isOffset = b;
 			}
+
+			OGLMesh* GetCubeMesh() { return cubeMesh; }
+			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
+
+			OGLMesh* GetPlayerMesh() { return playerMesh; }
+			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
+
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -68,6 +76,8 @@ namespace NCL {
 			int playerID;
 
 			bool buttonStates[6];
+			OGLMesh* cubeMesh = nullptr;
+			OGLMesh* playerMesh = nullptr;
 
 			std::queue<GameObject*> collectables;
 		};

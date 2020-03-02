@@ -13,9 +13,6 @@
     <Filter Include="AI">
       <UniqueIdentifier>{ed419283-b2e2-421f-a417-ff0c62260d42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pathfinding">
-      <UniqueIdentifier>{84f869c2-c73b-4eb0-ace4-ff4d685ef4ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Other">
       <UniqueIdentifier>{7d85adc6-7681-4657-8953-c5696f06c66d}</UniqueIdentifier>
     </Filter>
@@ -30,6 +27,9 @@
     </Filter>
     <Filter Include="Buffs">
       <UniqueIdentifier>{d9bdc679-24ce-4486-8551-1fe1175fdc00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other\Pathfinding">
+      <UniqueIdentifier>{84f869c2-c73b-4eb0-ace4-ff4d685ef4ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,16 +88,16 @@
       <Filter>CollisionDetection</Filter>
     </ClInclude>
     <ClInclude Include="NavigationPath.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="NavigationGrid.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="NavigationMesh.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="NavigationMap.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>CollisionDetection</Filter>
@@ -201,10 +201,10 @@
       <Filter>Physics</Filter>
     </ClCompile>
     <ClCompile Include="NavigationGrid.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="NavigationMesh.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Other\Pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>CollisionDetection</Filter>
