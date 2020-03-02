@@ -281,7 +281,6 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -0.5, 2));
 	AddSomeObject(GameLevelMapMesh1,		Vector3(0, -1.5, 4));
 	AddSomeObject(GameLevelMapMesh2,		Vector3(0, -2.0, 6));
-
 }
 
 void TutorialGame::LoadColladaRenderObjects() {
@@ -415,6 +414,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 
 		//build object list
@@ -424,7 +424,6 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
 		newRender->SetParentTransform(&tempObject->GetTransform());
 		tempObject->SetRenderObject(newRender);
-
 
 		tempObject->addComponent(physicsC);
 

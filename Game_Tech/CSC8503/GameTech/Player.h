@@ -50,6 +50,8 @@ namespace NCL {
 			Vector3 camOffset;
 			int playerID;
 
+			int testYaw;
+
 			bool buttonStates[6];
 
 			std::queue<GameObject*> collectables;

@@ -36,6 +36,8 @@ Player::Player(int id) : GameObject("PLAYER")
 	direction = transform.GetWorldPosition() - camPos;
 	
 	this->addComponent(new ShotTracker());
+
+	testYaw = 0;
 }
 
 Player::~Player() 
@@ -45,6 +47,9 @@ Player::~Player()
 
 void Player::DuringUpdate(float dt)
 {
+	testYaw += 1;
+	Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, testYaw, 0);
+	transform.SetLocalOrientation(cameraRot);
 	UpdateClientPlayerKeys(dt);
 
 	UpdateCamera(dt);
