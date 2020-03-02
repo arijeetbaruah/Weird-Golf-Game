@@ -2,8 +2,76 @@
 #include "NetworkPlayer.h"
 #include "../CSC8503Common/GameServer.h"
 #include "../CSC8503Common/GameClient.h"
+#include "../../Plugins/Logger/Logger.h"
+#include <memory>
 
 #define COLLISION_MSG 30
+
+class PlayerPacketReceiver : public PacketReceiver {
+public:
+	PlayerPacketReceiver(GameWorld& w, Player* player, GameObject* ghost) : world(w), controlledplayer(player), secondPlayer(ghost){
+		log = std::unique_ptr<Logger>(new Logger("Player Packet"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Received_State) {
+			PlayerPacket* realPacket = (PlayerPacket*)payload;
+
+			packet = realPacket->fullState;
+
+			controlledplayer->GetTransform().SetWorldPosition(packet.position);
+			controlledplayer->GetTransform().SetLocalOrientation(packet.orientation);
+			log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
+		}
+	}
+	GameWorld& world;
+	NetworkState packet;
+	Player* controlledplayer;
+	GameObject* secondPlayer;
+	std::unique_ptr<Logger> log;
+};
+
+class NewPlayerPacketReceiver : public PacketReceiver {
+public:
+	NewPlayerPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
+		log = std::unique_ptr<Logger>(new Logger("New Player"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Connected) {
+			NewPlayerPacket* realPacket = (NewPlayerPacket*)payload;
+
+			log->info("New Player Connected");
+			game->InsertPlayer(realPacket->playerID, controlledplayer);
+		}
+	}
+
+	GameWorld& world;
+	Player* controlledplayer;
+	NetworkedGame* game;
+	std::unique_ptr<Logger> log;
+};
+
+class PlayerDisconnectPacketReceiver : public PacketReceiver {
+public:
+	PlayerDisconnectPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
+		log = std::unique_ptr<Logger>(new Logger("Player Disconnected"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Disconnected) {
+			PlayerDisconnectPacket* realPacket = (PlayerDisconnectPacket*)payload;
+
+			log->info("Player Disconnected");
+			game->RemovePlayer(realPacket->playerID, controlledplayer);
+		}
+	}
+
+	GameWorld& world;
+	Player* controlledplayer;
+	NetworkedGame* game;
+	std::unique_ptr<Logger> log;
+};
 
 class FullPacketReceiver : public PacketReceiver {
 public:
@@ -183,7 +251,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	ClientPacketReceiver* serverReceiver = new ClientPacketReceiver(*world, true, Ball, playerTwo);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, Ball, playerTwo);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
@@ -198,9 +266,19 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	CollectableCountReceiver* countReceiver = new CollectableCountReceiver(*world);
 	thisClient->RegisterPacketHandler(Collectable_Count, &(*countReceiver));
 
-	thisClient->Connect(127, 0, 0, 1, port);
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, Ball, this);
+	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
 
+	thisClient->Connect(127, 0, 0, 1, port);
+}
+
+void NetworkedGame::InsertPlayer(int ID, Player* p) {
 	serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));
+}
+
+void NetworkedGame::RemovePlayer(int ID, Player* p) {
+	std::map<int, GameObject*>::iterator it = serverPlayers.find(1);
+	serverPlayers.erase(it);
 }
 
 void NetworkedGame::UpdateGame(float dt)
@@ -225,6 +303,18 @@ void NetworkedGame::UpdateGame(float dt)
 	
 	UpdateAsClient(dt);
 	
+}
+void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
+	if (!thisClient)
+		return;
+	PlayerPacket packet;
+
+	packet.fullState.position = Ball->GetTransform().GetWorldPosition();
+	packet.fullState.orientation = Ball->GetTransform().GetLocalOrientation();
+	log->info("({}, {}, {})", packet.fullState.position.x, packet.fullState.position.y, packet.fullState.position.z);
+
+	this->thisClient->SendPacket(packet);
+
 }
 
 void NetworkedGame::SpawnPlayer()

@@ -69,6 +69,21 @@ namespace NCL {
 			void    Invert();
 			Matrix4 Inverse() const;
 
+			inline void Transpose() {
+				for (int i = 0; i < 4; ++i) {
+					for (int j = i+1; j < 4; ++j) {
+
+						int input = (i * 4) + j;
+						int output = (j * 4) + i;
+
+						float temp = array[input];
+						array[input] = array[output];
+						array[output] = temp;
+
+					}
+				}
+			}
+
 
 			Vector4 GetRow(unsigned int row) const;
 			Vector4 GetColumn(unsigned int column) const;

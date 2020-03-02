@@ -43,7 +43,7 @@ void PS4ComputeShader::Execute(Gnmx::GnmxGfxContext& cmdList, int x, int y, int 
 	cmdList.dispatch(x, y, z);
 }
 
-void PS4ComputeShader::Synchronise(Gnmx::GnmxGfxContext& cmdList) {
+void PS4ComputeShader::Synchronize(Gnmx::GnmxGfxContext& cmdList) {
 	Gnmx::GnmxDrawCommandBuffer* dcb = &cmdList.m_dcb;
 
 	volatile uint64_t* label = (volatile uint64_t*)dcb->allocateFromCommandBuffer(sizeof(uint64_t), Gnm::kEmbeddedDataAlignment8); // allocate memory from the command buffer

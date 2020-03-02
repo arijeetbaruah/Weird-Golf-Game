@@ -31,6 +31,7 @@ namespace NCL {
 
 			friend class OGLRenderer;
 			OGLMesh();
+			OGLMesh(MeshGeometry* copyMesh);
 			OGLMesh(const std::string&filename);
 			~OGLMesh();
 

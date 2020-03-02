@@ -20,7 +20,7 @@ namespace NCL {
 			void Bind(Gnmx::GnmxGfxContext& cmdList) const;
 			void Execute(Gnmx::GnmxGfxContext& cmdList, int x, int y = 1, int z = 1) const;
 
-			void Synchronise(Gnmx::GnmxGfxContext& cmdList);
+			void Synchronize(Gnmx::GnmxGfxContext& cmdList);
 
 			int		GetConstantBuffer(const std::string& name);
 			int		GetRegularBuffer(const std::string& name);

@@ -21,10 +21,13 @@ namespace NCL {
 			void StartLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
+			void InsertPlayer(int id, Player* p);
+			void RemovePlayer(int ID, Player* p);
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 			std::map<int, GameObject*> GetServerPlayers() { return serverPlayers; };
+			virtual void UpdateNetworkPostion(GameObject* obj) override;
 
 		protected:
 			void UpdateAsServer(float dt);
