@@ -78,7 +78,7 @@ namespace NCL {
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
 			std::unique_ptr<Logger> log;
-			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, bool ifHasPhysics = true, const Vector3& size = Vector3(1,1,1), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
 			GameObject* playerTwo;
@@ -155,6 +155,7 @@ namespace NCL {
 			//list of renderObject
 			MeshSceneNode* GameLevelMapMesh1;
 			MeshSceneNode* GameLevelMapMesh2;
+			MeshSceneNode* GameLevelMapMesh3;
 			PhysicsObject* temp;
 
 			//list of 
