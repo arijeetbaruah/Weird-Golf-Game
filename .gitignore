@@ -354,3 +354,4 @@ out/
 # PS4 Debug
 ORBIS_Debug/
 !submodules/FMOD/windows/api/*/lib/x64
+submodules/PhysX
