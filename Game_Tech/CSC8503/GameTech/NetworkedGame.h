@@ -27,6 +27,7 @@ namespace NCL {
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 			std::map<int, GameObject*> GetServerPlayers() { return serverPlayers; };
+			std::map<int, GameObject*>::const_iterator GetServerPlayersIterator() const { return serverPlayers.begin(); };
 			virtual void UpdateNetworkPostion(GameObject* obj) override;
 
 		protected:
