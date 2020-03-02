@@ -411,14 +411,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 	for (RenderObject* tempRender : renderList)
 	{
 
-		//build physics volume
-		std::vector<PxVec3> verts;
-		std::vector<PxU32> tris;
-		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
-		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
-		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 
-		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
 
 		//build object list
 		GameObject* tempObject = new GameObject(objectName);
@@ -434,7 +427,6 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		newRender->SetParentTransform(&tempObject->GetTransform());
 		tempObject->SetRenderObject(newRender);
 
-		tempObject->addComponent(physicsC);
 
 		//build physics volume
 		std::vector<PxVec3> verts;
