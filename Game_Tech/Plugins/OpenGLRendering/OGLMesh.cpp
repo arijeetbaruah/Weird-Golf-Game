@@ -29,12 +29,12 @@ OGLMesh::OGLMesh() {
 NCL::Rendering::OGLMesh::OGLMesh(MeshGeometry* copyMesh)
 {
 	this->primType = copyMesh->GetPrimitiveType();
-	for (Vector3 temp : copyMesh->GetPositionData())	this->positions.push_back(temp);
+	for (Vector3 temp : copyMesh->GetPositionData())		this->positions.push_back(temp);
 	for (Vector2 temp : copyMesh->GetTextureCoordData())	this->texCoords.push_back(temp);
-	for (Vector4 temp : copyMesh->GetColourData())		this->colours.push_back(temp);
-	for (Vector3 temp : copyMesh->GetNormalData())		this->normals.push_back(temp);
-	for (Vector3 temp : copyMesh->GetTangentData())		this->tangents.push_back(temp);
-	for (unsigned int temp : copyMesh->GetIndexData())	this->indices.push_back(temp);
+	for (Vector4 temp : copyMesh->GetColourData())			this->colours.push_back(temp);
+	for (Vector3 temp : copyMesh->GetNormalData())			this->normals.push_back(temp);
+	for (Vector3 temp : copyMesh->GetTangentData())			this->tangents.push_back(temp);
+	for (unsigned int temp : copyMesh->GetIndexData())		this->indices.push_back(temp);
 
 	vao = 0;
 	subCount = 1;
