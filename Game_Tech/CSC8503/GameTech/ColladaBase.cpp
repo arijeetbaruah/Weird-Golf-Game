@@ -2,12 +2,15 @@
 #include"..\..\Common\Assets.h"
 ColladaBase::ColladaBase(const char* path)
 {
+	//initial information
 	tinyxml2::XMLDocument xml;
 	std::string a("Assets/");
 	std::string tempS = a + path;
 	const char* tempC = tempS.c_str();
 	xml.LoadFile(tempC);
 	auto* COLLADA = xml.FirstChildElement("COLLADA");
+
+	//read basic information
 	std::cout << COLLADA->FirstAttribute()->Value() << std::endl;
 	auto* library_geometries = COLLADA->FirstChildElement("library_geometries");
 	std::vector<tinyxml2::XMLElement*> geometries;
@@ -125,8 +128,8 @@ ColladaBase::ColladaBase(const char* path)
 			auto* matrixTem = current_node->FirstChildElement("matrix");
 			transform.push_back(matrixTem);
 		}
-		int i = 0;
 
+		int i = 0;
 		for (auto* item : transform)
 		{
 			auto* vertex_array = item->GetText();
@@ -167,6 +170,31 @@ ColladaBase::ColladaBase(const char* path)
 		}
 	}
 
+	//read image name
+	auto* library_images = COLLADA->FirstChildElement("library_images");
+	if (library_images)
+	{
+		int i = 0;
+		for (auto* init_from = library_images->FirstChildElement("init_from");
+			init_from != nullptr;
+			init_from = init_from->NextSiblingElement("init_from")
+			)
+		{
+			auto* name_array = init_from->GetText();
+			std::stringstream ss(name_array);
+			std::string name;
+			ss >> name;
+			meshes[i].imageName = name;
+			i++;
+		}
+	}
+	else
+	{
+		for (meshInfor temp : meshes)
+		{
+			temp.imageName = std::string("");
+		}
+	}
 
 }
 
