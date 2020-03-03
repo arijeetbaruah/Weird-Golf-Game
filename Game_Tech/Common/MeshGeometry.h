@@ -54,7 +54,7 @@ namespace NCL {
 		void SetVertexPositions(const vector<Vector3>& newVerts);
 		void SetVertexTextureCoords(const vector<Vector2>& newTex);
 
-		void SetVertexColours(const vector<Vector4>& newColours);
+		void SetVertexColors(const vector<Vector4>& newColors);
 		void SetVertexNormals(const vector<Vector3>& newNorms);
 		void SetVertexTangents(const vector<Vector3>& newTans);
 		void SetVertexIndices(const vector<unsigned int>& newIndices);
