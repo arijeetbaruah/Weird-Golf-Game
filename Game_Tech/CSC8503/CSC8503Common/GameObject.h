@@ -10,9 +10,12 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <stdexcept>
+#include <stdlib.h>
 
 using std::pair;
 using std::vector;
+using std::unordered_map;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -27,7 +30,11 @@ namespace NCL {
 
 			template <typename T>
 			T getComponent(string name) {
-				return static_cast<T>(components.at(name));
+				unordered_map<string, Component*>::const_iterator obj = components.find(name);
+				if (obj == components.end())
+					return NULL;
+				else
+					return static_cast<T>(obj->second);
 			}
 
 			void addComponent(Component* component) {
