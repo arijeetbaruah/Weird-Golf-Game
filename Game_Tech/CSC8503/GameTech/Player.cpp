@@ -7,7 +7,6 @@ using namespace CSC8503;
 
 Player::Player(int id) : GameObject("PLAYER")
 {
-	speed = 500;
 	camOffset = Vector3(0, 15, -10);
 	yaw = 0.0f;
 	mainCamera = nullptr;
@@ -153,7 +152,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 		q = cameraRot * q * c;
 		shotDir = Vector3(q.x, q.y, q.z);
 
-		Vector3 vec = getShotDir() * distance * 0.005;
+		Vector3 vec = getShotDir() * distance * speed;
 		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 		

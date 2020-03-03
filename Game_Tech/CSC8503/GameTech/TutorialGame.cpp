@@ -10,6 +10,7 @@
 
 #include "../CSC8503Common/cubeDebuff.h"
 #include "../CSC8503Common/TestBuff.h"
+#include "../CSC8503Common/SpeedBoost.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -1074,7 +1075,8 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 
 	TestBuff* testBuff = new TestBuff();
 	Ball->addComponent(testBuff);
-	Ball->addComponent(new offForward());
+	//Ball->addComponent(new offForward());
+	Ball->addComponent(new SpeedBoost());
 	world->AddGameObject(Ball);
 
 
