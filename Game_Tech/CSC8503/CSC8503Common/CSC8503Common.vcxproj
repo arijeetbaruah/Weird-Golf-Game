@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\FMOD\windows\api\studio\inc;$(SolutionDir)..\submodules\FMOD\windows\api\fsbank\inc;$(SolutionDir)..\submodules\FMOD\windows\api\core\inc;$(SolutionDir)..\submodules\spdlog\include;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -141,9 +141,11 @@
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
+    <ClInclude Include="Homing.h" />
     <ClInclude Include="LimitedShot.h" />
     <ClInclude Include="offForward.h" />
     <ClInclude Include="ShotTracker.h" />
+    <ClInclude Include="SpeedBoost.h" />
     <ClInclude Include="TestBuff.h" />
     <ClInclude Include="Timed.h" />
     <ClInclude Include="NavigationGrid.h" />
@@ -192,6 +194,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="Homing.cpp" />
     <ClCompile Include="LimitedShot.cpp" />
     <ClCompile Include="NavigationGrid.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
@@ -207,6 +210,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="SpeedBoost.cpp" />
     <ClCompile Include="Targeted.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
