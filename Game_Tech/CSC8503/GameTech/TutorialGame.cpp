@@ -402,12 +402,16 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 		int meshSize = tempMesh->GetNumMeshes();
 
+		OGLTexture* defaultTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 		std::vector<OGLTexture*> tempTexture;
-		for (const char* tempName : textureName)
+		for (size_t i = 0; i < meshSize; i++) tempTexture.push_back(defaultTex);
+		for (size_t i = 0; i < textureName.size(); i++)
 		{
-			OGLTexture* tempTex = (OGLTexture*)TextureLoader::LoadAPITexture(tempName);
-			tempTexture.push_back(tempTex);
+			OGLTexture* tempTex = (OGLTexture*)TextureLoader::LoadAPITexture((textureName[i]));
+			tempTexture[i] = tempTex;
 		}
+
+
 
 		std::vector<EnjoyMesh> meshList = tempMesh->GetMeshes();
 		for (int j = 0; j < meshList.size(); j++)
@@ -460,12 +464,12 @@ void TutorialGame::LoadColladaRenderObjects() {
 	colladaLoadFunc(&GameLevelMapMesh1,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&GameLevelMapMesh2,		"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&GameLevelMapMesh3,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
-	colladaLoadFunc(&GameLevelMapMesh4,		"enjoyTree.dae",	"tex_tree.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh4,		"enjoyTree.dae",	"tex_tree.png",				basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
 	temp.push_back("greenglass.jpg");
-	colladaLoadFuncMulTex(&GameLevelMapMesh5, "tree.dae", temp, basicShader);
+	colladaLoadFuncMulTex(&GameLevelMapMesh5,"tree.dae",		temp,						basicShader);
 
 
 
