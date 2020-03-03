@@ -283,8 +283,8 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(GameLevelMapMesh1,	Vector3(  0, -1.5,   4));
 	AddSomeObject(GameLevelMapMesh2,	Vector3(  0, -2.0,   6));
 	AddSomeObject(GameLevelMapMesh3,	Vector3(  0,    0,   0.5),		Vector3(1,1,1),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
-	AddSomeObject(GameLevelMapMesh4,	Vector3(  0,    0,   0),				Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
-	AddSomeObject(GameLevelMapMesh5,	Vector3(0, 0, -0.3), Vector3(10, 10, 10), Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+	AddSomeObject(GameLevelMapMesh5,	Vector3(  0,    0,   0),				Vector3(10, 10, 10),	Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
+	AddSomeObject(GameLevelMapMesh4,	Vector3(0, 0, -0.3), Vector3(10, 10, 10), Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))));
 
 }
 
@@ -459,16 +459,13 @@ void TutorialGame::LoadColladaRenderObjects() {
 	//				target					mesh				texture						shader
 	colladaLoadFunc(&GameLevelMapMesh1,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&GameLevelMapMesh2,		"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
-
-
-	colladaLoadFunc(&GameLevelMapMesh3,		"treeR.dae",			"tex_MinigolfPack.png",		basicShader);
-	colladaLoadFunc(&GameLevelMapMesh5,		"enjoyTree.dae",	"tex_tree.png", basicShader);
+	colladaLoadFunc(&GameLevelMapMesh3,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&GameLevelMapMesh4,		"enjoyTree.dae",	"tex_tree.png", basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
 	temp.push_back("greenglass.jpg");
-
-	colladaLoadFuncMulTex(&GameLevelMapMesh4, "tree.dae", temp, basicShader);
+	colladaLoadFuncMulTex(&GameLevelMapMesh5, "tree.dae", temp, basicShader);
 
 
 
