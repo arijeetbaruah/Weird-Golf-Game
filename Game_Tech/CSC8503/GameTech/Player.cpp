@@ -153,6 +153,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 		shotDir = Vector3(q.x, q.y, q.z);
 
 		Vector3 vec = getShotDir() * distance * speed;
+		Component* test = this->getComponent<ShotTracker*>("Shots");
 		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
 		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
 		

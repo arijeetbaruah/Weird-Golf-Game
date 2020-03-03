@@ -13,7 +13,11 @@ TestBuff::TestBuff() {
 void TestBuff::Apply() {
 	Script* ct = new Script();
 	ct->setName("Cout");
-	ct->setLambda([](GameObject* go) {std::cout << "Number of Shots: " << go->getComponent<ShotTracker*>("ShotTracker")->getShots() << std::endl; });
+	ct->setLambda([](GameObject* go) {
+		ShotTracker* st = go->getComponent<ShotTracker*>("ShotTracker");
+		if (st != NULL)
+			std::cout << "Number of Shots: " << st->getShots() << std::endl; 
+	});
 	this->getParent()->addComponent(ct);
 }
 
