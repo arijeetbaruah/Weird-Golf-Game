@@ -1,10 +1,12 @@
-^H:\DESKTOP\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\DOGE.PNG
-"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\doge.png" -o "..\Assets\Textures\doge.gnf" -f Auto
-^H:\DESKTOP\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\SKY.JPG
-"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\sky.jpg" -o "..\Assets\Textures\sky.gnf" -f Auto
-^H:\DESKTOP\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\CHAIR.PNG
-"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\chair.png" -o "..\Assets\Textures\chair.gnf" -f Auto
-^H:\DESKTOP\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\TEX_MINIGOLFPACK.PNG
-"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\tex_MinigolfPack.png" -o "..\Assets\Textures\tex_MinigolfPack.gnf" -f Auto
-^H:\DESKTOP\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\MONU10.PNG
-"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\monu10.png" -o "..\Assets\Textures\monu10.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\DOGE.PNG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\doge.png" -o "..\Assets\Textures\doge.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\SKY.JPG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\sky.jpg" -o "..\Assets\Textures\sky.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\CHAIR.PNG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\chair.png" -o "..\Assets\Textures\chair.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\TEX_MINIGOLFPACK.PNG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\tex_MinigolfPack.png" -o "..\Assets\Textures\tex_MinigolfPack.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\MONU10.PNG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\monu10.png" -o "..\Assets\Textures\monu10.gnf" -f Auto
+^H:\DESKTOP\GOLF\WEIRD-GOLF-GAME\NEWPS4CODEBASE\PS4 STARTER\ASSETS\TEXTURES\TEX_TREE.PNG
+"C:\Program Files (x86)\SCE\ORBIS SDKs\7.000\host_tools\bin\orbis-image2gnf" -i "H:\Desktop\Golf\weird-golf-game\NewPS4Codebase\PS4 Starter\Assets\Textures\tex_tree.png" -o "..\Assets\Textures\tex_tree.gnf" -f Auto

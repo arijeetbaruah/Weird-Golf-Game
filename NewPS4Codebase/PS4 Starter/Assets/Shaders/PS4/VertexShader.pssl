@@ -8,6 +8,31 @@ ConstantBuffer CameraData
 	column_major matrix camMatrix;
 };
 
+ConstantBuffer LightColor
+{
+	float4 color;
+};
+
+ConstantBuffer LightPos
+{
+	float3 position;
+};
+
+ConstantBuffer LightRadius
+{
+	float radius;
+};
+
+ConstantBuffer Intensity
+{
+	float intensity;
+};
+
+ConstantBuffer CameraPos
+{
+	float3 cameraPos;
+};
+
 struct VS_INPUT
 {
 	float3 Position		: POSITION0;
