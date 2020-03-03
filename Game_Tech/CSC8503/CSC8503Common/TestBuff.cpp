@@ -22,5 +22,7 @@ void TestBuff::Apply() {
 }
 
 void TestBuff::Remove() {
-	this->getParent()->getComponent<Script*>("Cout")->toRemove = true;
+	Script* ct = this->getParent()->getComponent<Script*>("Cout");
+	if (ct != NULL)
+		ct->toRemove = true;
 }

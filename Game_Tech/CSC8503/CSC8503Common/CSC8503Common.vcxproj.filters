@@ -168,6 +168,9 @@
     <ClInclude Include="SpeedBoost.h">
       <Filter>Buffs</Filter>
     </ClInclude>
+    <ClInclude Include="Homing.h">
+      <Filter>Buffs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -270,6 +273,9 @@
       <Filter>Debuffs</Filter>
     </ClCompile>
     <ClCompile Include="SpeedBoost.cpp">
+      <Filter>Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="Homing.cpp">
       <Filter>Buffs</Filter>
     </ClCompile>
   </ItemGroup>
