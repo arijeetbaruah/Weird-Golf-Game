@@ -25,7 +25,6 @@
 #include "PhysxController.h"
 
 #include <functional>
-
 using namespace NCL;
 using namespace CSC8503;
 
@@ -57,72 +56,20 @@ void TutorialGame::InitialiseAssets() {
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
 		(*into)->UploadToGPU();
 	};
-	auto objLoadFunc = [](const string& name, OGLMesh** into) {
-		objl::Loader loader;
-		bool loadout = loader.LoadFile(name);
-
-		if (!loadout) 
-		{
-			return;
-		}
-
-		*into = new OGLMesh(name);
-		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
-
-		int size = loader.LoadedMeshes.size();
-
-		for (int j = 0; j < loader.LoadedMeshes.size(); j++) 
-		{
-			objl::Mesh curMesh = loader.LoadedMeshes[j];
-
-			vector<Vector3> verts;
-			vector<Vector3> normals;
-			vector<Vector2> texCoords;
-
-			for (int i = 0; i < curMesh.Vertices.size(); i++)
-			{
-				Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
-				verts.push_back(v);
-
-				Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
-				normals.push_back(n);
-
-				Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
-				texCoords.push_back(t);
-			}
-
-			(*into)->SetVertexPositions(verts);
-			(*into)->SetVertexNormals(normals);
-			(*into)->SetVertexTextureCoords(texCoords);
-			(*into)->SetVertexIndices(curMesh.Indices);
-
-			(*into)->UploadToGPU();
-		}
-	};
 
 	loadFunc("cube.msh"		 , &cubeMesh);
-	loadFunc("sphere.msh"	 , &sphereMesh);
 
-	objLoadFunc("Assets/Ball3.obj", &playerMesh1);
-	golfLevelTex = (OGLTexture*)TextureLoader::LoadAPITexture("tex_MinigolfPack.png");
-
-	//physxC.spawnBall();
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
 	UIShader = new OGLShader("GameUIVert.glsl", "GameUIFrag.glsl");
 
 	LoadColladaRenderObjects();
-
 }
-
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
-	delete sphereMesh;
 	delete basicShader;
-
 	delete Ball;
-
 	delete renderer;
 	delete world;
 }
@@ -131,7 +78,6 @@ void TutorialGame::StartGame()
 {
 	InitCamera();
 	InitWorld();
-
 	InitUIWorld();
 
 	std::vector < GameObject* >::const_iterator first;
@@ -155,14 +101,10 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
-	lockedObject = nullptr;
 }
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
-
-	// The player to act as the server
-	AddPlayerToWorld(Vector3(-0.4, 0.1, -0.9), 0);
 
 	//			 RenderObject(must)	    Position(must)					scale					rotation													name
 	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
@@ -172,12 +114,16 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),				Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		 "");
+	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3"));
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
+
+	// add the player controller
+	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0"));
+
 }
 
 void TutorialGame::LoadColladaRenderObjects() {
@@ -366,6 +312,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",	basicShader);
+	objLoadFunc	   (&playerTemp0,		"Assets/Ball3.obj", "tex_MinigolfPack.png",	basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
@@ -374,83 +321,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png",		UIShader);
 
-}
-
-
-
-GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
-{
-
-	Ball = new Player(playerNum);
-
-	Ball->setCamera(world->GetMainCamera());
-
-	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
-
-	Ball->SetCubeMesh(cubeMesh);
-	Ball->SetPlayerMesh(playerMesh1);
-
-	SpherePhysicsComponent* sphere = nullptr;
-
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-
-	OGLMesh* thisMesh = playerMesh1;
-	Ball->SetRenderObject(
-		new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
-	thisMesh = playerMesh1;
-
-	Ball->addComponent(sphere);
-
-
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
-
-	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
-
-	Script* test = new Script();
-	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
-	test->setLambda(std::function<void(GameObject*)>(script));
-
-	cubeDebuff* cubed = new cubeDebuff(thisMesh, Ball->GetCubeMesh());
-	Ball->addComponent(cubed);
-
-	TestBuff* testBuff = new TestBuff();
-	Ball->addComponent(testBuff);
-	Ball->addComponent(new Homing(Vector3(0, 0, 3)));
-	world->AddGameObject(Ball);
-
-	return Ball;
-}
-
-
-GameObject* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
-{
-	GameObject* BallTemp = new GameObject();
-	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
-
-	//BallTemp->setCamera(world->GetMainCamera());
-	BallTemp->GetTransform().SetWorldScale(size);
-	BallTemp->GetTransform().SetWorldPosition(position);
-
-	OGLMesh* objOGL = new OGLMesh(renderList[0]->GetMesh());
-
-	RenderObject* newRender = new RenderObject(renderList[0]);
-	newRender->SetParentTransform(&BallTemp->GetTransform());
-	BallTemp->SetRenderObject(newRender);
-
-	OGLMesh* tempOGL = new OGLMesh(newRender->GetMesh());
-
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial);
-	BallTemp->addComponent(sphere);
-
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
-
-
-	world->AddGameObject(BallTemp);
-	return BallTemp;
 }
 
 vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, std::string objectName)
@@ -524,6 +394,57 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 
 	world->AddGameObject(BallTemp);
 	return BallTemp;
+}
+
+GameObject* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
+{
+	//temp information
+	int playerNum = 0;
+
+	//real code
+	Ball = new Player(playerNum);
+	Ball->setCamera(world->GetMainCamera());
+
+	//build render object
+	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
+	OGLMesh* objOGL = new OGLMesh(renderList[0]->GetMesh());
+	RenderObject* newRender = new RenderObject(renderList[0]);
+
+	Ball->GetTransform().SetWorldScale(size);
+	Ball->GetTransform().SetWorldPosition(position);
+	newRender->SetParentTransform(&Ball->GetTransform());
+	Ball->SetRenderObject(newRender);
+	/////////////////////
+	Ball->SetCubeMesh(cubeMesh);
+	/////////////////////
+	Ball->SetPlayerMesh(objOGL);
+
+
+	//physics component
+	SpherePhysicsComponent* sphere = nullptr;
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+
+	Ball->addComponent(sphere);
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
+
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
+
+	Script* test = new Script();
+	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
+	test->setLambda(std::function<void(GameObject*)>(script));
+
+	cubeDebuff* cubed = new cubeDebuff(objOGL, Ball->GetCubeMesh());
+	Ball->addComponent(cubed);
+
+	TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);
+	Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+	world->AddGameObject(Ball);
+
+	return Ball;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -649,16 +570,6 @@ bool TutorialGame::SelectObject() {
 				return false;
 			}
 		}
-		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
-			if (selectionObject) {
-				if (lockedObject == selectionObject) {
-					lockedObject = nullptr;
-				}
-				else {
-					lockedObject = selectionObject;
-				}
-			}
-		}
 	}
 	else {
 		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
@@ -739,36 +650,65 @@ void TutorialGame::InitUIWorld()
 void TutorialGame::UpdateUIWorld(float dt)
 {
 	UIworld->UpdateWorld(dt);
-	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw()+ 5);
+	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw() + 5);
 	UIworld->GetMainCamera()->UpdateCamera(dt);
 
 	UIrenderer->Update(dt);
 	UIworld->SetUIactive(false);
 	UIrenderer->Render();
-
-
-	/*
-	if (lockedObject != nullptr) {
-		LockedCameraMovement();
-	}
-
-	UpdateKeys();
-
-	SelectObject();
-	MoveSelectedObject();
-
-	world->UpdateWorld(dt);
-	renderer->Update(dt);
-
-	renderer->Render();
-	*/
 }
-
 
 
 //followings codes are some useless code and check if can be deleted
 
 /*
+
+
+GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
+{
+
+	Ball = new Player(playerNum);
+
+	Ball->setCamera(world->GetMainCamera());
+
+	Ball->GetTransform().SetWorldScale(Vector3(1, 1, 1));
+
+	Ball->SetCubeMesh(cubeMesh);
+	Ball->SetPlayerMesh(playerMesh1);
+
+	SpherePhysicsComponent* sphere = nullptr;
+
+	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+
+	OGLMesh* thisMesh = playerMesh1;
+	Ball->SetRenderObject(
+		new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	thisMesh = playerMesh1;
+
+	Ball->addComponent(sphere);
+
+
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
+
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
+
+	Script* test = new Script();
+	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
+	test->setLambda(std::function<void(GameObject*)>(script));
+
+	cubeDebuff* cubed = new cubeDebuff(thisMesh, Ball->GetCubeMesh());
+	Ball->addComponent(cubed);
+
+	TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);
+	Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+	world->AddGameObject(Ball);
+
+	return Ball;
+}
+
 
 void TutorialGame::DebugObjectMovement() {
 //If we've selected an object, we can manipulate it with some key presses
