@@ -10,6 +10,6 @@ void BoxPhysicsComponent::Start() {
 	PhysicsComponent::Start();
 }
 
-void BoxPhysicsComponent::Update() {
-	PhysicsComponent::Update();
+void BoxPhysicsComponent::Update(float dt) {
+	PhysicsComponent::Update(dt);
 }
