@@ -143,6 +143,7 @@ namespace NCL {
 			MeshSceneNode* treeFormRhino;
 			MeshSceneNode* treeFromBlender;
 			MeshSceneNode* treeWithMultiTex;
+			MeshSceneNode* powerUpStar;
 
 			MeshSceneNode* playerTemp1;
 			MeshSceneNode* playerTemp2;

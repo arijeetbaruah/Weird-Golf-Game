@@ -285,6 +285,7 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
 	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
 	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
+	AddSomeObject(powerUpStar, Vector3(0, 0, -0.3), Vector3(10, 10, 10), Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))), Vector4(1, 1, 1, 1), "star");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
@@ -313,7 +314,10 @@ void TutorialGame::LoadColladaRenderObjects() {
 		ColladaBase* tempMesh = new ColladaBase(meshName);
 
 		int meshSize = tempMesh->GetNumMeshes();
-		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		OGLTexture* tempTexture = nullptr;
+
+		tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
 
 		for (EnjoyMesh tempIn : tempMesh->GetMeshes()) {
 			float tempF[16];
@@ -340,7 +344,9 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 				vertics.push_back(Vector3(tempVec) * 0.01);
 				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+
 				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+
 				indices.push_back(i);
 			}
 
@@ -348,7 +354,9 @@ void TutorialGame::LoadColladaRenderObjects() {
 			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 			tempOGLMesh->SetVertexPositions(vertics);
 			tempOGLMesh->SetVertexNormals(normals);
+
 			tempOGLMesh->SetVertexTextureCoords(texCoords);
+
 			tempOGLMesh->SetVertexIndices(indices);
 			tempOGLMesh->UploadToGPU();
 
@@ -466,6 +474,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	colladaLoadFunc(&gameMapExplode,	"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
+	colladaLoadFunc(&powerUpStar, "Star.dae", nullptr, basicShader);
 
 	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
