@@ -411,8 +411,6 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 	for (RenderObject* tempRender : renderList)
 	{
 
-
-
 		//build object list
 		GameObject* tempObject = new GameObject(objectName);
 

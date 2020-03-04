@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\FMOD\windows\api\studio\inc;$(SolutionDir)..\submodules\FMOD\windows\api\fsbank\inc;$(SolutionDir)..\submodules\FMOD\windows\api\core\inc;$(SolutionDir)..\submodules\spdlog\include;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
