@@ -19,6 +19,7 @@ ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) :
 
 	defaultMesh = PS4Mesh::GenerateTriangle();
 	defaultTexture = PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/doge.gnf");
+	treeTex = PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/tex_tree.gnf");
 
 	testlevelTexture = PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/tex_MinigolfPack.gnf");
 
@@ -36,12 +37,14 @@ ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) :
 
 	building = new SceneNode("/app0/Assets/Meshes/building.dae", defaultShader, PS4Texture::LoadTextureFromFile("/app0/Assets/Textures/monu10.gnf"));
 	golfLevel = new SceneNode("/app0/Assets/Meshes/TestLevel2.dae", defaultShader, testlevelTexture);
-	
+	tree = new SceneNode("/app0/Assets/Meshes/enjoyTree.dae", defaultShader, treeTex);
+
 	golfLevel->SetScale(Matrix4::Scale(Vector3(20, 20, 20)));
 	golfLevel->Translate(Vector3(0, -10, 0));
 	building->SetScale(Matrix4::Scale(Vector3(1, 1, 1)));
 	building->Translate(Vector3(0, -10, -5));
 	golfLevel->AddChild(building);
+	golfLevel->AddChild(tree);
 }
 
 ExampleRenderer::~ExampleRenderer()	
@@ -53,6 +56,7 @@ ExampleRenderer::~ExampleRenderer()
 	delete testlevelTexture;
 	delete golfLevel;
 	delete building;
+	delete treeTex;
 }
 
 void ExampleRenderer::Update(float dt)	{

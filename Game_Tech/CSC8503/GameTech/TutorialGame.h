@@ -71,31 +71,26 @@ namespace NCL {
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 
 			Vector3 playerPos1;
-			Vector3 playerPos2;
-			Vector3 playerPos3;
-			Vector3 playerPos4;
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
 			std::unique_ptr<Logger> log;
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
-
+			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* Ball;
+
 			GameObject* playerTwo;
-			vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
 			void StoreHighScore();
-			std::string fileName;
 
 			int secondPlayerScore;
 
 			void RenderMenu();
 			void RenderScoreBoard();
-			int buttonSelected;
 			bool playing;
 			void StartGame();
 
@@ -122,23 +117,14 @@ namespace NCL {
 			GameObject* selectionObject = nullptr;
 
 			
-			OGLTexture* basicTex	= nullptr;
 			OGLTexture* golfLevelTex = nullptr;
 			OGLShader*	basicShader = nullptr;
 
-			NavigationGrid grid;
-
 			//Coursework Meshes
-			OGLMesh*	gooseMesh	= nullptr;
-			OGLMesh*	keeperMesh	= nullptr;
-			OGLMesh*	appleMesh	= nullptr;
-			OGLMesh*	charA		= nullptr;
-			OGLMesh*	charB		= nullptr;
+
+
 			OGLMesh* testLevel = nullptr;
 			OGLMesh* playerMesh1 = nullptr;
-			OGLMesh* playerMesh2 = nullptr;
-			OGLMesh* playerMesh3 = nullptr;
-			OGLMesh* playerMesh4 = nullptr;
 
 			vector<OGLMesh*> golfLevelMeshes;
 
@@ -149,22 +135,21 @@ namespace NCL {
 				lockedObject = o;
 			}
 
+
+			//load render objects
 			void LoadColladaRenderObjects();
+			MeshSceneNode* gameMapOrigin;
+			MeshSceneNode* gameMapExplode;
+			MeshSceneNode* treeFormRhino;
+			MeshSceneNode* treeFromBlender;
+			MeshSceneNode* treeWithMultiTex;
 
+			MeshSceneNode* playerTemp1;
+			MeshSceneNode* playerTemp2;
+			MeshSceneNode* playerTemp3;
 
-			//list of renderObject
-			MeshSceneNode* GameLevelMapMesh1;
-			MeshSceneNode* GameLevelMapMesh2;
-			MeshSceneNode* GameLevelMapMesh3;
-			PhysicsObject* temp;
-
-			//list of 
-			GameObject* gameLevelOBJ;
-
-			//list of mesh
-			OGLMesh* playerMesh = nullptr;
-
-
+			//load otherplayers
+			std::vector<GameObject*> otherplayers;
 		};
 	}
 }

@@ -53,6 +53,9 @@ namespace NCL {
 			OGLMesh* GetPlayerMesh() { return playerMesh; }
 			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
 
+			float getSpeed() { return speed; }
+			void setSpeed(float s) { speed = s; }
+
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -60,7 +63,7 @@ namespace NCL {
 
 			float orbitSpeed;
 			float orbitDistance;
-			float speed;
+			float speed = 0.005;
 
 			bool isOffset = false;
 

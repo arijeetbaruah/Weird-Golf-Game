@@ -44,6 +44,9 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExampleRenderer.h">
@@ -70,6 +73,9 @@
     <ClInclude Include="SceneNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <WavePsslc Include="..\Assets\Shaders\PS4\PixelShader.pssl">
@@ -79,6 +85,9 @@
       <Filter>Shaders</Filter>
     </WavePsslc>
     <WavePsslc Include="..\Assets\Shaders\PS4\ComputeShader.pssl">
+      <Filter>Shaders</Filter>
+    </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
   </ItemGroup>
@@ -96,6 +105,9 @@
       <Filter>Textures</Filter>
     </CustomBuild>
     <CustomBuild Include="..\Assets\Textures\monu10.png">
+      <Filter>Textures</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Assets\Textures\tex_tree.png">
       <Filter>Textures</Filter>
     </CustomBuild>
   </ItemGroup>
