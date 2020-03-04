@@ -415,7 +415,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	temp.push_back("greenglass.jpg");
 	colladaLoadFuncMulTex(&treeWithMultiTex,"tree.dae",		temp,						basicShader);
 
-	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png", UIShader);
+	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png",		UIShader);
 
 }
 
@@ -452,6 +452,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 10000, verts, tris, mMaterial);
+		
 		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
@@ -660,6 +661,17 @@ bool TutorialGame::SelectObject() {
 	return false;
 }
 
+
+
+
+
+
+
+
+
+
+
+//following is UIfunction
 vector<GameObject*> TutorialGame::AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, const Vector4& colour, std::string objectName)
 {
 	std::vector<GameObject*> resultList;
