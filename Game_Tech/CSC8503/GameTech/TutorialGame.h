@@ -8,7 +8,6 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
-#include "PhysxController.h"
 #include "ColladaBase.h"
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
@@ -80,8 +79,6 @@ namespace NCL {
 			Player* Ball;
 
 			GameObject* playerTwo;
-
-			PhysxController physxC = PhysxController::getInstance();
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 

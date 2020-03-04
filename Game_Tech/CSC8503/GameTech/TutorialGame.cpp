@@ -19,7 +19,10 @@
 
 #include "SpherePhysicsComponent.h"
 #include "SpherePhysicsComponent.h"
+#include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
+
+#include "PhysxController.h"
 
 #include <functional>
 
@@ -1078,6 +1081,10 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 	//SphereVolume* volume = new SphereVolume(size);
 	//otherBall->SetBoundingVolume((CollisionVolume*)volume);
 
+	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball,10,0.05, 0.05, 0.05);
+	PhysxController::getInstance().setupFiltering(box->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
+	Ball->addComponent(box);
+
 otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
 
 SpherePhysicsComponent* sphere = nullptr;
@@ -1145,6 +1152,9 @@ void TutorialGame::RenderMenu()
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
+	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),floor, 10000, verts, tris);
+	floor->addComponent(physicsC);
+	PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 
 		switch (buttonSelected)
 		{

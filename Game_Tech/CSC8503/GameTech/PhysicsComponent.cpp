@@ -2,10 +2,13 @@
 #include "PhysicsComponent.h"
 #include "../../Common/Vector3.h"
 #include "../CSC8503Common/GameObject.h"
+#include "PhysxController.h"
 #include <iostream>
 
-PhysicsComponent::PhysicsComponent(std::string name) : Component(name) {
+PhysicsComponent::PhysicsComponent(std::string name, PxTransform transform, GameObject* go) : Component(name) {
 	gPhysics = PhysxController::getInstance().Physics();
+	actor = gPhysics->createRigidDynamic(transform);
+	actor->userData = go;
 }
 
 void PhysicsComponent::Start() {
@@ -14,11 +17,17 @@ void PhysicsComponent::Start() {
 
 void PhysicsComponent::Update(float dt) {
 	PxTransform tran = actor->getGlobalPose();
-	//std::cout << tran.p.x << tran.p.y << tran.p.z << std::endl;
 	getParent()->GetTransform().SetWorldPosition(Vector3(tran.p.x, tran.p.y, tran.p.z));
 
 	Quaternion orientation = Quaternion(tran.q.x, tran.q.y, tran.q.z, tran.q.w);
 	getParent()->GetTransform().SetLocalOrientation(orientation);
+}
+
+void PhysicsComponent::setAsTrigger() {
+	PxShape* shape;
+	actor->getShapes(&shape, 1);
+	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 }
 
 void PhysicsComponent::addForce(PxVec3 force) {
