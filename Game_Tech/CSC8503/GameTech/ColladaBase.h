@@ -30,6 +30,7 @@ typedef struct  EnjoyMesh
 	vector<vertexInfor> normals;
 	vector<textureInfor> texcoords;
 	vector<float> transform;
+	std::string imageName;
 	vector<int> indices;
 }meshInfor;
 
