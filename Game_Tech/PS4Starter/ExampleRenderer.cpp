@@ -10,7 +10,7 @@ using namespace NCL::PS4;
 ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) : 
 	PS4RendererBase(window), input(input)
 {
-	mainLight = new Light(Vector3(0, 100, 0), Vector4(1, 1, 1, 1), 5000, 0.5f);
+	mainLight = new Light(Vector3(0, 100, 0), Vector4(1, 1, 1, 1), 5000, 0.7f);
 	defaultShader = PS4Shader::GenerateShader(
 		"/app0/Assets/Shaders/PS4/VertexShader.sb",
 		"/app0/Assets/Shaders/PS4/PixelShader.sb"
@@ -183,6 +183,12 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	cameraPosBuffer.initAsConstantBuffer(cameraPosVec3, sizeof(Vector3));
 	cameraPosBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
 
+	Gnm::Buffer invertModelMatBuffer;
+	Matrix4* invertModelMat = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+	*invertModelMat = o->GetLocalTransform().Inverse();
+	invertModelMatBuffer.initAsConstantBuffer(invertModelMat, sizeof(Matrix4));
+	invertModelMatBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
 	PS4Shader* realShader = (PS4Shader*)o->GetShader();
 
 	int objIndex = realShader->GetConstantBuffer("RenderObjectData");
@@ -192,6 +198,7 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	int lightRadius = realShader->GetConstantBuffer("LightRadius");
 	int lightIntensity = realShader->GetConstantBuffer("LightIntensity");
 	int cameraPos = realShader->GetConstantBuffer("CameraPos");
+	int invertModelMatrix = realShader->GetConstantBuffer("InvertModelMat");
 
 
 	Gnm::Sampler trilinearSampler;
@@ -209,6 +216,7 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightRadius, 1, &lightRadiusBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightIntensity, 1, &lightInensityBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, cameraPos, 1, &cameraPosBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, invertModelMatrix, 1, & invertModelMatBuffer);
 
 	realShader->SubmitShaderSwitch(*currentGFXContext);
 	DrawMesh(*((PS4Mesh*)o->GetMesh()));
