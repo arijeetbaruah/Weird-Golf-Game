@@ -1,4 +1,7 @@
 #include "cubeDebuff.h"
+#include "../GameTech/PhysxController.h"
+#include "../GameTech/TriangleMeshPhysicsComponent.h"
+#include "Transform.h"
 
 using namespace NCL;
 using namespace CSC8503;

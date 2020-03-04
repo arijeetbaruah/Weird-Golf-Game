@@ -19,7 +19,10 @@
 
 #include "SpherePhysicsComponent.h"
 #include "SpherePhysicsComponent.h"
+#include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
+
+#include "PhysxController.h"
 
 #include <functional>
 
@@ -194,7 +197,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	OGLMesh* thisMesh = playerMesh1;
 	Ball->SetRenderObject(
 	new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), Ball, 10, 0.05, mMaterial);
 	thisMesh = playerMesh1;
 
 	Ball->addComponent(sphere);
@@ -485,6 +488,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 
 	for (RenderObject* tempRender : renderList)
 	{
+
 		//build object list
 		GameObject* tempObject = new GameObject(objectName);
 
@@ -510,7 +514,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		}
 		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
-		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 10000, verts, tris, mMaterial);
+		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial);
 		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
@@ -537,7 +541,7 @@ GameObject* TutorialGame::AddSphereObjectToWorld(MeshSceneNode* sceneNode, const
 	OGLMesh* tempOGL = new OGLMesh(newRender->GetMesh());
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10, 0.05, mMaterial);
+	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial);
 	BallTemp->addComponent(sphere);
 
 	sphere->setLinearDamping(0.8);
@@ -1044,7 +1048,7 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	}
 	TriangleMeshPhysicsComponent* physicsC = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
-	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris, mMaterial);
+	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), floor, 10000, verts, tris, mMaterial);
 	floor->addComponent(physicsC);
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
@@ -1076,6 +1080,10 @@ GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 
 	//SphereVolume* volume = new SphereVolume(size);
 	//otherBall->SetBoundingVolume((CollisionVolume*)volume);
+
+	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball,10,0.05, 0.05, 0.05);
+	PhysxController::getInstance().setupFiltering(box->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
+	Ball->addComponent(box);
 
 otherBall->GetTransform().SetWorldScale(Vector3(size, size, size));
 
@@ -1144,6 +1152,9 @@ void TutorialGame::RenderMenu()
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
+	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),floor, 10000, verts, tris);
+	floor->addComponent(physicsC);
+	PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 
 		switch (buttonSelected)
 		{
