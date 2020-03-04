@@ -13,6 +13,7 @@
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
+#include "UIPushDownMachine.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -30,7 +31,6 @@ namespace NCL {
 			void InitialiseAssets();
 
 			void InitCamera();
-			void ResetCamera();
 			void UpdateKeys();
 
 			void InitWorld();
@@ -40,42 +40,20 @@ namespace NCL {
 			in the module. Feel free to mess around with them to see different objects being created in different
 			test scenarios (constraints, collision types, and so on). 
 			*/
-			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
-			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
-			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
-			void SimpleGJKTest();
+
 
 			bool SelectObject();
-			void SeenObjects();
-			void MoveSelectedObject();
-			void DebugObjectMovement();
-			void LockedObjectMovement();
-			void LockedCameraMovement();
-			/*
-			// Stuff from goose game
-			GameObject* AddFloorToWorld(const Vector3& position);
-			void AddObstacles();
-			GameObject* AddTerrainToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
-			GameObject* AddLakeToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
-			void AddBridgeToWorld(Vector3 startPos, int num);
-			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
-			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
-			GameObject* AddPlayerTwoToWorld(const Vector3& position);
-			Enemy*		AddParkKeeperToWorld(const Vector3& position);
-			GameObject* AddCharacterToWorld(const Vector3& position);
-			GameObject* AddAppleToWorld(const Vector3& position);
-			GameObject* AddBonusItemToWorld(const Vector3& position);
-			*/
+
+
 
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
-			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 
-			Vector3 playerPos1;
 
-			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+
+
 
 			std::unique_ptr<Logger> log;
-			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
 			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* Ball;
 
@@ -85,34 +63,24 @@ namespace NCL {
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
-			void StoreHighScore();
+
 
 			int secondPlayerScore;
 
-			void RenderMenu();
-			void RenderScoreBoard();
-			bool playing;
 			void StartGame();
 
 			bool isNetworkedGame;
 			bool isServer;
-			int playerID;
 
-			void RestartNetworkedGame();
 
-			bool newSession;
 
-			float matchTimer;
-			float gameOverScreenCoolDown;
+
 
 			GameTechRenderer*	renderer;
-			PhysicsSystem*		physics;
 			GameWorld*			world;
 
-			bool useGravity;
-			bool inSelectionMode;
 
-			float	forceMagnitude;
+			bool inSelectionMode;
 
 			GameObject* selectionObject = nullptr;
 
@@ -150,6 +118,19 @@ namespace NCL {
 
 			//load otherplayers
 			std::vector<GameObject*> otherplayers;
+
+
+			//UI system
+			Camera* UIcamera;
+			MeshSceneNode* UIbar;
+			vector<GameObject*> AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1, 1, 1, 1), std::string objectName = "");
+			GameWorld* UIworld;
+			void InitUIWorld();
+			void UpdateUIWorld(float dt);
+			UIPushDownMachine*	UImachine;
+			GameTechRenderer*	UIrenderer;
+			stateObj* beginState;
+			OGLShader* UIShader = nullptr;
 		};
 	}
 }

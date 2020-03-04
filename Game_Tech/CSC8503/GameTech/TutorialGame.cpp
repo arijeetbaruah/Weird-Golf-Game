@@ -29,26 +29,14 @@ using namespace CSC8503;
 TutorialGame::TutorialGame()	{
 	world = new GameWorld();
 	renderer = new GameTechRenderer(*world);
-	physics = new PhysicsSystem(*world);
 
-	forceMagnitude	= 10.0f;
-	useGravity		= false;
+	UIworld = new GameWorld();
+	UIrenderer = new GameTechRenderer(*UIworld);
+
 	inSelectionMode = false;
-
-	newSession = true;
-
 	log = std::unique_ptr<Logger>(new Logger("Tutorial Game"));
 
 	Ball = nullptr;
-
-	matchTimer = -1;
-	gameOverScreenCoolDown = 20.0f;
-
-	playing = true;
-
-	playerPos1 = Vector3(-0.4, 0.1, -0.9);
-
-	playerID = 0;
 
 	isNetworkedGame = false;
 	isServer = false;
@@ -59,14 +47,8 @@ TutorialGame::TutorialGame()	{
 	StartGame();
 }
 
-/*
-
-Each of the little demo scenarios used in the game uses the same 2 meshes, 
-and the same texture and shader. There's no need to ever load in anything else
-for this module, even in the coursework, but you can add it if you like!
-
-*/
 void TutorialGame::InitialiseAssets() {
+
 	auto loadFunc = [](const string& name, OGLMesh** into) {
 		*into = new OGLMesh(name);
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
@@ -114,50 +96,6 @@ void TutorialGame::InitialiseAssets() {
 			(*into)->UploadToGPU();
 		}
 	};
-	auto objLoadLevelFunc = [this](const string& name) {
-		objl::Loader loader;
-		bool loadout = loader.LoadFile(name);
-
-		if (!loadout)
-		{
-			return;
-		}
-
-
-		int size = loader.LoadedMeshes.size();
-
-		for (int j = 0; j < loader.LoadedMeshes.size(); j++)
-		{
-			OGLMesh* playerMesh = new OGLMesh();
-			playerMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
-
-			objl::Mesh curMesh = loader.LoadedMeshes[j];
-
-			vector<Vector3> verts;
-			vector<Vector3> normals;
-			vector<Vector2> texCoords;
-
-			for (int i = 0; i < curMesh.Vertices.size(); i++)
-			{
-				Vector3 v(curMesh.Vertices[i].Position.X, curMesh.Vertices[i].Position.Y, curMesh.Vertices[i].Position.Z);
-				verts.push_back(v);
-
-				Vector3 n(curMesh.Vertices[i].Normal.X, curMesh.Vertices[i].Normal.Y, curMesh.Vertices[i].Normal.Z);
-				normals.push_back(n);
-
-				Vector2 t(curMesh.Vertices[i].TextureCoordinate.X, curMesh.Vertices[i].TextureCoordinate.Y);
-				texCoords.push_back(t);
-			}
-
-			playerMesh->SetVertexPositions(verts);
-			playerMesh->SetVertexNormals(normals);
-			playerMesh->SetVertexTextureCoords(texCoords);
-			playerMesh->SetVertexIndices(curMesh.Indices);
-
-			playerMesh->UploadToGPU();
-			golfLevelMeshes.push_back(playerMesh);
-		}
-	};
 
 	loadFunc("cube.msh"		 , &cubeMesh);
 	loadFunc("sphere.msh"	 , &sphereMesh);
@@ -168,17 +106,17 @@ void TutorialGame::InitialiseAssets() {
 	//physxC.spawnBall();
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
+	UIShader = new OGLShader("GameUIVert.glsl", "GameUIFrag.glsl");
+
 	LoadColladaRenderObjects();
 
 }
-
-//	RenderObject(must)	Position(must)	scale	rotation	colour	name
 
 // Player num is the number of the player in a networked game
 GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 {
 
-	Ball = new Player(playerID);
+	Ball = new Player(playerNum);
 
 	Ball->setCamera(world->GetMainCamera());
 
@@ -194,7 +132,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	OGLMesh* thisMesh = playerMesh1;
 	Ball->SetRenderObject(
 	new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), 10, 0.05, mMaterial);
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10, 0.05, mMaterial);
 	thisMesh = playerMesh1;
 
 	Ball->addComponent(sphere);
@@ -203,7 +141,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	sphere->setLinearDamping(0.8);
 	sphere->setAngularDamping(2);
 
-	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 
 	Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
@@ -221,7 +159,6 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 }
 
 
-
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
 	delete sphereMesh;
@@ -229,16 +166,16 @@ TutorialGame::~TutorialGame()	{
 
 	delete Ball;
 
-	delete physics;
 	delete renderer;
 	delete world;
 }
 
 void TutorialGame::StartGame()
 {
-	matchTimer = 180.0f;
 	InitCamera();
 	InitWorld();
+
+	InitUIWorld();
 
 	std::vector < GameObject* >::const_iterator first;
 	std::vector < GameObject* >::const_iterator last;
@@ -249,12 +186,6 @@ void TutorialGame::StartGame()
 
 	for (auto i = first; i != last; ++i) 
 	{
-		/*if ((*i)->getLayer() == 2)
-		{
-			(*i)->SetNetworkObject(new NetworkObject(*(*i), playerID));
-			continue;
-		}*/
-		
 		if (!(*i)->GetNetworkObject())
 			(*i)->SetNetworkObject(new NetworkObject(*(*i), counter));
 		counter++;
@@ -272,19 +203,19 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
-	physics->Clear();
 
 	// The player to act as the server
-	AddPlayerToWorld(Vector3(0, 1, 0), 1);
+	AddPlayerToWorld(Vector3(-0.4, 0.1, -0.9), 0);
 
-	//			 RenderObject(must)	    Position(must)					scale					rotation													colour					name
-	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
-	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
-	AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
-	AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
-	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
-	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
-	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
+	//			 RenderObject(must)	    Position(must)					scale					rotation													name
+	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+	AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+	AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),				Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		 "");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
@@ -300,6 +231,14 @@ void TutorialGame::LoadColladaRenderObjects() {
 		OGLMesh* tempMesh = new OGLMesh(meshName);
 
 		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		vector<unsigned int> indices;
+		for (int i = 0; i < tempMesh->GetPositionData().size(); i++)
+		{
+			indices.push_back(i);
+		}
+		
+		tempMesh->SetVertexIndices(indices);
 
 		tempMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 		tempMesh->UploadToGPU();
@@ -469,16 +408,18 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",		basicShader);
+	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",	basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
 	temp.push_back("greenglass.jpg");
 	colladaLoadFuncMulTex(&treeWithMultiTex,"tree.dae",		temp,						basicShader);
 
+	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png", UIShader);
+
 }
 
-vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate,const Vector4& colour, std::string objectName)
+vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, std::string objectName)
 {
 	std::vector<GameObject*> resultList;
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
@@ -549,87 +490,18 @@ GameObject* TutorialGame::AddSphereObjectToWorld(MeshSceneNode* sceneNode, const
 }
 
 void TutorialGame::UpdateGame(float dt) {
+	
+	if (UIworld->GetUIactive() == false)
+	{
+		UpdateUIWorld(dt);
+		if (UIworld->GetUIactive() == false)return;
+	}
+	
 
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
-
-	/*if (!playing)
-	{
-		if (matchTimer > 0)
-		{
-			renderer->DrawString("!!GAMEOVER!!",
-						Vector2(450, 600), Vector4(0, 0, 1, 1));
-
-			if (isNetworkedGame)
-			{
-				if (isServer)
-				{
-					renderer->DrawString("YOUR FINAL SCORE: " + std::to_string(world->getPlayerOneScore()),
-						Vector2(425, 400), Vector4(0, 0, 1, 1));
-					renderer->DrawString("THEIR FINAL SCORE: " + std::to_string(world->getPlayerTwoScore()),
-						Vector2(425, 350), Vector4(1, 0, 0, 1));
-				}
-				else
-				{
-					renderer->DrawString("YOUR FINAL SCORE: " + std::to_string(world->getPlayerTwoScore()),
-						Vector2(425, 400), Vector4(1, 0, 0, 1));
-					renderer->DrawString("THEIR FINAL SCORE: " + std::to_string(world->getPlayerOneScore()),
-						Vector2(425, 350), Vector4(0, 0, 1, 1));
-				}
-
-				if (world->getPlayerOneScore() > world->getPlayerTwoScore())
-				{
-					renderer->DrawString("!!BLUE WINS!!",
-						Vector2(425, 300), Vector4(0, 0, 1, 1));
-				}
-				else if (world->getPlayerOneScore() < world->getPlayerTwoScore())
-				{
-					renderer->DrawString("!!RED WINS!!",
-						Vector2(425, 300), Vector4(1, 0, 0, 1));
-				}
-				else
-				{
-					renderer->DrawString("!!DRAW!!",
-						Vector2(425, 300), Vector4(1, 0, 1, 1));
-				}
-
-				renderer->DrawString("TIME TILL NEXT MATCH: " + std::to_string(matchTimer),
-					Vector2(325, 200), Vector4(1, 0, 1, 1));
-			} else
-			{
-				renderer->DrawString("FINAL SCORE: " + std::to_string(world->getScore()),
-					Vector2(425, 400), Vector4(0, 0, 1, 1));
-			}
-
-
-			matchTimer -= dt;
-		}
-		else if (!isNetworkedGame && matchTimer <= 0 && world->getScore() > 0)
-		{
-			physics->Clear();
-			world->ClearAndErase();
-		}
-		else if (isNetworkedGame && matchTimer <= 0)
-		{
-			if (isServer)
-				RestartNetworkedGame();
-			else
-			{
-				newSession = false;
-				playing = true;
-				matchTimer = 100;
-				world->SetCollectableCount(1);
-			}
-		}
-		else if (!isNetworkedGame)
-		{
-			RenderMenu();
-		}
-	}
-	else
-	{*/
-
+	/*
 	if (!isNetworkedGame)
 	{
 		isNetworkedGame = true;
@@ -645,8 +517,10 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 	else
 	{
+		
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::TAB))
 			RenderScoreBoard();
+		
 
 		if (isServer)
 		{
@@ -663,108 +537,29 @@ void TutorialGame::UpdateGame(float dt) {
 				Vector2(50, 550), Vector4(0, 0, 1, 1));
 		}
 	}
-
 	// Gameover
 	if ((matchTimer <= 0) || (world->GetCollectableCount() == 0))
 	{
 		playing = false;
 		matchTimer = gameOverScreenCoolDown;
 	}
-
-	/*}*/
-
 	if (lockedObject != nullptr) {
 		LockedCameraMovement();
-	}
+			//MoveSelectedObject();
+	*/
 
 	UpdateKeys();
 
 	SelectObject();
-	MoveSelectedObject();
-	//SeenObjects();
+
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
-
-	//physics->Update(dt);
-
-	/*if (!isNetworkedGame)
-		physics->Update(dt);
-	else if (isServer && isNetworkedGame)
-		physics->Update(dt);*/
 
 	Debug::FlushRenderables();
 	UpdateNetworkPostion(Ball);
 
 	renderer->Render();
-}
-
-void TutorialGame::RestartNetworkedGame()
-{
-	//StoreHighScore();
-	newSession = false;
-	playing = true;
-	world->setPlayerOneScore(0);
-	world->setPlayerTwoScore(0);
-	Vector3 offSet(275, 10, 195);
-	matchTimer = 100;
-	Ball->GetNetworkObject()->resetScore();
-	playerTwo->GetNetworkObject()->resetScore();
-	physics->Clear();
-
-	if (isServer)
-	{
-		Ball->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
-		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));
-	}
-
-	std::vector <GameObject*>::const_iterator first;
-	std::vector <GameObject*>::const_iterator last;
-
-	world->GetObjectIterators(first, last);
-
-	int collectableCounter = 0;
-
-	for (auto i = first; i != last; ++i)
-	{
-		// Reset Collectables
-		if ((*i)->getLayer() == 4)
-		{
-			(*i)->setLayerMask(4);
-			int xPos = rand() % 480;
-			int zPos = rand() % 420;
-			(*i)->GetTransform().SetWorldPosition(Vector3(xPos, 10, zPos));
-			(*i)->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
-			collectableCounter++;
-		}
-
-		// Reset Enemies
-		if ((*i)->getLayer() == 3)
-		{
-			Enemy* e = (Enemy*)(*i);
-			e->resetPosition();
-		}
-	}
-
-	world->SetCollectableCount(collectableCounter);
-}
-
-void TutorialGame::RenderScoreBoard()
-{
-	if (isServer)
-	{
-		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
-			Vector2(400, 400), Vector4(0, 0, 1, 1));
-		renderer->DrawString("THEIR TOTAL SCORE: " + std::to_string(world->GetPlayerTwoTotal()),
-			Vector2(400, 350), Vector4(1, 0, 0, 1));
-	}
-	else
-	{
-		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerTwoTotal()),
-			Vector2(400, 400), Vector4(1, 0, 0, 1));
-		renderer->DrawString("THEIR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
-			Vector2(400, 350), Vector4(0, 0, 1, 1));
-	}
 }
 
 void TutorialGame::UpdateKeys() {
@@ -776,7 +571,7 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
 		InitCamera(); //F2 will reset the camera to a specific default place
 	}
-
+	/*
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
 		useGravity = !useGravity; //Toggle gravity!
 		physics->UseGravity(useGravity);
@@ -798,108 +593,17 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
 		world->ShuffleObjects(false);
 	}
-
+	
 	if (lockedObject) {
 		LockedObjectMovement();
 	}
+	
 	else {
 		DebugObjectMovement();
 	}
+	*/
 }
 
-void TutorialGame::LockedObjectMovement() {
-	Matrix4 view		= world->GetMainCamera()->BuildViewMatrix();
-	Matrix4 camWorld	= view.Inverse();
-
-	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
-
-	//forward is more tricky -  camera forward is 'into' the screen...
-	//so we can take a guess, and use the cross of straight up, and
-	//the right axis, to hopefully get a vector that's good enough!
-
-	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		selectionObject->GetPhysicsObject()->AddForce(-rightAxis);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		selectionObject->GetPhysicsObject()->AddForce(rightAxis);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
-	}
-}
-
-void  TutorialGame::LockedCameraMovement() {
-	if (lockedObject != nullptr) {
-		Vector3 objPos = lockedObject->GetTransform().GetWorldPosition();
-		Vector3 camPos = objPos + lockedOffset;
-
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
-
-		Matrix4 modelMat = temp.Inverse();
-
-		Quaternion q(modelMat);
-		Vector3 angles = q.ToEuler(); //nearly there now!
-
-		world->GetMainCamera()->SetPosition(camPos);
-		world->GetMainCamera()->SetPitch(angles.x);
-		world->GetMainCamera()->SetYaw(angles.y);
-	}
-}
-
-void TutorialGame::DebugObjectMovement() {
-//If we've selected an object, we can manipulate it with some key presses
-	if (inSelectionMode && selectionObject) {
-		//Twist the selected object!
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
-		}
-	}
-}
-
-/*
-
-Every frame, this code will let you perform a raycast, to see if there's an object
-underneath the cursor, and if so 'select it' into a pointer, so that it can be
-manipulated later. Pressing Q will let you toggle between this behaviour and instead
-letting you move the camera around.
-
-*/
 bool TutorialGame::SelectObject() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
 		inSelectionMode = !inSelectionMode;
@@ -956,8 +660,214 @@ bool TutorialGame::SelectObject() {
 	return false;
 }
 
-void TutorialGame::SeenObjects() {
+vector<GameObject*> TutorialGame::AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, const Vector4& colour, std::string objectName)
+{
+	std::vector<GameObject*> resultList;
+	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
+
+	for (RenderObject* tempRender : renderList)
+	{
+		//build object list
+		GameObject* tempObject = new GameObject(objectName);
+
+		//build rander object
+		RenderObject* newRender = new RenderObject(tempRender);
+
+		tempObject->GetTransform().SetWorldScale(size);
+		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
+		tempObject->GetTransform().SetWorldOrientation(rotate);
+
+		newRender->SetParentTransform(&tempObject->GetTransform());
+		tempObject->SetRenderObject(newRender);
+		tempObject->GetRenderObject()->SetColour(colour);
+
+		resultList.push_back(tempObject);
+		state->state.push_back(tempObject);
+	}
+	return resultList;
+}
+
+void TutorialGame::InitUIWorld()
+{
+	//initiate UIworld
+
+	UIworld->ClearAndErase();
+	UIworld->SetUIactive(true);
 	
+
+	//initiate camera
+	UIworld->GetMainCamera()->SetNearPlane(0.5f);
+	UIworld->GetMainCamera()->SetFarPlane(500.0f);
+	UIworld->GetMainCamera()->SetPitch(0.0f);
+	UIworld->GetMainCamera()->SetYaw(0.0f);
+	UIworld->GetMainCamera()->SetPosition(Vector3(-20,20,20));
+	
+
+
+	//initiate state
+	beginState = new stateObj(begin_menu);
+	UImachine = new UIPushDownMachine(beginState);
+
+	//Add Strip To state	state		scenenode	position		scale			rotate													colour			text
+	AddStripToState(		beginState,	UIbar,		Vector3(0,0,-0.3),	Vector3(0.1, 0.1, 0.1), Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),	Vector3(1,1,1),	"");
+
+	//Add State to UI state machine
+
+
+	//Set Default state
+	UIworld->SetObjectList(UImachine->GetMenuList());
+
+}
+
+void TutorialGame::UpdateUIWorld(float dt)
+{
+	UIworld->UpdateWorld(dt);
+	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw()+ 5);
+	UIworld->GetMainCamera()->UpdateCamera(dt);
+
+	UIrenderer->Update(dt);
+	UIworld->SetUIactive(false);
+	UIrenderer->Render();
+
+
+	/*
+	if (lockedObject != nullptr) {
+		LockedCameraMovement();
+	}
+
+	UpdateKeys();
+
+	SelectObject();
+	MoveSelectedObject();
+
+	world->UpdateWorld(dt);
+	renderer->Update(dt);
+
+	renderer->Render();
+	*/
+}
+
+
+
+//followings codes are some useless code and check if can be deleted
+
+/*
+
+void TutorialGame::DebugObjectMovement() {
+//If we've selected an object, we can manipulate it with some key presses
+	if (inSelectionMode && selectionObject) {
+		//Twist the selected object!
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+		}
+	}
+}
+void  TutorialGame::LockedCameraMovement() {
+	if (lockedObject != nullptr) {
+		Vector3 objPos = lockedObject->GetTransform().GetWorldPosition();
+		Vector3 camPos = objPos + lockedOffset;
+
+		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
+
+		Matrix4 modelMat = temp.Inverse();
+
+		Quaternion q(modelMat);
+		Vector3 angles = q.ToEuler(); //nearly there now!
+
+		world->GetMainCamera()->SetPosition(camPos);
+		world->GetMainCamera()->SetPitch(angles.x);
+		world->GetMainCamera()->SetYaw(angles.y);
+	}
+}
+
+void TutorialGame::LockedObjectMovement() {
+	Matrix4 view		= world->GetMainCamera()->BuildViewMatrix();
+	Matrix4 camWorld	= view.Inverse();
+
+	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
+
+	//forward is more tricky -  camera forward is 'into' the screen...
+	//so we can take a guess, and use the cross of straight up, and
+	//the right axis, to hopefully get a vector that's good enough!
+
+	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		selectionObject->GetPhysicsObject()->AddForce(-rightAxis);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		selectionObject->GetPhysicsObject()->AddForce(rightAxis);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+	}
+}
+
+void TutorialGame::MoveSelectedObject() {
+	renderer -> DrawString(" Click Force :" + std::to_string(forceMagnitude),
+		Vector2(10, 20)); // Draw debug text at 10 ,20
+	forceMagnitude += Window::GetMouse() -> GetWheelMovement() * 100.0f;
+
+	if (!selectionObject) {
+		return;// we haven �t selected anything !
+
+	}
+	// Push the selected object !
+	if (Window::GetMouse() -> ButtonPressed(NCL::MouseButtons::RIGHT)) {
+		Ray ray = CollisionDetection::BuildRayFromMouse(
+			* world -> GetMainCamera());
+
+		RayCollision closestCollision;
+		if (world -> Raycast(ray, closestCollision, true)) {
+			if (closestCollision.node == selectionObject) {
+				selectionObject -> GetPhysicsObject() -> AddForceAtPosition(
+					ray.GetDirection() * forceMagnitude,
+					closestCollision.collidedAt);
+
+			}
+
+		}
+
+	}
+}
+
+
+void TutorialGame::SeenObjects() {
+
 
 	GameObjectIterator first;
 	GameObjectIterator last;
@@ -965,7 +875,7 @@ void TutorialGame::SeenObjects() {
 
 	for (vector<GameObject*>::const_iterator i = first;
 			i != last; i++) {
-	
+
 		Ray ray = CollisionDetection::BuildRayToCamera(*world->GetMainCamera(), **i);
 
 		GameObject* obj = *i;
@@ -975,12 +885,31 @@ void TutorialGame::SeenObjects() {
 
 			obj->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 		}
-		else 
+		else
 		{
 			obj->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
 		}
 	}
 }
+
+void TutorialGame::RenderScoreBoard()
+{
+	if (isServer)
+	{
+		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
+			Vector2(400, 400), Vector4(0, 0, 1, 1));
+		renderer->DrawString("THEIR TOTAL SCORE: " + std::to_string(world->GetPlayerTwoTotal()),
+			Vector2(400, 350), Vector4(1, 0, 0, 1));
+	}
+	else
+	{
+		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerTwoTotal()),
+			Vector2(400, 400), Vector4(1, 0, 0, 1));
+		renderer->DrawString("THEIR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
+			Vector2(400, 350), Vector4(0, 0, 1, 1));
+	}
+}
+
 
 void TutorialGame::ResetCamera() {
 	world->GetMainCamera()->SetNearPlane(0.0f);
@@ -991,39 +920,55 @@ void TutorialGame::ResetCamera() {
 	lockedObject = nullptr;
 }
 
-/*
-If an object has been clicked, it can be pushed with the right mouse button, by an amount
-determined by the scroll wheel. In the first tutorial this won't do anything, as we haven't
-added linear motion into our physics system. After the second tutorial, objects will move in a straight
-line - after the third, they'll be able to twist under torque aswell.
-*/
 
-void TutorialGame::MoveSelectedObject() {
-	renderer -> DrawString(" Click Force :" + std::to_string(forceMagnitude),
-		Vector2(10, 20)); // Draw debug text at 10 ,20
-	forceMagnitude += Window::GetMouse() -> GetWheelMovement() * 100.0f;
-	
-	if (!selectionObject) {
-		return;// we haven �t selected anything !
+void TutorialGame::RestartNetworkedGame()
+{
+	//StoreHighScore();
+	newSession = false;
+	playing = true;
+	world->setPlayerOneScore(0);
+	world->setPlayerTwoScore(0);
+	Vector3 offSet(275, 10, 195);
+	matchTimer = 100;
+	Ball->GetNetworkObject()->resetScore();
+	playerTwo->GetNetworkObject()->resetScore();
+	physics->Clear();
 
+	if (isServer)
+	{
+		Ball->GetTransform().SetWorldPosition(offSet + Vector3(5, 0, 5));
+		playerTwo->GetTransform().SetWorldPosition(offSet - Vector3(5, 0, 5));
 	}
-	// Push the selected object !
-	if (Window::GetMouse() -> ButtonPressed(NCL::MouseButtons::RIGHT)) {
-		Ray ray = CollisionDetection::BuildRayFromMouse(
-			* world -> GetMainCamera());
-		
-		RayCollision closestCollision;
-		if (world -> Raycast(ray, closestCollision, true)) {
-			if (closestCollision.node == selectionObject) {
-				selectionObject -> GetPhysicsObject() -> AddForceAtPosition(
-					ray.GetDirection() * forceMagnitude,
-					closestCollision.collidedAt);
-				
-			}
 
+	std::vector <GameObject*>::const_iterator first;
+	std::vector <GameObject*>::const_iterator last;
+
+	world->GetObjectIterators(first, last);
+
+	int collectableCounter = 0;
+
+	for (auto i = first; i != last; ++i)
+	{
+		// Reset Collectables
+		if ((*i)->getLayer() == 4)
+		{
+			(*i)->setLayerMask(4);
+			int xPos = rand() % 480;
+			int zPos = rand() % 420;
+			(*i)->GetTransform().SetWorldPosition(Vector3(xPos, 10, zPos));
+			(*i)->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+			collectableCounter++;
 		}
 
+		// Reset Enemies
+		if ((*i)->getLayer() == 3)
+		{
+			Enemy* e = (Enemy*)(*i);
+			e->resetPosition();
+		}
 	}
+
+	world->SetCollectableCount(collectableCounter);
 }
 
 
@@ -1054,18 +999,6 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	return floor;
 }
 
-
-
-
-
-
-
-
-
-
-//followings codes are some useless code and check if can be deleted
-
-/*
 
 GameObject* TutorialGame::AddOtherPlayerToWorld(Vector3 position, int playerNum)
 {
