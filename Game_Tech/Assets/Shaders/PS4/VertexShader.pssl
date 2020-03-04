@@ -10,12 +10,12 @@ ConstantBuffer CameraData
 
 ConstantBuffer LightColor
 {
-	float4 color;
+	float4 lightColor;
 };
 
 ConstantBuffer LightPos
 {
-	float3 position;
+	float3 lightPos;
 };
 
 ConstantBuffer LightRadius
@@ -23,7 +23,7 @@ ConstantBuffer LightRadius
 	float radius;
 };
 
-ConstantBuffer Intensity
+ConstantBuffer LightIntensity
 {
 	float intensity;
 };
@@ -45,15 +45,29 @@ struct VS_OUTPUT
 {
 	float4 Position		: S_POSITION;
 	float2 UV			: TEXCOORD0; 
+	float4 lightColor;
+	float3 normal;
+	float3 fragPos;
+	float3 lightPos;
+	float radius;
+	float3 cameraPos;
+	float intensity;
 };
 
 VS_OUTPUT main(VS_INPUT Input)
 {
 	VS_OUTPUT Output; 
 
-	Output.Position = mul(mul( camMatrix, modelMatrix), float4(Input.Position.xyz, 1));
+	Output.Position = mul(mul(camMatrix, modelMatrix), float4(Input.Position.xyz, 1));
 	//Output.Color = Input.Color;
+	Output.lightColor = lightColor;
 	Output.UV = Input.UV;
-
+	float3x3 normalMatrix = transpose(float3x3(modelMatrix));
+	Output.normal = normalize(mul(normalMatrix, normalize(Input.Normal)));
+	Output.fragPos = float3(mul(modelMatrix, float4(Input.Position.xyz, 1)));
+	Output.lightPos = lightPos;
+	Output.radius = radius;
+	Output.cameraPos = cameraPos;
+	Output.intensity = intensity;
 	return Output;
 }

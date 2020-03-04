@@ -1,12 +1,14 @@
 #pragma once
 #include <move.h>
+#include <queue>
+
 #include "../Plugins/PlayStation4/PS4RendererBase.h"
 #include "../Plugins/PlayStation4/PS4Input.h"
 #include "../Common/Camera.h"
 #include "OBJMesh.h"
 #include "EnjoyColladaMesh.h"
 #include "SceneNode.h"
-#include <queue>
+#include "Light.h"
 
 namespace NCL {
 	namespace PS4 {
@@ -46,6 +48,8 @@ namespace NCL {
 			SceneNode* golfLevel;
 			SceneNode* building;
 			SceneNode* tree;
+
+			Light* mainLight;
 		};
 	}
 }
