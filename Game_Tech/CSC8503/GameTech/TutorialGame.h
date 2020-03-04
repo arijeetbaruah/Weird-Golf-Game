@@ -8,7 +8,6 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
-#include "PhysxController.h"
 #include "ColladaBase.h"
 
 namespace NCL {
@@ -70,8 +69,6 @@ namespace NCL {
 			Player* Ball;
 			GameObject* playerTwo;
 			vector<Enemy*> enemies;
-
-			PhysxController physxC = PhysxController::getInstance();
 
 			void StoreHighScore();
 			std::string fileName;

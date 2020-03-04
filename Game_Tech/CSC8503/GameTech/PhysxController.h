@@ -1,17 +1,21 @@
 // @Author: Christopher Cometto
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include "PxPhysicsAPI.h"
-#include <iostream>
+#include "../CSC8503Common/GameObject.h"
+
 #define PVD_HOST "127.0.0.1"
 
 using namespace physx;
+using namespace NCL;
+using namespace CSC8503;
 
 struct FilterGroup {
 	enum Enum {
-		eBALL = (1 << 0),
-		eLEVEL = (1 << 1),
+		ePLAYER = (1 << 0),
+		eLEVEL = (1 << 1)
 	};
 };
 
@@ -26,7 +30,14 @@ class TestReportCallback : public PxSimulationEventCallback {
 		std::vector<PxContactPairPoint> contactPoints;
 
 		for (PxU32 i = 0; i < nbPairs; i++) {
-			std::cout << "a;lskdl;askd;laksdl;aksd" << std::endl;
+			PxActor* a1 = pairHeader.actors[0];
+			GameObject* go1 = (GameObject*)a1->userData;
+			PxActor* a2 = pairHeader.actors[1];
+			GameObject* go2 = (GameObject*)a2->userData;
+			
+			std::cout << go1 << std::endl;
+			std::cout << go2 << std::endl;
+			std::cout << std::endl;
 		}
 	}
 };

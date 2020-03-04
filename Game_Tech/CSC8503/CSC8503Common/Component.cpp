@@ -12,6 +12,7 @@ Component::Component(std::string name) {
 std::string Component::getName() {
 	return name;
 }
+
 void Component::setName(std::string name) {
 	this->name = name;
 }

@@ -47,6 +47,7 @@ void PhysxController::createDefaultScene() {
 	sceneDesc->cpuDispatcher = gDispatcher;
 	sceneDesc->filterShader = contactReportFilterShader;
 	sceneDesc->simulationEventCallback = &testCallback;
+	//sceneDesc->contactModifyCallback = &testCallback;
 	actualScene = gPhysics->createScene(*sceneDesc);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(gPhysics->getTolerancesScale()));
@@ -57,9 +58,6 @@ void PhysxController::createDefaultScene() {
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-
-	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-	//actualScene->addActor(*groundPlane);
 }
 
 void PhysxController::addActor(PxActor* actor) {
@@ -67,7 +65,7 @@ void PhysxController::addActor(PxActor* actor) {
 }
 
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
-	 PxFilterData filterData;
+	PxFilterData filterData;
     filterData.word0 = filterGroup; // word0 = own ID
     filterData.word1 = filterMask;  // word1 = ID mask to filter pairs that trigger a
                                     // contact callback;

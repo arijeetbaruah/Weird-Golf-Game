@@ -1,8 +1,9 @@
 #include "TriangleMeshPhysicsComponent.h"
+#include "PhysxController.h"
 #include <iostream>
 
-TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris)
-	: PhysicsComponent("SpherePhysicsComponent") {
+TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, GameObject* go, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris)
+	: PhysicsComponent("TriangleMeshPhysicsComponent", transform, go) {
 	PxTriangleMeshDesc meshDesc;
 
 	meshDesc.points.count = verts.size();
@@ -21,12 +22,10 @@ TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform
 	PxTriangleMesh* mesh = gPhysics->createTriangleMesh(readBuffer);
 	PxTriangleMeshGeometry geom(mesh);
 
-	PxRigidDynamic* meshActor = gPhysics->createRigidDynamic(transform);
 	PxShape* meshShape;
-	if (meshActor) {
-		meshActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-		meshShape = PxRigidActorExt::createExclusiveShape(*meshActor, geom, *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-		actor = meshActor;
+	if (actor) {
+		actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+		meshShape = PxRigidActorExt::createExclusiveShape(*actor, geom, *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	}
 }
 

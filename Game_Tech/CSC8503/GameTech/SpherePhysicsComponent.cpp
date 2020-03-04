@@ -1,9 +1,8 @@
 #include "SpherePhysicsComponent.h"
 
-SpherePhysicsComponent::SpherePhysicsComponent(PxTransform transform, float mass, float radius) 
-	: PhysicsComponent("SpherePhysicsComponent") {
+SpherePhysicsComponent::SpherePhysicsComponent(PxTransform transform, GameObject* go, float mass, float radius)
+	: PhysicsComponent("SpherePhysicsComponent", transform, go) {
 	PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-	actor = gPhysics->createRigidDynamic(transform);
 	actor->attachShape(*shape);
 	PxRigidBodyExt::updateMassAndInertia(*actor, mass);
 }

@@ -15,6 +15,8 @@
 #include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
+#include "PhysxController.h"
+
 #include <functional>
 
 using namespace NCL;
@@ -883,8 +885,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position, int playerNu
 	Ball->addComponent(test);
 
 
-	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),10,0.05, 0.05, 0.05);
-	PhysxController::getInstance().setupFiltering(box->getActor(), FilterGroup::eBALL, FilterGroup::eLEVEL);
+	BoxPhysicsComponent* box = new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball,10,0.05, 0.05, 0.05);
+	PhysxController::getInstance().setupFiltering(box->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
 	Ball->addComponent(box);
 
 	Vector3 offSet(5, 0, 5);
@@ -934,8 +936,9 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 		tris.push_back(index);
 	}
 
-	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), 10000, verts, tris);
+	TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)),floor, 10000, verts, tris);
 	floor->addComponent(physicsC);
+	PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));

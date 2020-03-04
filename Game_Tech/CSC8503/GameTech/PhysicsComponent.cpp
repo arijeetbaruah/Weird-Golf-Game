@@ -2,10 +2,13 @@
 #include "PhysicsComponent.h"
 #include "../../Common/Vector3.h"
 #include "../CSC8503Common/GameObject.h"
+#include "PhysxController.h"
 #include <iostream>
 
-PhysicsComponent::PhysicsComponent(std::string name) : Component(name) {
+PhysicsComponent::PhysicsComponent(std::string name, PxTransform transform, GameObject* go) : Component(name) {
 	gPhysics = PhysxController::getInstance().Physics();
+	actor = gPhysics->createRigidDynamic(transform);
+	actor->userData = go;
 }
 
 void PhysicsComponent::Start() {
