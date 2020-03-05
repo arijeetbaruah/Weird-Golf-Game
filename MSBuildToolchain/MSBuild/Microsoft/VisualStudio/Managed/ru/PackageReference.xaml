@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Свойства пакета" DisplayName="Пакет" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Описание зависимости." DisplayName="Описание" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Ресурсы, исключаемые из этой ссылки" DisplayName="Исключенные ресурсы" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Указывает, необходимо ли создать свойство MSBuild, содержащее расположение корневого каталог пакета. Имя созданного свойства имеет вид 'Pkg[PackageID]', где '[PackageID]' — идентификатор пакета, в котором точки ('.') заменены на нижние подчеркивания ('_')." DisplayName="Создать свойство пути" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Ресурсы, включаемые из этой ссылки" DisplayName="Включенные ресурсы" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Разделенный запятыми список предупреждений, которые должны быть подавлены для этого пакета." DisplayName="Отключить предупреждения" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Расположение пакета, на который указывает ссылка." ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Ресурсы, являющиеся закрытыми в этой ссылке" DisplayName="Закрытые ресурсы" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Версия зависимости." DisplayName="Версия" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

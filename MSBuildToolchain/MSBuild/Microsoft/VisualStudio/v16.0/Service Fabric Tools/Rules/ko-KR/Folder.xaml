@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project folders -->
+<Rule Name="Folder" DisplayName="일반" PageTemplate="generic" Description="폴더 속성" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" HasConfigurationCondition="False" ItemType="Folder"/>
+    </Rule.DataSource>
+</Rule>

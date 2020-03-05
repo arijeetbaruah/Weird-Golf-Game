@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Starten" PageTemplate="debugger" Description="Lokale Debuggeroptionen" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Startoptionen" Description="Startoptionen"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Debuggertyp" Category="StartOptions" Description="Gibt an, welcher Debugger aktiviert werden soll. Wenn diese Option auf &quot;Gemischt&quot; festgelegt ist, werden die Debugger sowohl für verwalteten als auch für nativen Code aufgerufen. Wenn diese Option auf &quot;Nativ mit Skript&quot; festgelegt ist, werden die Debugger sowohl für nativen Code als auch für Skriptcode aufgerufen.">
+        <EnumValue Name="NativeOnly" DisplayName="Nur nativ" Description="Nur nativ"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Nur verwaltet" Description="Nur verwaltet"/>
+        <EnumValue Name="Script" DisplayName="Nur Skript" Description="Nur Skript"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Nativ mit Skript" Description="Nativ mit Skript"/>
+        <EnumValue Name="Mixed" DisplayName="Gemischt (verwaltet und nativ)" Description="Gemischt (verwaltet und nativ)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Iniciar" PageTemplate="debugger" Description="Opções do Depurador Local" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Opções de Inicialização" Description="Opções de Inicialização"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Tipo de Depurador" Category="StartOptions" Description="Especifica qual depurador deve ser habilitado. Quando definido como Misto, os depuradores de código gerenciado e de código nativo são usados. Quando definido como Nativo com Script, os depuradores de código nativo e de código de script são usados.">
+        <EnumValue Name="NativeOnly" DisplayName="Somente Nativo" Description="Somente Nativo"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Somente Gerenciado" Description="Somente Gerenciado"/>
+        <EnumValue Name="Script" DisplayName="Somente Script" Description="Somente Script"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Nativo com Script" Description="Nativo com Script"/>
+        <EnumValue Name="Mixed" DisplayName="Misto (Nativo e Gerenciado)" Description="Misto (Nativo e Gerenciado)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

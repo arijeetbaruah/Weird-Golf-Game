@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="开始" PageTemplate="debugger" Description="本地调试器选项" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="启动选项" Description="启动选项"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="调试器类型" Category="StartOptions" Description="指定要启用的调试程序。设置为“混合”时，将同时调用调试托管代码和本机代码的调试程序。当设置为“带脚本的本机代码”时，将使用本机代码和脚本代码的调试程序。">
+        <EnumValue Name="NativeOnly" DisplayName="仅限本机" Description="仅限本机"/>
+        <EnumValue Name="ManagedOnly" DisplayName="仅限托管" Description="仅限托管"/>
+        <EnumValue Name="Script" DisplayName="仅脚本" Description="仅脚本"/>
+        <EnumValue Name="NativeWithScript" DisplayName="带脚本的本机代码" Description="带脚本的本机代码"/>
+        <EnumValue Name="Mixed" DisplayName="混合(托管和本机)" Description="混合(托管和本机)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ProjectReference" DisplayName="Właściwości odwołania" PageTemplate="generic" Description="Właściwości odwołania" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Różne"/>
+    </Rule.Categories>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="Kopia lokalna" Description="Wskazuje, czy odwołanie będzie kopiowane do katalogu wyjściowego.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="Tożsamość" Description="Tożsamość zabezpieczeń zestawu, którego dotyczy odwołanie (zobacz System.Reflection.Assembly.Evidence lub System.Security.Policy.Evidence).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ServiceLaunchUrl" Category="Misc" DisplayName="Adres URL do uruchomienia" Description="Adres URL do uruchomienia w celu debugowania tej usługi.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="ServiceLaunchUrl"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+</Rule>

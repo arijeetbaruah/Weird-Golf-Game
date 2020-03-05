@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule 
+  Name="iOSDebugger"
+  DisplayName="iOS Debugger"
+  PageTemplate="debugger"
+  Order="100"
+  Description="Debugger options"
+  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Metadata>
+    <sys:Guid x:Key="DebugTargetTypeCommandGuid">6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C</sys:Guid>
+    <sys:UInt32 x:Key="DebugTargetTypeCommandId">0x200</sys:UInt32>
+    <sys:String x:Key="DebugTargetDropdownEnum">iOSDeviceID</sys:String>
+  </Rule.Metadata>
+  <Rule.DataSource>
+    <DataSource Persistence="UserFile" />
+  </Rule.DataSource>
+  <EnumProperty Name="DebuggerType" 
+                DisplayName="Debugger Type" 
+                F1Keyword="VC.Project.iOSDebugger.DebuggerType"
+                Description="Specifies which code type to debug.">
+    <EnumProperty.Metadata>
+      <NameValuePair Name="IsDebugType" Value="true"/>
+    </EnumProperty.Metadata>
+    <EnumValue Name="NativeOnly" DisplayName="Native Only"/>
+  </EnumProperty>
+
+  <DynamicEnumProperty Name="iOSDeviceID"
+                DisplayName="Debug Target"
+                EnumProvider="iOSDevices"
+                Description="Specifies the simulator or device to use for debugging."
+                F1Keyword="VC.Project.iOSDebugger.iOSDeviceID">
+  </DynamicEnumProperty>
+
+  <StringListProperty Name="AdditionalSymbolSearchPaths"
+                  DisplayName="Additional Symbol Search Paths"
+                  Description="Additional search path for debug symbols."
+                  F1Keyword="VC.Project.iOSDebugger.LaunchActivity"
+                  Subtype="folder"
+                  Visible="true">
+  </StringListProperty>
+
+  <!-- invisible properties used in debug launcher-->
+  <StringProperty Name="PackageId"
+              DisplayName="Package ID"
+              Description="The ID of the package, has to match the one used in manifest."
+              Visible="false">
+  </StringProperty>
+
+  <StringProperty Name="LastSuccessfulDeploy" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="LastDeviceRefresh" Visible="false" />
+
+  <StringProperty Name="DefaultDeviceName" Visible="false" />
+</Rule>

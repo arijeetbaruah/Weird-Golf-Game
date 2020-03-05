@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="專案屬性" PageTemplate="generic" Description="專案屬性" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="應用程式" Description="應用程式"/>
+        <Category Name="Misc" DisplayName="其他" Description="其他"/>
+        <Category Name="Debugging" DisplayName="偵錯" Description="偵錯"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="專案檔" Description="專案檔的名稱。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="專案資料夾" Description="專案檔的位置。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="應用程式偵錯模式" Default="Remove" Description="表示偵錯時應用程式部署的行為。
+
+移除應用程式 - 應用程式會在偵錯工具工作階段結束後從叢集中移除。
+保留應用程式 - 應用程式會在偵錯工具工作階段結束後繼續在叢集中執行。在後續偵錯時，應用程式將會移除，並在偵錯期間重新部署。
+自動升級 - 現有應用程式會在偵錯開始期間升級，並在偵錯工具工作階段結束後繼續在叢集中執行。
+重新整理應用程式 - 使用新的二進位碼檔案重新整理應用程式，而無須重新部署應用程式。此模式僅適用 1-節點叢集。">
+        <EnumValue Name="AutoUpgrade" DisplayName="自動升級"/>
+        <EnumValue Name="Remove" DisplayName="移除應用程式"/>
+        <EnumValue Name="Keep" DisplayName="保留應用程式"/>
+        <EnumValue Name="Refresh" DisplayName="重新整理應用程式"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="啟動目標" Description="應用程式啟動後要瀏覽的 URL 來源。" EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="應用程式 URL" Description="應用程式啟動之後要瀏覽的 URL。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="封裝完整的輸出資料夾" Default="true" Description="指出封裝行為 (僅適用於以完整 .NET Framework 為目標的非 ASP.NET 服務專案)。
+
+True - 封裝 Bin 資料夾中的所有檔案。
+False - 依據預先設定的邏輯來封裝特定檔案。">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="偵錯設定檔" Description="在偵錯 Service Fabric 應用程式時使用的設定檔。" EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

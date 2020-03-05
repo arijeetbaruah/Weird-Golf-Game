@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.SharePoint.Workflow.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+SharePoint projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Workflow4Targets>$(MSBuildExtensionsPath32)\Microsoft\Workflow Manager\1.0\Microsoft.WorkflowServiceBuildExtensions.targets</Workflow4Targets>
+    <PartitionWorkflowBuild  Condition="'$(IncludeAssemblyInPackage)' != 'false' and '$(PartitionWorkflowBuild )' == ''">true</PartitionWorkflowBuild>
+  </PropertyGroup>
+
+  <Import Project="$(Workflow4Targets)"  Condition="Exists('$(Workflow4Targets)')"/>
+
+  <!-- 
+  Save CoreCompileDependsOn that Workflow targets override.
+  -->
+  <PropertyGroup>
+    <SaveCoreCompileDependsOn>$(CoreCompileDependsOn)</SaveCoreCompileDependsOn>
+  </PropertyGroup>
+
+  <!-- 
+  Import the Workflow target files 
+  -->
+  <Import Condition="'$(Language)' == 'C#'" Project="$(MSBuildFrameworkToolsPath)\Workflow.Targets" />
+  <Import Condition="'$(Language)' == 'VB'" Project="$(MSBuildFrameworkToolsPath)\Workflow.VisualBasic.targets" />
+
+  <!-- 
+  Restore the CoreCompileDependsOn and add our target that conditionally calls the Workflow target.
+  -->
+  <PropertyGroup>
+    <CoreCompileDependsOn>
+      $(SaveCoreCompileDependsOn);
+      ConditionalWorkflowCompilation
+    </CoreCompileDependsOn>
+  </PropertyGroup>
+
+  <!--
+  See if there is a reference to the workflow assembly or we have a XOML Content file.
+  If there is no reference or XOML files then default to skipping the Workflow compilation.
+  -->
+  <Target Name="ConditionalWorkflowCompilation">
+    <PropertyGroup>
+      <HasWorkflowReference Condition="'$(HasWorkflowReference)' == ''
+        and '%(Reference.Identity)' == 'System.Workflow.ComponentModel'"
+      >True</HasWorkflowReference>
+
+      <HasXomlFiles Condition="'$(HasXomlFiles)' == ''
+        and '%(Content.Extension)' == '.xoml'"
+      >True</HasXomlFiles>
+
+      <SharePointSkipWorkflowCompilation Condition="$(SharePointSkipWorkflowCompilation) == ''
+        and '$(HasWorkflowReference)' != 'True'
+        and '$(HasXomlFiles)' != 'True'"
+      >True</SharePointSkipWorkflowCompilation>
+    </PropertyGroup>
+
+    <!--
+    Call the Workflow compilation target if we did not decide to skip it.
+    -->
+    <CallTarget Condition="'$(SharePointSkipWorkflowCompilation)' != 'True'" Targets="WorkflowCompilation" />
+  </Target>
+
+  <!-- When the sharepoint project contains Workflows, we need to make sure that the WFTools SDK is installed.-->
+  <Target
+    Name="VerifyWorkflowPrerequisites"
+    Condition="'@(XamlAppDef)' != ''"
+    BeforeTargets="Build"
+    >
+
+    <Error Condition="!Exists('$(Workflow4Targets)')" Text="Workflow Manager Tools need to be installed to build this project." />
+  </Target>
+
+</Project>

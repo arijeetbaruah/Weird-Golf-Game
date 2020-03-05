@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="プロジェクト プロパティ" PageTemplate="generic" Description="プロジェクト プロパティ" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="アプリケーション" Description="アプリケーション"/>
+        <Category Name="Misc" DisplayName="その他" Description="その他"/>
+        <Category Name="Debugging" DisplayName="デバッグ" Description="デバッグ"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="プロジェクト ファイル" Description="プロジェクト ファイルの名前。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="プロジェクト フォルダー" Description="プロジェクト ファイルの場所。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="アプリケーション デバッグ モード" Default="Remove" Description="デバッグの一部としてのアプリケーション配置の動作を示します。
+
+アプリケーションの削除 - デバッガー セッション終了後、クラスターからアプリケーションが削除されます。
+アプリケーションの保持 - デバッガー セッション終了後、アプリケーションはクラスターで実行を継続します。その後のデバッグ中に、アプリケーションは削除されて再配置されます。
+自動アップグレード - 既存のアプリケーションはデバッグの開始時にアップグレードされ、デバッガー セッション終了後、クラスターで実行を継続します。
+アプリケーションの更新 - アプリケーションを再配置せずに、新しいバイナリを含むアプリケーションを更新します。このモードは 1-Node クラスターでのみ適用できます。">
+        <EnumValue Name="AutoUpgrade" DisplayName="自動アップグレード"/>
+        <EnumValue Name="Remove" DisplayName="アプリケーションの削除"/>
+        <EnumValue Name="Keep" DisplayName="アプリケーションの保持"/>
+        <EnumValue Name="Refresh" DisplayName="アプリケーションの更新"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="起動ターゲット" Description="アプリケーションの起動後に参照する URL のソースです。" EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="アプリケーション URL" Description="アプリケーションの起動後に参照する URL。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="パッケージの完全な出力フォルダー" Default="true" Description="パッケージの動作を示します (完全な .NET Framework を対象とする ASP.NET 以外のサービス プロジェクトにのみ該当します)。
+
+True - bin フォルダー内のすべてのファイルをパッケージ化します。
+False - 構成済みのロジックに基づいて特定のファイルをパッケージします。">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="デバッグ プロファイル" Description="Service Fabric アプリケーションのデバッグ時に使用するプロファイル。" EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ResolvedProjectReference" DisplayName="Propriedades de Referência" PageTemplate="generic" Description="Propriedades de Referência" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Diversos"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ResolvedReference" ItemType="ProjectReference" HasConfigurationCondition="False" SourceType="TargetResults" MSBuildTarget="ResolveProjectReferencesDesignTime"/>
+    </Rule.DataSource>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="Copiar Local" Description="Indica se a referência será copiada para o diretório de saída.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="Identidade" Description="Identidade de segurança do assembly referenciado (consulte System.Reflection.Assembly.Evidence ou System.Security.Policy.Evidence).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <!--These are metadata added to the resolved item by MSBuild that we don't show to the user but use internally.-->
+    <StringProperty Name="OriginalItemSpec" Visible="False" ReadOnly="True" Description="O nome do item avaliado do item de referência original cuja resolução resultou neste item de referência resolvido."/>
+    <StringProperty Name="Name" Visible="false" ReadOnly="True"/>
+</Rule>

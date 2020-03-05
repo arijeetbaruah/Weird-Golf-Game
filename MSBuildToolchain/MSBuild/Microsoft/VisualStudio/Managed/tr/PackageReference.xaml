@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Paket Özellikleri" DisplayName="Paket" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Bağımlılık açıklaması" DisplayName="Açıklama" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Bu başvurudan dışlanacak varlıklar" DisplayName="Hariç tutulan varlıklar" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Paket kök dizini konumuyla bir MSBuild özelliği oluşturulup oluşturulmayacağını belirtir. Oluşturulan özellik adı 'Pkg[PackageID]' biçimindedir. Burada '[PackageID]', noktalar '.' alt çizgi '_' ile değiştirilmiş olarak paketin adıdır." DisplayName="Yol özelliği oluştur" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Bu başvurudan eklenecek varlıklar" DisplayName="Dahil edilen varlıklar" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Bu paket için gizlenmesi gereken virgülle ayrılmış uyarı listesi" DisplayName="Uyarıları Gizle" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Başvurulan paketin konumu." ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Bu başvuruda özel olan varlıklar" DisplayName="Özel varlıklar" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Bağımlılık sürümü." DisplayName="Sürüm" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

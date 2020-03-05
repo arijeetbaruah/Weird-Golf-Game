@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="ProjectReference" Description="Verweiseigenschaften" DisplayName="Projektverweis" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="ProjectReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringListProperty Name="Aliases" Description="Eine durch Komma getrennte Liste von Aliasen zu diesem Verweis." DisplayName="Aliase" Separator=",">
+    <StringListProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="ProjectReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+  <BoolProperty Name="CopyLocal" Description="Gibt an, ob der Verweis in das Ausgabeverzeichnis kopiert wird." DisplayName="Lokale Kopie">
+    <BoolProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="ProjectReference" PersistedName="Private" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <BoolProperty Name="CopyLocalSatelliteAssemblies" Description="Gibt an, ob die Satellitenassemblys des Verweisziels in das Ausgabeverzeichnis dieses Projekts kopiert werden sollen." DisplayName="Lokale Satellitenassemblys kopieren" />
+  <StringProperty Name="Culture" Description="Der Wert des Felds &quot;Kultur&quot; aus den Assemblymetadaten." DisplayName="Kultur" ReadOnly="True" />
+  <StringProperty Name="Description" Description="Der Wert des Felds &quot;Title&quot; aus den Assemblymetadaten." DisplayName="Beschreibung" ReadOnly="True" />
+  <BoolProperty Name="EmbedInteropTypes" Description="Gibt an, ob in der Assembly definierte Typen in die Zielassembly eingebettet werden." DisplayName="Interoptypen einbetten">
+    <BoolProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="ProjectReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringProperty Name="ExcludeAssets" Description="Auszuschließende Ressourcen aus diesem Verweis" DisplayName="Objekte ausschließen" Visible="True" />
+  <StringProperty Name="Identity" Description="Sicherheits-ID der referenzierten Assembly (siehe System.Reflection.Assembly.Evidence oder System.Security.Policy.Evidence)." DisplayName="Identität" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistedName="{}{Identity}" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="IncludeAssets" Description="Einzuschließende Ressourcen aus diesem Verweis" DisplayName="Objekte einschließen" Visible="True" />
+  <BoolProperty Name="LinkLibraryDependencies" Visible="False" />
+  <StringProperty Name="PrivateAssets" Description="Private Ressourcen in diesem Verweis" DisplayName="Private Objekte" Visible="True" />
+  <StringProperty Name="Project" Visible="False" />
+  <StringProperty Name="ProjectFileFullPath" Visible="False" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource ItemType="ProjectReference" PersistedName="FullPath" Persistence="Intrinsic" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="ReferencedProjectIdentifier" Visible="False" />
+  <BoolProperty Name="ReferenceOutputAssembly" Description="Ein Wert, der angibt, ob vom Compiler ein Verweis auf die primäre Ausgabeassembly des Zielprojekts eingeschlossen werden soll." DisplayName="Verweisausgabeassembly" />
+  <StringProperty Name="ResolvedPath" Description="Speicherort der Datei, auf die verwiesen wird." DisplayName="Pfad" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistedName="Identity" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="UseLibraryDependencyInputs" Visible="False" />
+  <StringProperty Name="Version" Description="Verweisversion" DisplayName="Version" ReadOnly="True" />
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

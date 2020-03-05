@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="CL" PageTemplate="tool" DisplayName="C/C++" SwitchPrefix="-" Order="10" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="全般" />
+    <Category Name="Optimization" DisplayName="最適化" />
+    <Category Name="CodeGeneration" DisplayName="コード生成" />
+    <Category Name="Language" DisplayName="言語" />
+    <Category Name="PrecompiledHeaders" DisplayName="プリコンパイル済みヘッダー" />
+    <Category Name="CodeCoverage" DisplayName="コード カバレッジ" />
+    <Category Name="Advanced" DisplayName="詳細設定" />
+    <Category Name="StaticAnalyzer" DisplayName="静的アナライザ" />
+    <Category Name="AllOptions" Subtype="Search" DisplayName="すべてのオプション" />
+    <Category Name="CommandLine" Subtype="CommandLine" DisplayName="コマンド ライン" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="ClCompile" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <StringListProperty Subtype="folder" Name="AdditionalIncludeDirectories" Category="General" Switch="I" DisplayName="追加のインクルード ディレクトリ" Description="インクルード パスに追加するディレクトリを指定します。 複数指定する場合は、セミコロンで区切ってください。(-I[path])" />
+  <BoolProperty Name="NoStandardIncludePaths" Category="Advanced" Switch="nostdinc" DisplayName="標準インクルード パスの無視" Description="標準システム ディレクトリでシステム ヘッダー ファイルを検索しない。-I を使用して指定されているインクルード ディレクトリのみ、検索されます。 (-nostdinc)">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="" Label="Configuration" HasConfigurationCondition="true" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringListProperty Name="PreprocessorDefinitions" Category="General" Switch="D" DisplayName="プリプロセッサの定義" Description="1 つまたは複数のプリプロセッサ定義を指定します。複数指定する場合は、セミコロンで区切ってください。(-D[name[=番号]])" />
+  <StringListProperty Subtype="file" Name="ForcedIncludeFiles" Category="General" Switch="include " DisplayName="強制インクルード ファイル" Description="1 つまたは複数の強制インクルードファイルを指定します。(-include [path])" />
+  <BoolProperty Name="GenerateDebugInformation" Category="General" Switch="g" DisplayName="デバッグ情報の生成" Description="コンパイラでデバッグ情報を生成するかどうかを指定します。また同時に、対応するリンカの設定を変更する必要もあります。(-g)" />
+  <BoolProperty Name="InlinedScopes" Category="General" ReverseSwitch="gno-inlined-scopes" DisplayName="インライン関数デバッグ情報" Description="インライン関数のデバッグ情報を生成するかどうかを選択します。最適化済みコードのデバッグ情報は改善されていますが、実行可能ファイルのサイズとコンパイル時間は長目になります。(-gno-inlined-scopes)" />
+  <EnumProperty Name="Warnings" Category="General" DisplayName="警告" Description="コンパイル時に警告や注意を表示するかどうかを選択します。 エラーは常に表示されます。(-Wall, -w)">
+    <EnumValue Name="NormalWarnings" DisplayName="標準の警告を表示" />
+    <EnumValue Name="MoreWarnings" DisplayName="さらなる警告を表示" Switch="Wall" />
+    <EnumValue Name="WarningsOff" DisplayName="警告なし" Switch="w" />
+  </EnumProperty>
+  <BoolProperty Name="ExtraWarnings" Category="General" Switch="Wextra" DisplayName="特別警告" Description="-Wall スイッチを使用した場合に生成されない特定のイベン トに対し、特別に警告を生成します。(-Wextra)" />
+  <StringListProperty Name="EnableSpecificWarnings" Category="General" Switch="W" DisplayName="指定の警告を有効にする" Description="有効にする、指定された警告の名前をセミコロンで区切られたリストで指定します。(-W[warning])" />
+  <StringListProperty Name="DisableSpecificWarnings" Category="General" Switch="Wno-" DisplayName="指定の警告を無効にする" Description="無効にする、指定された警告の名前をセミコロンで区切られたリストで指定します。(-Wno-[warning])" />
+  <StringListProperty Name="ErrorOnSpecificWarnings" Category="General" Switch="Werror=" DisplayName="特定の警告のレベルを上げてエラーにする" Description="特定の警告の名前を指定し、警告のレベルを上げてエラーにします。警告名はセミコロンで区切られたリストに入れられます。 (-Werror=[warning])" />
+  <BoolProperty Name="WarningsAsErrors" Category="General" Switch="Werror" DisplayName="警告をエラーとして扱う" Description="コンパイラにおいて、すべての警告と注意をエラーとして処理します。(-Werror)" />
+  <BoolProperty Name="EnableFixits" Category="General" Switch="fdiagnostics-parseable-fixits" DisplayName="Fix-Itヒントを有効にする" Description="コンパイラが、警告およびエラー診断メッセージに対する修正方法のヒントを提供します。 (-fdiagnostics-parseable-fixits)" />
+  <BoolProperty Name="ExtendedDiagnostics" Category="General" ReverseSwitch="fno-caret-diagnostics" DisplayName="拡張診断メッセージ" Description="各エラー メッセージや警告メッセージに関連したソース コードの行を表示します。なお、キャレット記号 (^) は、ソース コードの行にある問題の位置を差しています。 (-fcaret-diagnostics)" />
+  <EnumProperty Name="CompileAs" Category="Advanced" DisplayName="コンパイル形式" Description="ファイルをコンパイルする形式（C または C++）を指定します。(-x [language])">
+    <EnumValue Name="Default" DisplayName="デフォルト" Description="Default for the file extension used." />
+    <EnumValue Name="CompileAsC" DisplayName="C コードとしコンパイル" Switch="x c" />
+    <EnumValue Name="CompileAsCpp" DisplayName="C++ コードとしコンパイル" Switch="x c++" />
+    <EnumValue Name="CompileAsCHeader" DisplayName="C GCH コードとしコンパイル" Switch="x c-header" />
+    <EnumValue Name="CompileAsCppHeader" DisplayName="C++ GCH コードとしコンパイル" Switch="x c++-header" />
+    <EnumValue Name="CompileAsAssembler" DisplayName="Assembler コードとしコンパイル" Switch="x assembler-with-cpp" />
+  </EnumProperty>
+  <StringProperty Subtype="file" Name="ObjectFileName" Category="General" Switch="o " DisplayName="オブジェクト ファイル名" Description="既定のオブジェクト ファイル名を上書きするとき指定します。ディレクトリ名を含むこともできます。(-o [file path])" />
+  <BoolProperty Name="MultiProcessorCompilation" Category="General" IncludeInCommandLine="false" DisplayName="複数プロセッサによるコンパイル" Description="複数のソースファイルの平行コンパイルを有効にします。最大コンパイル で指定された値で制限されます。" />
+  <IntProperty Name="ProcessorNumber" Category="General" IncludeInCommandLine="false" DisplayName="最大コンパイル" Description="このプロジェクトで使用する同時コンパイルの最大件数を指定します。値を指定しなかった場合には、グローバル設定の値（同時実行する C++ コンパイルの最大数）が使用されます。" />
+  <BoolProperty Name="Distributable" Category="General" DisplayName="分散コンパイルを許可する" Description="分散ビルド中に分散コンパイルを許可するかどうかを指定します。許可されていない場合、ソース ファイルは常にローカルにコンパイルされます。" />
+  <EnumProperty Name="OptimizationLevel" Category="Optimization" DisplayName="最適化レベル" Description="コードの最適化レベルを指定します。(-O0..3, -Os, -Oz)">
+    <EnumValue Name="Level0" Switch="O0" DisplayName="最適化なし" />
+    <EnumValue Name="Level1" Switch="O1" DisplayName="軽量最適化" />
+    <EnumValue Name="Level2" Switch="O2" DisplayName="標準最適化" />
+    <EnumValue Name="Level3" Switch="O3" DisplayName="完全最適化" />
+    <EnumValue Name="Levels" Switch="Os" DisplayName="最適化とサイズ縮小" />
+    <EnumValue Name="Levelz" Switch="Oz" DisplayName="アグレッシブにサイズを縮小" />
+  </EnumProperty>
+  <BoolProperty Name="FastMath" Category="Optimization" Switch="ffast-math" DisplayName="高速演算" Description="浮動小数点演算の速度を上げるため、さらなる最適化を有効にします。場合によっては、引数や結果に関 して危険な仮定が行われ、IEEE や ANSI 規格に違反することもあります。(-ffast-math)" />
+  <BoolProperty Name="NoStrictAliasing" Category="Optimization" Switch="fno-strict-aliasing" DisplayName="厳重なエイリアシングなし" Description="厳重なエイリアシング ルールは使用しません。異なるタイプのオブジェクトが、同じアドレスに存在する可能性もあると仮定します。コード パフォーマンスと引き換えに、安全性が高まります。(-fno-strict-aliasing)" />
+  <BoolProperty Name="UnrollLoops" Category="Optimization" Switch="funroll-loops" ReverseSwitch="fno-unroll-loops" DisplayName="ループ展開" Description="コンパイル時またはループ開始時に、ループの反復が決定可能なループを展開します。コード サイズと引き換えに、実行速度を向上できる可能性があります。(-funroll-loops, -fno-unroll-loops)" />
+  <BoolProperty Name="LinkTimeOptimization" Category="Optimization" Switch="flto" DisplayName="LTO へのサポートを有効化" Description="リンク時まで解析と最適化を遅延します。これにより複数のコンパイル ユニットでの最適化が実行されるようになりますが、代わりにリンク時間は大幅に延長されます。「エディットコンティニュ」との互換性はありません。(-flto)" />
+  <BoolProperty Name="CppExceptions" Category="CodeGeneration" Switch="fexceptions" DisplayName="C++ 例外の有効化" Description="C++ コード中の例外処理を有効にします。(-fexceptions)" />
+  <BoolProperty Name="RuntimeTypeInfo" Category="Language" Switch="frtti" ReverseSwitch="fno-rtti" DisplayName="ランタイム タイプ情報の有効化" Description="ランタイムに C++ のオブジェクト型をチェックするコードを追加します (ランタイム型情報)。例外利用と共に自動的に有効化されます。(-frtti, -fno-rtti)" />
+  <EnumProperty Name="CppLanguageStd" Category="Language" DisplayName="C++ 言語標準" Description="C++ ソースで使用する言語標準を指定します。(-std=c++14,-std=c++17)">
+    <EnumValue Name="Cpp14" Switch="std=c++14" DisplayName="C++14 を使用" />
+    <EnumValue Name="Cpp17" Switch="std=c++17" DisplayName="C++17 を使用" />
+  </EnumProperty>
+  <EnumProperty Name="CLanguageStd" Category="Language" DisplayName="C 言語標準" Description="C ソースで使用する言語標準を指定します。 (-std=c89,gnu89,c94,c99,gnu99,c11,gnu11)">
+    <EnumValue Name="C89" Switch="std=c89" DisplayName="C89 を使用" />
+    <EnumValue Name="Gnu89" Switch="std=gnu89" DisplayName="GNU89 を使用" />
+    <EnumValue Name="C99" Switch="std=c99" DisplayName="C99 を使用" />
+    <EnumValue Name="Gnu99" Switch="std=gnu99" DisplayName="GNU99 を使用" />
+    <EnumValue Name="C11" Switch="std=c11" DisplayName="C11 を使用" />
+    <EnumValue Name="Gnu11" Switch="std=gnu11" DisplayName="GNU11 を使用" />
+  </EnumProperty>
+  <BoolProperty Name="AnsiCompliance" Category="Language" Switch="ansi" DisplayName="ANSI 互換性チェック" Description="C/C++ コードの ANSI との互換性をチェックします。(-ansi)" />
+  <BoolProperty Name="CharUnsigned" Category="Language" Switch="funsigned-char" DisplayName="char のデフォルトを符号なしに設定" Description="クオリファイされていない char タイプを、符号付きとして処理するか、符号なしとして処理するかを設定します。(-funsigned-char)" />
+  <BoolProperty Name="MsExtensions" Category="Language" Switch="fms-extensions" DisplayName="MS 拡張子を有効に設定" Description="一部の非標準 Microsoft VC++ 拡張子を有効にします。ストラクチャやユニオンにおける一部の無名フィールドは、このオプションでのみ受け入れられます。(-fms-extensions)" />
+  <EnumProperty Name="PrecompiledHeader" Category="PrecompiledHeaders" DisplayName="プリコンパイル済みヘッダー" Description="ビルド時にプリコンパイル済みヘッダーを作成、使用します。PCH ファイルの作 成時には、オブジェクト ファイルは生成 されません。 (-x c++-header, -include-pch)">
+    <EnumValue Name="Create" Switch="x c++-header" DisplayName="作成">
+      <Argument Property="PrecompiledHeaderOutputFile" IsRequired="true" Separator=" " />
+    </EnumValue>
+    <EnumValue Name="Use" Switch="include-pch" DisplayName="使用">
+      <Argument Property="PrecompiledHeaderOutputFile" IsRequired="true" Separator=" " />
+    </EnumValue>
+    <EnumValue Name="NotUsing" DisplayName="プリコンパイル済みヘッダ ファイルを使用しない" />
+  </EnumProperty>
+  <StringProperty Subtype="file" Name="PrecompiledHeaderOutputFile" Category="PrecompiledHeaders" DisplayName="プリコンパイル済みヘッダー ファイル" Description="「ファイルに応じてプリコンパイル済みヘッダを自動選択」を使用していない場合に、生成されたプリコンパイル済みヘッダのパスと名前を指定します。" />
+  <EnumProperty Name="UndefinedBehavior" DisplayName="Undefined Behavior" Description="Undefined Behavior" Category="CodeGeneration" Visible="false">
+    <EnumValue Name="None" DisplayName="No checking" />
+    <EnumValue Name="All" DisplayName="Enable all checks" Switch="fsanitize=undefined" />
+  </EnumProperty>
+  <BoolProperty Name="AddressSanitizer" DisplayName="Address Sanitizer" Description="Address Sanitizer" Category="CodeGeneration" Visible="false" Switch="fsanitize=address" />
+  <BoolProperty Name="EnableCodeCoverage" Category="CodeCoverage" Switch="fcoverage-mapping -fprofile-instr-generate" DisplayName="コードカバレッジの有効化" Description="ランタイム時のコードカバレッジデータの計測コード挿入生成を有効化します。計測コード挿入済みコードにはパフォーマンス上のペナルティがあります。(-fcoverage-mapping -fprofile-instr-generate=[file])">
+    <Argument Property="CodeCoverageOutputFile" IsRequired="false" Separator="=" />
+  </BoolProperty>
+  <StringProperty Subtype="file" Name="CodeCoverageOutputFile" Category="CodeCoverage" DisplayName="コードカバレッジ出力ファイル" Description="コードカバレッジを有効化した場合に、rawプロファイルデータをどこに書き込むか、それを指定するターゲット側のファイルパスを指定します。" />
+  <BoolProperty Name="NoDefaultCheckers" DisplayName="NoDefaultCheckers" Description="NoDefaultCheckers" Category="StaticAnalyzer" IncludeInCommandLine="false" Visible="false" Switch="-analyzer-no-default-checks" />
+  <StringListProperty Name="AnalyzerCheckers" Category="StaticAnalyzer" IncludeInCommandLine="false" Switch="Xclang -analyzer-checker=" DisplayName="アナライザ チェッカ" Description="静的解析で使用するチェッカ パッケージまたは個々のチェッカを指定します。複数指定する場合は、セミコロンで区切ってください。(-analyzer-checker=チェッカ)" />
+  <StringListProperty Name="DisableCheckers" Category="StaticAnalyzer" IncludeInCommandLine="false" Switch="Xclang -analyzer-disable-checker=" DisplayName="チェッカの無効化" Description="現在有効化されているチェッカのうち、無効化するチェッカを個別に指定します (1 つまたは複数)。複数指定する場合は、セミコロンで区切ってください。(-analyzer-disable-checker=チェッカ)" />
+  <EnumProperty Name="AnalysisLevel" Category="StaticAnalyzer" IncludeInCommandLine="false" DisplayName="解析レベル" Description="静的解析のレベルを指定します。解析詳細度のレベルを上げるほど検索がより網羅的に行われ、潜在的なコード瑕疵の検出が行えます。">
+    <EnumValue Name="Level1" DisplayName="詳細度 - 軽度" />
+    <EnumValue Name="Level2" DisplayName="詳細度 - 標準" />
+    <EnumValue Name="Level3" DisplayName="詳細度 - 重度" />
+  </EnumProperty>
+  <BoolProperty Name="Analyze" Category="StaticAnalyzer" IncludeInCommandLine="false" DisplayName="静的解析の許可" Description="静的解析を認めるかどうかを指定します。無効化は、個々のソース ファイル別、またはプロジェクト全体で指定できます。" />
+  <StringProperty Subtype="folder" Name="TrackerLogDirectory" Category="General" IncludeInCommandLine="false" Visible="false" />
+  <EnumProperty Name="CompileAsManaged" Category="General" IncludeInCommandLine="false" Visible="false" />
+  <StringProperty Name="AdditionalOptions" Category="CommandLine" DisplayName="追加オプション" Description="他のプロパティによって提供される付加的なコンパイラ コマンド ライン オプションを指定します。オプションの形式は有効でなければなりません。" />
+</Rule>

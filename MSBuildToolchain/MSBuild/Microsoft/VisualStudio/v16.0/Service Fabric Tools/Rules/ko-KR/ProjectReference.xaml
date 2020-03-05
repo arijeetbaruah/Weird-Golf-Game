@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ProjectReference" DisplayName="참조 속성" PageTemplate="generic" Description="참조 속성" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="기타"/>
+    </Rule.Categories>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="로컬 복사" Description="참조를 출력 디렉터리로 복사할지 여부를 나타냅니다.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="ID" Description="참조된 어셈블리의 보안 ID입니다(System.Reflection.Assembly.Evidence 또는 System.Security.Policy.Evidence 참조).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ServiceLaunchUrl" Category="Misc" DisplayName="시작 URL" Description="이 서비스의 디버깅을 시작할 URL입니다.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="ServiceLaunchUrl"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+</Rule>

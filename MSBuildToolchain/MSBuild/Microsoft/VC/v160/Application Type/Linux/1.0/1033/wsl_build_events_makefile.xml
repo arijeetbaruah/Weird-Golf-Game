@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ConfigurationBuildEvents" 
+      DisplayName="Build Events" 
+      PageTemplate="tool" 
+      Order="90"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <Rule.Categories>
+    <Category Name="PreBuild" DisplayName="Pre-Build Event"/>
+    <Category Name="PostBuild" DisplayName="Post-Build Event"/>
+    <Category Name="RemotePreBuild" DisplayName="WSL Pre-Build Event"/>
+    <Category Name="RemotePostBuild" DisplayName="WSL Post-Build Event"/>
+  </Rule.Categories>
+  <StringProperty Name="PreBuildCommand"
+                  Category="PreBuild"
+                  DisplayName="Command Line"
+                  Description="Specifies a command line for the pre-build event tool to run."
+                  F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;Edit...&gt;"/>
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PreBuildMessage" Category="PreBuild" DisplayName="Description" Description="Specifies a description for the pre-build event tool to display." F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PreBuildEventUseInBuild" Category="PreBuild" DisplayName="Use In Build" Description="Specifies whether this build event is excluded from the build for the current configuration." F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild">
+  </BoolProperty>
+  <StringListProperty Name="PreBuildAdditionalSourcesToCopyMapping" DisplayName="Additional Files To Copy"
+              Description="Specifies additional files to copy to the remote system. Optionally the list can be provided as a local to remote mapping pairs using a syntax like this: fulllocalpath1:=fullremotepath1;fulllocalpath2:=fullremotepath2, where a local file can be copied to the specified remote location on the remote system."
+              F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+              Category="PreBuild" Default="">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreBuildEvent" PersistedName="AdditionalSourcesToCopyMapping" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+
+  <StringProperty Name="PostBuildCommand" Category="PostBuild" DisplayName="Command Line" Description="Specifies a command line for the post-build event tool to run." F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;Edit...&gt;"/>
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PostBuildMessage" Category="PostBuild" DisplayName="Description" Description="Specifies a description for the post-build event tool to display." F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PostBuildEventUseInBuild" Category="PostBuild" DisplayName="Use In Build" Description="Specifies whether this build event is excluded from the build for the current configuration." F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild">
+  </BoolProperty>
+  <StringListProperty Name="PostBuildAdditionalSourcesToCopyMapping" DisplayName="Additional Files To Copy"
+          Description="Specifies additional files to copy to the remote system. Optionally the list can be provided as a local to remote mapping pairs using a syntax like this: fulllocalpath1:=fullremotepath1;fulllocalpath2:=fullremotepath2, where a local file can be copied to the specified remote location on the remote system."
+          F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+          Category="PostBuild" Default="">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostBuildEvent" PersistedName="AdditionalSourcesToCopyMapping" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+
+  <StringProperty Name="RemotePreBuildCommand" Category="RemotePreBuild" DisplayName="Command Line" Description="Specifies a command line for the pre-build event tool to run on the remote system." F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePreBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="RemotePreBuildMessage" Category="RemotePreBuild" DisplayName="Description" Description="Specifies a description for the pre-build event tool to display." F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePreBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="RemotePreBuildEventUseInBuild" Category="RemotePreBuild" DisplayName="Use In Build" Description="Specifies whether this build event is excluded from the build for the current configuration." F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild">
+  </BoolProperty>
+  <StringListProperty Name="RemotePreBuildAdditionalSourcesToCopyMapping" DisplayName="Additional Files To Copy"
+        Description="Specifies additional files to copy from the remote system. Optionally the list can be provided as a remote to local mapping pairs using a syntax like this: fullremotepath1:=fulllocalpath1;fullremotepath2:=fulllocalpath2, where a remote file can be copied to the specified location on the local machine."
+        F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+        Category="RemotePreBuild" Default="">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePreBuildEvent" PersistedName="AdditionalSourcesToCopyMapping" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+
+  <StringProperty Name="RemotePostBuildCommand" Category="RemotePostBuild" DisplayName="Command Line" Description="Specifies a command line for the post-build event tool to run on the remote system." F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePostBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="RemotePostBuildMessage" Category="RemotePostBuild" DisplayName="Description" Description="Specifies a description for the post-build event tool to display." F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePostBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="RemotePostBuildEventUseInBuild" Category="RemotePostBuild" DisplayName="Use In Build" Description="Specifies whether this build event is excluded from the build for the current configuration." F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild">
+  </BoolProperty>
+  <StringListProperty Name="RemotePostBuildAdditionalSourcesToCopyMapping" DisplayName="Additional Files To Copy"
+    Description="Specifies additional files to copy from the remote system. Optionally the list can be provided as a remote to local mapping pairs using a syntax like this: fullremotepath1:=fulllocalpath1;fullremotepath2:=fulllocalpath2, where a remote file can be copied to the specified location on the local machine."
+    F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+    Category="RemotePostBuild" Default="">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="RemotePostBuildEvent" PersistedName="AdditionalSourcesToCopyMapping" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+</Rule>

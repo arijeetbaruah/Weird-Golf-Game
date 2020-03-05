@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule
+      Name="LinuxRemoteCopySources"
+      DisplayName="Copy Sources"
+      PageTemplate="generic"
+      Description="Copy Sources"
+      Order="9"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="" />
+  </Rule.DataSource> 
+
+  <StringProperty Name="SourcesToCopyRemotelyOverride" DisplayName="Sources To Copy"
+                  Description="Specifies the sources to copy to the remote system. Changing this list might shift or otherwise affect the directory structure where files are copied to on the remote system."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Category="General" Default="">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <BoolProperty Name="LocalRemoteCopySources" DisplayName="Copy Sources" Description="Specifies whether to copy the sources to the remote system." Category="General" F1Keyword="">
+  </BoolProperty>
+  
+  <BoolProperty Visible="false" Name="CleanRemoteProjectDirectory" DisplayName="Clean remote project directory" Description="Specifies whether to delete the remote project directory when executing the Clean build target." Category="General" F1Keyword="">
+  </BoolProperty>
+     
+  <StringListProperty Name="AdditionalSourcesToCopyMapping" DisplayName="Additional Sources To Copy"
+                  Description="Specifies additional sources to copy to the remote system. Optionally the list can be provided as a local to remote mapping pairs using a syntax like this: fulllocalpath1:=fullremotepath1;fulllocalpath2:=fullremotepath2, where a local file can be copied to the specified remote location on the remote system."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Category="General" Default="">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+</Rule>

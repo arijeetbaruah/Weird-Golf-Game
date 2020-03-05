@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ProjectReference" DisplayName="Proprietà riferimento" PageTemplate="generic" Description="Proprietà riferimento" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Varie"/>
+    </Rule.Categories>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="Copia localmente" Description="Indica se il riferimento verrà copiato nella directory di output.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="Identità" Description="Identità di sicurezza dell'assembly di riferimento (vedere System.Reflection.Assembly.Evidence o System.Security.Policy.Evidence).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ServiceLaunchUrl" Category="Misc" DisplayName="URL di avvio" Description="URL da avviare per il debug di questo servizio.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="ServiceLaunchUrl"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+</Rule>

@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="ConfigurationBuildEvents" DisplayName="ビルド イベント" PageTemplate="tool" Order="90" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <Rule.Categories>
+    <Category Name="PreBuild" DisplayName="ビルド前イベント" />
+    <Category Name="PreLink" DisplayName="リンク前イベント" />
+    <Category Name="PostBuild" DisplayName="ビルド後イベント" />
+    <Category Name="PostAnalyze" DisplayName="解析後イベント" />
+  </Rule.Categories>
+  <StringProperty Name="PreBuildCommand" Category="PreBuild" DisplayName="コマンド ライン" Description="実行するビルド前イベント ツールのコマンド ラインを指定します。" F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;編集...&gt;" />
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PreBuildMessage" Category="PreBuild" DisplayName="説明" Description="表示するビルド前イベント ツールの説明を指定します。" F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PreBuildEventUseInBuild" Category="PreBuild" DisplayName="ビルドで使用" Description="このビルド イベントを現在の構成のビルドから除外するかどうかを指定します。" F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild" />
+  <StringProperty Name="PreLinkCommand" Category="PreLink" DisplayName="コマンド ライン" Description="実行するリンク前イベント ツールのコマンド ラインを指定します。" F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;編集...&gt;" />
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreLinkEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PreLinkMessage" Category="PreLink" DisplayName="説明" Description="表示するリンク前イベント ツールの説明を指定します。" F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PreLinkEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PreLinkEventUseInBuild" Category="PreLink" DisplayName="ビルドで使用" Description="このビルド イベントを現在の構成のビルドから除外するかどうかを指定します。" F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild" />
+  <StringProperty Name="PostBuildCommand" Category="PostBuild" DisplayName="コマンド ライン" Description="実行するビルド後イベント ツールのコマンド ラインを指定します。" F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;編集...&gt;" />
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostBuildEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PostBuildMessage" Category="PostBuild" DisplayName="説明" Description="表示するビルド後イベント ツールの説明を指定します。" F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostBuildEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PostBuildEventUseInBuild" Category="PostBuild" DisplayName="ビルドで使用" Description="このビルド イベントを現在の構成のビルドから除外するかどうかを指定します。" F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild" />
+  <StringProperty Name="PostAnalyzeCommand" Category="PostAnalyze" DisplayName="コマンド ライン" Description="実行する解析後イベント ツールのコマンド ラインを指定します。" F1Keyword="VC.Project.IVCEventTool.CommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;編集...&gt;" />
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostAnalyzeEvent" PersistedName="Command" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="PostAnalyzeMessage" Category="PostAnalyze" DisplayName="説明" Description="表示する解析後イベント ツールの説明を指定します。" F1Keyword="VC.Project.IVCEventTool.Description">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" HasConfigurationCondition="true" ItemType="PostAnalyzeEvent" PersistedName="Message" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="PostAnalyzeEventUseInBuild" Category="PostAnalyze" DisplayName="ビルドで使用" Description="この解析 イベントを現在の構成の解析から除外するかどうかを指定します。" F1Keyword="VC.Project.IVCEventTool.ExcludedFromBuild" />
+</Rule>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for intrinsic project state -->
+<Rule Name="ConfigurationGeneral" DisplayName="Genel" PageTemplate="generic" Description="Genel" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="General" DisplayName="Genel" Description="Genel"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration"/>
+    </Rule.DataSource>
+    <StringListProperty Name="ProjectTypeGuids" Visible="False"/>
+    <StringProperty Name="ProjectGuid" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="PackageLocation" Visible="False"/>
+    <StringProperty Name="ProjectVersion" Visible="False"/>
+    <StringProperty Name="MinToolsVersion" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+    <StringProperty Name="SupportedMSBuildNuGetPackageVersion" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+    <StringProperty Name="TargetFrameworkVersion" Visible="False" Default="v4.5.2">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+    <StringProperty Name="ApplicationMSBuildNuGetPackageVersion" Visible="False"/>
+
+    <EnumProperty Name="ApplicationDebugMode" Visible="False">
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <EnumProperty Name="LaunchTarget" Visible="False">
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="LastServiceLocation" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+    <StringProperty Name="DoNotUpdateNuGetImport" Visible="False"/>
+
+    <StringProperty Name="LaunchTargetProjectFile" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False" PersistedName="LaunchTarget"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ApplicationUrlProjectFile" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False" PersistedName="ApplicationUrl"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Visible="False">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False" PersistedName="DebugProfile"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

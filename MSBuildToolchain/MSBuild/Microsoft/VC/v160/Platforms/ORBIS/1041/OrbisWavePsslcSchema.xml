@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <ContentType Name="OrbisWavePsslc" DisplayName="ORBIS Wave PSSL Compiler" ItemType="OrbisWavePsslc" />
+  <ItemType Name="OrbisWavePsslc" DisplayName="ORBIS Wave PSSL Compiler" />
+  <!--FileExtension Name="*.pssl" ContentType="OrbisWavePsslc" /-->
+</ProjectSchemaDefinitions>

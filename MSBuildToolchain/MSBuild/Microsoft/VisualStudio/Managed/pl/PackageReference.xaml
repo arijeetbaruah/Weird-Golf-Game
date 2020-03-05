@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Właściwości pakietu" DisplayName="Pakiet" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Opis zależności." DisplayName="Opis" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Zasoby do wykluczenia z tego odwołania" DisplayName="Wykluczone zasoby" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Wskazuje, czy należy generowania właściwość MSBuild z lokalizacją katalogu głównego pakietu. Nazwa właściwości generowane jest w formie 'Pkg [PackageID]', gdzie '[PackageID] 'jest identyfikator pakietu z okresów'.' zastąpione znakami podkreślenia '_'." DisplayName="Generuj właściwość ścieżki" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Zasoby do uwzględnienia z tego odwołania" DisplayName="Uwzględnione zasoby" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Rozdzielona przecinkami lista ostrzeżeń, które mają zostać pominięte dla tego pakietu" DisplayName="Pomiń ostrzeżenia" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Lokalizacja pakietu, którego dotyczy odwołanie." ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Prywatne zasoby w tym odwołaniu" DisplayName="Zasoby prywatne" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Wersja zależności." DisplayName="Wersja" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule
+  Name="ConfigurationGeneral"
+  DisplayName="General"
+  PageTemplate="generic"
+  Description="General"
+  xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+
+  <StringProperty Name="OutDir" DisplayName="Output Directory"
+                  Description="Specifies a relative path to the output file directory; can include environment variables."
+                  Category="General" Default="$(SolutionDir)$(Configuration)\"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.OutputDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="IntDir" DisplayName="Intermediate Directory"
+                  Description="Specifies a relative path to the intermediate file directory; can include environment variables."
+                  Category="General"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.IntermediateDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetName" DisplayName="Target Name"
+                  Description="Specifies a file name that this project will generate."
+                  F1Keyword="VC.Project.VCConfiguration.TargetName"
+                  Category="General"
+                  >
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" HasConfigurationCondition="False"/>
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetExt" DisplayName="Target Extension"
+                  Description="Specifies a file extension that this project will generate. (Example: .a)"
+                  F1Keyword="VC.Project.VCConfiguration.TargetExt"
+                  Category="General"
+                  ReadOnly="true"
+                  >
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" HasConfigurationCondition="False"/>
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringListProperty Name="ExtensionsToDeleteOnClean" DisplayName="Extensions to Delete on Clean"
+                      Description="Semi-colon delimited wildcard specification for which files in the intermediate directory to delete on clean or rebuild."
+                      Category="General" Separator=";"
+                      F1Keyword="VC.Project.VCConfiguration.DeleteExtensionsOnClean"
+                      Visible="false">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+  <StringProperty Name="BuildLogFile" DisplayName="Build Log File"
+                  Description="Specifies the build log file to write to when build logging is enabled."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Category="General" Default="$(ProjectDir)\$(MSBuildProjectName).log"
+                  Subtype="file"
+                  Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="BuildLog" PersistedName="Path" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="ProvisioningProfile"
+                       DisplayName="Provisioning Profile"
+                       Description="Specifies the provisioning profile used for codesign."
+                       F1Keyword=""
+                       Category="General" >
+
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="iOSProvisioningProfilePropertyEditor" DisplayName="&lt;Find Provisioning Profile...&gt;" />
+    </StringProperty.ValueEditors>
+    <StringProperty.DataSource>
+      <DataSource Persistence="UserFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+
+  <EnumProperty Name="iOSConfigurationType" DisplayName="Configuration Type"
+                Description="Specifies the type of output this configuration generates."
+                Category="ProjectDefaults"
+                Visible="false"
+                F1Keyword="VC.Project.VCConfiguration.ConfigurationType">
+    <EnumValue Name="Application" DisplayName="Application (.app)" />
+    <EnumValue Name="StaticLibrary" DisplayName="Static library (.a)" />
+    <EnumValue Name="Other" DisplayName="Other"/>
+    <!--<EnumValue Name="ApplicationExtenion" DisplayName="Application Extension (.appex)" />
+    <EnumValue Name="DynamicLibrary" DisplayName="Dynamic Library (.dylib)"/>
+    <EnumValue Name="Framework" DisplayName="Framework (.framework)" />
+    <EnumValue Name="UnitTest" DisplayName="Unit Test (.xctest)"/>--> 
+  </EnumProperty>
+
+  <!-- invisible properties used by Project system -->
+
+
+  <StringProperty Name="_RemoteProjectRecipe" Visible="false" />
+
+  <StringProperty Name="ConfigurationType" Visible="false" />
+
+
+  <!-- iOS specific -->
+  <StringProperty Name="ProjectDir" Visible="false" />
+  <StringProperty Name="Configuration" Visible="false" />
+  <StringProperty Name="Platform" Visible="false" />
+  <StringProperty Name="PlatformNativeArch" Visible="False" />
+  <StringProperty Name="RemoteRootDirectory" Visible="False" />
+  <!-- We are not using this property for iOS, but lot's of components expect to find in in VC projects-->
+  <StringProperty Name="PlatformToolset" Visible="False" />
+
+  <StringProperty
+    Name="OrganizationName"
+    DisplayName="Organization Name"
+    Category="General"
+    F1Keyword=""
+    Visible ="false"
+    Description="Your organization name to be used in xcode." />
+
+  <!-- general, used by CPS -->
+  <StringProperty Name="ProjectGuid" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="false" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  
+  <StringProperty Name="TargetPlatformIdentifier" Visible="false" />
+
+  <StringProperty Name="TargetPlatformVersion" Visible="false" />
+
+  <StringProperty Name="VisualStudioVersion" Visible="false" />
+
+  <StringProperty Name="MinimumVisualStudioVersion" Visible="false" />
+
+  <BoolProperty Name="WindowsAppContainer" Visible="false" />
+
+  <EnumProperty Name="TargetRuntime" Visible="false">
+    <EnumValue Name="Managed" />
+    <EnumValue Name="Native" />
+    <EnumValue Name="AppHost" />
+  </EnumProperty>
+
+  <StringProperty Name="WinRTReferenceTabs" Visible="false" />
+
+  <StringProperty Name="PackageAction" Visible="false" />
+
+  <StringProperty Name="DefaultContentType" Visible="false" />
+
+  <StringProperty Name="IntermediateOutputPath" Visible="false" />
+
+  <BoolProperty Name="SuppressOutOfDateMessageOnBuild" Visible="false" />
+
+  <BoolProperty Name="DisableFastUpToDateCheck" Visible="false" />
+
+  <StringProperty Name="OutputType" Visible="false" />
+
+  <StringProperty Name="TargetFrameworkMoniker" Visible="false" />
+
+  <StringProperty Name="TargetFrameworkIdentifier" Visible="false" />
+
+  <StringProperty Name="TargetFrameworkVersion" Visible="false" />
+
+  <StringProperty Name="TargetFrameworkProfile" Visible="false" />
+
+  <StringProperty Name="TargetPath" Visible="false" />
+
+  <StringProperty Name="RootNamespace" Visible="false" />
+
+  <StringProperty Name="DebuggerSymbolsPath" Visible ="false" />
+
+  <StringProperty Name="AssemblySearchPaths" Visible="false" />
+
+  <StringListProperty Name="AvailablePlatforms" Separator="," Visible="false" />
+
+  <!-- This property name must remain in sync with the string literal reference in ProjectContextHelper. -->
+  <!--<StringProperty Name="ReferenceCachePath" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>-->
+
+  <BoolProperty Name="ShowAllFiles" Visible="false">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="UserFile" HasConfigurationCondition="false" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+
+  <BoolProperty Name="AutoRefresh" Visible="false">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="UserFile" HasConfigurationCondition="false" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+
+  <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="AddItemTemplatesGuid" Visible="False" />
+
+</Rule>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.-->
+<Rule Name="DebuggerGeneralProperties" Description="一般偵錯工具選項" DisplayName="偵錯工具一般屬性" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource Persistence="UserFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringProperty Name="DebuggerFlavor" Visible="false" />
+  <EnumProperty Name="ImageClrType" Visible="false">
+    <EnumProperty.DataSource>
+      <DataSource HasConfigurationCondition="false" PersistedName="_TargetImageClrType" Persistence="UserFile" SourceOfDefaultValue="AfterContext" />
+    </EnumProperty.DataSource>
+    <EnumValue Name="Native" />
+    <EnumValue Name="Mixed" />
+    <EnumValue Name="Managed" />
+  </EnumProperty>
+  <StringProperty Name="SymbolsPath" Description="偵錯工具用來尋找符號的搜尋路徑。" DisplayName="符號搜尋路徑" />
+</Rule>

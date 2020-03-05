@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<Project xmlns = "http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(SceLangID)' == ''">
+    <SceLangID Condition="'$(LangID)' == '1041'">1041</SceLangID>
+    <SceLangID Condition="'$(LangID)' != '1041'">1033</SceLangID>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PropertyPageSchema Include = "$(MSBuildThisFileDirectory)\$(SceLangID)\$(MSBuildThisFileName).xml" />
+  </ItemGroup>
+
+  <Target Name="CreateClangAnalyzePlistFromDir"
+          AfterTargets="Rebuild"
+          BeforeTargets="CollectClangAnalysisResults"
+          Condition="'$(ClangPlistDir)' != ''">
+
+    <Message Text="Using plist files located in $(ClangPlistDir)" Importance="High" />
+
+    <ItemGroup>
+      <ClangAnalyzePlist Include="$(ClangPlistDir)\*.plist" />
+    </ItemGroup>
+
+  </Target>
+
+  <Target Name="_RetrieveClangAnalysisResults"
+          AfterTargets = "Rebuild"
+          Condition = "'@(ClangAnalyzePlist)' != ''"
+          DependsOnTargets = "CreateClangAnalyzePlistFromDir;CollectClangAnalysisResults" />
+
+</Project>

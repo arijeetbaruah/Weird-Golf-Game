@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ResolvedProjectReference" DisplayName="Свойства ссылки" PageTemplate="generic" Description="Свойства ссылки" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Прочее"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ResolvedReference" ItemType="ProjectReference" HasConfigurationCondition="False" SourceType="TargetResults" MSBuildTarget="ResolveProjectReferencesDesignTime"/>
+    </Rule.DataSource>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="Копировать локально" Description="Указывает, будет ли ссылка скопирована в выходной каталог.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="Идентификатор" Description="Удостоверение безопасности сборки, на которую указывает ссылка (см. System.Reflection.Assembly.Evidence или System.Security.Policy.Evidence).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <!--These are metadata added to the resolved item by MSBuild that we don't show to the user but use internally.-->
+    <StringProperty Name="OriginalItemSpec" Visible="False" ReadOnly="True" Description="Вычисленное имя исходного элемента ссылки, в результате разрешения которого был получен данный разрешенный элемент ссылки."/>
+    <StringProperty Name="Name" Visible="false" ReadOnly="True"/>
+</Rule>

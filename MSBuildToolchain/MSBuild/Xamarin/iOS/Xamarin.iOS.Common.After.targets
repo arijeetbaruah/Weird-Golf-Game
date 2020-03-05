@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+Xamarin.iOS.Common.After.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) 2010-2011 Novell. All rights reserved.
+Copyright (C) 2011-2013 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Messaging.Tasks.CreateArchiveDirectory" AssemblyFile="Xamarin.Messaging.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Messaging.Tasks.CopyFileFromMac" AssemblyFile="Xamarin.Messaging.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Messaging.Tasks.LocalUnzip" AssemblyFile="Xamarin.Messaging.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Messaging.Tasks.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.Messaging.Tasks.dll" />
+	<PropertyGroup>
+		<CreateAppBundleDependsOn>
+			GetBundleResourceWithLogicalNameItems;
+			$(CreateAppBundleDependsOn)
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName">
+		<ItemGroup>
+			<!-- We need this metadata to fix the source in VS -->
+			<_BundleResourceWithLogicalName>
+				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
+				<BuildServerPath Condition="'$(IsWatchApp)' == 'true' Or '$(IsAppExtension)' == 'true'">..\..\$(_AppBundleName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
+			</_BundleResourceWithLogicalName>
+		</ItemGroup>
+		<CollectMonotouchReferences References="@(_MSBuildProjectReferenceExistent)">
+			<Output TaskParameter="MonoTouchReferences" ItemName="MonoTouchReferences" />
+		</CollectMonotouchReferences>
+		<!-- This will collect the bundle resource items in the referenced projects -->
+		<MSBuild Projects="@(MonoTouchReferences)" Targets="GetBundleResourceWithLogicalNameItems" BuildInParallel="$(BuildInParallel)" RebaseOutputs="true" Properties="%(MonoTouchReferences.SetConfiguration); %(MonoTouchReferences.SetPlatform)" Condition="'@(MonoTouchReferences)' != '' and '%(MonoTouchReferences.Private)' != 'false' and '$(UseCommonOutputDirectory)' != 'true'" ContinueOnError="$(ContinueOnError)">
+			<Output TaskParameter="TargetOutputs" ItemName="_BundleResourceWithLogicalName" />
+		</MSBuild>
+	</Target>
+	<PropertyGroup>
+		<BuildDependsOn>
+			$(BuildDependsOn);
+			CopyAppBundleFromMac;
+			CopyDSYMFromMac
+		</BuildDependsOn>
+		<CreateIpaDependsOn>
+			$(CreateIpaDependsOn);
+			CopyIpaFromMac;
+		</CreateIpaDependsOn>
+		<ArchiveDependsOn>
+			$(ArchiveDependsOn);
+			CopyArchiveFromMac
+		</ArchiveDependsOn>
+	</PropertyGroup>
+	<Target Name="CopyAppBundleFromMac" Condition="'$(OutputType)' == 'Exe' And '$(IsMacEnabled)' == 'true' And '$(CopyAppBundle)' == 'true'">
+		<!-- Creates AppBundle dir on the output path -->
+		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificOutputPath)AppBundle" />
+		<!--Zip AppBundle-->
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Sources="$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)" OutputFile="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)AppBundle" />
+		<!--Copy Zip from Mac-->
+		<Message Text="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+		<CopyFileFromMac Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+		<!--Unzip App Bundle on Windows-->
+		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" ExtractionPath="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName)$(AppBundleExtension)" />
+		<!-- Delete Zip file -->
+		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+	</Target>
+	<Target Name="CopyIpaFromMac" Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(BuildIpa)' == 'true'">
+		<CopyFileFromMac SessionId="$(BuildSessionId)" File="$(IpaPackagePath)" />
+		<CopyFileFromMac Condition="('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc') And '$(EmbedOnDemandResources)' == 'false'" SessionId="$(BuildSessionId)" File="$(IpaPackageDir)\OnDemandResources\%(_AssetPack.DirectoryName)" />
+		<CopyFileFromMac Condition="('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc') And '$(EmbedOnDemandResources)' == 'false'" SessionId="$(BuildSessionId)" File="$(IpaPackageDir)\OnDemandResources\AssetPackManifest.plist" />
+	</Target>
+	<!-- Override Build -->
+	<Target Name="Build" Condition=" '$(_InvalidConfigurationWarning)' != 'true' " DependsOnTargets="$(BuildDependsOn)" Returns="@(TargetPath)">
+		<ItemGroup>
+			<TargetPath Include="$(TargetPath)">
+				<ArchivePath Condition="'$(ArchiveOnBuild)' == 'true'">$(ArchivePath)</ArchivePath>
+			</TargetPath>
+		</ItemGroup>
+	</Target>
+	<Target Name="CopyArchiveFromMac" Condition="'$(_CanArchive)' == 'true' And '$(ArchiveOnBuild)' == 'true'">
+		<PropertyGroup>
+			<_ArchiveZipWorkingDirOnMac>$(DeviceSpecificIntermediateOutputPath)archives</_ArchiveZipWorkingDirOnMac>
+			<_ArchiveZipFileNameOnMac>$(_ArchiveZipWorkingDirOnMac)\$([System.Guid]::NewGuid()).zip</_ArchiveZipFileNameOnMac>
+		</PropertyGroup>
+		<MakeDir SessionId="$(BuildSessionId)" Directories="$(_ArchiveZipWorkingDirOnMac)" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="$(ArchiveDir)" OutputFile="$(_ArchiveZipFileNameOnMac)" WorkingDirectory="$([System.IO.Path]::GetDirectoryName($(ArchiveDir)))" />
+		<CreateArchiveDirectory ArchiveBasePath="$(ArchiveBasePath)">
+			<Output TaskParameter="ArchiveRootDir" PropertyName="ArchiveRootDirOnWin" />
+		</CreateArchiveDirectory>
+		<PropertyGroup>
+			<_ArchiveZipFileNameOnWin>$(ArchiveRootDirOnWin)\$([System.IO.Path]::GetFileName($(_ArchiveZipFileNameOnMac)))</_ArchiveZipFileNameOnWin>
+			<ArchivePath>$(ArchiveRootDirOnWin)\$([System.IO.Path]::GetFileName($(ArchiveDir)))</ArchivePath>
+		</PropertyGroup>
+		<CopyFileFromMac SessionId="$(BuildSessionId)" File="$(_ArchiveZipFileNameOnMac)" TargetFile="$(_ArchiveZipFileNameOnWin)" />
+		<LocalUnzip ZipFilePath="$(_ArchiveZipFileNameOnWin)" ExtractionPath="$(ArchiveRootDirOnWin)" />
+		<Delete Files="$(_ArchiveZipFileNameOnWin)" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" Directories="$(_ArchiveZipWorkingDirOnMac)" />
+	</Target>
+	<Target Name="CopyDSYMFromMac" DependsOnTargets="_SayHello" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false' And '$(ComputedPlatform)' == 'iPhone' And '$(CopyDSYM)' == 'true' And ('$(BuildIpa)' == 'true' Or '$(CopyAppBundle)' == 'true')">
+		<!--Copy watchOS Dsym folders from Mac-->
+		<MSBuild Projects="@(_WatchAppReferenceWithConfigurationExistent)" Targets="CopyDSYMFromMac" Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration);      %(_WatchAppReferenceWithConfigurationExistent.SetPlatform);      BuildIpa=true" Condition="'$(IsWatchApp)' == 'false' And '@(_WatchAppReferenceWithConfigurationExistent)' != '' And '$(_BuildReferencedExtensionProjects)' != 'true'"></MSBuild>
+		<!--Look for all *.dsym folders int the output path of the main app -->
+		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
+			<Output TaskParameter="Directories" ItemName="_DSYMDir" />
+		</GetDirectories>
+		<ItemGroup>
+			<_DSYMDir>
+				<DsymFileName>%(_DSYMDir.Filename)%(_DSYMDir.Extension)</DsymFileName>
+			</_DSYMDir>
+		</ItemGroup>
+		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificIntermediateOutputPath)dsym" />
+		<!--Zip Dsym folders-->
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)dsym" />
+		<CopyFileFromMac Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
+		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName)" />
+		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
+	</Target>
+
+	<Target Name="_SetMtouchProjectDirectory" AfterTargets="_SayHello" BeforeTargets="_CompileToNative">
+		<PropertyGroup>
+			<MtouchProjectDirectory>$(MacBuildPath)</MtouchProjectDirectory>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true'"
+					Inputs="@(ImageAsset);" Outputs="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')">
+
+		<ItemGroup>
+			<_ResolveUTIOutputs Include="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')" />
+			<FileWrites Include="@(_ResolveUTIOutputs)" />
+		</ItemGroup>
+		
+		<ResolveUniversalTypeIdentifiers
+			Condition="'@(ImageAsset)' != ''"
+			SessionId="$(BuildSessionId)"
+			ImageAssets="@(ImageAsset)"
+			ProjectDir="$(MSBuildProjectDirectory)" />
+
+		<Touch AlwaysCreate="true" Files="@(_ResolveUTIOutputs)" />
+	</Target>
+
+	<Target Name="GenerateApplicationManifest" 
+					DependsOnTargets="_DeploymentComputeNativeManifestInfo;_DeploymentComputeClickOnceManifestInfo;ResolveComReferences;ResolveNativeReferences;_GenerateResolvedDeploymentManifestEntryPoint" 
+					Inputs="$(MSBuildAllProjects);@(AppConfigWithTargetPath);$(_DeploymentBaseManifest);@(ResolvedIsolatedComModules);@(_DeploymentManifestDependencies);@(_DeploymentResolvedManifestEntryPoint);@(_DeploymentManifestFiles)" 
+					Outputs="@(ApplicationManifest)" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets')" />
+
+	<!-- Allows providing SDK-specific target overrides -->
+	<PropertyGroup>
+		<XamarinAppleSdkTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Xamarin.Apple.Sdk.targets'))\Xamarin.Apple.Sdk.targets</XamarinAppleSdkTargets>
+	</PropertyGroup>
+	<Import Project="$(XamarinAppleSdkTargets)" Condition="'$(XamarinAppleSdkTargetsImported)' != 'true' And Exists('$(XamarinAppleSdkTargets)')" />
+</Project>

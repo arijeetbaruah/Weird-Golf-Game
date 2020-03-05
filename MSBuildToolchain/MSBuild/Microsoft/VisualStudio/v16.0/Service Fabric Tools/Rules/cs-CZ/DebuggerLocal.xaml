@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Spustit" PageTemplate="debugger" Description="Možnosti místního ladicího programu" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Možnosti spuštění" Description="Možnosti spuštění"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Typ ladicího programu" Category="StartOptions" Description="Určuje, který ladicí program se má povolit. Při nastavení na Smíšený se používají ladicí programy pro spravovaný i nativní kód. Při nastavení na Nativní pomocí skriptu se používají ladicí programy pro nativní i skriptový kód.">
+        <EnumValue Name="NativeOnly" DisplayName="Jenom nativní" Description="Jenom nativní"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Jenom spravovaný" Description="Jenom spravovaný"/>
+        <EnumValue Name="Script" DisplayName="Jenom skript" Description="Jenom skript"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Nativní se skriptem" Description="Nativní se skriptem"/>
+        <EnumValue Name="Mixed" DisplayName="Smíšený (spravovaný a nativní)" Description="Smíšený (spravovaný a nativní)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

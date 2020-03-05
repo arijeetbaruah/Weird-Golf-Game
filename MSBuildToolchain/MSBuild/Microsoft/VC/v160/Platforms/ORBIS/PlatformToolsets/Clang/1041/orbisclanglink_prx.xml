@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="Link" PageTemplate="tool" DisplayName="リンカ" SwitchPrefix="-" Order="20" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="全般" />
+    <Category Name="Optimization" DisplayName="最適化" />
+    <Category Name="Padding" DisplayName="パディング" />
+    <Category Name="Advanced" DisplayName="詳細設定" />
+    <Category Name="All Options" Subtype="Search" DisplayName="すべてのオプション" />
+    <Category Name="Command Line" Subtype="CommandLine" DisplayName="コマンド ライン" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="Link" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <StringProperty Subtype="file" Name="OutputFile" Category="General" Switch="o" Separator=" " DisplayName="出力ファイル" Description="出力ファイル名を指定します。(-o [file])" />
+  <EnumProperty Name="OutputFormat" Category="Advanced" DisplayName="出力フォーマット" Description="リンカで生成する出力フォーマットを選択します。(--oformat=[format])">
+    <EnumValue Name="ELFFile" DisplayName="ELF ファイル" />
+    <EnumValue Name="PRXFile" Switch="-oformat=prx" DisplayName="PRX ファイル" />
+  </EnumProperty>
+  <StringProperty Name="PrxStubOutputDir" Category="Advanced" Switch="-prx-stub-output-dir" Separator="=" DisplayName="PRX スタブ出力ディレクトリ" Description="このプロジェクトの PRX スタブ ライブラリを生成する際にリンカで使用する出力ディレクトリを指定します。(--prx-stub-output-dir=[dir])">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringListProperty Subtype="folder" Name="AdditionalLibraryDirectories" Category="General" Switch="L" DisplayName="追加のライブラリ ディレクトリ" Description="-l[name] スイッチを使って指定されているライブラリを検出するとき、検索する追加パスを 1 つまたは複数指定します。構成により設定は異なります。複数指定する場合はセミコロンで区切ってください。(-L[dir])" />
+  <BoolProperty Name="EditAndContinue" Category="General" Switch="-enc" DisplayName="エディット コンティニュを有効にする" Description="エディット コンティニュ (EnC) のデバッガ サポートに必要な追加データを生成します。このスイッチを有効にするとリンク時間が長くなります。「エディット コンティニュ」に関する情報は、「Debugger ユーザー ガイド」を参照してください。(--enc)" />
+  <EnumProperty Name="InfoStripping" Category="General" DisplayName="デバッグ情報とシンボルのストリップ" Description="デバッグ情報のストリップ、および出力実行ファイルからのシンボルのストリップを有効にします。(-S | -s)">
+    <EnumValue Name="None" DisplayName="シンボルをストリップしない" />
+    <EnumValue Name="StripDebug" Switch="S" DisplayName="デバッグ情報のみをストリップ" />
+    <EnumValue Name="StripSymsAndDebug" Switch="s" DisplayName="シンボルとデバッグ情報をストリップ" />
+  </EnumProperty>
+  <EnumProperty Name="DataStripping" Category="General" DisplayName="未使用の関数とデータのストリップ" Description="未使用関数コードのストリップ、および出力 PRX ファイルからのデータのストリップを有効にします。(--strip-unused | --strip-unused-data)">
+    <EnumValue Name="None" DisplayName="コードをストリップしない" />
+    <EnumValue Name="StripFuncs" Switch="-strip-unused" DisplayName="未使用の関数のみをストリップ" />
+    <EnumValue Name="StripFuncsAndData" Switch="-strip-unused-data" DisplayName="未使用の関数とデータをストリップ" />
+  </EnumProperty>
+  <BoolProperty Name="DuplicateStripping" Category="General" Switch="-strip-duplicates" DisplayName="重複した関数とデータのストリップ" Description="出力 PRX ファイルから、読み取り専用のデータ セクションと、まったく同じ関数のコードの付加的なストリッピングを可能にします。「未使用の関数とデータのストリップ」が有効化されているときのみ使用可能です。(--strip-duplicates)" />
+  <StringListProperty Subtype="file" Name="ImportLibrary" DisplayName="ImportLibrary" Description="ImportLibrary" Category="Advanced" IncludeInCommandLine="false" Visible="false" />
+  <BoolProperty Name="IgnoreImportLibrary" Category="Advanced" IncludeInCommandLine="false" DisplayName="PRX スタブ ライブラリを無視" Description="この構成によって生成される PRX スタブ ライブラリを依存プロジェクトにインポートしないように指定するものです。">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="" Label="" HasConfigurationCondition="true" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <EnumProperty Name="LinkTimeOptimization" Category="Optimization" DisplayName="リンク時の最適化" Description="Select the mode to use when linking source compiled with Link Time Optimization enabled. The default is &quot;Full&quot;, and provides the highest level of optimization. &quot;Thin&quot; offers less optimization for a shorter link time. (--lto=thin)">
+    <EnumValue Name="Default" DisplayName="デフォルト「Full」" />
+    <EnumValue Name="Thin" DisplayName="Thin" Switch="-lto=thin" />
+  </EnumProperty>
+  <BoolProperty Name="ThinLtoCaching" DisplayName="シンLTOキャッシュを有効にする" Description="シンLTOコンパイルをキャッシュすると、インクリメンタルリンク時間を短縮できます。キャッシュされたファイルは、ディレクトリ$(IntDir)$(ProjectName).lto直下に保存され、クリーンまたはリビルドで削除されます。(-lto-thin-cache=[dir])" Category="Optimization" Switch="-lto-thin-cache">
+    <Argument Property="ThinLtoCacheDir" IsRequired="true" Separator="=" />
+  </BoolProperty>
+  <StringProperty Name="ThinLtoCacheDir" DisplayName="ThinLtoCacheDir" Category="Optimization" Visible="false" />
+  <BoolProperty Name="Pad2mibText" DisplayName="テキストセグメントをパディングする" Description=".textセグメントにパディングを追加して、2MiBアラインされたアドレスに拡張します。(--pad-2mib=text)" Category="Padding" Switch="-pad-2mib=text" />
+  <BoolProperty Name="Pad2mibData" DisplayName="データセグメントをパディングする" Description=".dataセグメントにパディングを追加して、2MiBアラインされたアドレスに拡張します。(--pad-2mib=data)" Category="Padding" Switch="-pad-2mib=data" />
+  <BoolProperty Name="Pad2mibRelRo" DisplayName="RELROセグメントをパディングする" Description=".relroセグメントにパディングを追加して、2MiBアラインされたアドレスに拡張します。(--pad-2mib=relro)" Category="Padding" Switch="-pad-2mib=relro" />
+  <BoolProperty Name="GenerateMapFile" Category="General" Switch="-Map" Separator="=" DisplayName="マップ ファイルの生成" Description="マップ ファイルの生成を有効にします。">
+    <Argument Property="MapFileName" IsRequired="true" />
+  </BoolProperty>
+  <StringProperty Subtype="file" Name="MapFileName" Category="General" DisplayName="マップ ファイル名" Description="マップ ファイルのパスとファイル名を指定します。" />
+  <EnumProperty Name="Addressing" Category="General" DisplayName="アドレス指定" Description="ASLR (Address Space Layout Randomization) の使用を指定します。(--addressing=non-aslr)">
+    <EnumValue Name="Aslr" DisplayName="ASLR を使用する" />
+    <EnumValue Name="NonAslr" Switch="-addressing=non-aslr" DisplayName="ASLR を使用しない" />
+  </EnumProperty>
+  <BoolProperty Name="StartGroup" DisplayName="StartGroup" Description="StartGroup" Category="General" IncludeInCommandLine="false" Visible="false" Switch="-start-group" />
+  <StringListProperty Subtype="file" Name="Sources" DisplayName="Sources" Description="Sources" Category="General" IncludeInCommandLine="false" Visible="false" />
+  <StringListProperty Subtype="file" Name="AdditionalDependencies" Category="General" DisplayName="追加の依存ファイル" Description="リンク時に追加する項目を指定します。構成により設定は異なります。ライブラリ ファイル名、ライブラリ パスを使用するか、またはシステム ライブラリの LibraryName に -l を使用します。" />
+  <BoolProperty Name="EndGroup" DisplayName="EndGroup" Description="EndGroup" Category="General" IncludeInCommandLine="false" Visible="false" Switch="-end-group" />
+  <BoolProperty Name="LinkLibraryDependencies" Category="General" IncludeInCommandLine="false" F1Keyword="VC.Project.VCLinkerTool.LinkLibraryDependencies" DisplayName="ライブラリの依存関係をリンク" Description="プロジェクト依存性によるライブラリ出力が自動的にリンクされるかを指定します。">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="ProjectReference" Label="" HasConfigurationCondition="true" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <BoolProperty Name="UseLibraryDependencyInputs" Category="General" IncludeInCommandLine="false" F1Keyword="VC.Project.VCLinkerTool.UseLibraryDependencyInputs" DisplayName="ライブラリ依存関係入力の使用" Description="プロジェクト依存関係のライブラリ出力をリンクするとき、ライブラリ ファイル自体ではなく、ライブラリアン ツールへの出力を使うかどうかを指定します。">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="ProjectReference" Label="" HasConfigurationCondition="true" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringProperty Subtype="folder" Name="TrackerLogDirectory" Category="General" IncludeInCommandLine="false" Visible="false" />
+  <StringProperty Name="AdditionalOptions" Category="Command Line" DisplayName="追加オプション" Description="他のプロパティによって提供される付加的なリンカ コマンド ライン オプションを指定します。オプションの形式は有効でなければなりません。" />
+</Rule>

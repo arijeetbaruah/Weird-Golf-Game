@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="Свойства проекта" PageTemplate="generic" Description="Свойства проекта" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="Приложение" Description="Приложение"/>
+        <Category Name="Misc" DisplayName="Прочее" Description="Прочее"/>
+        <Category Name="Debugging" DisplayName="Отладка" Description="Отладка"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="Файл проекта" Description="Имя файла проекта.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="Папка проекта" Description="Расположение файла проекта.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="Режим отладки приложения" Default="Remove" Description="Задает поведение при развертывании приложения в ходе отладки. 
+
+Удалить приложение — приложение будет удалено из кластера после завершения сеанса отладчика. 
+Сохранить приложение — приложение продолжит работу в кластере после завершения сеанса отладчика. При последующей отладке приложение будет удалено и повторно развернуто во время отладки.
+Автообновление — существующее приложение будет обновлено при запуске отладки и продолжит работу в кластере после завершения сеанса отладчика. 
+Обновить приложение — приложение будет изменено с помощью новых двоичных файлов без повторного развертывания. Этот режим применим только для кластеров с одним узлом.">
+        <EnumValue Name="AutoUpgrade" DisplayName="Автообновление"/>
+        <EnumValue Name="Remove" DisplayName="Удалить приложение"/>
+        <EnumValue Name="Keep" DisplayName="Сохранить приложение"/>
+        <EnumValue Name="Refresh" DisplayName="Обновить приложение"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="Целевой объект запуска" Description="Источник URL-адреса для перехода после запуска приложения." EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="URL-адрес приложения" Description="URL-адрес для перехода после запуска приложения.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="Папка для вывода готового пакета" Default="true" Description="Указывает поведение пакета (применяется только к проектам служб, отличных от ASP.NET, для полной версии .NET Framework). 
+
+True — упаковать все файлы в папке bin. 
+False — упаковать указанные файлы на основе предварительно заданной логики.">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="Профиль отладки" Description="Профиль, используемый при отладке приложений Service Fabric." EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

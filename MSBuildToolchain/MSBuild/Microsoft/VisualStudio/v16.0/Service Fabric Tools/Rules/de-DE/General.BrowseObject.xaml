@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="Projekteigenschaften" PageTemplate="generic" Description="Projekteigenschaften" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="Anwendung" Description="Anwendung"/>
+        <Category Name="Misc" DisplayName="Sonstiges" Description="Sonstiges"/>
+        <Category Name="Debugging" DisplayName="Debuggen" Description="Debugging"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="Projektdatei" Description="Der Name der Projektdatei.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="Projektordner" Description="Der Speicherort der Projektdatei.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="Anwendungsdebugmodus" Default="Remove" Description="Gibt das Verhalten der Anwendungsbereitstellung als Teil des Debuggens an. 
+
+Anwendung entfernen: Die Anwendung wird nach dem Beenden der Debuggersitzung aus dem Cluster entfernt. 
+Anwendung beibehalten: Die Anwendung wird nach dem Beenden der Debuggersitzung weiterhin im Cluster ausgeführt. Bei nachfolgenden Debugsitzungen wird die Anwendung entfernt und während des Debuggens erneut bereitgestellt.
+Automatisches Upgrade: Für die vorhandene Anwendung wird während des Starts der Debugsitzung ein Upgrade ausgeführt. Die Anwendung wird nach dem Beenden der Debuggersitzung weiterhin im Cluster ausgeführt. 
+Anwendung aktualisieren: Die Anwendung wird mit neuen Binärdateien aktualisiert, ohne die Anwendung erneut bereitzustellen. Dieser Modus ist nur auf Cluster mit 1 Knoten anwendbar.">
+        <EnumValue Name="AutoUpgrade" DisplayName="Automatisches Upgrade"/>
+        <EnumValue Name="Remove" DisplayName="Anwendung entfernen"/>
+        <EnumValue Name="Keep" DisplayName="Anwendung beibehalten"/>
+        <EnumValue Name="Refresh" DisplayName="Anwendung aktualisieren"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="Startziel" Description="Die Quelle für die URL, die nach dem Start der Anwendung durchsucht werden soll." EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="Anwendungs-URL" Description="Die URL, nach der nach dem Start der Anwendung gesucht werden soll.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="Vollständigen Ausgabeordner paketieren" Default="true" Description="Gibt das Paketverhalten an (gilt nur für Nicht-ASP.NET-Dienstprojekte mit dem vollständigen .NET Framework als Ziel). 
+
+TRUE: Bei dieser Einstellung werden alle Dateien im bin-Ordner paketiert. 
+FALSE: Bei dieser Einstellung werden basierend auf einer vorkonfigurierten Logik bestimmte Dateien paketiert.">
+        <EnumValue Name="true" DisplayName="TRUE"/>
+        <EnumValue Name="false" DisplayName="FALSE"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="Debugprofil" Description="Das beim Debuggen der Service Fabric-Anwendung verwendete Profil." EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

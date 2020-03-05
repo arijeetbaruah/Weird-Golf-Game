@@ -1,0 +1,284 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.CppBuild.orbis.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- *******************************************************************************************
+        Build order - Taken from Microsoft.CppBuild.targets to override the VC++ build targets
+       ******************************************************************************************* -->
+  <PropertyGroup>
+    <CommonBuildOnlyTargets>
+      SetBuildDefaultEnvironmentVariables;
+      SetUserMacroEnvironmentVariables;
+      PrepareForBuild;
+    </CommonBuildOnlyTargets>
+
+    <BuildGenerateSourcesTargets>
+      PreBuildEvent;
+    </BuildGenerateSourcesTargets>
+
+    <BuildLibTargets Condition="'$(ConfigurationType)'!='Utility'">
+      _Lib;
+    </BuildLibTargets>
+
+    <BuildCompileTargets Condition="'$(ConfigurationType)'!='Utility'">
+      _ClCompile;
+    </BuildCompileTargets>
+
+    <BuildLinkTargets Condition="'$(ConfigurationType)'!='Utility' and '$(ConfigurationType)'!='StaticLibrary'">
+      _Link;
+    </BuildLinkTargets>
+
+    <BuildLinkTargets Condition="'$(ConfigurationType)'=='StaticLibrary'">
+      _Lib;
+    </BuildLinkTargets>
+
+    <AfterBuildLinkTargets Condition="'$(ConfigurationType)'!='Utility'">
+      CopyFilesToOutputDirectory;
+      PostBuildEvent;
+    </AfterBuildLinkTargets>
+
+    <AfterBuildLinkTargets Condition="'$(ConfigurationType)'=='Utility'">
+      PostBuildEvent
+    </AfterBuildLinkTargets>
+
+    <!-- Specify the build actions again after modifying the properties they referenced -->
+    <BuildGenerateSourcesAction>$(CommonBuildOnlyTargets);$(BeforeBuildGenerateSourcesTargets);$(BuildGenerateSourcesTargets);$(AfterBuildGenerateSourcesTargets)</BuildGenerateSourcesAction>
+    <BuildCompileAction>$(CommonBuildOnlyTargets);$(BeforeBuildCompileTargets);$(BuildCompileTargets);$(AfterBuildCompileTargets)</BuildCompileAction>
+    <BuildLinkAction>$(CommonBuildOnlyTargets);$(BeforeBuildLinkTargets);$(BuildLinkTargets);$(AfterBuildLinkTargets)</BuildLinkAction>
+  </PropertyGroup>
+
+  <!-- *******************************************************************************************
+        PrepareForBuild target
+       ******************************************************************************************* -->
+
+  <Target Name="PrepareForBuild" DependsOnTargets="SetBuildDefaultEnvironmentVariables;SetUserMacroEnvironmentVariables;$(PrepareForBuildDependsOn)">
+    <!-- These PropertyGroups are required because TargetPath and others are defined
+       to contain an item list. We want that item list to be expanded so that it can be used
+       as a regular property value and not as an item-list-with-transform. -->
+    <PropertyGroup>
+      <TargetDir>$(TargetDir)</TargetDir>
+      <LocalDebuggerCommand>$(LocalDebuggerCommand)</LocalDebuggerCommand>
+
+      <!-- Prevent building project reference once starting to build this project, unless $(AllowBuldingProjectReferencesDuringBuild) is set -->
+      <BuildProjectReferences Condition="'$(AllowBuldingProjectReferencesDuringBuild)' != 'true'">false</BuildProjectReferences>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <ConfigurationPlatformExists Condition="'%(ProjectConfiguration.Identity)' == '$(Configuration)|$(Platform)'">true</ConfigurationPlatformExists>
+    </PropertyGroup>
+
+    <!-- Error now before creating any directories. -->
+    <VCMessage Code="MSB8013" Type="Error" Arguments="$(Configuration)|$(Platform)" Condition="'$(DesignTimeBuild)' != 'true' and '$(ConfigurationPlatformExists)' != 'true'"/>
+
+    <MakeDir Directories="$(IntDir)"/>
+
+    <!-- Warn the user that about the missing envoriment variable -->
+    <VCMessage Code="MSB8003" Type="Warning" Arguments="VCInstallDir"  Condition="'$(DesignTimeBuild)'!='true' and '$(VCInstallDir)'==''" />
+    <VCMessage Code="MSB8004" Type="Warning" Arguments="Intermediate;Intermediate" Condition="'$(DesignTimeBuild)'!='true' and '$(IntDirTrailingSlashWarning)'=='true'" />
+    <VCMessage Code="MSB8004" Type="Warning" Arguments="Output;Output" Condition="'$(DesignTimeBuild)'!='true' and '$(OutDirTrailingSlashWarning)'=='true'" />
+
+    <VCMessage Code="MSB8021" Type="%(CompatibilityIssues.Type)" Arguments="%(CompatibilityIssues.FirstValue);%(CompatibilityIssues.FirstName);%(CompatibilityIssues.SecondValue);%(CompatibilityIssues.SecondName)" Condition="'%(CompatibilityIssues.Identity)' != '' and '$(DesignTimeBuild)'!='true'" />
+
+    <!-- lastbuildstate is a unique file writen to by each build. Multiple of this file can mean that the IntDir is shared by more the one project. -->
+    <ItemGroup>
+      <AllTlogLocation Include="$(IntDir)*.tlog\*.lastbuildstate" Exclude="$(LastBuildState)" Condition="'$(IntDirSharingDetected)' == ''"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <IntDirSharingDetected Condition="'@(AllTlogLocation)' != ''">true</IntDirSharingDetected>
+      <IntDirSharingProjects Condition="'@(AllTlogLocation)' != ''">@(AllTlogLocation->'%(Filename).vcxproj', ', ')</IntDirSharingProjects>
+    </PropertyGroup>
+
+    <VCMessage Code="MSB8028" Type="Warning" Arguments="$(IntDirSharingProjects);$(IntDir)" Condition="'$(IgnoreWarnIntDirSharingDetected)' != 'true' and '$(IntDirSharingDetected)' == 'true'"/>
+
+    <!-- Warn if IntDir or OutDir is a subfolder of the Temp -->
+    <PropertyGroup>
+      <_IntDirFullpath>$([System.IO.Path]::Combine($(ProjectDir), $(IntDir)))</_IntDirFullpath>
+      <_OutDirFullpath>$([System.IO.Path]::Combine($(ProjectDir), $(OutDir)))</_OutDirFullpath>
+    </PropertyGroup>
+
+    <VCMessage Code="MSB8029" Type="Warning" Condition="'$(DesignTimeBuild)'!='true' and '$(IgnoreWarnIntDirInTempDetected)' != 'true' and ('$(_IntDirFullpath.StartsWith($(Tmp), true, null))' == 'true' or '$(_IntDirFullpath.StartsWith($(Temp), true, null))' == 'true' or '$(_OutDirFullpath.StartsWith($(Tmp), true, null))' == 'true' or '$(_OutDirFullpath.StartsWith($(Temp), true, null))' == 'true')"/>
+
+    <!-- Create the directories for intermediate and final build products, and any other arbitrary directories. -->
+    <MakeDir Directories="@(GeneralDirsToMake)"/>
+  </Target>
+
+  <!-- *******************************************************************************************
+        Don't compute the manifest item for this project.
+       ******************************************************************************************* -->
+
+  <Target Name="GetNativeManifest" />
+
+  <!-- *******************************************************************************************
+        Compute Reference CL Inputs
+       ******************************************************************************************* -->
+  <!--PropertyGroup>
+    <ComputeCompileInputsTargets>
+      $(ComputeCompileInputsTargets);
+      ComputeReferenceCLInput
+    </ComputeCompileInputsTargets>
+  </PropertyGroup-->
+
+  <Target Name="ComputeCLInputPDBName" />
+
+  <!-- *******************************************************************************************
+        Compute Custom Build Output
+       ******************************************************************************************* -->
+  <Target Name="ComputeCustomBuildOutput" >
+
+    <ItemGroup>
+      <CustomBuildDirsToMake Include="%(CustomBuildStep.Outputs)" Condition="'%(CustomBuildStep.Command)' != ''"/>
+      <CustomBuildDirsToMake Include="%(CustomBuild.Outputs)" Condition="'@(CustomBuild)' != ''"/>
+      <Link Include="%(CustomBuildDirsToMake.Identity)" Condition="'%(Extension)'==$(ObjectExt) or '%(Extension)'=='.obj' or '%(Extension)'==$(LibExt) or '%(Extension)'=='.lib'"/>
+      <Lib Include="%(CustomBuildDirsToMake.Identity)" Condition="'%(Extension)'==$(ObjectExt) or '%(Extension)'=='.obj' or '%(Extension)'==$(LibExt) or '%(Extension)'=='.lib'"/>
+      <ImpLib Include="%(CustomBuildDirsToMake.Identity)" Condition="'%(Extension)'==$(ObjectExt) or '%(Extension)'=='.obj' or '%(Extension)'==$(LibExt) or '%(Extension)'=='.lib'"/>
+    </ItemGroup>
+
+    <MakeDir Directories="@(CustomBuildDirsToMake->'%(RootDir)%(Directory)')" />
+
+  </Target>
+
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+      ComputeCustomBuildOutput;
+      ComputeCLGeneratedLinkInputs;
+      ComputeLinkInputsFromProject;
+      ComputeReferenceLinkInputs;
+    </ComputeLinkInputsTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ComputeLibInputsTargets>
+      ComputeLibAdditionalOptions;
+      ComputeCustomBuildOutput;
+      ComputeCLGeneratedLibInputs;
+      ComputeLibInputsFromProject;
+      ComputeReferenceLibInputs;
+    </ComputeLibInputsTargets>
+  </PropertyGroup>
+
+  <!-- *******************************************************************************************
+        Compute CL Outputs  targets
+       ******************************************************************************************* -->
+
+  <Target Name="PreComputeCLOutputs" />
+       
+  <!-- Add CL generates .o files to Obj item group, it will be used by lib or link -->
+  <Target Name="ComputeCLOutputs"
+          DependsOnTargets="$(ComputeCompileInputsTargets);PreComputeCLOutputs"
+          Condition="'@(ClCompile)' != ''">
+
+    <ItemGroup>
+      <!-- No object file name defined: filename.obj -->
+      <Obj Condition="'%(ClCompile.ObjectFileName)'=='' and '%(ClCompile.ExcludedFromBuild)'!='true'" Include="@(ClCompile->'%(Filename)$(ObjectExt)')">
+        <LinkCompiled>%(ClCompile.LinkCompiled)</LinkCompiled>
+        <LibCompiled>%(ClCompile.LibCompiled)</LibCompiled>
+        <ImpLibCompiled>%(ClCompile.ImpLibCompiled)</ImpLibCompiled>
+      </Obj>
+      <!-- Object file name is a directory (has trailing slash): ofn\filename.obj -->
+      <Obj Condition="HasTrailingSlash('%(ClCompile.ObjectFileName)') and '%(ClCompile.ExcludedFromBuild)'!='true'" Include="@(ClCompile->'%(ObjectFileName)%(Filename)$(ObjectExt)')">
+        <LinkCompiled>%(ClCompile.LinkCompiled)</LinkCompiled>
+        <LibCompiled>%(ClCompile.LibCompiled)</LibCompiled>
+        <ImpLibCompiled>%(ClCompile.ImpLibCompiled)</ImpLibCompiled>
+      </Obj>
+      <!-- Object file name is a file (does not has trailing slash): ofn -->
+      <Obj Condition="'%(ClCompile.ObjectFileName)' != '' and !HasTrailingSlash('%(ClCompile.ObjectFileName)') and '%(ClCompile.ExcludedFromBuild)'!='true' and '$([System.IO.Path]::GetExtension(%(ClCompile.ObjectFileName)))' != ''" Include="@(ClCompile->'%(ObjectFileName)')" >
+        <LinkCompiled>%(ClCompile.LinkCompiled)</LinkCompiled>
+        <LibCompiled>%(ClCompile.LibCompiled)</LibCompiled>
+        <ImpLibCompiled>%(ClCompile.ImpLibCompiled)</ImpLibCompiled>
+      </Obj>
+      <!-- Object file name is a file without an extension (does not has trailing slash): ofn -->
+      <Obj Condition="'%(ClCompile.ObjectFileName)' != '' and !HasTrailingSlash('%(ClCompile.ObjectFileName)') and '%(ClCompile.ExcludedFromBuild)'!='true' and '$([System.IO.Path]::GetExtension(%(ClCompile.ObjectFileName)))' == ''" Include="@(ClCompile->'%(ObjectFileName).o')" >
+        <LinkCompiled>%(ClCompile.LinkCompiled)</LinkCompiled>
+        <LibCompiled>%(ClCompile.LibCompiled)</LibCompiled>
+        <ImpLibCompiled>%(ClCompile.ImpLibCompiled)</ImpLibCompiled>
+      </Obj>
+    </ItemGroup>
+
+  </Target>
+
+  <!-- *******************************************************************************************
+        Link targets
+       ******************************************************************************************* -->
+  <Target Name="_Link"
+          DependsOnTargets="$(BeforeLinkTargets);$(ComputeLinkInputsTargets);MakeDirsForLink;DoLinkOutputFilesMatch;PreLinkEvent;Link;ComputeLinkImportLibraryOutputsForClean;$(AfterLinkTargets);"
+          Condition="'$(LinkCompiled)' == 'true'">
+  </Target>
+
+  <!-- *******************************************************************************************
+        Property pages - override the default VC++ pages
+       ******************************************************************************************* -->
+  <ItemGroup Condition="'$(UseORBISDefaultPropertyPageSchemas)' != 'false' and ('$(ConfigurationType)' == 'Application' or '$(ConfigurationType)' == 'Utility')">
+    <DebuggerPages Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbisdebugger_*.xml"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseORBISDefaultPropertyPageSchemas)' != 'false'">
+    <PropertyPageSchema Include="
+        $(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbisProjectItemsSchema.xml;
+        $(VCTargetsPath)\$(LangID)\build_events.xml;
+        $(VCTargetsPath)\$(LangID)\custom_build_tool.xml;
+    "/>
+
+    <!-- We always need debuggers general page as soon as we have at least one debugger -->
+    <PropertyPageSchema Condition="'@(DebuggerPages)' != ''" Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
+    <PropertyPageSchema Include="@(DebuggerPages)" />
+
+    <!-- Selected file property page -->
+    <PropertyPageSchema Include="$(VCTargetsPath)\$(LangID)\general_file.xml">
+      <Context>File</Context>
+    </PropertyPageSchema>
+
+    <!-- Property sheet specific property pages -->
+    <PropertyPageSchema Include="$(VCTargetsPath)\$(LangID)\usermacros.xml">
+      <Context>PropertySheet</Context>
+    </PropertyPageSchema>
+
+    <!-- Switch view between project property based directories and environment variables -->
+    <PropertyPageSchema Condition="'$(UseEnv)' != 'true'" Include="$(VCTargetsPath)Platforms\ORBIS\$(SceLangID)\orbisdirectories.xml" />
+    <PropertyPageSchema Condition="'$(UseEnv)' == 'true'" Include="$(VCTargetsPath)\$(LangID)\envvars.xml" />
+
+    <!-- $(VCTargetsPath)\$(LangID)\custom_build_step.xml; -->
+    <!-- Non-Utility project property pages -->
+    <PropertyPageSchema Condition="'$(ConfigurationType)' != 'Utility'" Include="
+        $(VCTargetsPath)\$(LangID)\custom_build_step.xml;
+        $(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbislib.xml;
+        $(VCTargetsPath)\Platforms\ORBIS\PlatformToolsets\$(PlatformToolset)\$(SceLangID)\*.xml;
+    " Exclude="
+        $(VCTargetsPath)\Platforms\ORBIS\PlatformToolsets\$(PlatformToolset)\$(SceLangID)\orbisclanglink_prx.xml;
+    "/>
+
+    <PropertyPageSchema Condition="'$(ConfigurationType)' == 'DynamicLibrary'" Include="
+        $(VCTargetsPath)\Platforms\ORBIS\PlatformToolsets\$(PlatformToolset)\$(SceLangID)\orbisclanglink_prx.xml;
+    "/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseORBISDefaultPropertyPageSchemas)' != 'false'">
+    <PropertyPageSchema Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbisgeneral.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbisgeneral_ps.xml">
+      <Context>PropertySheet</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <!-- Tools that show up in the IDE property pages for exe and dll projects -->
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <ProjectTools Include="Link"/>
+    <ProjectTools Include="CustomBuildStep"/>
+  </ItemGroup>
+
+  <!-- Tools that show up in the IDE property pages for lib project-->
+  <ItemGroup Condition="'$(UseORBISDefaultProjectTools)' != 'false' and '$(ConfigurationType)' == 'StaticLibrary'">
+    <ProjectTools Include="Lib"/>
+    <ProjectTools Include="CustomBuildStep"/>
+  </ItemGroup>
+
+</Project>

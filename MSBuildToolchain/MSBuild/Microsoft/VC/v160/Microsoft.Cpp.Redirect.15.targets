@@ -1,0 +1,30 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.Cpp.Redirect.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+      created a backup copy.  Incorrect changes to this file will make it
+      impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Condition="'$(_ToolsetVCTargetsVersion)' == 'v150'" Project="$(VCTargetsPath)\Microsoft.Cpp.ToolsetLocation.targets"/>
+  <Import Condition="'$(_ToolsetVCTargetsVersion)' != 'v150'" Project="$(VCTargetsPath)\Microsoft.Cpp.Redirect.14.targets"/>
+
+  <!-- modification required for Dev16 from Dev15 -->
+
+  <!-- we want to use latest experimental unity build support for older toolsets -->
+  <Import Condition="'$(_EnableUnitySupport)' == 'true'" Project="$(CurrentVCTargetsPath)\Microsoft.Cpp.Unity.targets" />
+
+  <!-- Restore EnableUnitysupport property -->
+  <PropertyGroup>
+    <EnableUnitySupport>$(_EnableUnitySupport)</EnableUnitySupport>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RequiredBundles />
+  </PropertyGroup>
+</Project>

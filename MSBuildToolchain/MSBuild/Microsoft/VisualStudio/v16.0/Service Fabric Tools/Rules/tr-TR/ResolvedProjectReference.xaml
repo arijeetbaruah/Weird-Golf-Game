@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ResolvedProjectReference" DisplayName="Başvuru Özellikleri" PageTemplate="generic" Description="Başvuru Özellikleri" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Çeşitli"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ResolvedReference" ItemType="ProjectReference" HasConfigurationCondition="False" SourceType="TargetResults" MSBuildTarget="ResolveProjectReferencesDesignTime"/>
+    </Rule.DataSource>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="Yereli Kopyala" Description="Başvurunun çıkış dizinine kopyalanıp kopyalanmayacağını belirtir.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="Kimlik" Description="Başvurulan bütünleştirilmiş kodun güvenlik kimliği (bkz. System.Reflection.Assembly.Evidence veya System.Security.Policy.Evidence).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <!--These are metadata added to the resolved item by MSBuild that we don't show to the user but use internally.-->
+    <StringProperty Name="OriginalItemSpec" Visible="False" ReadOnly="True" Description="Çözümlemesi, bu çözümlenen başvuru öğesiyle sonuçlanmış olan özgün başvuru öğesinin değerlendirilen öğe adı."/>
+    <StringProperty Name="Name" Visible="false" ReadOnly="True"/>
+</Rule>

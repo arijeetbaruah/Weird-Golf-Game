@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule Name="ClangAnalyzePlist" PageTemplate="generic" DisplayName="Clang Static Analysis" Order="100">
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+    </Rule.Categories>
+    <StringProperty Subtype="folder" Name="ClangPlistDir" DisplayName="Clang Plist Directory" Description="Specify the directory to be searched for plist files." Category="General" />
+  </Rule>
+</ProjectSchemaDefinitions>

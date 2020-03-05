@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Vlastnosti balíčku" DisplayName="Balíček" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Popis závislosti" DisplayName="Popis" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Prostředky vyloučené z tohoto odkazu" DisplayName="Vyloučené prostředky" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Určuje, jestli se má generovat vlastnost MSBuildu s umístěním kořenového adresáře balíčku. Název generované vlastnosti je ve formátu Pkg[ID_balíčku], kde [ID_balíčku] je ID balíčku, ve kterém jsou tečky nahrazené podtržítky." DisplayName="Generovat vlastnost cesty" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Prostředky zahrnuté z tohoto odkazu" DisplayName="Zahrnuté prostředky" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Seznam upozornění oddělených čárkou, která by se měla u tohoto balíčku potlačit" DisplayName="Potlačit upozornění" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Umístění odkazovaného balíčku" ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Soukromé prostředky v tomto odkazu" DisplayName="Privátní prostředky" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Verze závislosti" DisplayName="Verze" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

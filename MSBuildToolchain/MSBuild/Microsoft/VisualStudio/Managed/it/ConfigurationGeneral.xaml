@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="ConfigurationGeneral" Description="Generale" DisplayName="Generale" OverrideMode="Replace" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" Description="Generale" DisplayName="Generale" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Label="Configuration" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringProperty Name="AddItemTemplatesGuid" Visible="False" />
+  <BoolProperty Name="AlwaysUseNumericalSuffixInItemNames" Visible="False" />
+  <StringProperty Name="ApplicationIcon" DisplayName="Icona dell'applicazione" />
+  <StringProperty Name="AssemblyName" />
+  <StringProperty Name="AssemblyReferenceTabs" Visible="false" />
+  <StringProperty Name="AssemblySearchPaths" Visible="false" />
+  <BoolProperty Name="AutoRefresh" Visible="False">
+    <BoolProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" Persistence="UserFile" SourceOfDefaultValue="AfterContext" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringListProperty Name="AvailablePlatforms" Separator="," />
+  <StringProperty Name="BaseIntermediateOutputPath" />
+  <StringProperty Name="Configuration" Visible="false" />
+  <StringProperty Name="DebuggerSymbolsPath" Visible="false" />
+  <StringProperty Name="DefaultContentType" Visible="false" />
+  <StringProperty Name="DefaultPlatform" Visible="false" />
+  <BoolProperty Name="DisableFastUpToDateCheck" DisplayName="Disabilita controllo aggiornamenti rapido">
+    <BoolProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="DisableFastUpToDateCheck" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringProperty Name="DocumentationFile" DisplayName="File dei commenti in formato documentazione XML" />
+  <StringProperty Name="IntDir" Visible="false" />
+  <StringProperty Name="IntermediateOutputPath" Visible="false" />
+  <StringProperty Name="LanguageServiceId" ReadOnly="True" Visible="False" />
+  <StringProperty Name="LanguageServiceName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="MinimumVisualStudioVersion" Visible="false" />
+  <StringProperty Name="MSBuildAllProjects" Visible="false" />
+  <StringProperty Name="MSBuildProjectDirectory" Visible="false" />
+  <StringProperty Name="MSBuildProjectFullPath" Visible="false" />
+  <StringProperty Name="Name" />
+  <StringProperty Name="NETCoreSdkVersion" ReadOnly="True" Visible="False" />
+  <StringProperty Name="OneAppCapabilities" Visible="False" />
+  <BoolProperty Name="Optimize" Description="Indicare se il compilatore deve ottimizzare l'output." />
+  <StringProperty Name="OutputName" />
+  <StringProperty Name="OutputPath" />
+  <EnumProperty Name="OutputType">
+    <EnumValue Name="Library" DisplayName="Libreria di classi" />
+    <EnumValue Name="Exe" DisplayName="Applicazione console" />
+    <EnumValue Name="WinExe" DisplayName="Applicazione Windows" />
+    <EnumValue Name="AppContainerExe" DisplayName="App di Windows Store" />
+    <EnumValue Name="WinMDObj" DisplayName="WinMD" />
+    <EnumProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="OutputType" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </EnumProperty.DataSource>
+  </EnumProperty>
+  <StringProperty Name="PackageAction" Visible="false" />
+  <StringProperty Name="Platform" Visible="false" />
+  <StringProperty Name="ProjectDir" Visible="false" />
+  <StringListProperty Name="ProjectTypeGuids" Visible="False" />
+  <StringProperty Name="ProjectUISubcaption" Visible="False" />
+  <StringProperty Name="RootNamespace" DisplayName="Spazio dei nomi radice">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="false" Label="Configuration" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="SDKExtensionDirectoryRoot" Visible="false" />
+  <StringProperty Name="SDKIdentifier" Visible="false" />
+  <StringProperty Name="SDKReferenceDirectoryRoot" Visible="false" />
+  <StringProperty Name="SDKReferenceRegistryRoot" Visible="false" />
+  <StringProperty Name="SDKVersion" Visible="false" />
+  <StringProperty Name="SharedItemContextSubProjectGuid" Visible="False">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" Persistence="UserFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="SharedProjectAppliesTo" Visible="False" />
+  <BoolProperty Name="ShowAllFiles" Visible="False">
+    <BoolProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" Persistence="UserFile" SourceOfDefaultValue="AfterContext" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <BoolProperty Name="SuppressOutOfDateMessageOnBuild" Visible="false" />
+  <StringProperty Name="TargetFramework" DisplayName="Framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFramework" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworkIdentifier" DisplayName="Identificatore framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworkIdentifier" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworkMoniker" DisplayName="Moniker framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworkMoniker" Persistence="ProjectFileWithInterceptionViaSnapshot" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworkMonikers" DisplayName="Moniker framework di destinazione" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworkMonikers" Persistence="ProjectFileWithInterception" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworkProfile" DisplayName="Profilo framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworkProfile" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworks" DisplayName="Framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworks" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetFrameworkVersion" DisplayName="Versione framework di destinazione">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" PersistedName="TargetFrameworkVersion" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetPath" />
+  <StringProperty Name="TargetPlatformIdentifier" Visible="false" />
+  <StringProperty Name="TargetPlatformVersion" Visible="false" />
+  <StringProperty Name="TargetPlatformWinMDLocation" Visible="false" />
+  <EnumProperty Name="TargetRuntime" Visible="false">
+    <EnumValue Name="Managed" />
+    <EnumValue Name="Native" />
+    <EnumValue Name="AppHost" DisplayName="App di Windows" />
+  </EnumProperty>
+  <StringProperty Name="TemplateLanguage" ReadOnly="True" Visible="False" />
+  <StringProperty Name="VCInstallDir" Visible="false" />
+  <StringProperty Name="VSInstallDir" Visible="false" />
+  <BoolProperty Name="WindowsAppContainer" Visible="false" />
+  <BoolProperty Name="WinMDAssembly" Visible="false" />
+  <StringProperty Name="WinRTReferenceTabs" Visible="false" />
+</Rule>

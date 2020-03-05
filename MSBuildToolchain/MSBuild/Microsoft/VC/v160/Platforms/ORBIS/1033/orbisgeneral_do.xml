@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="ConfigurationGeneral" PageTemplate="generic" DisplayName="General" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="ProjectDefaults" DisplayName="Project Defaults" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+  <StringProperty Name="BuildLogFile" DisplayName="Build Log File" Description="Specifies the build log file to write to when build logging is enabled." F1Keyword="VC.Project.VCConfiguration.BuildLogFile" Category="General" Default="$(ProjectDir)\$(MSBuildProjectName).log" Subtype="file" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="BuildLog" PersistedName="Path" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <EnumProperty Name="ConfigurationType" DisplayName="Configuration Type" Description="Specifies the type of output this configuration generates." Category="ProjectDefaults" F1Keyword="VC.Project.VCConfiguration.ConfigurationType" ReadOnly="true">
+    <EnumValue Name="Utility" DisplayName="Debug Only" />
+  </EnumProperty>
+  <StringProperty Name="_ProjectFileVersion" DisplayName="Project File Version" Description="Specifies the version of the conversion tool used to create this project file." Category="General" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" />
+    </StringProperty.DataSource>
+  </StringProperty>
+</Rule>

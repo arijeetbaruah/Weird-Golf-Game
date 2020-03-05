@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="SubProject" Description="Progetti che devono essere compilati come parte del progetto che li contiene, ma senza una effettiva dipendenza di compilazione" DisplayName="Generale" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="SubProject" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringProperty Name="ProjectId" Visible="False" />
+  <StringProperty Name="ProjectTypeGuid" Visible="False" />
+  <BoolProperty Name="VirtualProject" Visible="False" />
+</Rule>

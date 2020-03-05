@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.SharePoint.Azure.CustomAfter.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your Azure projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process to transform the .csdef files in the Azure 
+project associated with SharePoint Add-in.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="RemapSharePointAppPort" Condition="'$(PackageForComputeEmulator)' == 'true' and '$(SharePointAppWebRole)' != ''"/>
+
+  <PropertyGroup Condition="'$(PackageForComputeEmulator)' == 'true' and '$(SharePointAppWebRole)' != ''">
+    <GenerateServiceModelDependsOn>
+      $(GenerateServiceModelDependsOn);
+      RemapSharePointAppPort
+    </GenerateServiceModelDependsOn>
+  </PropertyGroup>
+
+  <Target Name="RemapSharePointAppPort" Condition="'$(PackageForComputeEmulator)' == 'true' and '$(SharePointAppWebRole)' != ''">
+    <RemapSharePointAppPort ServiceDefinition="@(TargetServiceDefinition)" WebRole="$(SharePointAppWebRole)" />
+  </Target>
+
+</Project>

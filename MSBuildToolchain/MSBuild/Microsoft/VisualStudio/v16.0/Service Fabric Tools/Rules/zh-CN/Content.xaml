@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for the Content project item type -->
+<Rule Name="Content" DisplayName="文件属性" PageTemplate="generic" Description="文件属性" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="杂项"/>
+        <Category Name="Advanced" DisplayName="高级"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" HasConfigurationCondition="false" ItemType="Content"/>
+    </Rule.DataSource>
+
+    <EnumProperty Name="CopyToOutputDirectory" DisplayName="复制到输出目录" Category="Advanced" Description="指定是否应将文件复制到输出文件夹。">
+        <EnumValue Name="Never" DisplayName="不复制"/>
+        <EnumValue Name="Always" DisplayName="始终复制"/>
+        <EnumValue Name="PreserveNewest" DisplayName="如果较新则复制"/>
+    </EnumProperty>
+
+    <StringProperty Name="FullPath" DisplayName="完整路径" ReadOnly="true" Category="Misc" Description="文件位置。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="Intrinsic" ItemType="Content" PersistedName="FullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FileNameAndExtension" DisplayName="文件名" ReadOnly="true" Category="Misc" Description="文件的名称。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="Intrinsic" ItemType="Content" PersistedName="FileNameAndExtension"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <BoolProperty Name="Visible" Visible="false"/>
+    <StringProperty Name="DependentUpon" Visible="false"/>
+    <StringProperty Name="Link" Visible="false"/>
+</Rule>

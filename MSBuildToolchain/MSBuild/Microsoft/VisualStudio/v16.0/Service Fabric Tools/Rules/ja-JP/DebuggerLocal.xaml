@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="開始" PageTemplate="debugger" Description="ローカル デバッガー オプション" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="開始オプション" Description="開始オプション"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="デバッガーの種類" Category="StartOptions" Description="有効にするデバッガーを指定します。[混合] に設定された場合、マネージド コードとネイティブ コードの両方のデバッガーが使用されます。[スクリプトを使用したネイティブ コード] に設定された場合、ネイティブ コードとスクリプト コードの両方のデバッガーが使用されます。">
+        <EnumValue Name="NativeOnly" DisplayName="ネイティブのみ" Description="ネイティブのみ"/>
+        <EnumValue Name="ManagedOnly" DisplayName="マネージドのみ" Description="マネージドのみ"/>
+        <EnumValue Name="Script" DisplayName="スクリプトのみ" Description="スクリプトのみ"/>
+        <EnumValue Name="NativeWithScript" DisplayName="スクリプトを使用したネイティブ コード" Description="スクリプトを使用したネイティブ コード"/>
+        <EnumValue Name="Mixed" DisplayName="混合 (マネージドとネイティブ)" Description="混合 (マネージドとネイティブ)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

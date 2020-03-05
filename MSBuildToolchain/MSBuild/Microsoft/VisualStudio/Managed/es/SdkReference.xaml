@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="SdkReference" Description="Propiedades de referencia del SDK" DisplayName="Referencia de SDK" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="SDKReference" MSBuildTarget="CollectSDKReferencesDesignTime" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="AppXLocation" DisplayName="Ubicación del paquete de la aplicación" ReadOnly="True" />
+  <BoolProperty Name="CopyLocalExpandedReferenceAssemblies" DisplayName="Copia local de ensamblados de referencia expandidos" ReadOnly="True" />
+  <BoolProperty Name="CopyPayload" DisplayName="Copiar carga útil" ReadOnly="True" />
+  <StringProperty Name="CopyPayloadToSubDirectory" DisplayName="Copiar carga útil en el subdirectorio" ReadOnly="True" />
+  <StringProperty Name="DisplayName" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="ExpandContent" DisplayName="Expandir contenido" ReadOnly="True" />
+  <BoolProperty Name="ExpandReferenceAssemblies" DisplayName="Expandir ensamblados de referencia" ReadOnly="True" />
+  <StringProperty Name="FrameworkIdentity" DisplayName="FrameworkIdentity" ReadOnly="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" DisplayName="Nombre" ReadOnly="True" />
+  <StringProperty Name="SDKPackageItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="SDKRootFolder" DisplayName="Raíz del SDK" ReadOnly="True" />
+  <StringProperty Name="Version" DisplayName="Versión" ReadOnly="True" />
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

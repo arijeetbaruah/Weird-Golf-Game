@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="ResolvedPackageReference" Description="包属性" DisplayName="打包" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="ResolvePackageDependenciesDesignTime" Persistence="ResolvedReference" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringListProperty Name="Dependencies" Separator=";" Visible="false">
+    <StringListProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="PackageReference" Persistence="ResolvedReference" SourceOfDefaultValue="AfterContext" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+  <StringProperty Name="Description" Description="依赖项说明。" DisplayName="说明" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="要从此引用中排除的资产" DisplayName="ExcludeAssets" Visible="True">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="PackageReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <StringProperty Name="IncludeAssets" Description="要从此引用中包括的资产" DisplayName="IncludeAssets" Visible="True">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="PackageReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="IsTopLevelDependency" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="应为此包取消的警告逗号分隔列表" DisplayName="NoWarn" Visible="True">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="PackageReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="OriginalItemSpec" Visible="False" />
+  <StringProperty Name="Path" Description="所引用的包的位置。" ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="此引用中的私有资产" DisplayName="PrivateAssets" Visible="True">
+    <StringProperty.DataSource>
+      <DataSource HasConfigurationCondition="False" ItemType="PackageReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="依赖项的版本。" DisplayName="版本" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

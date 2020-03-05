@@ -1,0 +1,68 @@
+<!--
+***********************************************************************************************
+Common.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)ImportBefore\*.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore')" />
+
+  <!-- We'll be using vcxproj iOS AppType to figure out installed platforms. 
+       This property needs to be defined before iOS.Common.props import as it is used there to define other props -->
+  <PropertyGroup>
+    <iOSConfigurationType Condition="'$(iOSConfigurationType)' == ''">Application</iOSConfigurationType>
+  </PropertyGroup>
+
+  <Import Project="$(iOSCommonTargetsPath)\iOS.Common.props" />
+
+  <PropertyGroup>
+    <PackageId>com.$(TargetName)</PackageId>
+  </PropertyGroup>  
+  
+  <!-- Default values -->
+  <PropertyGroup>
+    <PreBuildEventUseInBuild Condition="'$(PreBuildEventUseInBuild)' == ''">true</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(PreLinkEventUseInBuild)' == ''">true</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(PostBuildEventUseInBuild)' == ''">true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--<iOSSdkRootDir>remote://~/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk</iOSSdkRootDir>
+    <iOSDeveloperDir>remote://~/Applications/Xcode.app/Contents/Developer/Library/Frameworks</iOSDeveloperDir>-->
+
+    <!-- cannot use remote:// in project item Includes - calculation of FullPath throws. Commenting out for now. -->
+    <!--<iOSSdkRootDir>remote://%24(SDKROOT)</iOSSdkRootDir>
+    <iOSDeveloperDir>remote://%24(DEVELOPER_DIR)</iOSDeveloperDir>
+    <iOSBuiltProductsDir>remote://%24(BUILT_PRODUCTS_DIR)</iOSBuiltProductsDir>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ExecutablePath>$(MSBuild_ExecutablePath);$(PATH);</ExecutablePath>
+
+    <!-- Files to the project with unknown extensions will default to Content itemgroup, instead of None. -->
+    <DefaultContentType>Default</DefaultContentType>
+    <!-- For now we assume that this is a packaging project, so it can be a startup one. If we add more project types (like .symlib & .a), we'll need a condition here -->
+    <CanBeStartupProject>true</CanBeStartupProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--  Initial Debugger page and debugger -->
+    <DebuggerFlavor>iOSDebugger</DebuggerFlavor>
+    <DebuggerType>NativeOnly</DebuggerType>
+    <PackagePath Condition="'$(PackagePath)' == ''">$(TargetPath)</PackagePath>
+    <TargetRuntime>Native</TargetRuntime>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Guid used to define the group of items to show in the Add Item Dialog. -->
+    <AddItemTemplateGuid Condition="'$(AddItemTemplateGuid)' == ''">{99B6267E-EBC4-4AEF-A6C1-9672C8A5BC27}</AddItemTemplateGuid>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)ImportAfter\*.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportAfter')" />
+</Project>

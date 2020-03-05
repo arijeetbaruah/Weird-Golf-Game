@@ -1,0 +1,173 @@
+﻿<?xml version = "1.0" encoding = "utf-8"?>
+<Project xmlns = "http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName = "OrbisWavePsslc" AssemblyFile="$(VCTargetsPath)Platforms\ORBIS\SCE.Build.PsslTasks.orbis.dll" />
+  <UsingTask TaskName = "Bin2Header" AssemblyFile="$(VCTargetsPath)Platforms\ORBIS\SCE.Build.PsslTasks.orbis.dll" />
+
+  <PropertyGroup Condition="'$(SceLangID)' == ''">
+    <SceLangID Condition="'$(LangID)' == '1041'">1041</SceLangID>
+    <SceLangID Condition="'$(LangID)' != '1041'">1033</SceLangID>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(UseORBISDefaultPropertyPageSchemas)' != 'false' and '$(ConfigurationType)' != 'Utility'">
+    <PsslPages Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\orbiswavepsslc.xml"/>
+    <PsslPages Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\OrbisWavePsslcSchema.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PropertyPageSchema Include="@(PsslPages)" />
+    <AvailableItemName Include="OrbisWavePsslc">
+      <Targets>OrbisWavePsslc</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <Target Name="SelectOrbisWavePsslCompile" DependsOnTargets="_SelectedFiles;$(ComputeCompileInputsTargets);SelectCustomBuild">
+    <ItemGroup Condition="'@(SelectedFiles)' != ''">
+      <OrbisWavePsslc Remove="@(OrbisWavePsslc)" Condition="'%(Identity)' != '@(SelectedFiles)'"/>
+      <OrbisWavePsslc>
+        <MinimalRebuildFromTracking>false</MinimalRebuildFromTracking>
+      </OrbisWavePsslc>
+    </ItemGroup>
+  </Target>
+
+  <Target Name = "CheckOrbisWavePsslFileSuffix"
+          Condition = "'@(OrbisWavePsslc)' != ''">
+    <ItemGroup>
+      <WrongSuffix Include   = "%(OrbisWavePsslc.Identity)"
+                   Condition = "'%(OrbisWavePsslc.ExcludedFromBuild)' != 'true' AND '%(OrbisWavePsslc.Profile)' == '' AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_vv&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_vl&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_ve&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_p&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_c&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_g&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_h&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_hoc&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_dv&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_de&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_dvoc&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_veoc&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_ddtc&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_ddtci&quot;))') AND
+                                !('$([System.IO.Path]::GetFileNameWithoutExtension(%(OrbisWavePsslc.Identity)).EndsWith(&quot;_goc&quot;))')" />
+    </ItemGroup>
+
+    <Warning Text = "Unsupported file suffix on item: %(WrongSuffix.Identity)" Condition = "'@(WrongSuffix)' != ''" />
+  </Target>
+
+  <Target
+    Name             = "OrbisWavePsslc"
+    AfterTargets     = "CustomBuild"
+    Condition        = "'@(OrbisWavePsslc)' != ''"
+    DependsOnTargets = "SelectOrbisWavePsslCompile;CheckOrbisWavePsslFileSuffix">
+    <MakeDir Directories = "$([System.IO.Path]::GetDirectoryName('%(OrbisWavePsslc.OutputFileName)'))" />
+
+    <OrbisWavePsslc Condition ="'%(OrbisWavePsslc.ExcludedFromBuild)' != 'true'"
+        Sources                            ="@(OrbisWavePsslc)"
+
+        AdditionalIncludeDirectories       ="%(OrbisWavePsslc.AdditionalIncludeDirectories)"
+        ForcedIncludeFiles                 ="%(OrbisWavePsslc.ForcedIncludeFiles)"
+        Optimization                       ="%(OrbisWavePsslc.Optimization)"
+        FastMath                           ="%(OrbisWavePsslc.FastMath)"
+        HwTarget                           ="%(OrbisWavePsslc.HwTarget)"
+        EntryPoint                         ="%(OrbisWavePsslc.EntryPoint)"
+        Profile                            ="%(OrbisWavePsslc.Profile)"
+        PreprocessorDefinitions            ="%(OrbisWavePsslc.PreprocessorDefinitions)"
+        Nostdlib                           ="%(OrbisWavePsslc.Nostdlib)"
+        Language                           ="%(OrbisWavePsslc.Language)"
+        WarningsAsErrors                   ="%(OrbisWavePsslc.WarningsAsErrors)"
+        PsslLanguageStd                    ="%(OrbisWavePsslc.PsslLanguageStd)"
+        WarnPerformance                    ="%(OrbisWavePsslc.WarnPerformance)"
+        SdbCache                           ="%(OrbisWavePsslc.SdbCache)"
+        SdbCacheDir                        ="%(OrbisWavePsslc.SdbCacheDir)"
+        AdditionalOptions                  ="%(OrbisWavePsslc.AdditionalOptions)"
+
+        TrackerLogDirectory                ="$(TLogLocation)"
+        TLogReadFiles                      ="@(PsslTLogReadFiles)"
+        TLogWriteFiles                     ="@(PsslTLogWriteFiles)"
+        ToolExe                            ="$(PsslToolExe)"
+        ToolPath                           ="$(PsslToolPath)"
+        TrackFileAccess                    ="$(TrackFileAccess)"
+        MinimalRebuildFromTracking         ="%(OrbisWavePsslc.MinimalRebuildFromTracking)"
+        ToolArchitecture                   ="$(PsslToolArchitecture)"
+
+        MultiProcessorCompilation          ="%(OrbisWavePsslc.MultiProcessorCompilation)"
+        ProcessorNumber                    ="%(OrbisWavePsslc.ProcessorNumber)"
+        BuildingInIDE                      ="$(BuildingInsideVisualStudio)"
+        Distributable                      ="%(OrbisWavePsslc.Distributable)"
+        DistributedBuild                   ="$(DistributedBuild)"
+        DistributedBuildId                 ="$(DistributedBuildId)"
+        SnDbsOptions                       ="$(SnDbsOptions)"
+        ProjectName                        ="$(ProjectName)"
+
+        AcceptableNonZeroExitCodes         ="%(OrbisWavePsslc.AcceptableNonZeroExitCodes)"
+        YieldDuringToolExecution           ="$(OrbisWavePsslcYieldDuringToolExecution)"
+    />
+
+    <ItemGroup Condition="'@(OrbisWavePsslc)' != ''">
+      <Bin2Header Include="%(OrbisWavePsslc.OutputFileName)" Condition = "'%(OrbisWavePsslc.GenerateHeader)' == 'true' and '%(OrbisWavePsslc.ExcludedFromBuild)' != 'true'">
+        <HeaderFileName>%(OrbisWavePsslc.HeaderFileName)</HeaderFileName>
+        <AdditionalOptions>%(OrbisWavePsslc.Bin2HOptions)</AdditionalOptions>
+      </Bin2Header>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <Bin2Header_MinimalRebuildFromTracking Condition="'@(Bin2Header->AnyHaveMetadataValue('MinimalRebuildFromTracking', 'false'))' == 'true'">false</Bin2Header_MinimalRebuildFromTracking>
+      <Bin2Header_MinimalRebuildFromTracking Condition="'$(BuildType)' != 'Build' or '$(ForceRebuild)' == 'true'" >false</Bin2Header_MinimalRebuildFromTracking>
+      <Bin2Header_MinimalRebuildFromTracking Condition="'$(Link_MinimalRebuildFromTracking)' == ''">true</Bin2Header_MinimalRebuildFromTracking>
+      <Bin2HeaderYieldDuringToolExecution Condition="'$(Bin2HeaderYieldDuringToolExecution)' == ''">false</Bin2HeaderYieldDuringToolExecution>
+      <Bin2HeaderToolArchitecture Condition="'$(Bin2HeaderToolArchitecture)' == ''">Native64Bit</Bin2HeaderToolArchitecture>
+    </PropertyGroup>
+
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('%(Bin2Header.HeaderFileName)'))" Condition="'@(Bin2Header)' != ''"/>
+
+    <Bin2Header Condition ="'@(Bin2Header)' != ''"
+        Binaries                           ="@(Bin2Header)"
+        HeaderFileName                     ="%(Bin2Header.HeaderFileName)"
+        AdditionalOptions                  ="%(Bin2Header.AdditionalOptions)"
+
+        TrackerLogDirectory                ="$(TLogLocation)"
+        TLogReadFiles                      ="@(Bin2HeaderTLogReadFiles)"
+        TLogWriteFiles                     ="@(Bin2HeaderTLogWriteFiles)"
+        ToolExe                            ="$(Bin2HeaderToolExe)"
+        ToolPath                           ="$(Bin2HeaderToolPath)"
+        TrackFileAccess                    ="$(TrackFileAccess)"
+        MinimalRebuildFromTracking         ="$(Bin2Header_MinimalRebuildFromTracking)"
+        ToolArchitecture                   ="$(Bin2HeaderToolArchitecture)"
+        TrackerFrameworkPath               ="$(LibTrackerFrameworkPath)"
+        TrackerSdkPath                     ="$(Bin2HeaderTrackerSdkPath)"
+        TrackedInputFilesToIgnore          ="@(Bin2HeaderNoDependencies)"
+
+        AcceptableNonZeroExitCodes         ="%(Bin2Header.AcceptableNonZeroExitCodes)"
+        YieldDuringToolExecution           ="$(Bin2HeaderYieldDuringToolExecution)"
+    >
+    </Bin2Header>
+
+  </Target>
+
+  <Target Name="ComputeOrbisWavePsslLinkInputTargets">
+    <ItemGroup>
+      <Link Include = "%(OrbisWavePsslc.OutputFileName)" Condition = "'%(OrbisWavePsslc.Embed)' == 'true' AND '%(OrbisWavePsslc.ExcludedFromBuild)' != 'true'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeOrbisWavePsslLibInputTargets">
+    <ItemGroup>
+      <Lib Include = "%(OrbisWavePsslc.OutputFileName)" Condition = "'%(OrbisWavePsslc.Embed)' == 'true' AND '%(OrbisWavePsslc.ExcludedFromBuild)' != 'true'" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+      ComputeOrbisWavePsslLinkInputTargets;
+      $(ComputeLinkInputsTargets)
+    </ComputeLinkInputsTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ComputeLibInputsTargets>
+      ComputeOrbisWavePsslLibInputTargets;
+      $(ComputeLibInputsTargets)
+    </ComputeLibInputsTargets>
+  </PropertyGroup>
+</Project>

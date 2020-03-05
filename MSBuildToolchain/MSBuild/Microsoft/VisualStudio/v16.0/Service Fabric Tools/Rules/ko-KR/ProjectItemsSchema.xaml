@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <ContentType Name="Default" DisplayName="기본 파일 형식" ItemType="Content"/>
+    <ContentType Name="None" DisplayName="없음" ItemType="None"/>
+    <ItemType Name="None" DisplayName="없음"/>
+    <ItemType Name="Content" DisplayName="내용"/>
+    <FileExtension Name=".xml" ContentType="Content"/>
+    <FileExtension Name=".ps1" ContentType="None"/>
+    <FileExtension Name=".psm1" ContentType="None"/>
+    <FileExtension Name=".psd1" ContentType="None"/>
+</ProjectSchemaDefinitions>

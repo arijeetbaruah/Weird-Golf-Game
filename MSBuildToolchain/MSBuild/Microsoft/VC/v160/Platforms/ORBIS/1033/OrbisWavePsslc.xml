@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="OrbisWavePsslc" PageTemplate="tool" DisplayName="ORBIS Wave PSSL Compiler" Order="100" SwitchPrefix="-" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="OrbisWavePsslc" />
+  </Rule.DataSource>
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="Optimization" DisplayName="Optimization" />
+    <Category Name="CodeGeneration" DisplayName="Code Generation" />
+    <Category Name="Language" DisplayName="Language" />
+    <Category Name="Advanced" DisplayName="Advanced" />
+    <Category Name="Output" DisplayName="Output" />
+    <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
+    <Category Name="Command Line" Subtype="CommandLine" DisplayName="Command Line" />
+  </Rule.Categories>
+  <StringListProperty Subtype="folder" Name="AdditionalIncludeDirectories" DisplayName="Additional Include Directories" Description="Specifies one or more directories to add to the include path; use semi-colon delimited list if more than one.   (-I[path])" Category="General" Switch="I" />
+  <StringListProperty Subtype="file" Name="ForcedIncludeFiles" DisplayName="Forced Include Files" Description="Specifies one or more forced include files.   (-include [path])" Category="General" Switch="include " />
+  <StringProperty Name="EntryPoint" DisplayName="Entry Point" Description="Specifies the function name to use for the entry point. The default is 'main'.   (-entry [function])" Category="General" Switch="entry" Separator=" " />
+  <EnumProperty Name="Profile" DisplayName="Profile" Description="Specifies the profile to use for the shader.   (-profile [profile])" Category="General">
+    <EnumValue Name="" DisplayName="Use File Suffix" />
+    <EnumValue Name="sce_cs_orbis" DisplayName="Compute Shader" Switch="profile sce_cs_orbis" />
+    <EnumValue Name="sce_dd_tricull_orbis" DisplayName="Dispatch Draw Vertex Shader" Switch="profile sce_dd_tricull_orbis" />
+    <EnumValue Name="sce_dd_tricull_instancing_orbis" DisplayName="Dispatch Draw Vertex with Instancing" Switch="profile sce_dd_tricull_instancing_orbis" />
+    <EnumValue Name="sce_ds_es_orbis" DisplayName="Domain as Export Shader" Switch="profile sce_ds_es_orbis" />
+    <EnumValue Name="sce_ds_es_off_chip_orbis" DisplayName="Off-Chip Domain as Export Shader" Switch="profile sce_ds_es_off_chip_orbis" />
+    <EnumValue Name="sce_ds_vs_orbis" DisplayName="Domain as Vertex Shader" Switch="profile sce_ds_vs_orbis" />
+    <EnumValue Name="sce_ds_vs_off_chip_orbis" DisplayName="Off-Chip Domain as Vertex Shader" Switch="profile sce_ds_vs_off_chip_orbis" />
+    <EnumValue Name="sce_gs_orbis" DisplayName="Geometry Shader" Switch="profile sce_gs_orbis" />
+    <EnumValue Name="sce_gs_on_chip_orbis" DisplayName="Geometry on Chip" Switch="profile sce_gs_on_chip_orbis" />
+    <EnumValue Name="sce_hs_orbis" DisplayName="Hull Shader" Switch="profile sce_hs_orbis" />
+    <EnumValue Name="sce_hs_off_chip_orbis" DisplayName="Off-chip Hull Shader" Switch="profile sce_hs_off_chip_orbis" />
+    <EnumValue Name="sce_ps_orbis" DisplayName="Pixel Shader" Switch="profile sce_ps_orbis" />
+    <EnumValue Name="sce_vs_vs_orbis" DisplayName="Vertex Shader" Switch="profile sce_vs_vs_orbis" />
+    <EnumValue Name="sce_vs_ls_orbis" DisplayName="Vertex as Local Shader" Switch="profile sce_vs_ls_orbis" />
+    <EnumValue Name="sce_vs_es_orbis" DisplayName="Vertex as Export Shader" Switch="profile sce_vs_es_orbis" />
+    <EnumValue Name="sce_vs_es_on_chip_orbis" DisplayName="Vertex as Export Shader on Chip" Switch="profile sce_vs_es_on_chip_orbis" />
+  </EnumProperty>
+  <StringListProperty Name="PreprocessorDefinitions" DisplayName="Preprocessor Definitions" Description="Specifies one or more preprocessor defines; use semi-colon delimited list if more than one.   (-D[name[=value]])" Category="General" Switch="D" />
+  <BoolProperty Name="WarningsAsErrors" DisplayName="Treat Warnings as Errors" Description="Enables the compiler to treat warnings as errors.   (-Werror)" Category="General" Switch="Werror" />
+  <BoolProperty Name="WarnPerformance" DisplayName="Performance Warnings" Description="Enables warnings about potential performance hazards.   (-Wperf)" Category="General" Switch="Wperf" />
+  <EnumProperty Name="Language" DisplayName="Localization" Description="Selects the language to use for warning and error messages.   (-lang jp)" Category="General">
+    <EnumValue Name="en" DisplayName="English" />
+    <EnumValue Name="jp" DisplayName="Japanese" Switch="lang jp" />
+  </EnumProperty>
+  <BoolProperty Name="MultiProcessorCompilation" DisplayName="Multi-processor Compilation" Description="Enables multiple source files to be compiled in parallel limited by the value specified in &quot;Max Compilations&quot;." Category="General" IncludeInCommandLine="false" />
+  <IntProperty Name="ProcessorNumber" DisplayName="Max Compilations" Description="Specifies the maximum number of concurrent compiles to use for this project. If no value is given, the global VC++ setting for &quot;Maximum concurrent C++ compilations&quot; is used." Category="General" IncludeInCommandLine="false" />
+  <BoolProperty Name="Distributable" DisplayName="Allow Distributed Compilation" Description="Specifies if distributed compilation is allowed during a distributed build. Source files will always be compiled locally if disallowed." Category="General" />
+  <EnumProperty Name="Optimization" DisplayName="Optimization Level" Description="Select option for code optimization.   (-O0..4, -Od)" Category="Optimization">
+    <EnumValue Name="O0" DisplayName="Level 0" Switch="O0" />
+    <EnumValue Name="O1" DisplayName="Level 1" Switch="O1" />
+    <EnumValue Name="O2" DisplayName="Level 2" Switch="O2" />
+    <EnumValue Name="O3" DisplayName="Level 3" Switch="O3" />
+    <EnumValue Name="O4" DisplayName="Level 4" Switch="O4" />
+    <EnumValue Name="Od" DisplayName="Debugging" Switch="Od" />
+  </EnumProperty>
+  <BoolProperty Name="FastMath" DisplayName="Fast Math" Description="Enable algebraic transforms (e.g. Use 'a * 2' in place of 'a + a').   (-fastmath, -nofastmath)" Category="Optimization" Switch="fastmath" ReverseSwitch="nofastmath" />
+  <EnumProperty Name="HwTarget" DisplayName="Hardware Target" Description="Specifies the hardware target for the compiler to generate for.   (-target [type])" Category="CodeGeneration">
+    <EnumValue Name="Common" DisplayName="Common" />
+    <EnumValue Name="Base" DisplayName="Base" Switch="target base" />
+    <EnumValue Name="Neo" DisplayName="Neo" Switch="target neo" />
+  </EnumProperty>
+  <EnumProperty Name="PsslLanguageStd" Category="Language" DisplayName="PSSL Language Standard" Description="Specifies the language standard to use for PSSL source.   (-pssl1, -pssl2)">
+    <EnumValue Name="PSSL1" Switch="pssl1" DisplayName="Use PSSL1" />
+    <EnumValue Name="PSSL2" Switch="pssl2" DisplayName="Use PSSL2" />
+  </EnumProperty>
+  <BoolProperty Name="Nostdlib" DisplayName="Disable Standard Libraries" Description="Disables the standard library.   (-nostdlib)" Switch="nostdlib" Category="Advanced" />
+  <StringProperty Name="OutputFileName" DisplayName="Output File Name" Description="Specifies a name to override the default output file name.   (-o [file])" Category="Output" Switch="o " />
+  <EnumProperty Name="SdbCache" DisplayName="Generate SDB Cache File" Description="Output an SDB (Shader Debug) cache file with or without AST info for shader association.   (-cache, -cache-ast)" Category="Output">
+    <EnumValue Name="None" DisplayName="Do Not Generate" />
+    <EnumValue Name="Cache" DisplayName="Generate without AST Information" Switch="cache">
+      <Argument Property="SdbCacheDir" IsRequired="true" Separator=" " />
+    </EnumValue>
+    <EnumValue Name="CacheAst" DisplayName="Generate with AST Information" Switch="cache-ast">
+      <Argument Property="SdbCacheDir" IsRequired="true" Separator=" " />
+    </EnumValue>
+  </EnumProperty>
+  <StringProperty Name="SdbCacheDir" DisplayName="SDB Cache Directory" Description="Specifies a path to the directory to write any SDB cache file to.   (-cachedir [path])" Category="Output" Default="$(IntDir)" Subtype="folder" Switch="-cachedir " />
+  <StringProperty Name="AdditionalOptions" DisplayName="Additional Options" Description="Specify additional compiler command line options not provided by the other properties. The options format must be valid. " Category="Command Line" />
+  <BoolProperty Name="Embed" DisplayName="Embed Shader Binary" Description="Specifies that the shader binary should be automatically embedded into the project's output." Category="Output" />
+  <BoolProperty Name="GenerateHeader" DisplayName="Generate Header File" Description="Use the bin2h tool to generate a C Header File from the shader binary created by compilation." Category="Output">
+    <Argument Property="HeaderFileName" IsRequired="true" />
+  </BoolProperty>
+  <StringProperty Name="HeaderFileName" DisplayName="Header File Name" Description="Specifies the name for the generated header file." Category="Output" />
+  <StringProperty Name="Bin2HOptions" DisplayName="Additional Options for Bin2H" Description="Specify additional command line options to be passed to the bin2h tool when generating the header file." Category="Output" />
+</Rule>

@@ -1,0 +1,671 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.SharePoint.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+SharePoint projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project InitialTargets="AddResolvingPaths" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <CustomBeforeSharePointTargets Condition="'$(CustomBeforeSharePointTargets)'==''">$(MSBuildThisFileDirectory)\Custom.Before.Microsoft.VisualStudio.SharePoint.targets</CustomBeforeSharePointTargets>
+    <CustomAfterSharePointTargets Condition="'$(CustomAfterSharePointTargets)'==''">$(MSBuildThisFileDirectory)\Custom.After.Microsoft.VisualStudio.SharePoint.targets</CustomAfterSharePointTargets>
+    <ImportByWildcardBeforeSharePointTargets Condition="'$(ImportByWildcardBeforeSharePointTargets)' == ''">true</ImportByWildcardBeforeSharePointTargets>
+    <ImportByWildcardAfterSharePointTargets Condition="'$(ImportByWildcardAfterSharePointTargets)' == ''">true</ImportByWildcardAfterSharePointTargets>
+    <ProjectMode Condition="'$(ProjectMode)' == ''">SharePointCustomization</ProjectMode>
+    <IsApp Condition="'$(ProjectMode)' == 'SharePointApp' or '$(ProjectMode)' == 'OfficeApp' or '$(ProjectMode)' == 'MailApp'">true</IsApp>
+  </PropertyGroup>
+
+  <Target Name="PackageSharePointApp" />
+  <Target Name="GetProjectSettings" />
+
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore\*" Condition="'$(ImportByWildcardBeforeSharePointTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore')"/>
+
+  <Import Project="$(CustomBeforeSharePointTargets)" Condition="Exists('$(CustomBeforeSharePointTargets)')"/>
+
+  <Import Condition="'$(ProjectMode)' == 'OfficeApp' or '$(ProjectMode)' == 'MailApp'" Project="Microsoft.VisualStudio.Office.Apps.targets" />
+  <Import Condition="'$(ProjectMode)' != 'SharePointCustomization' and '$(ProjectMode)' != ''" Project="Microsoft.VisualStudio.SharePoint.Apps.targets" />
+  <Import Condition="'$(ProjectMode)' == 'SharePointCustomization'" Project="Microsoft.VisualStudio.SharePoint.Customization.targets" />
+  <Import Condition="'$(ProjectMode)' == 'SharePointCustomization' or '$(ProjectMode)' == 'SharePointApp'" Project="Microsoft.VisualStudio.SharePoint.Workflow.targets" />
+
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="CreateSharePointProjectService" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="EnumerateFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="TransformFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="EnumerateFeature" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="EnumeratePackage" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="EnumerateProjectItem" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="LayoutFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="PackageFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ResignAssemblies" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ResolveProjectMember" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="SetPackagingProperties" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="SetResigningProperties" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidatePackage" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidateSharePointAppManifest" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidateOfficeAppManifest" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidateOfficeAppPage" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidateSharePointAppIcons" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ValidateWebProjectReference" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="CreateWorkflowDebuggingElementManifest" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GetSharePointProjectDependeciesToBuild" />
+  <UsingTask AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" TaskName="AddSharePointResolver" TaskFactory="CodeTaskFactory" >
+    <ParameterGroup>
+      <SearchPath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Reflection" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+AppDomain.CurrentDomain.AssemblyResolve += (sender, e) => 
+{
+  string assemblyName = e.Name.Split(',')[0] + ".dll";
+  string assemblySearchPath = Path.Combine(SearchPath, assemblyName);
+    
+  if ((assemblyName.IndexOf("Microsoft.VisualStudio.SharePoint", StringComparison.OrdinalIgnoreCase) >= 0 || 
+     assemblyName.IndexOf("Microsoft.VisualStudio.Shell", StringComparison.OrdinalIgnoreCase) >= 0) && 
+     File.Exists(assemblySearchPath))
+  {
+    try
+    {
+      return Assembly.LoadFrom(assemblySearchPath);
+    }
+    catch (Exception ex)
+    {
+      return null;
+    }    
+  }
+  return null;
+};
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+  
+  <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v3.5'">
+    <!-- 
+    Force the C# 3.0 language 
+    -->
+    <LangVersion Condition="'$(LangVersion)' == '' and '$(Language)' == 'C#'">3</LangVersion>
+
+    <!-- 
+    Force the VB 9.0 language 
+    -->
+    <LangVersion Condition="'$(LangVersion)' == '' and '$(Language)' == 'VB'">9</LangVersion>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+
+    <!-- 
+    Team Build sets a global OutDir property which we need to propagate to project 
+    references when creating the project service. MSBuild does not have a method
+    of determining which properties are global, so we test whether OutDir is equal
+    to OutputPath (which is normally the case), and assume a difference means that
+    Team Build is redirecting the output of all projects.
+    
+    -->
+    <TeamBuildOutDir Condition="'$(OutDir)' != '$(OutputPath)'">$(OutDir)</TeamBuildOutDir>
+
+    <LayoutPath Condition="'$(LayoutPath)' == ''">pkg\$(Configuration)</LayoutPath>
+    <LayoutPath Condition="'$(LayoutPath)' != '' and !HasTrailingSlash('$(LayoutPath)')">$(LayoutPath)\</LayoutPath>
+
+    <PackageIntermediatePath Condition="'$(PackageIntermediatePath)' == ''">pkgobj\$(Configuration)</PackageIntermediatePath>
+    <PackageIntermediatePath Condition="'$(PackageIntermediatePath)' != '' and !HasTrailingSlash('$(PackageIntermediatePath)')">$(PackageIntermediatePath)\</PackageIntermediatePath>
+    <PackageVirtualFilesPath>$(PackageIntermediatePath)\VirtualFiles\</PackageVirtualFilesPath>
+
+    <BasePackagePath Condition="'$(BasePackagePath)' == ''">$(OutDir)</BasePackagePath>
+    <BasePackagePath Condition="'$(BasePackagePath)' != '' and !HasTrailingSlash('$(BasePackagePath)')">$(BasePackagePath)\</BasePackagePath>
+
+    <PackageExtension Condition="'$(PackageExtension)' == ''">wsp</PackageExtension>
+    <DebugAppPackageExtension Condition="'$(DebugAppPackageExtension)' == ''">debugapp</DebugAppPackageExtension>
+
+    <AssemblyDeploymentTarget Condition="'$(AssemblyDeploymentTarget)' == ''">GlobalAssemblyCache</AssemblyDeploymentTarget>
+    <PackageWithValidation Condition="'$(PackageWithValidation)' == ''">true</PackageWithValidation>
+    <ManifestWithValidation Condition="'$(ManifestWithValidation)' == ''">true</ManifestWithValidation>
+
+    <!-- The list of previously generated packages.  Created by PerformPackage and used by CleanPackage. -->
+
+    <PackageFileList Condition="'$(PackageFileList)'==''">$(MSBuildProjectFile).PackageFileList.txt</PackageFileList>
+
+    <BuildDependsOn>
+      AddEmptyCodeFile;
+      $(BuildDependsOn);
+      RemoveEmptyCodeFile;
+      ConfigurePackaging;
+      ConditionalManifestValidation;
+      ConditionalPackage
+    </BuildDependsOn>
+
+    <!--
+       Sequence of targets which generate the set of referenced projects needed by the CreateSharePointProjectService target.    
+    -->
+    <CreateSharePointProjectServiceDependsOn>
+      EnumeratePackages;
+      EnumeratePackageItems;
+      ResolveFeatures;
+      EnumerateFeatureItems;
+      ResolveProjectItems;
+      EnumerateProjectItems;
+      EnumerateSharePointProjectReferences;
+      BuildSharePointProjectReferences;
+      GetProjectSettings;
+    </CreateSharePointProjectServiceDependsOn>
+
+    <CreatePackageDependsOn>
+      ConfigureResigning;
+      ResignAssemblies;
+      CreateSharePointProjectService;
+      ConditionalPackageValidation;
+      EnumerateFiles;
+      CombineAllPackagingInputs;
+      ComputePackageInputFilesChanged;
+      DoPackaging;
+      PackageSharePointApp;
+    </CreatePackageDependsOn>
+
+    <DoPackagingDependsOn>
+      CleanPackage;
+      TransformSourceFiles;
+      BeforeLayout;
+      PerformLayout;
+      AfterLayout;
+      PerformPackage;
+    </DoPackagingDependsOn>
+
+    <PackageDependsOn>
+      Build;
+      CreatePackage
+    </PackageDependsOn>
+
+    <ValidatePackageDependsOn>
+      Build;
+      CreateSharePointProjectService;
+      PerformPackageValidation;
+    </ValidatePackageDependsOn>
+
+    <TokenReplacementFileExtensions>$(TokenReplacementFileExtensions);xml;aspx;ascx;webpart;dwp;bdcm</TokenReplacementFileExtensions>
+
+  </PropertyGroup>
+
+  <!--
+    Adds resolving paths for SharePoint assemblies.  
+    
+    Inputs:   @(None)
+    Outputs:  @(None)
+  -->
+  <Target Name="AddResolvingPaths">
+    <AddSharePointResolver SearchPath="$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\" />
+    <AddSharePointResolver SearchPath="$(VsInstallRoot)\Common7\IDE\PublicAssemblies\" />
+  </Target>
+  
+  <!--
+    Generates the set of package definition files in the current project.  
+    
+    Inputs:   @(None)
+    Outputs:  @(Package)
+  -->
+  <Target Name="EnumeratePackages">
+    <ItemGroup>
+      <!-- Package definitions are None items with PackageId metadata. -->
+      <Package Include="@(None)" Condition="%(None.PackageId) != ''" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Enumerates each package definition file and generates its set of project item and feature references.
+    
+    Inputs:   @(Package)
+    Outputs:  @(FeatureReference)
+              @(ProjectItemReference)    
+              @(ProjectOutputReference)
+  -->
+  <Target Name="EnumeratePackageItems" Condition="'@(Package)' != ''">
+    <EnumeratePackage Package="%(Package.Identity)"
+                      ProjectFile="$(MSBuildProjectFile)">
+      <Output ItemName="FeatureReference" TaskParameter="FeatureReferences" />
+      <Output ItemName="ProjectItemReference" TaskParameter="ProjectItemReferences" />
+      <Output ItemName="ProjectOutputReference" TaskParameter="ProjectOutputReferences" />
+    </EnumeratePackage>
+  </Target>
+
+  <!--
+    Resolves each feature reference to its corresponding feature definition file.
+    
+    Inputs:   @(FeatureReference)
+    Outputs:  @(Feature)
+  -->
+  <Target Name="ResolveFeatures" Condition="@(FeatureReference) != ''">
+
+    <MSBuild Projects="%(FeatureReference.Identity)" Targets="GetFeatures" RebaseOutputs="true">
+      <Output ItemName="AvailableFeature" TaskParameter="TargetOutputs"/>
+    </MSBuild>
+
+    <ResolveProjectMember AvailableProjectMembers="@(AvailableFeature)"
+                          ProjectMemberId="%(FeatureReference.FeatureId)"
+                          ProjectMemberIdMetadataName="FeatureId">
+      <Output ItemName="Feature" TaskParameter="ResolvedProjectMember" />
+    </ResolveProjectMember>
+
+  </Target>
+
+  <!--
+    Enumerates each feature definition file and generates its set of project item references and activation dependencies.
+    
+    Inputs:   @(Feature)
+    Outputs:  @(ProjectItemReference)
+              @(ReferencedFeatureActivationDependency)
+  -->
+  <Target Name="EnumerateFeatureItems" Condition="'@(Feature)' != ''">
+    <EnumerateFeature Feature="%(Feature.Identity)"
+                      ProjectFile="%(Feature.ProjectPath)">
+      <Output ItemName="ProjectItemReference" TaskParameter="ProjectItemReferences" />
+      <Output ItemName="ReferencedFeatureActivationDependency" TaskParameter="ReferencedFeatureActivationDependencies" />
+    </EnumerateFeature>
+  </Target>
+
+  <!--
+    Resolves each project item reference to its corresponding project item definition file.
+    
+    Inputs:   @(ProjectItemReference)
+    Outputs:  @(ProjectItem)
+  -->
+  <Target Name="ResolveProjectItems" Condition="@(ProjectItemReference) != ''">
+
+    <MSBuild Projects="%(ProjectItemReference.Identity)" Targets="GetProjectItems" RebaseOutputs="true">
+      <Output ItemName="AvailableProjectItem" TaskParameter="TargetOutputs"/>
+    </MSBuild>
+
+    <ResolveProjectMember AvailableProjectMembers="@(AvailableProjectItem)"
+                      ProjectMemberId="%(ProjectItemReference.SharePointProjectItemId)"
+                      ProjectMemberIdMetadataName="SharePointProjectItemId">
+      <Output ItemName="ProjectItem" TaskParameter="ResolvedProjectMember" />
+    </ResolveProjectMember>
+
+  </Target>
+
+  <!--
+    Enumerates each project item definition file and generates its set of project output references.
+    
+    Inputs:   @(ProjectItem)
+    Outputs:  @(ProjectOutputReference)
+  -->
+  <Target Name="EnumerateProjectItems" Condition="'@(ProjectItem)' != ''">
+    <EnumerateProjectItem ProjectItem="%(ProjectItem.Identity)"
+                          ProjectFile="%(ProjectItem.ProjectPath)">
+      <Output ItemName="ProjectOutputReference" TaskParameter="ProjectOutputReferences" />
+    </EnumerateProjectItem>
+  </Target>
+
+  <!--
+    Generates the set of projects referenced by the various SharePoint definition files.
+    
+    Inputs:   @(FeatureReference)
+              @(ProjectItemReference)
+              @(ProjectOutputReference)
+              @(ReferencedFeatureActivationDependency)              
+    Outputs:  @(SharePointProjectReference)
+  -->
+  <Target Name="EnumerateSharePointProjectReferences">
+    <ItemGroup>
+      <!-- Create a union of all generated project references, excluding references to the current project. -->
+      <UnfilteredSharePointProjectReference Include="@(ProjectItemReference);@(FeatureReference);@(ProjectOutputReference);@(ReferencedFeatureActivationDependency)" Condition="%(FullPath) != '$(MSBuildProjectFullPath)'" />
+      <!-- 
+        Create a union of all generated project references that require building before packaging (i.e. are a true dependency), excluding references to the current project. 
+        
+        Note that we exclude feature activation dependencies because they do not require the parent project to be built.
+      -->
+      <UnfilteredSharePointProjectDependency Include="@(ProjectItemReference);@(FeatureReference);@(ProjectOutputReference)" Condition="%(FullPath) != '$(MSBuildProjectFullPath)'" />
+    </ItemGroup>
+    <!-- Remove any duplicate project references. -->
+    <RemoveDuplicates Inputs="@(UnfilteredSharePointProjectReference)">
+      <Output ItemName="SharePointProjectReference" TaskParameter="Filtered" />
+    </RemoveDuplicates>
+    <RemoveDuplicates Inputs="@(UnfilteredSharePointProjectDependency)">
+      <Output ItemName="SharePointProjectDependency" TaskParameter="Filtered" />
+    </RemoveDuplicates>
+
+    
+    <GetSharePointProjectDependeciesToBuild ProjectReferences="@(ProjectReference)" ProjectDependencies="@(SharePointProjectDependency)">
+      <Output ItemName="SharePointProjectDependencyToBuild" TaskParameter="ProjectsToBuild" />
+    </GetSharePointProjectDependeciesToBuild>
+  </Target>
+
+  <!--
+    Build each project referenced by a SharePoint definition file (to ensure its output is available for packaging).
+    
+    Since these references are not true "project-to-project" references, MSBuild will not do this for us.
+    
+    Inputs: @(SharePointProjectDependency)
+  -->
+  <Target Name="BuildSharePointProjectReferences">
+    <MSBuild Projects="@(SharePointProjectDependencyToBuild)" Properties="Configuration=$(Configuration);Platform=$(Platform);ShouldUnsetParentConfigurationAndPlatform=$(ShouldUnsetParentConfigurationAndPlatform)" />
+  </Target>
+
+  <!--
+    Returns feature definition files from a SharePoint project.
+    
+    Feature definitions are None items with FeatureId metadata.
+    
+    Outputs:  @(ReturnedFeature)
+  -->
+  <Target Name="GetFeatures" Outputs="@(ReturnedFeature)">
+    <ItemGroup>
+      <ReturnedFeature Include="@(None)" Condition="%(None.FeatureId) != ''">
+        <ProjectPath>$(MSBuildProjectFullPath)</ProjectPath>
+      </ReturnedFeature>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Returns project item definition files from a SharePoint project.
+    
+    Project item definitions are None items with SharePointProjectItemId metadata.
+    
+    Outputs:  @(ReturnedProjectItem)
+  -->
+  <Target Name="GetProjectItems" Outputs="@(ReturnedProjectItem)">
+    <ItemGroup>
+      <ReturnedProjectItem Include="@(None)" Condition="%(None.SharePointProjectItemId) != ''">
+        <ProjectPath>$(MSBuildProjectFullPath)</ProjectPath>
+      </ReturnedProjectItem>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigurePackaging">
+    <!-- Set IsPackaging to false to make sure packaging does not happen in temporary project generated by workflow partition build. -->
+    <CreateProperty Value="false" Condition="$(MSBuildProjectFile.EndsWith('.tmp_proj'))">
+      <Output PropertyName="IsPackaging" TaskParameter="Value" />
+    </CreateProperty>
+
+    <!-- If the build is initiated by the IDE, a HostObject will tell this task whether to set IsPackaging to true.
+         From the command line it is always false. -->
+    <SetPackagingProperties ProjectFile="$(MSBuildProjectFile)">
+      <Output Condition="'$(IsPackaging)' == ''" PropertyName="IsPackaging" TaskParameter="IsPackaging" />
+      <Output Condition="'$(IsDebugging)' == ''" PropertyName="IsDebugging" TaskParameter="IsDebugging" />
+      <Output Condition="'$(IsWorkflowDebuggingEnabled)' == ''" PropertyName="IsWorkflowDebuggingEnabled" TaskParameter="IsWorkflowDebuggingEnabled" />
+      <Output Condition="'$(DebugRemoteAppServiceBaseUrl)' == ''" PropertyName="DebugRemoteAppServiceBaseUrl" TaskParameter="DebugRemoteAppServiceBaseUrl" />
+      <Output Condition="'$(WorkflowDebuggingClientSecret)' == ''" PropertyName="WorkflowDebuggingClientSecret" TaskParameter="WorkflowDebuggingClientSecret" />
+      <Output Condition="'$(SkipPackageWebProject)' == ''" PropertyName="SkipPackageWebProject" TaskParameter="SkipPackageWebProject" />
+      <Output Condition="'$(PublishedFrom)' ==''" PropertyName="PublishedFrom" TaskParameter="PublishedFrom" />
+    </SetPackagingProperties>
+  </Target>
+
+  <Target Name="ConditionalPackage" Condition="'$(IsPackaging)' == 'true'">
+    <CallTarget Targets="CreatePackage" />
+  </Target>
+
+  <Target Name="ConditionalPackageValidation" Condition="'$(PackageWithValidation)' == 'true'">
+    <CallTarget Targets="PerformPackageValidation" />
+  </Target>
+
+  <Target Name="ConditionalManifestValidation" Condition="'$(ManifestWithValidation)' == 'true'">
+    <CallTarget Targets="PerformManifestValidation" />
+  </Target>
+
+  <Target Name="GetOfficeAppManifestFiles">
+    <ItemGroup>
+      <OfficeAppManifestFiles Include="@(Content)" Condition="%(Content.OpcRelationship) == 'manifest-oemanifest'"/>
+    </ItemGroup>
+  </Target>
+
+  <!-- This target is used to validate manifest files in the project. -->
+  <Target Name="PerformManifestValidation" DependsOnTargets="GetOfficeAppManifestFiles">
+    <ItemGroup>
+      <SPAppManifestFiles Include="@(AppManifestFile)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <WebProjects Include="@(ProjectReference)" Condition="%(ProjectReference.RoleType) == 'Web'"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <SharePointAppIconFiles Include="@(Content)" Condition="%(Content.OpcRelationship) == 'manifest-icon'"/>
+    </ItemGroup>
+
+    <ValidateWebProjectReference ProjectMode="$(ProjectMode)"
+                                 WebProjectPaths="@(WebProjects)" />
+
+    <ValidateSharePointAppManifest Condition="'$(ProjectMode)' == 'SharePointApp'"
+                                   ManifestFilePaths="@(SPAppManifestFiles)"
+                                   WebProjectPaths="@(WebProjects)"
+                                   VsInstallDir="$(VsInstallRoot)" />
+
+    <ValidateOfficeAppManifest ManifestFilePaths="@(OfficeAppManifestFiles)"
+                               WebProjectPaths="@(WebProjects)"
+                               ProjectMode="$(ProjectMode)"
+                               VsInstallDir="$(VsInstallRoot)" />
+
+    <ValidateOfficeAppPage Condition="$(IsDebugging) != 'True' and $(IsPackaging) == 'True'"
+                           ManifestFilePaths="@(OfficeAppManifestFiles)"
+                           WebProjectPaths="@(WebProjects)">
+      <Output Condition="$(HasPackagingWarnings) != 'True'" PropertyName="HasPackagingWarnings" TaskParameter="HasWarnings" />
+    </ValidateOfficeAppPage>
+
+    <ValidateSharePointAppIcons IconFilePaths="@(SharePointAppIconFiles)" />
+  </Target>
+
+
+  <!-- This target is used to package from the command line. -->
+  <Target Name="Package" DependsOnTargets="$(PackageDependsOn)" />
+
+  <!-- This target is used to validate packages from the command line. -->
+  <Target Name="ValidatePackage" DependsOnTargets="$(ValidatePackageDependsOn)" />
+
+  <Target Name="CreatePackage" DependsOnTargets="$(CreatePackageDependsOn)" />
+
+  <Target Name="CreateSharePointProjectService" DependsOnTargets="$(CreateSharePointProjectServiceDependsOn)">
+    <ItemGroup>
+      <_ProjectFile Include="$(MSBuildProjectFile)">
+        <ProjectId>$(ProjectGuid)</ProjectId>
+        <AssemblyDeploymentTarget>$(AssemblyDeploymentTarget)</AssemblyDeploymentTarget>
+        <IncludeAssemblyInPackage>$(IncludeAssemblyInPackage)</IncludeAssemblyInPackage>
+        <IsSandboxedSolution>$(SandboxedSolution)</IsSandboxedSolution>
+        <RemoteAppUrl>$(RemoteAppUrl)</RemoteAppUrl>
+        <DebugRemoteAppServiceBaseUrl>$(DebugRemoteAppServiceBaseUrl)</DebugRemoteAppServiceBaseUrl>
+        <TargetPath>$(TargetPath)</TargetPath>
+        <TokenReplacementFileExtensions>$(TokenReplacementFileExtensions)</TokenReplacementFileExtensions>
+        <TreatWarningsAsErrors>$(TreatWarningsAsErrors)</TreatWarningsAsErrors>
+        <ProjectMode>$(ProjectMode)</ProjectMode>
+      </_ProjectFile>
+    </ItemGroup>
+
+    <CreateSharePointProjectService ProjectFile="@(_ProjectFile)"
+                                    ProjectReferences="@(SharePointProjectReference)"
+                                    NoneItems="@(None)"
+                                    ContentItems="@(Content)"
+                                    OutDir="$(TeamBuildOutDir)"
+                                    Configuration="$(Configuration)"
+                                    Platform="$(Platform)">
+      <Output PropertyName="ProjectService" TaskParameter="ProjectService" />
+    </CreateSharePointProjectService>
+  </Target>
+
+  <Target Name="PerformPackageValidation">
+
+    <ValidatePackage ProjectId="$(ProjectGuid)"
+                     ProjectService="$(ProjectService)" />
+
+  </Target>
+
+  <!-- Enumerates the untransformed source files that should be packaged
+  
+    Outputs:  @(EnumeratedUntransformedFiles)
+    -->
+  <Target Name="EnumerateFiles">
+
+    <EnumerateFiles ProjectId="$(ProjectGuid)"
+                    ProjectService="$(ProjectService)">
+      <Output ItemName="EnumeratedUntransformedFiles" TaskParameter="EnumeratedFiles" />
+    </EnumerateFiles>
+
+    <ItemGroup>
+      <EctFiles Include="%(None.FullPath)" Condition="'%(Extension)' == '.ect'"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CombineAllPackagingInputs">
+    <ItemGroup>
+      <AllPackagingInputs Include="@(AppManifestFile);$(IsDebuggingFilePath);$(RemoteAppUrlFilePath);$(DebugRemoteAppServiceBaseUrlFilePath);$(IsWorkflowDebuggingEnabledFilePath);@(EnumeratedUntransformedFiles);@(EctFiles);$(MSBuildProjectFile);@(XamlAppDef)"/>
+    </ItemGroup>
+  </Target>
+
+  <!-- Check if the package output is up-to-date
+  
+    Inputs:  @(EnumeratedUntransformedFiles)
+    Outputs: $(PackageInputFilesChanged) set to 'true' if the packaging output is not up-to-date
+  -->
+  <Target Name="ComputePackageInputFilesChanged" Outputs="$(BasePackagePath)%(EnumeratedUntransformedFiles.Package).$(PackageExtension)" Inputs="@(AllPackagingInputs)">
+    <CreateProperty Value="true">
+      <Output TaskParameter="ValueSetByTask" PropertyName="PackageInputFilesChanged" />
+    </CreateProperty>
+  </Target>
+
+  <!-- Generate the package if the output is not up-to-date. -->
+  <Target Name="DoPackaging" DependsOnTargets="$(DoPackagingDependsOn)" Condition="'$(PackageInputFilesChanged)' == 'true'" />
+
+  <!-- Generates intermediate packaging files with token replacement and manifest transformation
+  
+    Outputs:  @(EnumeratedFiles)
+    -->
+  <Target Name="TransformSourceFiles">
+
+    <MakeDir Directories="$(LayoutPath)" />
+    <MakeDir Directories="$(PackageIntermediatePath)" />
+    <MakeDir Directories="$(BasePackagePath)" />
+
+    <TransformFiles IntermediatePath="$(PackageIntermediatePath)"
+                    ProjectId="$(ProjectGuid)"
+                    ProjectService="$(ProjectService)"
+                    IsDebugging="$(IsDebugging)"
+                    TranslatedWorkflowsDestinationFolder="$(TranslatedWorkflowsDestinationFolder)"
+                    AppManifest="@(AppManifestFile)"
+                    PublishedFrom="$(PublishedFrom)">
+      <Output ItemName="EnumeratedFiles" TaskParameter="EnumeratedFiles" />
+    </TransformFiles>
+  </Target>
+
+  <!-- Override this target in your project to perform tasks before package layout. -->
+  <Target Name="BeforeLayout" />
+
+  <Target Name="PerformLayout">
+
+    <ItemGroup>
+      <_ManifestXml Include="@(EnumeratedFiles)" Condition="%(EnumeratedFiles.PackageRelativePath) == 'manifest.xml'"></_ManifestXml>
+    </ItemGroup>
+    <CreateWorkflowDebuggingElementManifest Condition="'$(ProjectMode)' == 'SharePointApp' and '@(Package)' != '' and $(IsDebugging) == 'true' and $(IsWorkflowDebuggingEnabled) == 'true'"
+                                            PackageManifest="@(_ManifestXml)"
+                                            DebugRemoteAppServiceBaseUrl="$(DebugRemoteAppServiceBaseUrl)"
+                                            LayoutPath="$(LayoutPath)%(EnumeratedFiles.Package)\" />
+
+
+    <Touch AlwaysCreate="true"
+      Condition="%(EnumeratedFiles.Virtual) == 'true' 
+          and %(EnumeratedFiles.GroupId) == 'Microsoft.VisualStudio.SharePoint.Workflow4Association'"
+      Files="@(EnumeratedFiles)" />
+
+    <LayoutFiles LayoutPath="$(LayoutPath)%(EnumeratedFiles.Package)\" Files="@(EnumeratedFiles)" />
+
+  </Target>
+
+  <!-- Override this target in your project to perform tasks after package layout. -->
+  <Target Name="AfterLayout" />
+
+  <Target Name="PerformPackage" Condition="@(EnumeratedFiles -> '%Package') != ''">
+    <PackageFiles LayoutPath="$(LayoutPath)%(EnumeratedFiles.Package)\" PackagePath="$(BasePackagePath)%(EnumeratedFiles.Package).$(PackageExtension)" IsApp="$(IsApp)" HasPackagingWarnings="$(HasPackagingWarnings)" />
+
+    <!-- Generate list of current packages. -->
+
+    <ItemGroup>
+      <_GeneratedPackageFiles Include="$(BasePackagePath)%(EnumeratedFiles.Package).$(PackageExtension)" />
+    </ItemGroup>
+
+    <!-- Make sure the directory exists. -->
+
+    <MakeDir Directories="$(IntermediateOutputPath)"/>
+
+    <!-- Write new list of current packages back to disk, replacing the existing list. -->
+
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(PackageFileList)"
+                      Lines="@(_GeneratedPackageFiles)"
+                      Overwrite="true"/>
+
+  </Target>
+
+  <Target Name="CleanPackage">
+
+    <!-- Read the list of packages produced by a prior packaging from disk. -->
+
+    <ReadLinesFromFile File="$(IntermediateOutputPath)$(PackageFileList)">
+      <Output TaskParameter="Lines" ItemName="_PackagesToDelete"/>
+    </ReadLinesFromFile>
+
+    <!-- Find all packages in the final output directory. -->
+
+    <FindUnderPath Path="$(OutDir)" Files="@(_PackagesToDelete)">
+      <Output TaskParameter="InPath" ItemName="_FoundPackagesToDelete"/>
+    </FindUnderPath>
+
+    <!-- Remove any previously generated package found (and the original package file list). -->
+
+    <Delete Files="@(_FoundPackagesToDelete);$(IntermediateOutputPath)$(PackageFileList)" />
+
+    <RemoveDir ContinueOnError="true" Directories="$(LayoutPath)" />
+    <RemoveDir ContinueOnError="true" Directories="$(PackageIntermediatePath)" />
+
+  </Target>
+
+  <Target Name="ConfigureResigning">
+    <!-- In instrumentation profiling, a HostObject will tell this task to set NeedResigning to true. -->
+    <SetResigningProperties ProjectFile="$(MSBuildProjectFile)">
+      <Output Condition="'$(NeedResigning)' == ''" PropertyName="NeedResigning" TaskParameter="NeedResigning" />
+    </SetResigningProperties>
+  </Target>
+
+  <Target
+    Name="ResignAssemblies"
+    Condition="'$(NeedResigning)' == 'true' And '$(SignAssembly)' == 'true' And '$(DelaySign)' != 'true'">
+
+    <PropertyGroup>
+      <ResignKey Condition="'$(KeyOriginatorFile)' != ''">$(KeyOriginatorFile)</ResignKey>
+      <ResignKey Condition="'$(KeyContainerName)' != ''">$(KeyContainerName)</ResignKey>
+      <ResignKeyType Condition="'$(KeyOriginatorFile)' != ''">File</ResignKeyType>
+      <ResignKeyType Condition="'$(KeyContainerName)' != ''">Container</ResignKeyType>
+    </PropertyGroup>
+
+    <ResignAssemblies Key="$(ResignKey)"
+                      KeyType="$(ResignKeyType)"
+                      Assemblies="$(OutDir)$(TargetFileName)" />
+  </Target>
+
+  <!-- Add an empty code file before build and remove it after build to work around
+       the CS2008 no source files warning for CSharp project and BC2008 no source files error for VB project. -->
+  <PropertyGroup>
+    <EmptyCodeFile>$(IntermediateOutputPath)\96dfa18c-b6b1-47cb-baa1-504b623c58d6$(DefaultLanguageSourceExtension)</EmptyCodeFile>
+  </PropertyGroup>
+  <Target Name="AddEmptyCodeFile" Condition="'@(Compile)' == ''">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Touch Files="$(EmptyCodeFile)" AlwaysCreate="true" />
+    <ItemGroup>
+      <Compile Include="$(EmptyCodeFile)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveEmptyCodeFile" Condition="Exists('$(EmptyCodeFile)')">
+    <Delete Files="$(EmptyCodeFile)" />
+  </Target>
+
+  <Import Project="$(CustomAfterSharePointTargets)" Condition="Exists('$(CustomAfterSharePointTargets)')"/>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter\*" Condition="'$(ImportByWildcardAfterSharePointTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter')"/>
+
+</Project>

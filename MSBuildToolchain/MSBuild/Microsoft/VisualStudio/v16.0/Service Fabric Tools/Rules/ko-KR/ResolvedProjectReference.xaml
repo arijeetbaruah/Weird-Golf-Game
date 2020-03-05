@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ResolvedProjectReference" DisplayName="참조 속성" PageTemplate="generic" Description="참조 속성" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="기타"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ResolvedReference" ItemType="ProjectReference" HasConfigurationCondition="False" SourceType="TargetResults" MSBuildTarget="ResolveProjectReferencesDesignTime"/>
+    </Rule.DataSource>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="로컬 복사" Description="참조를 출력 디렉터리로 복사할지 여부를 나타냅니다.">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="ID" Description="참조된 어셈블리의 보안 ID입니다(System.Reflection.Assembly.Evidence 또는 System.Security.Policy.Evidence 참조).">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <!--These are metadata added to the resolved item by MSBuild that we don't show to the user but use internally.-->
+    <StringProperty Name="OriginalItemSpec" Visible="False" ReadOnly="True" Description="확인 결과가 이 확인된 참조 항목인 원래 참조 항목의 평가 항목 이름입니다."/>
+    <StringProperty Name="Name" Visible="false" ReadOnly="True"/>
+</Rule>
