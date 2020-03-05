@@ -35,13 +35,27 @@ NCL::Rendering::OGLMesh::OGLMesh(MeshGeometry* copyMesh)
 	for (Vector3 temp : copyMesh->GetNormalData())			this->normals.push_back(temp);
 	for (Vector3 temp : copyMesh->GetTangentData())			this->tangents.push_back(temp);
 	for (unsigned int temp : copyMesh->GetIndexData())		this->indices.push_back(temp);
+	if ((OGLMesh*)copyMesh)
+	{
+		OGLMesh* temp = (OGLMesh*)copyMesh;
+		this->vao = temp->vao;
+		this->subCount = 1;
 
-	vao = 0;
-	subCount = 1;
-
-	for (int i = 0; i < MAX_BUFFER; ++i) {
-		buffers[i] = 0;
+		for (int i = 0; i < MAX_BUFFER; ++i) {
+			this->buffers[i] = temp->buffers[i];
+		}
 	}
+	else
+	{
+		vao = 0;
+		subCount = 1;
+
+		for (int i = 0; i < MAX_BUFFER; ++i) {
+			buffers[i] = 0;
+		}
+	}
+
+
 }
 
 OGLMesh::OGLMesh(const std::string&filename) : MeshGeometry(filename){
