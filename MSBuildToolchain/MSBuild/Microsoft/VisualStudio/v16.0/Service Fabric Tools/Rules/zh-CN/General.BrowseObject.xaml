@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="项目属性" PageTemplate="generic" Description="项目属性" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="应用程序" Description="应用程序"/>
+        <Category Name="Misc" DisplayName="杂项" Description="杂项"/>
+        <Category Name="Debugging" DisplayName="调试" Description="调试"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="项目文件" Description="项目文件的名称。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="项目文件夹" Description="项目文件的位置。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="应用程序调试模式" Default="Remove" Description="指示作为调试一部分的应用程序部署的行为。
+
+删除应用程序 - 调试程序会话结束后，将从群集中删除应用程序。
+保留应用程序 - 调试器会话结束后，应用程序将在群集中继续运行。后续调试时，将在调试过程中删除并重新部署应用程序。
+自动升级 - 现有应用程序将在调试过程中升级，并在调试程序会话结束后在群集中继续运行。
+刷新应用程序 - 使用新的二进制文件刷新应用程序，而不重新部署应用程序。此模式仅适用于单节点群集。">
+        <EnumValue Name="AutoUpgrade" DisplayName="自动升级"/>
+        <EnumValue Name="Remove" DisplayName="删除应用程序"/>
+        <EnumValue Name="Keep" DisplayName="保留应用程序"/>
+        <EnumValue Name="Refresh" DisplayName="刷新应用程序"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="启动目标" Description="启用应用程序后要浏览的 URL 的源。" EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="应用程序 URL" Description="启动应用程序后将浏览的 URL。">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="包完整输出文件夹" Default="true" Description="指示包行为(仅适用于面向完整 .NET 框架的非 ASP.NET 服务对象)。
+
+True - 将所有文件打包到 bin 文件夹中。
+False - 基于预配置的逻辑打包特定文件。">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="调试配置文件" Description="在调试 Service Fabric 应用程序时使用的配置文件。" EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

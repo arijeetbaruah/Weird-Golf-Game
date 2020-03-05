@@ -31,7 +31,7 @@ namespace NCL {
 			virtual void OnCollisionEnd(GameObject* otherObject);
 
 			bool* getButtonStates() { return buttonStates; };
-
+			bool isCurrentPlayer;
 
 			Vector3 getShotDir() {
 				if (isOffset)
@@ -46,12 +46,6 @@ namespace NCL {
 			void setIsOffset(bool b) {
 				isOffset = b;
 			}
-
-			OGLMesh* GetCubeMesh() { return cubeMesh; }
-			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
-
-			OGLMesh* GetPlayerMesh() { return playerMesh; }
-			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
 
 			float getSpeed() { return speed; }
 			void setSpeed(float s) { speed = s; }
@@ -81,8 +75,6 @@ namespace NCL {
 			int testYaw;
 
 			bool buttonStates[6];
-			OGLMesh* cubeMesh = nullptr;
-			OGLMesh* playerMesh = nullptr;
 
 			std::queue<GameObject*> collectables;
 		};

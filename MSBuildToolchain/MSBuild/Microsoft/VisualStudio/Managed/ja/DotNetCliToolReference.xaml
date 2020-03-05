@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="DotNetCliToolReference" Description="パッケージ" DisplayName="パッケージ" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="DotNetCliToolReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="依存関係の説明。" DisplayName="説明" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="この参照から除外する資産" DisplayName="ExcludeAssets" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <StringProperty Name="IncludeAssets" Description="この参照から含める資産" DisplayName="IncludeAssets" Visible="True" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" ReadOnly="True" Visible="False" />
+  <StringProperty Name="PrivateAssets" Description="この参照で非公開のアセット" DisplayName="PrivateAssets" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="依存関係のバージョン。" DisplayName="バージョン" ReadOnly="True" />
+</Rule>

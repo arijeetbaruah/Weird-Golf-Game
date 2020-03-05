@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.Azure.Fabric.ServiceProject.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="WaitForApplicationCleanup" AssemblyFile="bin\Microsoft.VisualStudio.Azure.Fabric.ServiceBuildTasks.dll" />
+  
+  <!-- Defines the following empty target to be overridden by specific service projects. -->
+  <Target Name="_UpdateServiceFabricServiceManifest" />
+
+  <!-- Defines the following empty target to be overridden by specific service projects. -->
+  <Target Name="_UpdateServiceFabricApplicationManifest" />
+
+  <!-- Prepares the application output folder for build. During Fast F5 scenario, the binaries in the output folder of a service project
+  might be used by service fabric process. This task will wait for the service fabric process to release the files. -->
+  <Target Name="_WaitForServiceFabricApplicationCleanupBeforeBuild" BeforeTargets="BeforeBuild" Condition="'$(IsServiceFabricServiceProject)' == 'true'">
+    <WaitForApplicationCleanup ProjectFullPath="$(MSBuildProjectFullPath)" BuildAction="Build" />
+  </Target>
+
+  <!-- Prepares the application output folder for clean. During Fast F5 scenario, the binaries in the output folder of a service project
+  might be used by service fabric process. This task will wait for the service fabric process to release the files. -->
+  <Target Name="_WaitForServiceFabricApplicationCleanupBeforeClean" BeforeTargets="BeforeClean" Condition="'$(IsServiceFabricServiceProject)' == 'true'">
+    <WaitForApplicationCleanup ProjectFullPath="$(MSBuildProjectFullPath)" BuildAction="Clean"/>
+  </Target>
+
+</Project>

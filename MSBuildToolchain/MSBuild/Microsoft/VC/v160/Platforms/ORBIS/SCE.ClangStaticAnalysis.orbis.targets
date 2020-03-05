@@ -1,0 +1,178 @@
+﻿<!--
+***********************************************************************************************
+SCE.CodeAnalysis.orbis.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="ClangCL" AssemblyFile="$(VCTargetsPath)Platforms\ORBIS\SCE.Build.CppTasks.orbis.dll" />
+  <UsingTask TaskName="ClangAnalysis" AssemblyFile="$(VCTargetsPath)Platforms\ORBIS\SCE.Build.CppTasks.orbis.dll" />
+  <UsingTask TaskName="SCEMessage" AssemblyFile="$(VCTargetsPath)Platforms\ORBIS\SCE.Build.CppTasks.orbis.dll" />
+
+  <Target Name="SkippingMSCodeAnalysisMessage">
+    <SCEMessage Type="Warning" Code="SIE100" Arguments="$(ProjectName);$(Configuration);$(Platform)" />
+    <SCEMessage Type="Warning" Code="SIE101" />
+  </Target>
+
+  <PropertyGroup>
+    <!-- Specified in the project as part of the build -->
+    <RunClangStaticAnalysisOnThisProject Condition="'$(RunClangStaticAnalysis)'=='true'">true</RunClangStaticAnalysisOnThisProject>   
+    <CollectClangAnalysisResults Condition="'$(RunClangStaticAnalysisOnThisProject)'=='true' and '$(BuildingInsideVisualStudio)'=='true'">true</CollectClangAnalysisResults>
+  </PropertyGroup>
+
+  <!-- Modify the targets for a 'Build' when code analysis only is being performed. No compilation or linking is to be done. -->
+  <PropertyGroup>
+    <BuildSteps Condition="'$(RunClangStaticAnalysis)'=='true'">
+      ResolveReferences;
+      PrepareForBuild;
+      InitializeBuildStatus;
+      BuildGenerateSources;
+      $(BeforeClCompileTargets);
+      MakeDirsForCl;
+      RunClangStaticAnalysis;
+      PostAnalyzeEvent;
+    </BuildSteps>  
+    <BuildSteps Condition="'$(CollectClangAnalysisResults)'=='true'">
+      $(BuildSteps);
+      CollectClangAnalysisResults;
+    </BuildSteps>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalyzeExt>.plist</AnalyzeExt>
+  </PropertyGroup>
+
+  <!-- Restore the ObjectFileName metadata when replaced by the PCH file path during compilation -->
+  <Target Name="RestoreObjectFileNamePostCompile"
+          Condition="'@(ClCompile)' != ''">
+    <ItemGroup>
+      <_ClCompile_ObjectFileName Include="@(ClCompile)" Condition="'%(ClCompile._ObjectFileName)'!=''"/>
+    </ItemGroup>
+    <ItemGroup Condition="'@(_ClCompile_ObjectFileName)'!=''">
+      <ClCompile Remove="@(ClCompile)" Condition="'%(Identity)'=='@(_ClCompile_ObjectFileName)'"/>
+      <ClCompile Include="@(_ClCompile_ObjectFileName)">
+        <ObjectFileName>%(_ClCompile_ObjectFileName._ObjectFileName)</ObjectFileName>
+      </ClCompile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeClangAnalyzeFromClCompile"
+          Condition="'@(ClCompile)' != ''"
+          DependsOnTargets="RestoreObjectFileNamePostCompile;ComputeClCompileAsFromDefault">   
+    <!-- Create a new ClangAnalyze item group from ClCompile with ObjectFileName pointing to a XML path -->
+    <ItemGroup>
+      <!-- Add any items which do not specify an object name as-is to be patched in the ClangCL task -->
+      <ClangAnalyze Include="@(ClCompile)" Condition="'%(ClCompile.ObjectFileName)'=='' and
+        '%(ClCompile.AnalyzeSource)'!='false' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompileAs)'!='CompileAsAssembler'">
+        <AnalyzeSource>true</AnalyzeSource>
+        <ObjectFileName>$(IntDir)%(Filename)$(AnalyzeExt)</ObjectFileName>
+      </ClangAnalyze>
+      <ClangAnalyze Include="@(ClCompile)" Condition="HasTrailingSlash('%(ClCompile.ObjectFileName)') and
+        '%(ClCompile.AnalyzeSource)'!='false' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompileAs)'!='CompileAsAssembler'">
+        <AnalyzeSource>true</AnalyzeSource>
+        <ObjectFileName>$([System.IO.Path]::GetDirectoryName('%(ClCompile.ObjectFileName)'))\%(Filename)$(AnalyzeExt)</ObjectFileName>
+      </ClangAnalyze>
+      <ClangAnalyze Include="@(ClCompile)" Condition="'%(ClCompile.ObjectFileName)'!='' and !HasTrailingSlash('%(ClCompile.ObjectFileName)') and
+        '%(ClCompile.AnalyzeSource)'!='false' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompileAs)'!='CompileAsAssembler'">
+        <AnalyzeSource>true</AnalyzeSource>
+        <ObjectFileName>$([System.IO.Path]::GetDirectoryName('%(ClCompile.ObjectFileName)'))\$([System.IO.Path]::GetFileNameWithoutExtension('%(ClCompile.ObjectFileName)'))$(AnalyzeExt)</ObjectFileName>
+      </ClangAnalyze>
+      <ClangAnalyze Remove="@(ClangAnalyze)" Condition="'%(ClangAnalyze.Analyze)'!='true'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="RunClangStaticAnalysis"
+          Condition="'$(RunClangStaticAnalysisOnThisProject)'=='true' and '@(ClCompile)' != ''"
+          DependsOnTargets="ComputeClangAnalyzeFromClCompile">
+
+    <Message Text="Running Clang Static Analysis for C/C++..." Importance="High"/>
+
+    <!-- Disable file tracking for this analysis step -->
+    <ClangCL
+        AnalyzeSource                      ="true"
+        BuildingInIDE                      ="$(BuildingInsideVisualStudio)"
+        Sources                            ="@(ClangAnalyze)"
+
+        AnalyzerCheckers                   ="%(ClangAnalyze.AnalyzerCheckers)"
+        DisableCheckers                    ="%(ClangAnalyze.DisableCheckers)"
+        NoDefaultCheckers                  ="%(ClangAnalyze.NoDefaultCheckers)"
+        AnalysisLevel1                     ="$(AnalysisLevel1)"
+        AnalysisLevel2                     ="$(AnalysisLevel2)"
+        AnalysisLevel3                     ="$(AnalysisLevel3)"
+        AnalysisLevel                      ="%(ClangAnalyze.AnalysisLevel)"
+        AdditionalAnalyzeOptions           ="%(ClangAnalyze.AdditionalAnalyzeOptions)"
+
+        AdditionalIncludeDirectories       ="%(ClangAnalyze.AdditionalIncludeDirectories);$(IncludePath)"
+        NoStandardIncludePaths             ="%(ClangAnalyze.NoStandardIncludePaths)"
+        PreprocessorDefinitions            ="%(ClangAnalyze.PreprocessorDefinitions)"
+        ForcedIncludeFiles                 ="%(ClangAnalyze.ForcedIncludeFiles)"
+        ExtendedDiagnostics                ="%(ClangAnalyze.ExtendedDiagnostics)"
+        CompileAs                          ="%(ClangAnalyze.CompileAs)"
+        NoStrictAliasing                   ="%(ClangAnalyze.NoStrictAliasing)"
+        CppExceptions                      ="%(ClangAnalyze.CppExceptions)"
+        RuntimeTypeInfo                    ="%(ClangAnalyze.RuntimeTypeInfo)"
+        CppLanguageStd                     ="%(ClangAnalyze.CppLanguageStd)"
+        CLanguageStd                       ="%(ClangAnalyze.CLanguageStd)"
+        AnsiCompliance                     ="%(ClangAnalyze.AnsiCompliance)"
+        CharUnsigned                       ="%(ClangAnalyze.CharUnsigned)"
+        MsExtensions                       ="%(ClangAnalyze.MsExtensions)"
+        AdditionalOptions                  ="%(ClangAnalyze.AdditionalOptions)"
+
+        ToolExe                            ="$(CLToolExe)"
+        ToolPath                           ="$(CLToolPath)"
+        TrackFileAccess                    ="false"
+        MinimalRebuildFromTracking         ="false"
+        ToolArchitecture                   ="$(CLToolArchitecture)"
+
+        AcceptableNonZeroExitCodes         ="%(ClangAnalyze.AcceptableNonZeroExitCodes)"
+        MultiProcessorCompilation          ="%(ClangAnalyze.MultiProcessorCompilation)"
+        ProcessorNumber                    ="%(ClangAnalyze.ProcessorNumber)"
+        Distributable                      ="%(ClangAnalyze.Distributable)"
+        DistributedBuild                   ="$(DistributedBuild)"
+        DistributedBuildId                 ="$(DistributedBuildId)"
+        MaxIncrediBuildCompiles            ="$(MaxIncrediBuildCompiles)"
+
+        ProjectName                        ="$(ProjectName)"
+        ObjectExt                          ="$(AnalyzeExt)"
+        IntelliSenseProperty               ="$(ORBISIntelliSense)"
+
+        PlatformToolset                    ="$(PlatformToolset)"
+    >
+    </ClangCL>
+  </Target>
+
+  <Target Name="ComputeClangAnalyzePlistFromClangAnalyze"
+          Condition="'@(ClangAnalyze)' != ''"
+          AfterTargets="RunClangStaticAnalysis">
+    <!-- Add the output paths from the ClangAnalyze items into the ClangAnalyzePlist item group -->
+    <ItemGroup>
+      <ClangAnalyzePlist Include="%(ClangAnalyze.ObjectFileName)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostAnalyzeEvent" Condition="'$(PostAnalyzeEventUseInBuild)'!='false'">
+    <Message Text="Description: %(PostAnalyzeEvent.Message)" Condition="'%(PostAnalyzeEvent.Message)' != '' and '%(PostAnalyzeEvent.Command)' != ''"/>
+    <Exec Command="%(PostAnalyzeEvent.Command)$(_BuildSuffix)" Condition="'%(PostAnalyzeEvent.Command)' != ''"/>
+  </Target>
+
+  <Target Name="CollectClangAnalysisResults"
+          Condition="'$(CollectClangAnalysisResults)' == 'true' and '@(ClangAnalyzePlist)' != ''">
+    <!-- Process the Plist files from Clang Static Analysis -->
+    <ClangAnalysis
+        Sources                            ="@(ClangAnalyzePlist)"
+        ProjectDir                         ="$(ProjectDir)"
+        StaticAnalysisBuildId              ="$(StaticAnalysisBuildId)"
+        ProjectFile                        ="$(ProjectPath)"
+    >
+      <Output PropertyName="DiagWarningCount" TaskParameter="DiagWarningCount" />
+    </ClangAnalysis>
+    
+    <Message Text="Project &quot;$(MSBuildProjectFile)&quot; generated $(DiagWarningCount) diagnostic messages" Importance="Normal" />
+  </Target>
+
+</Project>

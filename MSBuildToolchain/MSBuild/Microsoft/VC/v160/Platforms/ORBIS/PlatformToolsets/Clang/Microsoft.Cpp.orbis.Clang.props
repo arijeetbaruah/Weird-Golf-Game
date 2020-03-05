@@ -1,0 +1,121 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.Cpp.orbis.Clang.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Platforms\ORBIS\ImportBefore\*.Clang.props" Condition="Exists('$(VCTargetsPath)\Platforms\ORBIS\ImportBefore')" />
+
+  <PropertyGroup>
+    <ExecutablePath Condition="'$(ExecutablePath)' == ''">$(SCE_ORBIS_SDK_DIR)\host_tools\bin;$(VCTargetsPath)\Platforms\ORBIS;$(PATH);</ExecutablePath>
+    <IncludePath    Condition="'$(IncludePath)' == '' and '$(NoStandardIncludePaths)' != 'true'">$(SCE_ORBIS_SDK_DIR)\host_tools\lib\clang\include;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common;</IncludePath>
+    <ORBISIntelliSenseHeaderPath Condition="'$(ORBISIntelliSenseHeaderPath)' == ''">$(VCTargetsPath)\Platforms\ORBIS\PlatformToolsets\Clang\orbisclang_intellisense.h</ORBISIntelliSenseHeaderPath>
+    <ORBISIntelliSense Condition="'$(UseORBISIntelliSense)' != 'false'">-include "$(ORBISIntelliSenseHeaderPath)"</ORBISIntelliSense>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalysisLevel1>-Xclang -analyzer-disable-retry-exhausted</AnalysisLevel1>
+    <AnalysisLevel2></AnalysisLevel2>
+    <AnalysisLevel3>-Xclang -analyzer-config -Xclang ipa-always-inline-size=8 -Xclang -analyzer-config -Xclang max-inlinable-size=64 -Xclang -analyzer-config -Xclang max-nodes=300000</AnalysisLevel3>
+  </PropertyGroup>
+
+    <!-- *******************************************************************************************
+        CLCompile
+       ******************************************************************************************* -->
+
+  <!-- Default cl options -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <ObjectFileName               Condition="'%(ClCompile.ObjectFileName)'              == ''">$(IntDir)%(Filename)$(ObjectExt)</ObjectFileName>
+      <PreprocessorDefinitions      Condition="'$(PlatformToolset)'                       == 'Clang'"></PreprocessorDefinitions>
+      <GenerateDebugInformation     Condition="'%(ClCompile.GenerateDebugInformation)'    == ''">false</GenerateDebugInformation>
+      <InlinedScopes                Condition="'%(ClCompile.InlinedScopes)'               == ''">true</InlinedScopes>
+      <Warnings                     Condition="'%(ClCompile.Warnings)'                    == ''">MoreWarnings</Warnings>
+      <ExtraWarnings                Condition="'%(ClCompile.ExtraWarnings)'               == ''">false</ExtraWarnings>
+      <WarningsAsErrors             Condition="'%(ClCompile.WarningsAsErrors)'            == ''">false</WarningsAsErrors>
+      <EnableFixits                 Condition="'%(ClCompile.EnableFixits)'                == ''">true</EnableFixits>
+      <ExtendedDiagnostics          Condition="'%(ClCompile.ExtendedDiagnostics)'         == ''"></ExtendedDiagnostics>
+      <OptimizationLevel            Condition="'%(ClCompile.OptimizationLevel)'           == ''">Level0</OptimizationLevel>
+      <FastMath                     Condition="'%(ClCompile.FastMath)'                    == ''">false</FastMath>
+      <NoStrictAliasing             Condition="'%(ClCompile.NoStrictAliasing)'            == ''">false</NoStrictAliasing>
+      <UnrollLoops                  Condition="'%(ClCompile.UnrollLoops)'                 == ''"></UnrollLoops>
+      <LinkTimeOptimization         Condition="'%(ClCompile.LinkTimeOptimization)'        == ''">false</LinkTimeOptimization>
+      <CppExceptions                Condition="'%(ClCompile.CppExceptions)'               == ''">false</CppExceptions>
+      <AnsiCompliance               Condition="'%(ClCompile.AnsiCompliance)'              == ''">false</AnsiCompliance>
+      <CharUnsigned                 Condition="'%(ClCompile.CharUnsigned)'                == ''">false</CharUnsigned>
+      <MsExtensions                 Condition="'%(ClCompile.MsExtensions)'                == ''">false</MsExtensions>
+      <CompileAs                    Condition="'%(ClCompile.CompileAs)'                   == ''">Default</CompileAs>
+      <UndefinedBehavior            Condition="'%(ClCompile.UndefinedBehavior)'           == ''">$(UndefinedBehavior)</UndefinedBehavior>     
+      <AddressSanitizer             Condition="'%(ClCompile.AddressSanitizer)'            == ''">$(AddressSanitizer)</AddressSanitizer>
+      <MultiProcessorCompilation    Condition="'%(ClCompile.MultiProcessorCompilation)'   == ''">false</MultiProcessorCompilation>
+      <ProcessorNumber              Condition="'$(CL_MPCount)'                            != ''">$(CL_MPCount)</ProcessorNumber>
+      <Distributable                Condition="'%(ClCompile.Distributable)'               == ''">true</Distributable>
+      <Analyze                      Condition="'%(ClCompile.Analyze)'                     == ''">true</Analyze>
+      <AnalyzerCheckers             Condition="'%(ClCompile.AnalyzerCheckers)'            == ''">core;cplusplus;sie</AnalyzerCheckers>
+      <AnalysisLevel                Condition="'%(ClCompile.AnalysisLevel)'               == ''">Level2</AnalysisLevel>
+      <PrecompiledHeader            Condition="'%(ClCompile.PrecompiledHeader)'           == ''">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile  Condition="'%(ClCompile.PrecompiledHeaderOutputFile)' == ''">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <EnableCodeCoverage           Condition="'%(ClCompile.EnableCodeCoverage)'          == ''">false</EnableCodeCoverage>
+      <CodeCoverageOutputFile       Condition="'%(ClCompile.CodeCoverageOutputFile)'      == ''">/app0/$(ProjectName).profraw</CodeCoverageOutputFile>
+      <AdditionalOptions            Condition="'$(ORBISIntelliSense)'                     != ''">$(ORBISIntelliSense) %(ClCompile.AdditionalOptions)</AdditionalOptions>
+      <AcceptableNonZeroExitCodes   Condition="'%(Link.AcceptableNonZeroExitCodes)'       == ''">$(AcceptableNonZeroExitCodes)</AcceptableNonZeroExitCodes>
+      <TrackerLogDirectory          Condition="'%(ClCompile.TrackerLogDirectory)'         == ''">$(TLogLocation)</TrackerLogDirectory>
+      <MinimalRebuildFromTracking   Condition="'%(ClCompile.MinimalRebuildFromTracking)'  == ''">true</MinimalRebuildFromTracking>
+      <ClangMode>true</ClangMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- *******************************************************************************************
+        Link
+       ******************************************************************************************* -->
+
+  <!-- Default link options -->
+  <ItemDefinitionGroup>
+    <Link>
+      <OutputFile                   Condition="'%(Link.OutputFile)'                       == ''">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <EditAndContinue              Condition="'%(Link.EditAndContinue)'                  == ''">false</EditAndContinue>
+      <InfoStripping                Condition="'%(Link.InfoStripping)'                    == ''">None</InfoStripping>
+      <DataStripping                Condition="'%(Link.DataStripping)'                    == ''">None</DataStripping>
+      <DuplicateStripping           Condition="'%(Link.DuplicateStripping)'               == ''">false</DuplicateStripping>
+      <GenerateMapFile              Condition="'%(Link.GenerateMapFile)'                  == ''">false</GenerateMapFile>
+      <MapFileName                  Condition="'%(Link.MapFileName)'                      == ''">$(OutDir)$(TargetName).map</MapFileName>
+      <Addressing                   Condition="'%(Link.Addressing)'                       == ''">Aslr</Addressing>
+      <LinkTimeOptimization         Condition="'%(Link.LinkTimeOptimization)'             == ''">Default</LinkTimeOptimization>
+      <ThinLtoCaching               Condition="'%(Link.ThinLtoCaching)'                   == ''">false</ThinLtoCaching>
+      <ThinLtoCacheDir              Condition="'%(Link.ThinLtoCacheDir)'                  == '' and
+                                               '$(ThinLtoCacheDir)'                       != ''">$(ThinLtoCacheDir)</ThinLtoCacheDir>
+      <ThinLtoCacheDir              Condition="'%(Link.ThinLtoCacheDir)'                  == ''">$(IntDir)$(ProjectName).lto</ThinLtoCacheDir>
+      <Pad2mibText                  Condition="'%(Link.Pad2mibText)'                      == ''">false</Pad2mibText>
+      <Pad2mibData                  Condition="'%(Link.Pad2mibData)'                      == ''">false</Pad2mibData>
+      <Pad2mibRelRo                 Condition="'%(Link.Pad2mibRelRo)'                     == ''">false</Pad2mibRelRo>
+      <AcceptableNonZeroExitCodes   Condition="'%(Link.AcceptableNonZeroExitCodes)'       == ''">$(AcceptableNonZeroExitCodes)</AcceptableNonZeroExitCodes>
+      <TrackerLogDirectory          Condition="'%(ClCompile.TrackerLogDirectory)'         == ''">$(TLogLocation)</TrackerLogDirectory>
+      <MinimalRebuildFromTracking   Condition="'%(ClCompile.MinimalRebuildFromTracking)'  == ''">true</MinimalRebuildFromTracking>
+    </Link>
+
+    <Link Condition="'$(ConfigurationType)' != 'DynamicLibrary'">
+      <OutputFormat                 Condition="'%(Link.OutputFormat)'                     == ''">ELFFile</OutputFormat>
+      <!--AdditionalDependencies       Condition="'$(UndefinedBehavior)'                     == 'All'">-lSceDbgUBSanitizer_stub_weak;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies       Condition="'$(AddressSanitizer)'                      == 'true'">-lSceDbgAddressSanitizer_stub_weak;%(AdditionalDependencies)</AdditionalDependencies-->
+      <IgnoreImportLibrary          Condition="'%(Link.IgnoreImportLibrary)'              == ''">true</IgnoreImportLibrary>
+    </Link>
+
+    <Link Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+      <OutputFormat                 Condition="'%(Link.OutputFormat)'                     == ''">PRXFile</OutputFormat>
+      <ImportLibrary                Condition="'%(Link.ImportLibrary)'                    == '' and
+                                               '$(PrxStubOutputDir)'                      != ''">$(PrxStubOutputDir)$(TargetName)_stub_weak.a</ImportLibrary>
+      <ImportLibrary                Condition="'%(Link.ImportLibrary)'                    == '' and
+                                               '$(PrxStubOutputDir)'                      == ''">$(OutDir)$(TargetName)_stub_weak.a</ImportLibrary>
+      <IgnoreImportLibrary          Condition="'%(Link.IgnoreImportLibrary)'              == ''">false</IgnoreImportLibrary>
+      <PrxStubOutputDir             Condition="'%(Link.PrxStubOutputDir)'                 == ''">$(PrxStubOutputDir)</PrxStubOutputDir>
+    </Link>
+
+  </ItemDefinitionGroup>
+
+  <Import Project="$(VCTargetsPath)\Platforms\ORBIS\ImportAfter\*.Clang.props" Condition="Exists('$(VCTargetsPath)\Platforms\ORBIS\ImportAfter')" />
+</Project>

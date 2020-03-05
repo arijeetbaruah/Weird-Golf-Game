@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="ResolvedProjectReference" DisplayName="参照プロパティ" PageTemplate="generic" Description="参照プロパティ" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="その他"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ResolvedReference" ItemType="ProjectReference" HasConfigurationCondition="False" SourceType="TargetResults" MSBuildTarget="ResolveProjectReferencesDesignTime"/>
+    </Rule.DataSource>
+
+    <BoolProperty Name="CopyLocal" Category="Misc" DisplayName="ローカルにコピー" Description="参照を出力ディレクトリにコピーするかどうかを示します。">
+        <BoolProperty.DataSource>
+            <DataSource Persistence="ProjectFile" ItemType="ProjectReference" HasConfigurationCondition="False" PersistedName="Private"/>
+        </BoolProperty.DataSource>
+    </BoolProperty>
+
+    <StringProperty Name="Identity" Category="Misc" ReadOnly="True" DisplayName="ID" Description="参照されたアセンブリのセキュリティ ID です (System.Reflection.Assembly.Evidence または System.Security.Policy.Evidence をご覧ください)。">
+        <StringProperty.DataSource>
+            <DataSource PersistedName="{}{Identity}"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <!--These are metadata added to the resolved item by MSBuild that we don't show to the user but use internally.-->
+    <StringProperty Name="OriginalItemSpec" Visible="False" ReadOnly="True" Description="結果がこの解決済みの参照項目であった元の参照項目の評価済み項目名です。"/>
+    <StringProperty Name="Name" Visible="false" ReadOnly="True"/>
+</Rule>

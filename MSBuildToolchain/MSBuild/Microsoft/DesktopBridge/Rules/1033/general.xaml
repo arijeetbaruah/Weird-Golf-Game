@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule
+	Name="ConfigurationGeneral"
+	DisplayName="General"
+	PageTemplate="generic"
+	Description="General"
+	xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" HasConfigurationCondition="True"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="General" DisplayName="General"/>
+    </Rule.Categories>
+
+    <StringProperty Name="ProjectGuid" Visible="false"/>
+
+    <StringProperty
+        Name="OutputPath"
+        DisplayName="Output Path"
+        Category="General"
+        Description="Specifies the location for the output from the build operation." />
+
+    <StringProperty Name="EntryPointProjectUniqueName" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="EntryPointExe" Visible="False">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="DefaultLanguage" Visible="false" Category="General"/>
+    <StringProperty Name="AppxPackageRecipe" Visible="false" />
+
+    <StringProperty Name="AppxBundle" Visible="false"/>
+    <StringProperty Name="FinalAppxManifestName" Visible="false" />
+    <StringProperty Name="ProjectPriFullPath" Visible="false" />
+    <StringProperty Name="LayoutDir" Visible="false" />
+
+    <BoolProperty Name="IgnoreLocalNetworkLoopback" Visible="false" />
+    <BoolProperty Name="AllowLocalNetworkLoopback" Visible="false" />
+    <BoolProperty Name="ContainsStartupTask" Visible="False" />
+    
+    <StringProperty Name="TargetPlatformIdentifier" Visible="false">
+    <StringProperty.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+    </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="TargetPlatformVersion" DisplayName="Target version" Category="General" Description="Set the target platform version" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="TargetPlatformMinVersion" Visible="false"  DisplayName="Min version" Category="General" Description="Set the minimum target platform version">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="SDKIdentifier" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="SDKVersion" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="WapProjPath" Visible="False" Category="General" />
+
+</Rule>

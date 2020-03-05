@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <SCU>
+      <!-- General -->
+      <EvalClause>main</EvalClause>
+      <WarningLevel>W3</WarningLevel>
+      <WarningsAsErrors>false</WarningsAsErrors>
+      <Recolor>false</Recolor>
+      <OptimizeColoring>false</OptimizeColoring>
+      <Distributable>false</Distributable>
+      <Verbosity>Quiet</Verbosity>
+      <!-- Output -->
+      <OutputFileName>$(OutDir)%(FileName).sb</OutputFileName>
+      <Embed>false</Embed>
+      <GenerateHeader>false</GenerateHeader>
+      <HeaderFileName>%(RootDir)%(Directory)%(FileName).h</HeaderFileName>
+    </SCU>
+  </ItemDefinitionGroup>
+</Project>

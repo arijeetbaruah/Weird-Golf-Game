@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule
+	Name="ConfigurationGeneralBrowseObject"
+	DisplayName="General"
+	PageTemplate="generic"
+	Description="General"
+	xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="General" DisplayName="General" Description="General" />
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false" />
+    </Rule.DataSource>
+
+    <StringProperty Name="FileName" DisplayName="Project File" ReadOnly="True">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile" />
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="PreBuildEvent" DisplayName="Pre Build Event" Visible="False" />
+
+
+    <StringProperty Name="PostBuildEvent" DisplayName="Post Build Event" Visible="False" />
+
+
+    <EnumProperty Name="RunPostBuildEvent" DisplayName="Run Post Build Event" Visible="False">
+        <EnumValue Name="Always" DisplayName="Always" />
+        <EnumValue Name="OnBuildSuccess" DisplayName="On successful build"  IsDefault="True" />
+        <EnumValue Name="OnOutputUpdated" DisplayName="When the build updates the project output" />
+    </EnumProperty>
+    
+    <StringProperty Name="FullPath" ReadOnly="True">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath" />
+        </StringProperty.DataSource>
+    </StringProperty>
+</Rule>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="DotNetCliToolReference" Description="Pacote" DisplayName="Pacote" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="DotNetCliToolReference" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Descrição da dependência." DisplayName="Descrição" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Ativos a serem excluídos dessa referência" DisplayName="ExcludeAssets" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <StringProperty Name="IncludeAssets" Description="Ativos a serem incluídos dessa referência" DisplayName="IncludeAssets" Visible="True" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" ReadOnly="True" Visible="False" />
+  <StringProperty Name="PrivateAssets" Description="Ativos que são privados nessa referência" DisplayName="PrivateAssets" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Versão da independência." DisplayName="Versão" ReadOnly="True" />
+</Rule>

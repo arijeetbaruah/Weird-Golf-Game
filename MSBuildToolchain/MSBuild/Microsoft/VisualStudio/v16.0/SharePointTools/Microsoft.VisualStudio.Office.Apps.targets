@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.Office.Apps.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy. Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio projects
+for Office.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import  Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GenerateOwaItems" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GenerateOwaFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="SetOwaDebuggingProperties" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="UseDeveloperStore" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="AutohostedOfficeAppError" />
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      ConfigureOwaDebugging;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+
+    
+    <OwaDebuggingFile Condition="'$(OwaDebuggingFile)'==''">$(MSBuildProjectFile).OwaDebugging.txt</OwaDebuggingFile>
+    <OwaDebuggingFilePath>$(IntermediateOutputPath)$(OwaDebuggingFile)</OwaDebuggingFilePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AllPackagingInputs Include="$(OwaDebuggingFilePath)"/>
+  </ItemGroup>
+
+  
+  <Target Name="ConfigureOwaDebugging">
+    <!-- If the build is initiated by the IDE, a HostObject will tell this task whether to set IsOwaDebugging to true.
+         From the command line it is always false. -->
+    <SetOwaDebuggingProperties ProjectFile="$(MSBuildProjectFile)">
+      <Output Condition="'$(IsOwaDebugging)' == ''" PropertyName="IsOwaDebugging" TaskParameter="IsOwaDebugging" />
+      <Output Condition="'$(GeneratedFeatureId)' == ''" PropertyName="GeneratedFeatureId" TaskParameter="GeneratedFeatureId" />
+      <Output Condition="'$(GeneratedPackageId)' == ''" PropertyName="GeneratedPackageId" TaskParameter="GeneratedPackageId" />
+      <Output Condition="'$(GeneratedModuleId)' == ''" PropertyName="GeneratedModuleId" TaskParameter="GeneratedModuleId" />
+      <Output Condition="'$(GeneratedListId)' == ''" PropertyName="GeneratedListId" TaskParameter="GeneratedListId" />
+      <Output Condition="'$(GeneratedProductId)' == ''" PropertyName="GeneratedProductId" TaskParameter="GeneratedProductId" />
+      <Output Condition="'$(GeneratedAppVersion)' == ''" PropertyName="GeneratedAppVersion" TaskParameter="GeneratedAppVersion" />
+      <Output Condition="'$(GeneratedAppName)' == ''" PropertyName="GeneratedAppName" TaskParameter="GeneratedAppName" />
+      <Output Condition="'$(GeneratedDocumentName)' == ''" PropertyName="GeneratedDocumentName" TaskParameter="GeneratedDocumentName" />
+      <Output Condition="'$(GeneratedDocumentSource)' == ''" PropertyName="GeneratedDocumentSource" TaskParameter="GeneratedDocumentSource" />
+      <Output Condition="'$(GeneratedClientSecret)' == ''" PropertyName="GeneratedClientSecret" TaskParameter="GeneratedClientSecret" />
+      <Output Condition="'$(VersionedLayoutsPath)' == ''" PropertyName="VersionedLayoutsPath" TaskParameter="VersionedLayoutsPath" />
+    </SetOwaDebuggingProperties>
+
+    <ItemGroup>
+      <_OwaDebuggingContents Include="$(IsOwaDebugging);$(GeneratedFeatureId)$(GeneratedPackageId);$(GeneratedModuleId)$(GeneratedListId);$(GeneratedProductId);$(GeneratedAppVersion);$(GeneratedAppName)$(GeneratedDocumentName);$(GeneratedDocumentSource);$(VersionedLayoutsPath);$(GeneratedClientSecret )"></_OwaDebuggingContents>
+    </ItemGroup>
+
+    
+    <ReadLinesFromFile File="$(OwaDebuggingFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastOwaDebuggingContents"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(OwaDebuggingFilePath)"
+                      Condition="'@(_LastOwaDebuggingContents)' != '@(_OwaDebuggingContents)'"
+                      Lines="@(_OwaDebuggingContents)"
+                      Overwrite="true"/>
+  </Target>
+  
+  <Target Name="CoreCompile" />
+  <Target Name="CreateManifestResourceNames" />
+
+  
+  <Target Name="OwaDebugging"
+          Condition="'$(IsOwaDebugging)' == 'true'"
+          DependsOnTargets="GenerateOwaItems;GenerateOwaFiles"
+          BeforeTargets="EnumeratePackages;PackageSharePointApp" />
+
+  
+  <Target Name="GenerateOwaItems"
+          Condition="'$(IsOwaDebugging)' == 'true'"
+          BeforeTargets="GetFeatures;GetProjectItems"
+          DependsOnTargets="ConfigureOwaDebugging">
+
+    
+    <ItemGroup>
+      <OldOfficeAppManifest Include="@(Content)" Condition="'%(Content.OpcRelationship)' == 'manifest-oemanifest'">
+        <SPDataFile>$([MSBuild]::GetDirectoryNameOfFileAbove(%(Content.RelativeDir), SharePointProjectItem.spdata))SharePointProjectItem.spdata</SPDataFile>
+      </OldOfficeAppManifest>
+
+      <OldSPDataFile Include="@(None)" Condition="'%(None.Extension)' == '.spdata'" />
+    </ItemGroup>
+
+    
+    <ItemGroup>
+      <Content Remove="@(OldOfficeAppManifest)" />
+      <None Remove="@(OldSPDataFile)" />
+    </ItemGroup>
+
+    
+    <ItemGroup>
+      <None Include="$(IntermediateOutputPath)\GeneratedFiles\Features\Feature1\Feature1.feature">
+        <FeatureId>$(GeneratedFeatureId)</FeatureId>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </None>
+      <Content Include="$(IntermediateOutputPath)\GeneratedFiles\Features\Feature1\Feature1.Template.xml">
+        <DependentUpon>Feature1.feature</DependentUpon>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </Content>
+
+      <None Include="$(IntermediateOutputPath)\GeneratedFiles\OfficeDocuments\$(GeneratedDocumentName)">
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </None>
+      <None Include="$(IntermediateOutputPath)\GeneratedFiles\OfficeDocuments\SharePointProjectItem.spdata">
+        <SharePointProjectItemId>$(GeneratedModuleId)</SharePointProjectItemId>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </None>
+
+      <None Include="$(IntermediateOutputPath)\GeneratedFiles\OfficeDocumentsLibrary\SharePointProjectItem.spdata">
+        <SharePointProjectItemId>$(GeneratedListId)</SharePointProjectItemId>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </None>
+      <Content Include="$(IntermediateOutputPath)\GeneratedFiles\OfficeDocumentsLibrary\Elements.xml">
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </Content>
+
+      <None Include="$(IntermediateOutputPath)\GeneratedFiles\Package\Package.package">
+        <PackageId>$(GeneratedPackageId)</PackageId>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </None>
+      <Content Include="$(IntermediateOutputPath)\GeneratedFiles\Package\Package.Template.xml">
+        <DependentUpon>Package.package</DependentUpon>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </Content>
+
+      <AppManifestFile Include="$(IntermediateOutputPath)\GeneratedFiles\AppManifest.xml">
+        <SubType>Designer</SubType>
+        <GeneratedForOwa>true</GeneratedForOwa>
+      </AppManifestFile>
+    </ItemGroup>
+
+    
+    <GenerateOwaItems
+        IntermediatePath="$(IntermediateOutputPath)"
+        SPDataFiles="@(OldSPDataFile)"
+        OfficeAppManifests="@(OldOfficeAppManifest)">
+
+      <Output ItemName="OwaGeneratedManifest" TaskParameter="OwaGeneratedManifests" />
+      <Output ItemName="OwaGeneratedElement" TaskParameter="OwaGeneratedElements" />
+      <Output ItemName="OwaGeneratedSPData" TaskParameter="OwaGeneratedSPDatas" />
+    </GenerateOwaItems>
+
+    
+    <ItemGroup>
+      <Content Include="@(OwaGeneratedManifests);@(OwaGeneratedElements)" />
+      <None Include="@(OwaGeneratedSPData)" />
+    </ItemGroup>
+
+    
+    <ItemGroup>
+      <OwaGeneratedFile Include="@(Content)" Condition="'%(Content.GeneratedForOwa)' == 'true'" />
+      <OwaGeneratedFile Include="@(None)" Condition="'%(None.GeneratedForOwa)' == 'true'" />
+      <OwaGeneratedFile Include="@(AppManifestFile)" />
+    </ItemGroup>
+
+  </Target>
+
+  
+  <Target Name="GenerateOwaFiles"
+          Condition="'$(IsOwaDebugging)' == 'true'"
+          DependsOnTargets="GenerateOwaItems"
+          Inputs="@(OldOfficeAppManifest);@(OldSPDataFile);$(OwaDebuggingFilePath);$(MSBuildProjectFile)"
+          Outputs="@(OwaGeneratedFile)"
+          >
+
+    <GenerateOwaFiles
+        FeatureId="$(GeneratedFeatureId)"
+        PackageId="$(GeneratedPackageId)"
+        ModuleId="$(GeneratedModuleId)"
+        ListId="$(GeneratedListId)"
+        ProductId="$(GeneratedProductId)"
+        AppName="$(GeneratedAppName)"
+        AppVersion="$(GeneratedAppVersion)"
+        DocumentName="$(GeneratedDocumentName)"
+        DocumentSource="$(GeneratedDocumentSource)"
+        VersionedLayoutsPath="$(VersionedLayoutsPath)"
+        IntermediatePath="$(IntermediateOutputPath)"
+        OwaGeneratedManifests="@(OwaGeneratedManifest)"
+        OwaGeneratedElements="@(OwaGeneratedElement)"
+        OwaGeneratedSPDatas="@(OwaGeneratedSPData)"
+        ProjectReference="@(ProjectReference)"
+        >
+    </GenerateOwaFiles>
+  </Target>
+
+  
+  <Target Name="UseDeveloperStore"
+          Condition="'$(IsOwaDebugging)' == 'false'"
+          AfterTargets="EnumerateFiles"
+          DependsOnTargets="GetOfficeAppManifestFiles">
+    <ItemGroup>
+      <OfficeFiles Include="@(None)" Condition="
+                   %(None.Extension) == '.xlsx' or
+                   %(None.Extension) == '.xlsm' or
+                   %(None.Extension) == '.xltx' or
+                   %(None.Extension) == '.xltm' or
+                   %(None.Extension) == '.docx' or
+                   %(None.Extension) == '.docm' or
+                   %(None.Extension) == '.dotx' or
+                   %(None.Extension) == '.dotm' or
+                   %(None.Extension) == '.pptx' or
+                   %(None.Extension) == '.potx' or
+                   %(None.Extension) == '.pptm' or
+                   %(None.Extension) == '.potm'
+                   "/>
+    </ItemGroup>
+
+    <UseDeveloperStore
+      OfficeAppManifestFiles="@(OfficeAppManifestFiles)"
+      OfficeFiles="@(OfficeFiles)"
+      >
+    </UseDeveloperStore>
+  </Target>
+
+  <Target Name="AutohostedOfficeAppError" Condition="'$(IsAutoDeployedWebApplication)' == 'true'" BeforeTargets="Build">
+    <AutohostedOfficeAppError Project="$(MSBuildProjectFile)" />
+  </Target>
+</Project>

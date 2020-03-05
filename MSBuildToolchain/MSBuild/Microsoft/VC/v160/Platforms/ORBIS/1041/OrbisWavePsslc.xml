@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="OrbisWavePsslc" PageTemplate="tool" DisplayName="ORBIS Wave PSSL コンパイラ" Order="100" SwitchPrefix="-" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="OrbisWavePsslc" />
+  </Rule.DataSource>
+  <Rule.Categories>
+    <Category Name="General" DisplayName="全般" />
+    <Category Name="Optimization" DisplayName="最適化" />
+    <Category Name="CodeGeneration" DisplayName="コード生成" />
+    <Category Name="Language" DisplayName="言語" />
+    <Category Name="Advanced" DisplayName="詳細設定" />
+    <Category Name="Output" DisplayName="出力" />
+    <Category Name="All Options" DisplayName="すべてのオプション" Subtype="Search" />
+    <Category Name="Command Line" Subtype="CommandLine" DisplayName="コマンド ライン" />
+  </Rule.Categories>
+  <StringListProperty Subtype="folder" Name="AdditionalIncludeDirectories" DisplayName="追加のインクルード ディレクトリ" Description="インクルード パスに追加するディレクトリを指定します。 複数指定する場合は、セミコロンで区切ってください。(-I[path])" Category="General" Switch="I" />
+  <StringListProperty Subtype="file" Name="ForcedIncludeFiles" DisplayName="強制インクルード ファイル" Description="1 つまたは複数の強制インクルードファイルを指定します。(-include [path])" Category="General" Switch="include " />
+  <StringProperty Name="EntryPoint" DisplayName="エントリ ポイント" Description="エントリ ポイントに使用する関数名を指定します。デフォルトは main です。(-entry [function])" Category="General" Switch="entry" Separator=" " />
+  <EnumProperty Name="Profile" DisplayName="プロファイル" Description="シェーダに使用するプロファイルを指定します。(-profile [プロファイル])" Category="General">
+    <EnumValue Name="" DisplayName="ファイル接尾辞を使用する" />
+    <EnumValue Name="sce_cs_orbis" DisplayName="計算シェーダー" Switch="profile sce_cs_orbis" />
+    <EnumValue Name="sce_dd_tricull_orbis" DisplayName="Dispatch Draw Vertex Shader" Switch="profile sce_dd_tricull_orbis" />
+    <EnumValue Name="sce_dd_tricull_instancing_orbis" DisplayName="Dispatch Draw Vertex with Instancing" Switch="profile sce_dd_tricull_instancing_orbis" />
+    <EnumValue Name="sce_ds_es_orbis" DisplayName="Domain as Export Shader" Switch="profile sce_ds_es_orbis" />
+    <EnumValue Name="sce_ds_es_off_chip_orbis" DisplayName="Off-Chip Domain as Export Shader" Switch="profile sce_ds_es_off_chip_orbis" />
+    <EnumValue Name="sce_ds_vs_orbis" DisplayName="Domain as Vertex Shader" Switch="profile sce_ds_vs_orbis" />
+    <EnumValue Name="sce_ds_vs_off_chip_orbis" DisplayName="Off-Chip Domain as Vertex Shader" Switch="profile sce_ds_vs_off_chip_orbis" />
+    <EnumValue Name="sce_gs_orbis" DisplayName="ジオメトリ シェーダー" Switch="profile sce_gs_orbis" />
+    <EnumValue Name="sce_gs_on_chip_orbis" DisplayName="Geometry on Chip" Switch="profile sce_gs_on_chip_orbis" />
+    <EnumValue Name="sce_hs_orbis" DisplayName="ハル シェーダー" Switch="profile sce_hs_orbis" />
+    <EnumValue Name="sce_hs_off_chip_orbis" DisplayName="Off-chip Hull Shader" Switch="profile sce_hs_off_chip_orbis" />
+    <EnumValue Name="sce_ps_orbis" DisplayName="ピクセル シェーダー" Switch="profile sce_ps_orbis" />
+    <EnumValue Name="sce_vs_vs_orbis" DisplayName="頂点シェーダー" Switch="profile sce_vs_vs_orbis" />
+    <EnumValue Name="sce_vs_ls_orbis" DisplayName="Vertex as Local Shader" Switch="profile sce_vs_ls_orbis" />
+    <EnumValue Name="sce_vs_es_orbis" DisplayName="Vertex as Export Shader" Switch="profile sce_vs_es_orbis" />
+    <EnumValue Name="sce_vs_es_on_chip_orbis" DisplayName="Vertex as Export Shader on Chip" Switch="profile sce_vs_es_on_chip_orbis" />
+  </EnumProperty>
+  <StringListProperty Name="PreprocessorDefinitions" DisplayName="プリプロセッサの定義" Description="1 つまたは複数のプリプロセッサ定義を指定します。複数指定する場合は、セミコロンで区切ってください。(-D[name[=番号]])" Category="General" Switch="D" />
+  <BoolProperty Name="WarningsAsErrors" DisplayName="警告をエラーとして扱う" Description="コンパイラにおいて、すべての警告と注意をエラーとして処理します。(-Werror)" Category="General" Switch="Werror" />
+  <BoolProperty Name="WarnPerformance" DisplayName="パフォーマンスに関する警告" Description="潜在的なパフォーマンス問題に関する警告を有効にします。(-Wperf)" Category="General" Switch="Wperf" />
+  <EnumProperty Name="Language" DisplayName="ローカライズ" Description="Selects the language to use for warning and error messages.   (-lang jp)　[ja-JP]" Category="General">
+    <EnumValue Name="en" DisplayName="英語　[ja-JP]" />
+    <EnumValue Name="jp" DisplayName="日本語" Switch="lang jp" />
+  </EnumProperty>
+  <BoolProperty Name="MultiProcessorCompilation" DisplayName="複数プロセッサによるコンパイル" Description="複数のソースファイルの平行コンパイルを有効にします。最大コンパイル で指定された値で制限されます。" Category="General" IncludeInCommandLine="false" />
+  <IntProperty Name="ProcessorNumber" DisplayName="最大コンパイル" Description="このプロジェクトで使用する同時コンパイルの最大件数を指定します。値を指定しなかった場合には、グローバル設定の値（同時実行する C++ コンパイルの最大数）が使用されます。" Category="General" IncludeInCommandLine="false" />
+  <BoolProperty Name="Distributable" DisplayName="分散コンパイルを許可する" Description="分散ビルド中に分散コンパイルを許可するかどうかを指定します。許可されていない場合、ソース ファイルは常にローカルにコンパイルされます。" Category="General" />
+  <EnumProperty Name="Optimization" DisplayName="最適化レベル" Description="コードの最適化レベルを指定します。(-O0..4, -Od)" Category="Optimization">
+    <EnumValue Name="O0" DisplayName="レベル 0" Switch="O0" />
+    <EnumValue Name="O1" DisplayName="レベル 1" Switch="O1" />
+    <EnumValue Name="O2" DisplayName="レベル 2" Switch="O2" />
+    <EnumValue Name="O3" DisplayName="レベル 3" Switch="O3" />
+    <EnumValue Name="O4" DisplayName="レベル 4" Switch="O4" />
+    <EnumValue Name="Od" DisplayName="デバッグ" Switch="Od" />
+  </EnumProperty>
+  <BoolProperty Name="FastMath" DisplayName="高速演算" Description="代数変換 (a + a の代わりに a * 2 を使用するなど) を有効にします。(-fastmath, -nofastmath)" Category="Optimization" Switch="fastmath" ReverseSwitch="nofastmath" />
+  <EnumProperty Name="HwTarget" DisplayName="ハードウェアターゲット" Description="コンパイラがコード生成するハードウェアターゲットを指定します。(-target [type])" Category="CodeGeneration">
+    <EnumValue Name="Common" DisplayName="汎用" />
+    <EnumValue Name="Base" DisplayName="Base" Switch="target base" />
+    <EnumValue Name="Neo" DisplayName="Neo" Switch="target neo" />
+  </EnumProperty>
+  <EnumProperty Name="PsslLanguageStd" Category="Language" DisplayName="PSSL言語標準" Description="PSSLソースで使用する言語標準を指定します。(-pssl1, -pssl2)">
+    <EnumValue Name="PSSL1" Switch="pssl1" DisplayName="PSSL1を使用" />
+    <EnumValue Name="PSSL2" Switch="pssl2" DisplayName="PSSL2を使用" />
+  </EnumProperty>
+  <BoolProperty Name="Nostdlib" DisplayName="標準ライブラリの無効化" Description="標準ライブラリを無効にします。(-nostdlib)" Switch="nostdlib" Category="Advanced" />
+  <StringProperty Name="OutputFileName" DisplayName="出力ファイル名" Description="デフォルトの出力ファイル名を上書きする名前を指定します。(-o [file])" Category="Output" Switch="o " />
+  <EnumProperty Name="SdbCache" DisplayName="SDBキャッシュファイルの生成" Description="シェーダ関連の AST 情報とともに、または AST 情報なしに SDB (シェーダ デバッグ) キャッシュ ファイルを出力します。(-cache, -cache-ast)" Category="Output">
+    <EnumValue Name="None" DisplayName="生成しない" />
+    <EnumValue Name="Cache" DisplayName="AST 情報なしに生成" Switch="cache">
+      <Argument Property="SdbCacheDir" IsRequired="true" Separator=" " />
+    </EnumValue>
+    <EnumValue Name="CacheAst" DisplayName="AST情報とともに生成" Switch="cache-ast">
+      <Argument Property="SdbCacheDir" IsRequired="true" Separator=" " />
+    </EnumValue>
+  </EnumProperty>
+  <StringProperty Name="SdbCacheDir" DisplayName="SDBキャッシュディレクトリ" Description="任意の SDB キャッシュ ファイルを書き込むディレクトリへのパスを指定します。(-cachedir [path])" Category="Output" Default="$(IntDir)" Subtype="folder" Switch="-cachedir " />
+  <StringProperty Name="AdditionalOptions" DisplayName="追加オプション" Description="他のプロパティによって提供される付加的なコンパイラ コマンド ライン オプションを指定します。オプションの形式は有効でなければなりません。" Category="Command Line" />
+  <BoolProperty Name="Embed" DisplayName="シェーダ バイナリの組み込み" Description="シェーダ バイナリを実行可能ファイルまたはアーカイブに組み込みます。" Category="Output" />
+  <BoolProperty Name="GenerateHeader" DisplayName="ヘッダー ファイルの生成" Description="bin2h ツールを使用し、コンパイルで作成されたシェーダ バイナリから C ヘッダー ファイルを生成します。" Category="Output">
+    <Argument Property="HeaderFileName" IsRequired="true" />
+  </BoolProperty>
+  <StringProperty Name="HeaderFileName" DisplayName="ヘッダー ファイル名" Description="生成されたヘッダー ファイルの名前を指定します。" Category="Output" />
+  <StringProperty Name="Bin2HOptions" DisplayName="Bin2H追加オプション" Description="ヘッダー ファイル生成時に bin2h ツールに渡される追加コマンドライン オプションを指定します。" Category="Output" />
+</Rule>

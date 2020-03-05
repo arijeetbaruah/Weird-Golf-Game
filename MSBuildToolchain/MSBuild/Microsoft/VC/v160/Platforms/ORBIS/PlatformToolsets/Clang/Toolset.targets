@@ -1,0 +1,3 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Platforms\ORBIS\PlatformToolsets\Clang\Microsoft.Cpp.orbis.Clang.targets"/>
+</Project>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="프로젝트 속성" PageTemplate="generic" Description="프로젝트 속성" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="애플리케이션" Description="애플리케이션"/>
+        <Category Name="Misc" DisplayName="기타" Description="기타"/>
+        <Category Name="Debugging" DisplayName="디버깅" Description="디버깅"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="프로젝트 파일" Description="프로젝트 파일의 이름입니다.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="프로젝트 폴더" Description="프로젝트 파일의 위치입니다.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="애플리케이션 디버그 모드" Default="Remove" Description="애플리케이션 배포의 동작을 디버깅의 일부로 나타냅니다. 
+
+애플리케이션 제거 - 디버거 세션이 종료된 후 애플리케이션이 클러스터에서 제거됩니다. 
+애플리케이션 유지 - 디버거 세션이 종료된 후 애플리케이션이 클러스터에서 계속 실행됩니다. 이후 디버깅 시 애플리케이션이 제거되고 디버깅 중 다시 배포됩니다.
+자동 업그레이드 - 디버그 시작 시 기존 애플리케이션이 업그레이드되고 디버거 세션 종료 후에도 클러스터에서 계속 실행됩니다. 
+애플리케이션 새로 고침 - 애플리케이션을 다시 배포하지 않고 애플리케이션을 새 이진으로 새로 고칩니다. 이 모드는 1 노드 클러스터에만 적용할 수 있습니다.">
+        <EnumValue Name="AutoUpgrade" DisplayName="자동 업그레이드"/>
+        <EnumValue Name="Remove" DisplayName="애플리케이션 제거"/>
+        <EnumValue Name="Keep" DisplayName="애플리케이션 유지"/>
+        <EnumValue Name="Refresh" DisplayName="애플리케이션 새로 고침"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="시작 대상" Description="애플리케이션이 시작된 후 탐색할 URL의 소스입니다." EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="애플리케이션 URL" Description="애플리케이션이 시작된 후 탐색할 URL입니다.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="전체 출력 폴더 패키지" Default="true" Description="전체 .NET Framework를 대상으로 하는 ASP.NET 이외의 서비스 프로젝트에만 해당하는 패키지 동작을 나타냅니다. 
+
+True - bin 폴더에 있는 모든 파일을 패키지합니다. 
+False - 미리 구성된 논리에 따라 특정 파일을 패키지합니다.">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="디버그 프로필" Description="Service Fabric 애플리케이션을 디버그할 때 사용되는 프로필입니다." EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

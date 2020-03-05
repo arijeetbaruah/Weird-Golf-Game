@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule Name="SCU" PageTemplate="tool" DisplayName="ORBIS GPU Assembler (SCU)" Order="200" SwitchPrefix="-">
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="SCU" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category Name="General" DisplayName="全般" />
+      <Category Name="Output" DisplayName="出力" />
+      <Category Name="All Options" DisplayName="すべてのオプション" Subtype="Search" />
+      <Category Name="Command Line" Subtype="CommandLine" DisplayName="コマンド ライン" />
+    </Rule.Categories>
+    <StringListProperty Subtype="folder" Name="AdditionalIncludeDirectories" DisplayName="追加のインクルード ディレクトリ" Description="インクルード パスに追加するディレクトリを指定します。 複数指定する場合は、セミコロンで区切ってください。(-I[path])" Category="General" Switch="I" />
+    <StringProperty Name="EvalClause" DisplayName="EvalClause [ja-JP]" Description="Specify clause name to evaluate for assembly; default: 'main'. (-e [name]) [ja-JP]" Category="General" Switch="e" Separator=" " />
+    <StringListProperty Name="PreprocessorDefinitions" DisplayName="プリプロセッサの定義" Description="Defines one or more global variables by name to [value] or to 1 if no value is provided. (-D[name]=[value];...) [ja-JP]" Category="General" Switch="D" />
+    <EnumProperty Name="WarningLevel" DisplayName="Warning Level [ja-JP]" Description="Sets the warning level. (-W[0..4]) [ja-JP]" Category="General">
+      <EnumValue Name="W0" DisplayName="レベル 0" Switch="W0" />
+      <EnumValue Name="W1" DisplayName="レベル 1" Switch="W1" />
+      <EnumValue Name="W2" DisplayName="レベル 2" Switch="W2" />
+      <EnumValue Name="W3" DisplayName="レベル 3" Switch="W3" />
+      <EnumValue Name="W4" DisplayName="レベル 4" Switch="W4" />
+    </EnumProperty>
+    <BoolProperty Name="WarningsAsErrors" DisplayName="警告をエラーとして扱う" Description="コンパイラにおいて、すべての警告と注意をエラーとして処理します。(-Werror)" Category="General" Switch="Werror" />
+    <StringListProperty Name="DisableSpecificWarnings" DisplayName="Disable Specific Warnings [ja-JP]" Description="Disable the desired warning tags; put them into a semi-colon delimited list. (-Wdisable=[TAG]) [ja-JP]" Switch="Wdisable=" />
+    <BoolProperty Name="Recolor" DisplayName="Recolor GPRs [ja-JP]" Description="Treat GPRs which aren't fixed by entry, exit, or call constraints as aliases to be colored. (-R) [ja-JP]" Category="General" Switch="R" />
+    <BoolProperty Name="OptimizeColoring" DisplayName="Optimize Alias Coloring [ja-JP]" Description="Retry assignment of GPRs to aliases to guarantee the minimum GPR count solution. (-Oc) [ja-JP]" Category="General" Switch="Oc" />
+    <EnumProperty Name="Verbosity" DisplayName="Verbosity [ja-JP]" Description="Sets the verbosity of output from the shader assembler. [ja-JP]" Category="General">
+      <EnumValue Name="Quiet" DisplayName="Quiet [ja-JP]" Switch="q" />
+      <EnumValue Name="Brief" DisplayName="Brief [ja-JP]" Switch="b" />
+      <EnumValue Name="Verbose" DisplayName="Verbose [ja-JP]" Switch="v" />
+      <EnumValue Name="Debug" DisplayName="Debug [ja-JP]" Switch="d" />
+    </EnumProperty>
+    <StringProperty Name="OutputFileName" DisplayName="出力ファイル名" Description="デフォルトの出力ファイル名を上書きする名前を指定します。(-o [file])" Category="Output" Switch="o " />
+    <BoolProperty Name="Embed" DisplayName="シェーダ バイナリの組み込み" Description="シェーダ バイナリを実行可能ファイルまたはアーカイブに組み込みます。" Category="Output" />
+    <BoolProperty Name="GenerateHeader" DisplayName="ヘッダー ファイルの生成" Description="bin2h ツールを使用し、コンパイルで作成されたシェーダ バイナリから C ヘッダー ファイルを生成します。" Category="Output" />
+    <StringProperty Name="HeaderFileName" DisplayName="ヘッダー ファイル名" Description="生成されたヘッダー ファイルの名前を指定します。" Category="Output" />
+    <StringProperty Name="Bin2HOptions" DisplayName="Bin2H 追加オプション" Description="ヘッダー ファイル生成時に bin2h ツールに渡される追加コマンドライン オプションを指定します。" Category="Output" />
+    <StringProperty Subtype="AdditionalOptions" Name="AdditionalOptions" DisplayName="追加オプション" Description="他のプロパティによって提供される付加的なコンパイラ コマンド ライン オプションを指定します。オプションの形式は有効でなければなりません。" Category="Command Line" />
+  </Rule>
+  <ItemType Name="SCU" DisplayName="ORBIS GPU Assembler (SCU)" />
+  <FileExtension Name="*.scu" ContentType="SCU" />
+  <ContentType Name="SCU" DisplayName="ORBIS GPU Assembler (SCU)" ItemType="SCU" />
+  <ItemType Name="SCU_HEADER" DisplayName="ORBIS GPU Assembler Header (SCUH)" />
+  <FileExtension Name="*.scuh" ContentType="SCU_HEADER" />
+  <ContentType Name="SCU_HEADER" DisplayName="ORBIS GPU Assembler Header (SCUH)" ItemType="SCU_HEADER" />
+</ProjectSchemaDefinitions>

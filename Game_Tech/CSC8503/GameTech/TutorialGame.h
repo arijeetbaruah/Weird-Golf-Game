@@ -31,11 +31,50 @@ namespace NCL {
 			//need check
 			//need check
 			bool SelectObject();
-			GameObject* playerTwo;
+			void SeenObjects();
+			void MoveSelectedObject();
+			void DebugObjectMovement();
+			void LockedObjectMovement();
+			void LockedCameraMovement();
+			/*
+			// Stuff from goose game
+			GameObject* AddFloorToWorld(const Vector3& position);
+			void AddObstacles();
+			GameObject* AddTerrainToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
+			GameObject* AddLakeToWorld(const Vector3& position, const Vector3& size, const Vector4& colour);
+			void AddBridgeToWorld(Vector3 startPos, int num);
+			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
+			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
+			GameObject* AddPlayerTwoToWorld(const Vector3& position);
+			Enemy*		AddParkKeeperToWorld(const Vector3& position);
+			GameObject* AddCharacterToWorld(const Vector3& position);
+			GameObject* AddAppleToWorld(const Vector3& position);
+			GameObject* AddBonusItemToWorld(const Vector3& position);
+			*/
+
+			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
+			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
+
+			Vector3 playerPos1;
+			Vector3 playerPos2;
+			Vector3 playerPos3;
+			Vector3 playerPos4;
+
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+
+			std::unique_ptr<Logger> log;
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
+
+			Player* Ball;
+			Player* playerTwo;
+			vector<Enemy*> enemies;
+
+			PhysxController physxC = PhysxController::getInstance();
+
 			bool isNetworkedGame;
 			bool isServer;
+
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
-			std::unique_ptr<Logger> log;
 			GameObject* selectionObject = nullptr;
 
 
@@ -49,7 +88,7 @@ namespace NCL {
 			//sub functions of initiate
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
 			GameObject*			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-			GameObject*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+			Player*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 
 			//update game 
 			void UpdateKeys();
@@ -75,7 +114,35 @@ namespace NCL {
 			bool inSelectionMode;
 			OGLShader* basicShader = nullptr;
 
-			Player* Ball;
+			float	forceMagnitude;
+
+			std::map<int, GameObject*> serverPlayers;
+			
+			OGLTexture* basicTex	= nullptr;
+			OGLTexture* golfLevelTex = nullptr;
+
+			NavigationGrid grid;
+
+			//Coursework Meshes
+			OGLMesh*	gooseMesh	= nullptr;
+			OGLMesh*	keeperMesh	= nullptr;
+			OGLMesh*	appleMesh	= nullptr;
+			OGLMesh*	charA		= nullptr;
+			OGLMesh*	charB		= nullptr;
+			OGLMesh* testLevel = nullptr;
+			OGLMesh* playerMesh1 = nullptr;
+			OGLMesh* playerMesh2 = nullptr;
+			OGLMesh* playerMesh3 = nullptr;
+			OGLMesh* playerMesh4 = nullptr;
+
+			vector<OGLMesh*> golfLevelMeshes;
+
+			//Coursework Additional functionality	
+			GameObject* lockedObject	= nullptr;
+			Vector3 lockedOffset		= Vector3(0, 14, 20);
+			void LockCameraToObject(GameObject* o) {
+				lockedObject = o;
+			}
 			std::vector<GameObject*> otherplayers;
 
 

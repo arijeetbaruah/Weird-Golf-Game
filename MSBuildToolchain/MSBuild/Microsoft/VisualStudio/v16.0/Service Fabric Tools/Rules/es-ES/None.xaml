@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for the None project item type -->
+<Rule Name="None" DisplayName="Propiedades del archivo" PageTemplate="generic" Description="Propiedades del archivo" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.Categories>
+        <Category Name="Misc" DisplayName="Varios"/>
+        <Category Name="Advanced" DisplayName="Avanzadas"/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" HasConfigurationCondition="false" ItemType="None"/>
+    </Rule.DataSource>
+
+    <EnumProperty Name="CopyToOutputDirectory" DisplayName="Copiar en el directorio de salida" Category="Advanced" Description="Especifica si el archivo debe copiarse en la carpeta de salida.">
+        <EnumValue Name="Never" DisplayName="No copiar"/>
+        <EnumValue Name="Always" DisplayName="Copiar siempre"/>
+        <EnumValue Name="PreserveNewest" DisplayName="Copiar si es posterior"/>
+    </EnumProperty>
+
+    <StringProperty Name="FullPath" DisplayName="Ruta de acceso completa" ReadOnly="true" Category="Misc" Description="Ubicación del archivo.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="Intrinsic" ItemType="None" PersistedName="FullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FileNameAndExtension" DisplayName="Nombre de archivo" ReadOnly="true" Category="Misc" Description="Nombre del archivo.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="Intrinsic" ItemType="None" PersistedName="FileNameAndExtension"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <BoolProperty Name="Visible" Visible="false"/>
+    <StringProperty Name="DependentUpon" Visible="false"/>
+    <StringProperty Name="Link" Visible="false"/>
+</Rule>

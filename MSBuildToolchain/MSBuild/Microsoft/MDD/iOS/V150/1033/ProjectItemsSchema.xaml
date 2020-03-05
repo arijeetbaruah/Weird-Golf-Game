@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <ContentType
+    Name="Default"
+    DisplayName="Default file type"
+    ItemType="Content" />
+
+  <ContentType
+      Name="ObjCCode"
+      DisplayName="Objective-C/C++ Code"
+      ItemType="ClCompile">
+  </ContentType>
+
+  <ContentType
+      Name="CppCode"
+      DisplayName="C++ Code"
+      ItemType="ClCompile">
+  </ContentType>
+
+  <ContentType
+      Name="CCode"
+      DisplayName="C Code"
+      ItemType="ClCompile">
+  </ContentType>
+
+  <ContentType
+      Name="XCodeSource"
+      DisplayName="XCode source"
+      ItemType="PBXCompile">
+  </ContentType>
+
+  <ContentType
+      Name="CppHeader"
+      DisplayName="C/C++ Header"
+      ItemType="ClInclude">
+  </ContentType>
+
+  <ContentType
+      Name="InfoPlist"
+      DisplayName="Info.plist File"
+      ItemType="InfoPlist">
+  </ContentType>
+
+  <ItemType Name="InfoPlist" DisplayName="Info.plist file"/>
+  <ItemType Name="PBXCompile" DisplayName="XCode source"/>
+  <ItemType Name="ClCompile" DisplayName="C/C++"/>
+  <ItemType Name="ClInclude" DisplayName="C/C++ header"/>
+  <ItemType Name="Content" DisplayName="Content" />
+  <ItemType Name="None" DisplayName="None"/>
+
+  <FileExtension Name=".m" ContentType="ObjCCode"/>
+  <FileExtension Name=".mm" ContentType="ObjCCode"/>
+  
+  <FileExtension Name=".cpp" ContentType="CppCode"/>
+  <FileExtension Name=".cc" ContentType="CppCode"/>
+  <FileExtension Name=".cxx" ContentType="CppCode"/>
+  <FileExtension Name=".c" ContentType="CCode"/>
+
+  <FileExtension Name=".h" ContentType="CppHeader"/>
+  <FileExtension Name=".hh" ContentType="CppHeader"/>
+  <FileExtension Name=".hpp" ContentType="CppHeader"/>
+  <FileExtension Name=".hxx" ContentType="CppHeader"/>
+
+  <FileExtension Name=".swift" ContentType="XCodeSource"/>
+
+  <FileExtension Name=".xcconfig" ContentType="None"/>
+  
+</ProjectSchemaDefinitions>
+

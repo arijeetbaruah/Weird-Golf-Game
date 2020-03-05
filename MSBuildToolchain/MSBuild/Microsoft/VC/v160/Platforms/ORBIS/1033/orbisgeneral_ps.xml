@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="ConfigurationGeneral" PageTemplate="generic" DisplayName="General" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="Sanitizers" DisplayName="Sanitizers" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+  <StringProperty Name="OutDir" DisplayName="Output Directory" Description="Specifies a relative path to the output file directory; can include environment variables." Category="General" Default="$(SolutionDir)$(Configuration)\" Subtype="folder">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="IntDir" DisplayName="Intermediate Directory" Description="Specifies a relative path to the intermediate file directory; can include environment variables." Category="General" Subtype="folder">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetName" DisplayName="Target Name" Description="Specifies a file name that this project will generate." Category="General" Default="$(ProjectName)">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="TargetExt" DisplayName="Target Extension" Description="Specifies a file extension that this project will generate. (Example: .self or .sprx)" Category="General">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringListProperty Name="ExtensionsToDeleteOnClean" DisplayName="Extensions to Delete on Clean" Description="Semi-colon delimited wildcard specification for which files in the intermediate directory to delete on clean or rebuild." Category="General" Separator=";" F1Keyword="VC.Project.VCConfiguration.DeleteExtensionsOnClean">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+  <StringProperty Name="BuildLogFile" DisplayName="Build Log File" Description="Specifies the build log file to write to when build logging is enabled." F1Keyword="VC.Project.VCConfiguration.BuildLogFile" Category="General" Default="$(ProjectDir)\$(MSBuildProjectName).log" Subtype="file" />
+  <EnumProperty Name="UndefinedBehavior" DisplayName="Undefined Behavior Sanitizer" Description="Enable Clang’s Undefined Behaviour Sanitizer checking. Messages will be generated at runtime for checks that fail.   (-fsanitize=undefined)" Category="Sanitizers">
+    <EnumValue Name="None" DisplayName="No checking" />
+    <EnumValue Name="All" DisplayName="Enable all checks" />
+    <EnumProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </EnumProperty.DataSource>
+  </EnumProperty>
+  <BoolProperty Name="AddressSanitizer" DisplayName="Enable Address Sanitizer" Description="Enable Clang’s Address Sanitizer checking. Messages will be generated at runtime for checks that fail.   (-fsanitize=address)" Category="Sanitizers">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+  <StringProperty Name="_ProjectFileVersion" DisplayName="Project File Version" Description="Specifies the version of the conversion tool used to create this project file." Category="General" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" />
+    </StringProperty.DataSource>
+  </StringProperty>
+</Rule>

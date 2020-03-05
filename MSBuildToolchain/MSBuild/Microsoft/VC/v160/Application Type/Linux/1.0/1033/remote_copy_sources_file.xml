@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule
+      Name="LinuxRemoteCopySourcesFile"
+      DisplayName="Copy Sources"
+      PageTemplate="generic"
+      Description="Copy Sources"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" ItemType="{}{AnyType}" />
+  </Rule.DataSource>
+
+  <StringProperty Subtype="file" 
+                  Name="RemoteFile"
+                  DisplayName="Remote File"
+                  Description="Specifies where to copy the file on the remote system. The option overrides the default name and location of the file on the remote system. "
+                  Category="General"
+                  F1Keyword="VC.Project.VCLinkerTool.OutputFile" />
+  <BoolProperty Name="RemoteCopyFile" DisplayName="Copy Remotely" Category="General"
+                Description="Specifies whether to copy the file on the remote system."
+                F1Keyword="VC.Project.VCFileConfiguration.ExcludedFromBuild"/>
+  <BoolProperty Name="RemoteCopyToOutputDir" DisplayName="Copy To Output Directory" Category="General"
+            Description="Specifies whether to also copy the file to the output project directory on the remote system."
+            F1Keyword="VC.Project.VCFileConfiguration.ExcludedFromBuild"/>
+</Rule>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Démarrer" PageTemplate="debugger" Description="Options du débogueur local" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Options de démarrage" Description="Options de démarrage"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Type de débogueur" Category="StartOptions" Description="Désigne le débogueur à activer. Lorsque la valeur est Mixte, les débogueurs pour code managé et natif sont utilisés. Lorsque la valeur est Natif avec script, les débogueurs pour code natif et de script sont utilisés.">
+        <EnumValue Name="NativeOnly" DisplayName="Natif uniquement" Description="Natif uniquement"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Managé uniquement" Description="Managé uniquement"/>
+        <EnumValue Name="Script" DisplayName="Script uniquement" Description="Script uniquement"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Natif avec script" Description="Natif avec script"/>
+        <EnumValue Name="Mixed" DisplayName="Mixte (managé et natif)" Description="Mixte (managé et natif)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

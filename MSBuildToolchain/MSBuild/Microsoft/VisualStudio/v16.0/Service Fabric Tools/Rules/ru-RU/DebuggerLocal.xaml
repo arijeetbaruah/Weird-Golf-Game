@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Запустить" PageTemplate="debugger" Description="Параметры локального отладчика" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Параметры запуска" Description="Параметры запуска"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Тип отладчика" Category="StartOptions" Description="Указывает, какой отладчик нужно включить. Если выбран смешанный режим, будут вызываться отладчики как для управляемого, так и для машинного кода. Если выбран режим &quot;Машинный и скрипт&quot;, будут вызываться отладчики как для машинного кода, так и для скриптов.">
+        <EnumValue Name="NativeOnly" DisplayName="Только машинный код" Description="Только машинный код"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Только управляемый код" Description="Только управляемый код"/>
+        <EnumValue Name="Script" DisplayName="Только скрипт" Description="Только скрипт"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Машинный со скриптом" Description="Машинный со скриптом"/>
+        <EnumValue Name="Mixed" DisplayName="Смешанный (управляемый и машинный)" Description="Смешанный (управляемый и машинный)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

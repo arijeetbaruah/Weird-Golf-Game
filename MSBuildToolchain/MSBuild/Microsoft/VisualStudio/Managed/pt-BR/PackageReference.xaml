@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Propriedades do Pacote" DisplayName="Pacote" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Descrição da dependência." DisplayName="Descrição" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Ativos a serem excluídos dessa referência" DisplayName="Bens excluídos" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Indica se é necessário gerar uma propriedade do MSBuild com a localização do diretório de raiz do pacote. O nome da propriedade gerado é em forma de 'Pkg [PackageID]', onde '[PackageID] 'é o ID do pacote com quaisquer períodos'.' substituído com caracteres de sublinhado '_'." DisplayName="Gerar propriedade do caminho" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Ativos a serem incluídos dessa referência" DisplayName="Ativos incluídos" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Lista de avisos delimitada por vírgulas que deve ser suprimida para este pacote" DisplayName="Suprimir avisos" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Localização do pacote que está sendo referenciado." ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Ativos que são privados nessa referência" DisplayName="Bens particulares" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Versão da independência." DisplayName="Versão" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

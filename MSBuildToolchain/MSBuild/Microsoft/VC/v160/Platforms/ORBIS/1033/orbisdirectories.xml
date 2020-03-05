@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="ConfigurationDirectories" PageTemplate="generic" DisplayName="VC++ Directories" Order="8" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="VC++" DisplayName="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" />
+  </Rule.DataSource>
+  <StringListProperty Subtype="folder" Name="ExecutablePath" DisplayName="Executable Directories" Description="Path to use when searching for executable files while building a VC++ project.  Corresponds to environment variable PATH." Category="VC++" Separator=";" />
+  <StringListProperty Subtype="folder" Name="IncludePath" DisplayName="Include Directories" Description="Path to use when searching for include files while building a VC++ project.  Corresponds to environment variable INCLUDE." Category="VC++" Separator=";" />
+  <StringListProperty Subtype="folder" Name="LibraryPath" DisplayName="Library Directories" Description="Path to use when searching for library files while building a VC++ project.  Corresponds to environment variable LIB." Category="VC++" Separator=";" />
+  <StringListProperty Subtype="folder" Name="SourcePath" DisplayName="Source Directories" Description="Path to use when searching for source files to use for Intellisense." Category="VC++" Separator=";" />
+</Rule>

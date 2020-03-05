@@ -1,0 +1,20 @@
+﻿<?xml version = "1.0" encoding = "utf-8"?>
+<Project xmlns = "http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(SceLangID)' == ''">
+    <SceLangID Condition="'$(LangID)' == '1041'">1041</SceLangID>
+    <SceLangID Condition="'$(LangID)' != '1041'">1033</SceLangID>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PsslPages Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\WavePsslcSchema.xml" />
+    <PsslPages Include="$(VCTargetsPath)\Platforms\ORBIS\$(SceLangID)\OrbisWavePsslcSchema.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PropertyPageSchema Include="@(PsslPages)" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <WavePsslcSchemaIncluded>true</WavePsslcSchemaIncluded>
+  </PropertyGroup>
+</Project>

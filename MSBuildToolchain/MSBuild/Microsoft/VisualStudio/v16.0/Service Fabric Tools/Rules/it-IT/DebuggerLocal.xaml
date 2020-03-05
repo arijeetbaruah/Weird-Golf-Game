@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Avvia" PageTemplate="debugger" Description="Opzioni del debugger locale" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Opzioni di avvio" Description="Opzioni di avvio"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Tipo di debugger" Category="StartOptions" Description="Specifica quale debugger abilitare. Se è impostato su Misto, vengono usati i debugger per il codice gestito e nativo. Se è impostato su Nativo con script, vengono usati i debugger per il codice nativo e script.">
+        <EnumValue Name="NativeOnly" DisplayName="Solo nativo" Description="Solo nativo"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Solo gestito" Description="Solo gestito"/>
+        <EnumValue Name="Script" DisplayName="Solo script" Description="Solo script"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Nativo con script" Description="Nativo con script"/>
+        <EnumValue Name="Mixed" DisplayName="Misto (gestito e nativo)" Description="Misto (gestito e nativo)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

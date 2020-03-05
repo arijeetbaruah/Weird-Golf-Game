@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="Proje Özellikleri" PageTemplate="generic" Description="Proje Özellikleri" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="Uygulama" Description="Uygulama"/>
+        <Category Name="Misc" DisplayName="Çeşitli" Description="Çeşitli"/>
+        <Category Name="Debugging" DisplayName="Hata Ayıklama" Description="Hata Ayıklama"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="Proje Dosyası" Description="Proje dosyasının adı.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="Proje Klasörü" Description="Proje dosyasının konumu.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="Uygulama Hata Ayıklama Modu" Default="Remove" Description="Hata ayıklamanın bir parçası olarak uygulama dağıtımının davranışını gösterir.
+
+Uygulamayı Kaldır - Hata ayıklayıcı oturumu bittiğinde uygulama, kümeden kaldırılır. 
+Uygulamayı Tut - Hata ayıklayıcı oturumu bittiğinde uygulama, kümede çalışmaya devam eder. Sonraki hata ayıklamada, uygulama kaldırılır ve hata ayıklama sırasında yeniden dağıtılır.
+Otomatik Yükseltme - Mevcut uygulama, hata ayıklama başlatılırken yükseltilir ve hata ayıklayıcı oturumu bittiğinde kümede çalışmaya devam eder. 
+Uygulamayı Yenile - Uygulamayı yeniden dağıtmadan yeni ikili dosyalarla yeniler. Bu mod yalnızca 1 Düğümlü kümede uygulanabilir.">
+        <EnumValue Name="AutoUpgrade" DisplayName="Otomatik Yükseltme"/>
+        <EnumValue Name="Remove" DisplayName="Uygulamayı Kaldır"/>
+        <EnumValue Name="Keep" DisplayName="Uygulamayı Tut"/>
+        <EnumValue Name="Refresh" DisplayName="Uygulamayı Yenile"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="Hedefi Başlat" Description="Uygulama başlatıldıktan sonra gözatılacak URL'nin kaynağı." EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="Uygulama URL'si" Description="Uygulama başlatıldıktan sonra göz atılacak URL.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="Paket Tam Çıkış Klasörü" Default="true" Description="Paket davranışını gösterir (yalnızca tam .NET Framework'ü hedefleyen ASP.NET dışı hizmet projeleri için geçerlidir). 
+
+True - Bin klasöründeki tüm dosyaları paketler. 
+False - Önceden yapılandırılmış mantığa dayalı olarak belirli dosyaları paketler.">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="Hata Ayıklama Profili" Description="Service Fabric uygulamasında hata ayıklama sırasında kullanılan profil." EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

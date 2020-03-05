@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.SharePoint.Customization.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+SharePoint projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GenerateSandboxedReferenceAssembly" />
+
+  <PropertyGroup>
+    <!-- Disable similar functionality shipped with the sandboxed power tool of VS 2010. -->
+    <SkipPowerToolSandboxedCompile>true</SkipPowerToolSandboxedCompile>
+  </PropertyGroup>
+
+  <!-- Resolve the path to the sandboxed reference assembly. -->
+  <Target
+    Name="ResolveSandboxedReferenceAssembly"
+    Condition="'$(SandboxedSolution)' != 'false'">
+    <GenerateSandboxedReferenceAssembly
+      ReferenceAssemblyDirectory="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\SharePointTools\ReferenceAssemblies"
+      SdkToolsPath="$(SDK40ToolsPath)"
+      MSBuildToolsPath="$(MSBuildFrameworkToolsPath)"
+      ContinueOnError="true">
+      <Output PropertyName="SandboxedReferenceAssembly" TaskParameter="ReferenceAssemblyFile"/>
+    </GenerateSandboxedReferenceAssembly>
+  </Target>
+
+  <!-- Replace the full-trust reference with the sandboxed reference before 'CoreCompile' if the project is sandboxed. -->
+  <Target
+    Name="ReplaceSharePointReference"
+    BeforeTargets="CoreCompile"
+    DependsOnTargets="ResolveSandboxedReferenceAssembly"
+    Condition="'$(SandboxedSolution)' != 'false'">
+
+    <PropertyGroup>
+      <FullTrustReferenceAssembly Condition="'%(ReferencePath.FileName)%(ReferencePath.Extension)'=='Microsoft.SharePoint.dll'">@(ReferencePath)</FullTrustReferenceAssembly>
+    </PropertyGroup>
+
+    <ItemGroup Condition="Exists('$(FullTrustReferenceAssembly)') And Exists('$(SandboxedReferenceAssembly)')">
+      <ReferencePath Remove="$(FullTrustReferenceAssembly)" />
+      <ReferencePath Include="$(SandboxedReferenceAssembly)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Restore the full-trust reference after 'CoreCompile' if the project is sandboxed. -->
+  <Target
+    Name="RestoreSharePointReference"
+    AfterTargets="CoreCompile"
+    Condition="'$(SandboxedSolution)' != 'false'">
+
+    <ItemGroup Condition="Exists('$(FullTrustReferenceAssembly)') And Exists('$(SandboxedReferenceAssembly)')">
+      <ReferencePath Remove="$(SandboxedReferenceAssembly)" />
+      <ReferencePath Include="$(FullTrustReferenceAssembly)" />
+    </ItemGroup>
+  </Target>
+</Project>

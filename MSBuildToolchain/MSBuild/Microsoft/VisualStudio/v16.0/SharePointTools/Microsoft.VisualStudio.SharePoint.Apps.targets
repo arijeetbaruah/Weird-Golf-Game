@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.SharePoint.Apps.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+SharePoint projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="CreateAppPackage" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GetWebProjectSettings" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GetAppManifestSettings" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GenerateAppManifest" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="FixUpSqlPackageProperty" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="MergeSearchConfigurationFiles" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="UseSPAppStore" Condition="'$(ProjectMode)' == 'SharePointApp' or '$(ProjectMode)' == 'OfficeApp'" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="MergeEctItemFiles" Condition="'$(ProjectMode)' == 'SharePointApp'" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="GenerateBdcMetadataFile" Condition="'$(ProjectMode)' == 'SharePointApp'" />
+  <UsingTask AssemblyFile="Microsoft.VisualStudio.SharePoint.Tasks.dll" TaskName="ComputeUpdatableChangedFiles" Condition="'$(ProjectMode)' == 'SharePointApp'" />
+
+  <PropertyGroup>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <PackageSharePointAppDependsOn>
+      $(PackageSharePointAppDependsOn);
+      GetProjectSettings;
+      EnumerateWebFiles;
+      EnumerateSPDataFiles;
+      GetEnumerationSettings;
+      MergeSearchConfigurationFiles;
+      GetOfficeAppManifestFiles;
+    </PackageSharePointAppDependsOn>
+
+    <!-- The list of previously generated app package files.  Created by PackageSharePointApp and used by CleanAppPackage. -->
+    <BaseAppPackageFileList Condition="'$(BaseAppPackageFileList)'==''">$(MSBuildProjectFile).AppPackageFileList.txt</BaseAppPackageFileList>
+    <DebuggingAppPackageFileList Condition="'$(DebuggingAppPackageFileList)'==''">$(MSBuildProjectFile).DebuggingAppPackageFileList.txt</DebuggingAppPackageFileList>
+    <IsDebuggingFile Condition="'$(IsDebuggingFile)'==''">$(MSBuildProjectFile).IsDebugging.txt</IsDebuggingFile>
+    <IsDebuggingFilePath>$(IntermediateOutputPath)$(IsDebuggingFile)</IsDebuggingFilePath>
+    <RemoteAppUrlFile Condition="'$(RemoteAppUrlFile)'==''">$(MSBuildProjectFile).RemoteAppUrl.txt</RemoteAppUrlFile>
+    <RemoteAppUrlFilePath>$(IntermediateOutputPath)$(RemoteAppUrlFile)</RemoteAppUrlFilePath>
+    <DebugRemoteAppServiceBaseUrlFile Condition="'$(DebugRemoteAppServiceBaseUrlFile)'==''">$(MSBuildProjectFile).DebugRemoteAppServiceBaseUrl.txt</DebugRemoteAppServiceBaseUrlFile>
+    <DebugRemoteAppServiceBaseUrlFilePath>$(IntermediateOutputPath)$(DebugRemoteAppServiceBaseUrlFile)</DebugRemoteAppServiceBaseUrlFilePath>
+    <WorkflowDebuggingClientSecretFile Condition="'$(WorkflowDebuggingClientSecretFile)'==''">$(MSBuildProjectFile).WorkflowDebuggingClientSecret.txt</WorkflowDebuggingClientSecretFile>
+    <WorkflowDebuggingClientSecretFilePath>$(IntermediateOutputPath)$(WorkflowDebuggingClientSecretFile)</WorkflowDebuggingClientSecretFilePath>
+    <IsWorkflowDebuggingEnabledFile Condition="'$(IsWorkflowDebuggingEnabledFile)'==''">$(MSBuildProjectFile).IsWorkflowDebuggingEnabled.txt</IsWorkflowDebuggingEnabledFile>
+    <IsWorkflowDebuggingEnabledFilePath>$(IntermediateOutputPath)$(IsWorkflowDebuggingEnabledFile)</IsWorkflowDebuggingEnabledFilePath>
+    <MergedSearchConfigurationFile Condition="'$(MergedSearchConfigurationFile)'==''">SearchConfiguration.xml</MergedSearchConfigurationFile>
+
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanAppPackage;
+    </CleanDependsOn>
+
+  </PropertyGroup>
+
+  <Target Name="GetEnumerationSettings" DependsOnTargets="PerformPackage">
+    <PropertyGroup>
+      <AppPackageName Condition="'$(IsDebugging)' == 'true'">$(MSBuildProjectName).debugapp</AppPackageName>
+      <AppPackageName Condition="'$(IsDebugging)' != 'true'">$(MSBuildProjectName).app</AppPackageName>
+      <WspPath Condition="'%(EnumeratedUntransformedFiles.Package)' != ''">$(BasePackagePath)%(EnumeratedUntransformedFiles.Package).$(PackageExtension)</WspPath>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="GetProjectSettings">
+    <ItemGroup>
+      <!-- A project can define a feature.xml for a feature that will be included directly in the app package. If no such file is present,
+      and there are element manifest that require it, CreateAppPackage will generate one.
+      -->
+      <ParentWebFeature Include="@(Content)" Condition="%(Content.AppPackageFeature) != ''" />
+      <ParentWebElementManifests Include="@(Content)" Condition="%(Content.OpcRelationship) == 'feature-elementmanifest'" />
+      <AppPackageParts Include="@(Content)" Condition="%(Content.OpcRelationship) != 'feature-elementmanifest' AND %(Content.OpcRelationship) != ''" />
+    </ItemGroup>
+
+    <GetWebProjectSettings ProjectReference="@(ProjectReference)"
+                           IsDebugging="$(IsDebugging)"
+                           PublishProfileName="$(ActivePublishProfile)"
+                           AzureProjectOutput="@(SharePointAzureProjectOutput)"
+                           VisualStudioVersion="$(VisualStudioVersion)"
+                           VSToolsPath="$(VSToolsPath)">
+      <Output PropertyName="WebProjectStartupUrl" TaskParameter="WebProjectStartupUrl" />
+      <Output PropertyName="WebProjectClientId" TaskParameter="WebProjectClientId" />
+      <Output PropertyName="WebProjectClientSecret" TaskParameter="WebProjectClientSecret" />
+      <Output PropertyName="IsWebProjectHighTrust" TaskParameter="IsWebProjectHighTrust" />
+      <Output PropertyName="ActivePublishProfilePath" TaskParameter="PublishProfilePath" />
+    </GetWebProjectSettings>
+
+    
+    <PropertyGroup>
+      <WebProjectClientSecret Condition="'$(WebProjectClientSecret)' == '' and '$(IsOwaDebugging)' == 'true'">$(GeneratedClientSecret)</WebProjectClientSecret>
+    </PropertyGroup>
+
+    <GetAppManifestSettings AppManifest="@(AppManifestFile)" Condition="'@(AppManifestFile)' != ''">
+      <Output PropertyName="IsAutoDeployedWebApplication" TaskParameter="IsAutoDeployedWebApplication" />
+      <Output PropertyName="AppVersion" TaskParameter="AppVersion" />
+    </GetAppManifestSettings>
+
+    <PropertyGroup Condition="'$(AppSpecificPublishOutputs)' == 'true'">
+      <PublishDir Condition="'$(PublishDir)' != '' and '$(AppVersion)' != ''">$(PublishDir)$(MSBuildProjectName)\$(AppVersion)\</PublishDir>
+      <PublishDir Condition="'$(PublishDir)' != '' and '$(AppVersion)' == ''">$(PublishDir)$(MSBuildProjectName)\</PublishDir>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AppSpecificPublishOutputs)' != 'true'">
+      <PublishDir Condition="'$(PublishDir)' != '' and '$(AppVersion)' != ''">$(PublishDir)$(AppVersion)\</PublishDir>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <RemoteAppUrl Condition="'$(RemoteAppUrl)' == ''">$(WebProjectStartupUrl)</RemoteAppUrl>
+      <PackageOutputDir Condition="'$(IsDebugging)' == 'true'">$(OutputPath)</PackageOutputDir>
+      <PackageOutputDir Condition="'$(IsDebugging)' != 'true'">$(PublishDir)</PackageOutputDir>
+      <AppPackageFileList Condition="'$(AppPackageFileList)'=='' and '$(IsDebugging)' == 'true'">$(DebuggingAppPackageFileList)</AppPackageFileList>
+      <AppPackageFileList Condition="'$(AppPackageFileList)'==''">$(BaseAppPackageFileList)</AppPackageFileList>
+      <IsIntegratedWorkflowApp Condition="'$(IsIntegratedWorkflowApp)' == ''">false</IsIntegratedWorkflowApp>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(ProjectMode)' == 'SharePointApp' or '$(ProjectMode)' == 'OfficeApp' or '$(ProjectMode)' == 'MailApp'" >
+      <OfficeAppManifestOutputPath Condition="'$(OfficeAppManifestOutputPath)' == ''">$(PackageOutputDir)OfficeAppManifests\</OfficeAppManifestOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <WebProjectReference Include="@(ProjectReference)" Condition="%(ProjectReference.RoleType) == 'Web'" />
+      <AzureProjectReference Include="@(ProjectReference)" Condition="%(ProjectReference.RoleType) == 'Azure'" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <DatabaseProjectReference Include="@(ProjectReference)" Condition="%(ProjectReference.RoleType) == 'Database'" />
+    </ItemGroup>
+
+    <FixUpSqlPackageProperty DatabaseProjectReference="@(DatabaseProjectReference)"
+                             Configuration="$(Configuration)"
+                             Platform="$(Platform)"
+                             OutDir="$(OutDir)"
+                             Condition="'@(DatabaseProjectReference)' != ''">
+      <Output PropertyName="SqlPackage" TaskParameter="SqlPackage" />
+    </FixUpSqlPackageProperty>
+
+    <ReadLinesFromFile File="$(IsDebuggingFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastIsDebugging"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(IsDebuggingFilePath)"
+                      Condition="'@(_LastIsDebugging)' != '$(IsDebugging)'"
+                      Lines="$(IsDebugging)"
+                      Overwrite="true"/>
+
+    <ReadLinesFromFile File="$(RemoteAppUrlFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastRemoteAppUrl"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(RemoteAppUrlFilePath)"
+                      Condition="'@(_LastRemoteAppUrl)' != '$(RemoteAppUrl)'"
+                      Lines="$(RemoteAppUrl)"
+                      Overwrite="true"/>
+
+    <Touch Files="$(RemoteAppUrlFilePath)"
+           Condition="!Exists('$(RemoteAppUrlFilePath)')"
+           AlwaysCreate="true"/>
+
+    <ReadLinesFromFile File="$(DebugRemoteAppServiceBaseUrlFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastDebugRemoteAppServiceBaseUrl"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(DebugRemoteAppServiceBaseUrlFilePath)"
+                      Condition="'@(_LastDebugRemoteAppServiceBaseUrl)' != '$(DebugRemoteAppServiceBaseUrl)'"
+                      Lines="$(DebugRemoteAppServiceBaseUrl)"
+                      Overwrite="true"/>
+
+    <Touch Files="$(DebugRemoteAppServiceBaseUrlFilePath)"
+           Condition="!Exists('$(DebugRemoteAppServiceBaseUrlFilePath)')"
+           AlwaysCreate="true"/>
+
+    <ReadLinesFromFile File="$(WorkflowDebuggingClientSecretFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastWorkflowDebuggingClientSecret"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(WorkflowDebuggingClientSecretFilePath)"
+                      Condition="'@(_LastWorkflowDebuggingClientSecret)' != '$(WorkflowDebuggingClientSecret)'"
+                      Lines="$(WorkflowDebuggingClientSecret)"
+                      Overwrite="true"/>
+
+    <Touch Files="$(WorkflowDebuggingClientSecretFilePath)"
+           Condition="!Exists('$(WorkflowDebuggingClientSecretFilePath)')"
+           AlwaysCreate="true"/>
+
+    <ReadLinesFromFile File="$(IsWorkflowDebuggingEnabledFilePath)">
+      <Output TaskParameter="Lines" ItemName="_LastIsWorkflowDebuggingEnabled"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(IsWorkflowDebuggingEnabledFilePath)"
+                      Condition="'@(_LastIsWorkflowDebuggingEnabled)' != '$(IsWorkflowDebuggingEnabled)'"
+                      Lines="$(IsWorkflowDebuggingEnabled)"
+                      Overwrite="true"/>
+
+    <Touch Files="$(IsWorkflowDebuggingEnabledFilePath)"
+           Condition="!Exists('$(IsWorkflowDebuggingEnabledFilePath)')"
+           AlwaysCreate="true"/>
+
+  </Target>
+
+  <!-- 
+    Create a cloud package for the web project. (in web deploy format).
+    This target will be invoked when 1) It is packaging or deploy (not F5)
+                                     2) There is one and only one web project reference
+                                     3) The AppCloudPackage is not provided
+                                     4) There is no Azure project reference
+    This target depends on the GetProjectSettings target to evaluate the RemoteAppUrl property, WebProjectReference item collection and IsAutoDeployedWebApplication.
+  -->
+  <Target Name="EnumerateWebFiles"
+          Condition="'$(IsDebugging)' == 'false' and '@(WebProjectReference)' != '' and '@(WebProjectReference->'%(dummy)')' == '' and '$(AppCloudPackage)' == '' and '@(AzureProjectReference)' == ''
+	  and '$(SkipPackageWebProject)' != 'true'"
+          DependsOnTargets="GetProjectSettings">
+
+    <ConvertToAbsolutePath Condition="$(IsAutoDeployedWebApplication) == 'True'" Paths="$(BaseIntermediateOutputPath)\WebDeploy\$(ProjectName).Web.zip">
+      <Output TaskParameter="AbsolutePaths" PropertyName="AppCloudPackage"/>
+    </ConvertToAbsolutePath>
+
+    <ConvertToAbsolutePath Condition="$(IsAutoDeployedWebApplication) != 'True'" Paths="$(PublishDir)$(ProjectName).Web.zip">
+      <Output TaskParameter="AbsolutePaths" PropertyName="AppCloudPackage"/>
+    </ConvertToAbsolutePath>
+
+    <RemoveDir Directories="$(PublishDir)"/>
+
+    <PropertyGroup>
+      <_WebProjectPublishProfile Condition="$(IsAutoDeployedWebApplication) == 'True'">sp-autohosted</_WebProjectPublishProfile>
+      <_WebProjectPublishProfile Condition="$(IsAutoDeployedWebApplication) != 'True'">$(ActivePublishProfile)</_WebProjectPublishProfile>
+    </PropertyGroup>
+
+    <MSBuild Projects="@(WebProjectReference)"
+             Properties="PackageFileName=$(AppCloudPackage);WebApplicationName=$(ProjectName);PublishProfileName=$(_WebProjectPublishProfile)"
+             Targets="Package" />
+  </Target>
+
+  <Target Name="EnumerateSPDataFiles">
+    <ItemGroup>
+      <SPDataFiles Include="%(None.FullPath)" Condition="'%(Extension)' == '.spdata'"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CollectSearchConfigurationFiles">
+    <ItemGroup>
+      <SearchConfigurationFiles Include="@(Content)" Condition="%(Content.SearchConfiguration) == 'True'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <MergedSearchConfigurationFilePath Condition="'@(SearchConfigurationFiles)' != ''">$(IntermediateOutputPath)$(MergedSearchConfigurationFile)</MergedSearchConfigurationFilePath>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="MergeSearchConfigurationFiles"
+          DependsOnTargets="CollectSearchConfigurationFiles"
+          Inputs="@(SearchConfigurationFiles)"
+          Outputs="$(MergedSearchConfigurationFilePath)">
+
+    <MergeSearchConfigurationFiles MergedSearchConfigurationFilePath="$(MergedSearchConfigurationFilePath)"
+                                   SearchConfigurationFiles="@(SearchConfigurationFiles)" />
+  </Target>
+
+  <Target Name="PackageSharePointApp"
+      DependsOnTargets="$(PackageSharePointAppDependsOn)"
+      Inputs="$(AppCloudPackage);$(MSBuildProjectFile);@(AppManifestFile);$(WspPath);$(SqlPackage);$(SqlPostProvisioningScript);@(ParentWebFeature);@(ParentWebElementManifests);@(AppPackageParts);$(RemoteAppUrlFilePath);$(DebugRemoteAppServiceBaseUrlFilePath);$(WorkflowDebuggingClientSecretFilePath);$(IsWorkflowDebuggingEnabledFilePath);$(MergedSearchConfigurationFilePath);@(SPDataFiles);$(ActivePublishProfilePath)"
+      Outputs="$(PackageOutputDir)$(AppPackageName)" >
+
+    <PropertyGroup>
+      <CloudPackageToInclude Condition="$(IsAutoDeployedWebApplication) == 'True'">$(AppCloudPackage)</CloudPackageToInclude>
+    </PropertyGroup>
+    <MakeDir Directories="$(PackageOutputDir)" />
+    <MakeDir Directories="$(PackageIntermediatePath)" />
+
+    <GenerateAppManifest
+      IsAutoDeployedWebApplication="$(IsAutoDeployedWebApplication)"
+      AppManifestPath="$(IntermediateOutputPath)AppManifest.xml"
+      AppName="$(MSBuildProjectName)"
+      OfficeAppManifestFilePaths="@(OfficeAppManifestFiles)"
+      ProductId="$(AutohostedOfficeAppProductId)"
+      Condition="'@(AppManifestFile)' == ''">
+    </GenerateAppManifest>
+
+    <ItemGroup Condition="'@(AppManifestFile)' == ''">
+      <AppManifestFile Include="$(IntermediateOutputPath)AppManifest.xml"/>
+    </ItemGroup>
+
+    <RemoveDir Directories="$(OfficeAppManifestOutputPath)" />
+
+    <CreateAppPackage
+      PublishedFrom="$(PublishedFrom)"
+      ClientId="$(WebProjectClientId)"
+      ClientSecret="$(WebProjectClientSecret)"
+      IsHighTrust="$(IsWebProjectHighTrust)"
+      AppManifest="@(AppManifestFile)"
+      PackagePath="$(PackageOutputDir)$(AppPackageName)"
+      Wsp="$(WspPath)"
+      IntermediatePath="$(PackageIntermediatePath)"
+      IsDebugging="$(IsDebugging)"
+      RemoteAppUrl="$(RemoteAppUrl)"
+      DebugRemoteAppServiceBaseUrl="$(DebugRemoteAppServiceBaseUrl)"
+      AppCloudPackage="$(CloudPackageToInclude)"
+      SqlPackage="$(SqlPackage)"
+      SqlPostProvisioningScript="$(SqlPostProvisioningScript)"
+      AppCloudPackagePartId="$(CspkgPartId)"
+      SqlPackagePartId="$(SqlPackagePartId)"
+      WspPartId="$(WspPartId)"
+      WorkflowPartId="$(WorkflowPartId)"
+      IsIntegratedWorkflowApp="$(IsIntegratedWorkflowApp)"
+      AppFeaturePartId="$(AppFeaturePartId)"
+      AppFeature="@(ParentWebFeature)"
+      AppElementManifests="@(ParentWebElementManifests)"
+      AppPackageParts="@(AppPackageParts)"
+      EnumeratedFiles="@(EnumeratedFiles)"
+      OfficeAppManifestOutputPath="$(OfficeAppManifestOutputPath)"
+      HasPackagingWarnings="$(HasPackagingWarnings)"
+      ProjectId="$(ProjectGuid)"
+      ProjectService="$(ProjectService)"
+      TranslatedWorkflowsDestinationFolder="$(TranslatedWorkflowsDestinationFolder)"
+      SearchConfigurationPartId="$(SearchConfigurationPartId)"
+      MergedSearchConfigurationFilePath="$(MergedSearchConfigurationFilePath)"
+      WorkflowDebuggingClientSecret="$(WorkflowDebuggingClientSecret)">
+      <Output TaskParameter="CreatedPackageFiles" PropertyName="CreatedPackageFiles"/>
+    </CreateAppPackage>
+
+    <!-- Write new list of current app package files back to disk, replacing the existing list. -->
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(AppPackageFileList)"
+                      Lines="$(CreatedPackageFiles)"
+                      Overwrite="true"/>
+  </Target>
+
+  <Target Name="UseSPAppStore"
+          Condition="'$(ProjectMode)' == 'SharePointApp' or ('$(ProjectMode)' == 'OfficeApp' and '$(IsOwaDebugging)' == 'true')"
+          AfterTargets="EnumerateFiles">
+    <UseSPAppStore
+      EnumeratedFiles="@(EnumeratedUntransformedFiles)" >
+    </UseSPAppStore>
+  </Target>
+
+  <Target Name="CleanAppPackage">
+    <!-- Read the list of package files produced by a prior packaging from disk. -->
+
+    <ReadLinesFromFile File="$(IntermediateOutputPath)$(BaseAppPackageFileList)">
+      <Output TaskParameter="Lines" ItemName="_AppPackageFileList"/>
+    </ReadLinesFromFile>
+    <ReadLinesFromFile File="$(IntermediateOutputPath)$(DebuggingAppPackageFileList)">
+      <Output TaskParameter="Lines" ItemName="_DebuggingAppPackageFileList"/>
+    </ReadLinesFromFile>
+
+    <!-- Find all packages in the final output directory. -->
+
+    <FindUnderPath Path="$(OutDir)" Files="@(_AppPackageFileList)">
+      <Output TaskParameter="InPath" ItemName="_FoundAppPackagesToDelete"/>
+    </FindUnderPath>
+    <FindUnderPath Path="$(OutDir)" Files="@(_DebuggingAppPackageFileList)">
+      <Output TaskParameter="InPath" ItemName="_FoundDebuggingAppPackageFileList"/>
+    </FindUnderPath>
+
+    <!-- Remove any previously generated package found (and the original package file list). -->
+
+    <Delete Files="@(_FoundAppPackagesToDelete);@(_FoundDebuggingAppPackageFileList);$(IntermediateOutputPath)$(DebuggingAppPackageFileList)" />
+    <CallTarget Targets="CleanPackage"/>
+  </Target>
+
+  <Target Name="MergeExternalContentTypeFiles" Condition="'$(ProjectMode)' == 'SharePointApp'" BeforeTargets="EnumeratePackages">
+    <MergeEctItemFiles NoneItems="@(None)">
+      <Output PropertyName="BdcMetadataContent" TaskParameter="BdcMetadataContent" />
+    </MergeEctItemFiles>
+  </Target>
+
+  <Target Name="GenerateBdcMetadataFileTarget" Condition="'$(ProjectMode)' == 'SharePointApp'" AfterTargets="PerformLayout" BeforeTargets="AfterLayout">
+    <GenerateBdcMetadataFile LayoutPath="$(LayoutPath)%(EnumeratedFiles.Package)\"
+                             BdcMetadataContent="$(BdcMetadataContent)"
+                             Condition="'$(BdcMetadataContent)' != ''"/>
+  </Target>
+
+  <Target Name="ComputeUpdatableChangedFilesTarget" Condition="'$(ProjectMode)' == 'SharePointApp' and $(IsDebugging) == 'True'" BeforeTargets="ComputePackageInputFilesChanged">
+    <ComputeUpdatableChangedFiles
+        ProjectId="$(ProjectGuid)"
+        ProjectService="$(ProjectService)"
+        PackageFiles="@(AllPackagingInputs)"
+        PackagePath="$(BasePackagePath)%(EnumeratedUntransformedFiles.Package).$(DebugAppPackageExtension)">
+    </ComputeUpdatableChangedFiles>
+  </Target>
+
+</Project>

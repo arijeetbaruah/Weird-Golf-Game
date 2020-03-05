@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="Vlastnosti projektu" PageTemplate="generic" Description="Vlastnosti projektu" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="Aplikace" Description="Aplikace"/>
+        <Category Name="Misc" DisplayName="Různé" Description="Různé"/>
+        <Category Name="Debugging" DisplayName="Ladění" Description="Ladění"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="Soubor projektu" Description="Název souboru projektu">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="Složka projektu" Description="Umístění souboru projektu">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="Režim ladění aplikace" Default="Remove" Description="Indikuje chování nasazení aplikace jako součást ladění. 
+
+Odebrat aplikaci – až relace ladicího programu skončí, aplikace se odebere z clusteru. 
+Zachovat aplikaci – až relace ladicího programu skončí, aplikace dál poběží v clusteru. Při dalším ladění se aplikace odebere a znovu nasadí.
+Automaticky upgradovat – existující aplikace se při spouštění ladění upgraduje a po skončení relace ladicího programu dál poběží v clusteru. 
+Aktualizovat aplikaci – aplikace se aktualizuje o nové binární soubory bez opětovného nasazení. Tento režim je použitelný jenom na clusteru s 1 uzlem.">
+        <EnumValue Name="AutoUpgrade" DisplayName="Automaticky upgradovat"/>
+        <EnumValue Name="Remove" DisplayName="Odstranit aplikaci"/>
+        <EnumValue Name="Keep" DisplayName="Zachovat aplikaci"/>
+        <EnumValue Name="Refresh" DisplayName="Aktualizovat aplikaci"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="Cíl spuštění" Description="Zdroj pro adresu URL, která se má vyhledat po spuštění aplikace" EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="Adresa URL aplikace" Description="Adresa URL, která se má vyhledat po spuštění aplikace.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="Výstupní složka dokončeného balíčku" Default="true" Description="Určuje chování balíčku (platí jen pro projekty služeb s technologií jinou než ASP.NET, které cílí na úplné rozhraní .NET Framework). 
+
+True – Zabalí se všechny soubory ve složce bin. 
+False – Zabalí se konkrétní soubory na základě předem nakonfigurované logiky.">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="Ladicí profil" Description="Profil, který se používá při ladění aplikace Service Fabric" EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="LIB" PageTemplate="tool" DisplayName="ライブラリアン" Order="40" xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="全般" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="Lib" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <StringProperty Subtype="file" Name="OutputFile" DisplayName="出力ファイル" Description="出力ファイル名を指定します。 ([file])" Category="General" />
+  <StringListProperty Subtype="file" Name="AdditionalDependencies" DisplayName="追加の依存ファイル" Description="リンク時に追加する項目を指定します。構成により設定は異なります。" Category="General" />
+  <StringProperty Name="DisableWarnings" DisplayName="指定の警告を無効にする" Description="カンマで区切られた警告番号のリストは無効にされます。(--disable-warning=[num1[,num2]])" Category="General" Switch="--disable-warning" Separator="=" />
+  <BoolProperty Name="ThinArchive" DisplayName="シン アーカイブの生成" Description="プロジェクトで「シン アーカイブ」ファイルを出力するよう指定します。このライブラリ型は、参照を組み込むのではなく、そのメンバへの参照を格納します。通常のライブラリと比較して作成が迅速に行われますが、ポータブルではありません。" Category="General" Switch="createthin" />
+  <BoolProperty Name="LinkLibraryDependencies" DisplayName="ライブラリの依存関係をリンク" Description="プロジェクト依存性によるライブラリ出力が自動的にリンクされるかを指定します。" Category="General" IncludeInCommandLine="false" F1Keyword="VC.Project.VCLinkerTool.LinkLibraryDependencies">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="ProjectReference" Label="" HasConfigurationCondition="true" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+</Rule>

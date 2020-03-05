@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <ContentType Name="HLSL" DisplayName="HLSL コンパイラ" ItemType="FxCompile" />
+  <ContentType Name="HLSLHeader" DisplayName="HLSL ヘッダー ファイル" ItemType="None" />
+  <ContentType Name="CppCode" DisplayName="C/C++ コード" ItemType="ClCompile" />
+  <ContentType Name="CppHeader" DisplayName="C/C++ ヘッダー" ItemType="ClInclude" />
+  <ContentType Name="CppClass" DisplayName="C++ クラス" ItemType="ClCompile" />
+  <ContentType Name="CppForm" DisplayName="C++ フォーム" ItemType="ClCompile" />
+  <ContentType Name="CppControl" DisplayName="C++ コントロール" ItemType="ClCompile" />
+  <ContentType Name="Text" DisplayName="テキスト ファイル" ItemType="Text" />
+  <ContentType Name="DEF" DisplayName="DEF ファイル" ItemType="None" />
+  <ContentType Name="Midl" DisplayName="Idl ファイル" ItemType="Midl" />
+  <ContentType Name="Makefile" DisplayName="メイクファイル" ItemType="None" />
+  <ContentType Name="RGS" DisplayName="RGS ファイル" ItemType="None" />
+  <ContentType Name="RC" DisplayName="RC ファイル" ItemType="ResourceCompile" />
+  <ContentType Name="RC2" DisplayName="RC2 ファイル" ItemType="None" />
+  <ContentType Name="RES" DisplayName="RES ファイル" ItemType="Resource" />
+  <ContentType Name="XSD" DisplayName="XSD ファイル" ItemType="Xsd" />
+  <ContentType Name="XML" DisplayName="Xml ファイル" ItemType="Xml" />
+  <ContentType Name="HTML" DisplayName="Html ファイル" ItemType="None" />
+  <ContentType Name="CSS" DisplayName="カスケード スタイル シート" ItemType="None" />
+  <ContentType Name="Resx" DisplayName="Resx ファイル" ItemType="EmbeddedResource" />
+  <ContentType Name="Script" DisplayName="スクリプト ファイル" ItemType="None" />
+  <ContentType Name="BSC" DisplayName="Bsc ファイル" ItemType="None" />
+  <ContentType Name="XSX" DisplayName="XSX ファイル" ItemType="None" />
+  <ContentType Name="CppWebService" DisplayName="C++ Web サービス" ItemType="ClInclude" />
+  <ContentType Name="Asax" DisplayName="Asax ファイル" ItemType="None" />
+  <ContentType Name="AspPage" DisplayName="ASP ページ" ItemType="None" />
+  <ContentType Name="Document" DisplayName="ドキュメント" ItemType="None" />
+  <ContentType Name="Discomap" DisplayName="探索ファイル" ItemType="CustomBuild" />
+  <ContentType Name="CSharpFile" DisplayName="C# ファイル" ItemType="None" />
+  <ContentType Name="ClassDiagram" DisplayName="クラス ダイアグラム" ItemType="None" />
+  <ContentType Name="MHT" DisplayName="MHT ファイル" ItemType="None" />
+  <ContentType Name="CUR" DisplayName="カーソル" ItemType="None" />
+  <ContentType Name="Manifest" DisplayName="マニフェスト" ItemType="Manifest" />
+  <ContentType Name="RDLC" DisplayName="RDLC ファイル" ItemType="None" />
+  <ContentType Name="OBJ" DisplayName="オブジェクト ファイル" ItemType="Object" />
+  <ContentType Name="LIB" DisplayName="ライブラリ ファイル" ItemType="Library" />
+  <ContentType Name="RSC" DisplayName="リソース" ItemType="Resource" />
+  <ContentType Name="Licenses" DisplayName="コンパイル済みライセンス" ItemType="_EmbedManagedResourceFile" />
+  <ContentType Name="PageXaml" DisplayName="XAML ページ" ItemType="Page">
+    <NameValuePair Name="DependentFileExtensions" Value=".cpp;.h" />
+  </ContentType>
+  <ContentType Name="AppXaml" DisplayName="XAML アプリケーション定義" ItemType="ApplicationDefinition">
+    <NameValuePair Name="DependentFileExtensions" Value=".cpp;.h" />
+  </ContentType>
+  <ContentType Name="PRIResource" DisplayName="PRI リソース" ItemType="PRIResource" />
+  <ContentType Name="Image" DisplayName="イメージ ファイル" ItemType="Image" />
+  <ContentType Name="AppxManifest" DisplayName="アプリケーション パッケージ マニフェスト" ItemType="AppxManifest" />
+  <ContentType Name="Media" DisplayName="メディア ファイル" ItemType="Media" />
+  <ContentType Name="Font" DisplayName="フォント ファイル" ItemType="Font" />
+  <ItemType Name="PRIResource" DisplayName="PRI リソース" />
+  <ItemType Name="AppxManifest" DisplayName="アプリケーション パッケージ マニフェスト" />
+  <ItemType Name="Page" DisplayName="XAML ページ" />
+  <ItemType Name="ApplicationDefinition" DisplayName="XAML アプリケーション定義" />
+  <ItemType Name="ClCompile" DisplayName="C/C++ コンパイラ" />
+  <ItemType Name="ClInclude" DisplayName="C/C++ ヘッダー" />
+  <ItemType Name="Midl" DisplayName="MIDL ツール" />
+  <ItemType Name="ResourceCompile" DisplayName="リソース コンパイラ" />
+  <ItemType Name="EmbeddedResource" DisplayName="マネージ リソース コンパイラ" />
+  <ItemType Name="Xsd" DisplayName="XML データ ジェネレーター ツール" />
+  <ItemType Name="CustomBuild" DisplayName="カスタム ビルド ツール" />
+  <ItemType Name="None" DisplayName="ビルドに含めない" />
+  <ItemType Name="Resource" DisplayName="リソース" />
+  <ItemType Name="Object" DisplayName="オブジェクト" />
+  <ItemType Name="Library" DisplayName="ライブラリ" />
+  <ItemType Name="Manifest" DisplayName="マニフェスト ツール" />
+  <ItemType Name="_EmbedManagedResourceFile" DisplayName="コンパイル済みマネージ リソース" />
+  <ItemType Name="FxCompile" DisplayName="HLSL コンパイラ" />
+  <ItemType Name="Image" DisplayName="Image" />
+  <ItemType Name="Media" DisplayName="メディア" />
+  <ItemType Name="Xml" DisplayName="XML" />
+  <ItemType Name="Text" DisplayName="テキスト" />
+  <ItemType Name="Font" DisplayName="フォント" />
+  <FileExtension Name=".resw" ContentType="PRIResource" />
+  <FileExtension Name=".resjson" ContentType="PRIResource" />
+  <FileExtension Name=".appxmanifest" ContentType="AppxManifest" />
+  <FileExtension Name=".xaml" ContentType="PageXaml" />
+  <FileExtension Name=".cpp" ContentType="CppCode" />
+  <FileExtension Name=".c" ContentType="CppCode" />
+  <FileExtension Name=".cc" ContentType="CppCode" />
+  <FileExtension Name=".cxx" ContentType="CppCode" />
+  <FileExtension Name=".s" ContentType="CppCode" />
+  <FileExtension Name=".asm" ContentType="CppCode" />
+  <FileExtension Name=".h" ContentType="CppHeader" />
+  <FileExtension Name=".hh" ContentType="CppHeader" />
+  <FileExtension Name=".hpp" ContentType="CppHeader" />
+  <FileExtension Name=".hxx" ContentType="CppHeader" />
+  <FileExtension Name=".idl" ContentType="Midl" />
+  <FileExtension Name=".odl" ContentType="Midl" />
+  <FileExtension Name=".asax" ContentType="Asax" />
+  <FileExtension Name=".asmx" ContentType="HTML" />
+  <FileExtension Name=".asp" ContentType="AspPage" />
+  <FileExtension Name=".def" ContentType="DEF" />
+  <FileExtension Name=".mk" ContentType="MakeFile" />
+  <FileExtension Name=".mak" ContentType="MakeFile" />
+  <FileExtension Name=".txt" ContentType="Text" />
+  <FileExtension Name=".log" ContentType="Text" />
+  <FileExtension Name=".rgs" ContentType="RGS" />
+  <FileExtension Name=".rc" ContentType="RC" />
+  <FileExtension Name=".rc2" ContentType="RC2" />
+  <FileExtension Name=".res" ContentType="RES" />
+  <FileExtension Name=".resx" ContentType="RESX" />
+  <FileExtension Name=".html" ContentType="HTML" />
+  <FileExtension Name=".htm" ContentType="HTML" />
+  <FileExtension Name=".css" ContentType="CSS" />
+  <FileExtension Name=".cur" ContentType="CUR" />
+  <FileExtension Name=".vbS" ContentType="Script" />
+  <FileExtension Name=".jS" ContentType="Script" />
+  <FileExtension Name=".xml" ContentType="XML" />
+  <FileExtension Name=".xslt" ContentType="XML" />
+  <FileExtension Name=".xsl" ContentType="XML" />
+  <FileExtension Name=".xsd" ContentType="XSD" />
+  <FileExtension Name=".wsdl" ContentType="Discomap" />
+  <FileExtension Name=".disco" ContentType="Discomap" />
+  <FileExtension Name=".discomap" ContentType="Discomap" />
+  <FileExtension Name=".cs" ContentType="CSharpFile" />
+  <FileExtension Name=".bsc" ContentType="BSC" />
+  <FileExtension Name=".mht" ContentType="MHT" />
+  <FileExtension Name=".manifest" ContentType="Manifest" />
+  <FileExtension Name=".rdlc" ContentType="RDLC" />
+  <FileExtension Name=".cd" ContentType="ClassDiagram" />
+  <FileExtension Name=".o" ContentType="OBJ" />
+  <FileExtension Name=".obj" ContentType="OBJ" />
+  <FileExtension Name=".a" ContentType="LIB" />
+  <FileExtension Name=".lib" ContentType="LIB" />
+  <FileExtension Name=".rsc" ContentType="RSC" />
+  <FileExtension Name=".licenses" ContentType="Licenses" />
+  <FileExtension Name=".fx" ContentType="HLSL" />
+  <FileExtension Name=".hlsl" ContentType="HLSL" />
+  <FileExtension Name=".hlsli" ContentType="HLSLHeader" />
+  <FileExtension Name=".jpg" ContentType="Image" />
+  <FileExtension Name=".jpe" ContentType="Image" />
+  <FileExtension Name=".jpeg" ContentType="Image" />
+  <FileExtension Name=".jfif" ContentType="Image" />
+  <FileExtension Name=".png" ContentType="Image" />
+  <FileExtension Name=".bmp" ContentType="Image" />
+  <FileExtension Name=".dib" ContentType="Image" />
+  <FileExtension Name=".gif" ContentType="Image" />
+  <FileExtension Name=".ico" ContentType="Image" />
+  <FileExtension Name=".tif" ContentType="Image" />
+  <FileExtension Name=".tiff" ContentType="Image" />
+  <FileExtension Name=".dds" ContentType="Image" />
+  <FileExtension Name=".tga" ContentType="Image" />
+  <FileExtension Name=".mp3" ContentType="Media" />
+  <FileExtension Name=".wav" ContentType="Media" />
+  <FileExtension Name=".mov" ContentType="Media" />
+  <FileExtension Name=".mp4" ContentType="Media" />
+  <FileExtension Name=".wmv" ContentType="Media" />
+  <FileExtension Name=".webm" ContentType="Media" />
+  <FileExtension Name=".ttf" ContentType="Font" />
+  <FileExtension Name=".otf" ContentType="Font" />
+  <FileExtension Name=".compositefont" ContentType="Font" />
+</ProjectSchemaDefinitions>

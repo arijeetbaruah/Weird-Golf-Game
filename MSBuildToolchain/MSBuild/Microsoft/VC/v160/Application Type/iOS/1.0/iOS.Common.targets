@@ -1,0 +1,408 @@
+﻿<!--
+***********************************************************************************************
+iOS.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps/targets required to build Visual C++ projects
+specifically on x64 platforms.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- *******************************************************************************************
+        Set Build Default Environment Variables
+       ******************************************************************************************* -->
+
+  <UsingTask TaskName="SetEnv" AssemblyFile="$(VCTargetsPath)Microsoft.Build.CppTasks.Common.dll"/>
+  <UsingTask TaskName="GetRemoteClCompileItems" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll"/>
+  <UsingTask TaskName="GeneratePbxproj" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll"/>
+  <UsingTask TaskName="VCRemoteBuild" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll"/>
+  <UsingTask TaskName="VCRemoteClean" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll" />
+  <UsingTask TaskName="GenerateRecipe" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll" />
+  <UsingTask TaskName="GetRemoteTargetPath" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll"/>
+  <UsingTask TaskName="GetCaseSensitivePath" AssemblyFile="$(MSBuildthisFileDirectory)Microsoft.Build.CppTasks.iOS.dll"/>
+
+  <PropertyGroup>
+    <ReferencePathForAddReferenceDialog>$(ReferencePath);$(iOSFrameworksSearchPath);</ReferencePathForAddReferenceDialog>
+    <!-- make SetISensePaths target to run for designtime build -->
+    <DetermineProjectTypeTargets>$(DetermineProjectTypeTargets);SetISensePaths</DetermineProjectTypeTargets>
+    <!-- can add this mapping only here as project can override OutDir -->
+    <LocalRemoteDirectoriesMap>$(MacRootDir)$(MacBuildRoot)\$(OutDir.Replace(":",""))=%24(BUILT_PRODUCTS_DIR);$(LocalRemoteDirectoriesMap)</LocalRemoteDirectoriesMap>
+  </PropertyGroup>
+
+  <Target Name="SetISensePaths"
+          DependsOnTargets="$(SetiOSPathsDependsOn)" >
+    <PropertyGroup Condition ="'$(DesignTimeBuild)' == 'true'">
+      <IncludePath>$(IncludePath);$(iOSIncludePath);</IncludePath>
+      <FrameworkIncludePath>$(ReferencePath);$(iOSFrameworksSearchPath)</FrameworkIncludePath>
+    </PropertyGroup>  
+  </Target>
+
+  <Target Name="SetBuildDefaultEnvironmentVariables"
+          Condition="'$(UseEnv)' != 'true'">
+
+    <GetCaseSensitivePath Path="$(ProjectDir)" >
+      <Output TaskParameter="CasedPath" PropertyName="CasedProjectDir" />
+    </GetCaseSensitivePath>
+
+    <PropertyGroup>
+      <!-- Fall back to $(ProjectDir) -->
+      <CasedProjectDir Condition="'$(CasedProjectDir)' == ''">$(ProjectDir)</CasedProjectDir>
+    </PropertyGroup>
+    
+    <!--<SetEnv Name   ="PATH"
+            Value  ="$(ExecutablePath)"
+            Prefix ="false">
+    </SetEnv>-->
+  </Target>
+
+  <PropertyGroup>
+    <_RecipeFile>$(OutDir)$(TargetName)$(TargetExt).recipe</_RecipeFile>
+  </PropertyGroup>
+  
+  <Target Name="GetRecipeFile" Returns="$(RecipeFile)">
+    <PropertyGroup>
+      <RecipeFile>$(_RecipeFile)</RecipeFile>
+    </PropertyGroup>
+    <Message Text="GetRecipeFile from project '$(MSBuildProjectFullPath)' returned '$(RecipeFile)'" Importance="Normal" />
+  </Target>
+  
+  <Target Name="_AssignProjectReferencesPlatformType">
+    <ItemGroup>
+      <_MSBuildProjectReferenceExistent Include="@(_MSBuildProjectReferenceExistent)">
+        <ProjectApplicationType>iOS</ProjectApplicationType>
+      </_MSBuildProjectReferenceExistent>
+    </ItemGroup>
+  </Target>
+  
+  <Target Name="CreateRecipeFile" DependsOnTargets="$(CommonBuildOnlyTargets);_AssignProjectReferencesPlatformType;_GetRemoteTargetPath">
+    <MSBuild Projects="@(_MSBuildProjectReferenceExistent->WithMetadataValue('ProjectApplicationType', 'iOS'))"
+             Targets="GetRecipeFile"
+             BuildInParallel="$(BuildInParallel)"
+             Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
+             Condition="'%(_MSBuildProjectReferenceExistent.Extension)' == '.vcxproj' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != ''">
+      <Output TaskParameter="TargetOutputs" ItemName="DirectDependenciesRecipelistFile"/>
+    </MSBuild>
+
+    <ItemGroup>
+      <RecileFileItem Include="$(_RecipeFile)">
+        <BuiltOutputs>$(_RemoteTargetPath)</BuiltOutputs>
+        <RecipeFiles>@(DirectDependenciesRecipelistFile)</RecipeFiles>
+      </RecileFileItem>
+    </ItemGroup>
+
+    <GenerateRecipe
+        RecipeFiles="@(RecileFileItem)"
+        OutDir="$(OutDir)" />
+
+    <!-- Output for cleaning -->
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).write.1u.tlog" Lines="^$(ProjectPath);$(_ApkRecipeFile)" Encoding="Unicode"/>
+  </Target>
+  
+  <!-- *******************************************************************************************
+        Generate xcode project (we'll use ClCompile target for it)
+       ******************************************************************************************* -->
+
+  <PropertyGroup>
+    <BeforeBuildCompileTargets>
+      $(BeforeBuildCompileTargets);
+      _iOSPrepareForClCompile;
+    </BeforeBuildCompileTargets>
+
+    <BuildLinkTargets>
+      $(BuildLinkTargets);
+      CreateRecipeFile;
+    </BuildLinkTargets>
+
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      iOSVCRemoteClean;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+
+  <Target Name="_iOSPrepareForClCompile">
+    <!-- GeneratePBXProj task uses this __temporary.cpp to gather project level settings.  
+    Thus, it is conditioned for non-deisngtime. This file is already added for designtime build.-->
+    <ItemGroup Condition ="'$(DesignTimeBuild)' != 'true'">
+      <ClCompile Include="__temporary.cpp">
+        <ConfigurationOptions>true</ConfigurationOptions>
+      </ClCompile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="FixupCLCompileOptions"
+          Condition="'@(ClCompile)' != ''">
+    <ItemGroup>
+      <ClCompile>
+        <!--<ClangForcedIncludeFiles>%(ClCompile.ForcedIncludeFiles)</ClangForcedIncludeFiles>-->
+        <PrecompiledHeaderFile Condition="'%(ClCompile.PrecompiledHeader)' != 'Use'"></PrecompiledHeaderFile>
+        <!--<MinimalRebuildFromTracking Condition="'$(_BuildActionType)' != 'Build' or '$(ForceRebuild)' == 'true'">false</MinimalRebuildFromTracking>-->
+        <WarningLevel Condition="'%(WarningLevel)' == 'Level1' or '%(WarningLevel)' == 'Level2' or '%(WarningLevel)' == 'Level3'">EnableAllWarnings</WarningLevel>
+        <CompileAs Condition="'%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.c'">CompileAsC</CompileAs>
+        <CompileAs Condition="'%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.m'">CompileAsObjC</CompileAs>
+        <CompileAs Condition="'%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.mm'">CompileAsObjCpp</CompileAs>
+      </ClCompile>  
+
+      <ClCompile>
+        <!-- Still unknown extension, assume C++ -->
+        <CompileAs Condition="'%(ClCompile.CompileAs)' == 'Default'">CompileAsCpp</CompileAs>
+      </ClCompile>
+      
+      <ClCompile>
+        <!-- Only Pass C++ standard to Cpp files -->
+        <!-- C/ObjC share the same standard, and C++/ObjC++ share the same standard -->
+        <CLanguageStandard Condition="'%(ClCompile.CompileAs)' == 'CompileAsCpp' or '%(ClCompile.CompileAs)' == 'CompileAsObjCpp'"></CLanguageStandard>
+        <CppLanguageStandard Condition="'%(ClCompile.CompileAs)' == 'CompileAsC' or '%(ClCompile.CompileAs)' == 'CompileAsObjC'"></CppLanguageStandard>
+      </ClCompile>
+        
+      
+      <!-- we'll let xcode deal with precompiled headers -->
+      <!-- define precompiled header related options -->
+      <!--<ClCompile Condition="'%(ClCompile.PrecompiledHeaderFile)' != ''">
+        <PrecompiledHeaderOutputFileDirectory Condition="'%(ClCompile.PrecompiledHeaderOutputFileDirectory)' != '' and !HasTrailingSlash('%(ClCompile.PrecompiledHeaderOutputFileDirectory)')">%(ClCompile.PrecompiledHeaderOutputFileDirectory)\</PrecompiledHeaderOutputFileDirectory>
+        <PrecompiledHeaderOutputFileName>$([System.IO.Path]::GetFileName('%(ClCompile.PrecompiledHeaderFile)'))</PrecompiledHeaderOutputFileName>
+        --><!-- Add pch.h to force included files. This property will be used for intellisense command line (to be consistent with cl.exe), clang needs it differently (see ClangForcedIncludeFiles) --><!--
+        <ForcedIncludeFiles>%(ClCompile.PrecompiledHeaderFile);%(ClCompile.ForcedIncludeFiles)</ForcedIncludeFiles>
+      </ClCompile>
+
+      --><!-- need to have a separate group to use defined metadata --><!--
+      <ClCompile Condition="'%(ClCompile.PrecompiledHeaderFile)' != ''">
+        <PrecompiledHeaderFileInOutputDirectory>%(ClCompile.PrecompiledHeaderOutputFileDirectory)%(ClCompile.PrecompiledHeaderOutputFileName)</PrecompiledHeaderFileInOutputDirectory>
+        <PrecompiledHeaderOutputFile>%(ClCompile.PrecompiledHeaderOutputFileDirectory)%(ClCompile.PrecompiledHeaderOutputFileName).gch</PrecompiledHeaderOutputFile>
+        --><!-- Clang (gcc) does not have a switch to specify pch file directly. Instead it searches for it assuming the name (pch.h -> pch.h.gch) and location (the same dir as pch.h). 
+             It is happy with not existing .h file when it finds .gch for it --><!--
+        <ClangForcedIncludeFiles>%(ClCompile.PrecompiledHeaderOutputFileDirectory)%(ClCompile.PrecompiledHeaderOutputFileName);%(ClCompile.ClangForcedIncludeFiles)</ClangForcedIncludeFiles>
+      </ClCompile>-->
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="GenerateXCodeProj" 
+          Condition="'@(ClCompile)' != ''" 
+          DependsOnTargets="SelectClCompile" >
+
+    <!--  
+      We are not passing the following options to allow xcode dealing with them    
+      ObjectFileName="%(ClCompile.ObjectFileName)"
+      precompiled header ones
+    -->
+    
+    <GetRemoteClCompileItems
+      
+        Sources="@(ClCompile)"
+        
+        DirectoriesMap = "$(LocalRemoteDirectoriesMap)"
+        LocalProjectDirectory ="$(CasedProjectDir)"
+        RemoteRootDirectory ="$(RemoteRootDirectory)"
+        
+        AdditionalIncludeDirectories="%(ClCompile.AdditionalIncludeDirectories);$(IncludePath)"
+        AdditionalOptions="%(ClCompile.AdditionalOptions)"
+        CLanguageStandard="%(ClCompile.CLanguageStandard)"
+        CompileAs="%(ClCompile.CompileAs)"
+        CppLanguageStandard="%(ClCompile.CppLanguageStandard)"
+        DebugInformationLevel="%(ClCompile.DebugInformationLevel)"
+        DebugInformationFormat="%(ClCompile.DebugInformationFormat)"
+        ExceptionHandling="%(ClCompile.ExceptionHandling)"
+        ForcedIncludeFiles="%(ClCompile.ForcedIncludeFiles)"
+        GenerateDebugSymbols="%(ClCompile.GenerateDebugSymbols)"
+        OmitFramePointers="%(ClCompile.OmitFramePointer)"
+        Optimization="%(ClCompile.Optimization)"
+        PositionIndependentCode="%(ClCompile.PositionIndependentCode)"
+        PreprocessorDefinitions="%(ClCompile.PreprocessorDefinitions)"
+        RuntimeTypeInfo="%(ClCompile.RuntimeTypeInfo)"
+        ShowIncludes="%(ClCompile.ShowIncludes)"
+        StrictAliasing="%(ClCompile.StrictAliasing)"
+        ThumbMode="%(ClCompile.ThumbMode)"
+        TreatWarningAsError="%(ClCompile.TreatWarningAsError)"
+        AdditionalWarning="%(ClCompile.AdditionalWarning)"
+        ThreadSafeStatics="%(ClCompile.ThreadSafeStatics)"
+        UndefineAllPreprocessorDefinitions="%(ClCompile.UndefineAllPreprocessorDefinitions)"
+        UndefinePreprocessorDefinitions="%(ClCompile.UndefinePreprocessorDefinitions)"
+        UnrollLoops="%(ClCompile.UnrollLoops)"
+        Verbose="%(ClCompile.Verbose)"
+        WarningLevel="%(ClCompile.WarningLevel)"
+        MakeStringsReadOnly="%(ClCompile.MakeStringsReadOnly)"
+        RelaxIEEE="%(ClCompile.RelaxIEEE)"
+        HideInlineMethods="%(ClCompile.HideInlineMethods)"
+        SymbolsHiddenByDefault="%(ClCompile.SymbolsHiddenByDefault)"
+        LinkTimeOptimization = "%(ClCompile.LinkTimeOptimization)"
+        NoCommonBlocks="%(ClCompile.NoCommonBlocks)"
+    >
+      <Output TaskParameter="RemoteCompileItems" ItemName="RemoteClCompile"/>
+    </GetRemoteClCompileItems>
+    
+    <!-- create local <ProjectName>.xcodeproj directory for generated project.pbxproj file -->
+    <MakeDir Directories="$(PbxprojDirectory)" />
+
+    <ItemGroup Condition="'$(ConfigurationType)' == 'StaticLibrary' and '@(Lib)' == ''">
+      <Lib Include="__temporary"/>
+    </ItemGroup>
+
+    <GeneratePbxproj
+        Sources="@(RemoteClCompile)"
+        
+        FrameworkReferences="@(FrameworkReference)"
+        FrameworkSearchPath="$(ReferencePath)"
+        LibrarySearchPath="$(LibraryPath)"
+        
+        DirectoriesMap = "$(LocalRemoteDirectoriesMap)"
+        LocalProjectDirectory ="$(CasedProjectDir)"
+        RemoteRootDirectory ="$(RemoteRootDirectory)"
+        
+        PbxprojDirectory="$(PbxprojDirectory)"
+        
+        Configuration = "$(Configuration)"
+        Platform = "$(Platform)"
+        
+        ProjectName = "$(ProjectName)"
+        OrganizationName="$(OrganizationName)"
+        
+        AdditionalLibraryDirectories="%(Lib.AdditionalLibraryDirectories)"
+        AdditionalOptions="%(Lib.AdditionalOptions)"
+        AdditionalDependencies="%(Lib.AdditionalDependencies)"
+        AdditionalBuildSettings="$(AdditionalBuildSettings)"
+
+        BuildOutputFile="%(Lib.OutputFile)"
+        
+        UseOfStl="$(UseOfStl)"
+    >
+      <!--<Output TaskParameter="RemoteOutputfile" PropertyName="RemoteOutputfile" />-->
+    </GeneratePbxproj>
+    
+    <ItemGroup>
+      <ClCompile Remove="__temporary.cpp" Condition="'%(ClCompile.ConfigurationOptions)' == 'true'"/>
+    </ItemGroup>
+    
+    <!-- Todo: move these messages to GeneratePbxproj task with Normal or Low Importance -->
+    <!--<Message Text="$(MSBuildProjectFile) -&gt; $(RemoteOutputfile)" Importance="High" />-->
+  </Target>
+
+  <Target Name="ClCompile" Condition="'@(ClCompile)' != ''" DependsOnTargets="GenerateXCodeProj">
+    <!-- Todo: move these messages to VCRemoteBuild task with Normal or Low Importance 
+    
+    <Message Text="***** VCRemoteBuild:TargetDir= '$(TargetDir)'" Importance="High" />
+    <Message Text="***** VCRemoteBuild:LocalIntermediateDirectory= '$(IntDir)'" Importance="High" />
+    <Message Text="***** VCRemoteBuild:RemoteRootDirectory= '$(RemoteRootDirectory)'" Importance="High" />
+    <Message Text="***** VCRemoteBuild:DirectoriesMap= '$(LocalRemoteDirectoriesMap)'" Importance="High" />
+    <Message Text="***** VCRemoteBuild:LocalProjectDirectory= '$(CasedProjectDir)'" Importance="High" />-->
+
+    <!-- Scans AdditionalIncludeSearchPaths for files with AdditionalIncludeHeaderExtensions extensions. -->
+    <ItemGroup Condition="'$(CopyAdditionalIncludes)' != 'false'">
+      <AdditionalIncludeSearchPaths Include="$(AdditionalIncludeSearchPaths)" >
+        <AdditionalIncludeHeaderExtensions>$(AdditionalIncludeHeaderExtensions)</AdditionalIncludeHeaderExtensions>
+      </AdditionalIncludeSearchPaths>
+
+      <AdditionalIncludeSearchPaths Include="%(ClCompile.DefiningProjectDirectory)" Condition="'$(CopyAdditionalIncludesSharedItems)' != 'false' and '%(ClCompile.DefiningProjectDirectory)' != '$(MSBuildProjectDirectory)'">
+        <AdditionalIncludeHeaderExtensions>$(AdditionalIncludeHeaderExtensions)</AdditionalIncludeHeaderExtensions>
+      </AdditionalIncludeSearchPaths>
+      
+      <AdditionalIncludeSearchPaths>
+        <_IncludeDir>%(Identity)</_IncludeDir>
+      </AdditionalIncludeSearchPaths>
+    </ItemGroup>
+    
+    <!-- Cast _AddIncSP to a property and back in order to evaluate wildcards. -->
+    <PropertyGroup>
+      <__AddIncSP>@(AdditionalIncludeSearchPaths->Metadata(AdditionalIncludeHeaderExtensions)->'%(_IncludeDir)\**\*%(Identity)')</__AddIncSP>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <AdditionalIncludePaths Condition="'$(CopyAdditionalIncludes)' != 'false'" Include="$(__AddIncSP)" Exclude="@(ClInclude->FullPath());@(ClCompile->FullPath())" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <SourcesToCopy Include="@(ClCompile);@(ClInclude);@(AdditionalIncludePaths)" />
+    </ItemGroup>
+
+    <VCRemoteBuild
+       Sources="@(SourcesToCopy)"
+       LocalXCodeProjectDirectory="$(PbxprojDirectory)"
+       LocalOutputDirectory="$(OutDir)"
+       LocalIntermediateDirectory="$(IntDir)"
+       PayloadDescriptionFilepath="$(PayloadDescriptionFilepath)"
+       RemoteRootDirectory="$(RemoteRootDirectory)"
+       Configuration="$(Configuration)"
+       Platform="$(Platform)"
+       Architecture="$(PlatformNativeArch)"
+       ProjectName="$(ProjectName)"
+       DirectoriesMap = "$(LocalRemoteDirectoriesMap)"
+       LocalProjectDirectory ="$(CasedProjectDir)"
+       TargetName="$(TargetName)"
+       TargetExt="$(TargetExt)">
+    </VCRemoteBuild>
+  </Target>
+        
+  <Target Name="iOSVCRemoteClean"
+           DependsOnTargets="SetBuildDefaultEnvironmentVariables;$(iOSVCRemoteCleanDependsOn)">
+
+    <VCRemoteClean
+        RemoteRootDirectory="$(RemoteRootDirectory)"
+        LocalProjectDirectory="$(CasedProjectDir)"
+        LocalIntermediateDirectory="$(IntDir)"
+        ProjectName="$(ProjectName)"
+        LocalPathsToClean="@(LocalPathsToClean)"
+        RemotePathsToClean="@(RemotePathsToClean)"
+        DirectoriesMap="$(LocalRemoteDirectoriesMap)"
+        RemoteXCodeClean="$(RemoteXCodeClean)"
+    />
+  </Target>
+
+  <Target Name="Link"  />
+  <Target Name="Lib"  />
+
+  <Target Name="_GetRemoteTargetPath">
+    <GetRemoteTargetPath
+       RemoteRootDirectory="$(RemoteRootDirectory)"
+       LocalTargetPath = "$(TargetPath)"
+       LocalProjectDirectory ="$(CasedProjectDir)">
+      <Output TaskParameter="RemoteTargetPath" PropertyName="_RemoteTargetPath"/>
+    </GetRemoteTargetPath>
+  </Target>
+
+  <!-- Designtime definitions -->
+  <!-- Property pages -->
+  <ItemGroup>
+    <PropertyPageSchema Include="$(iOSCommonTargetsPath)$(LangID)\general_ios.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+   
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\folder.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+    
+    <PropertyPageSchema Include="$(iOSCommonTargetsPath)$(LangID)\ProjectItemsSchema_iOS.xml" />
+    <PropertyPageSchema Include="$(iOSCommonTargetsPath)$(LangID)\directories_ios.xml"/>
+    <PropertyPageSchema Include="$(iOSCommonTargetsPath)$(LangID)\clang_ios.xml"/>
+    <PropertyPageSchema Include="$(iOSCommonTargetsPath)$(LangID)\ar_ios.xml"/>
+  </ItemGroup>
+
+
+  <!-- Property pages -->
+  <ItemGroup>
+    <!-- Unique items for the project -->
+    <CustomBuildStep Include="$(ProjectName)" />
+    <PreBuildEvent Include="$(ProjectName)" />
+    <PreLinkEvent Include="$(ProjectName)" />
+    <PostBuildEvent Include="$(ProjectName)" />
+
+    <!-- Tools that show up in the IDE property pages for Link/Lib (ClangLink) project-->
+    <ProjectTools Condition="'$(ConfigurationType)' == 'DynamicLibrary'" Include="Link" />
+    <ProjectTools Condition="'$(ConfigurationType)' == 'StaticLibrary'" Include="Lib" />
+    <ProjectTools Include="CustomBuildStep" />
+  </ItemGroup>
+
+  <!-- Project capabilities are used to filter which Extension SDKs appear in the Add/Remove References dialog -->
+  <ItemGroup>
+    <ProjectCapability Include="iOS"/>
+    <ProjectCapability Include="iOSNative"/>
+    <ProjectCapability Include="iOSFrameworkReferences" />
+  </ItemGroup>
+
+</Project>

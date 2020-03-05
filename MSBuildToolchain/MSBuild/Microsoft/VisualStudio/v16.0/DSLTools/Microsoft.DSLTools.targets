@@ -1,0 +1,146 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+	File containing MSBuild targets specific to building DSL tools.
+	You must import the settings file independently
+-->
+
+  <!-- Settings for text transformation of ".dsl" files -->
+
+  <PropertyGroup>
+    <!-- Path to VS\Common7\IDE -->
+    <VsIdePath Condition=" $(VsIdePath) == ''" >$(VSInstallRoot)\Common7\IDE\</VsIdePath>
+
+    <!-- Set the default location for the Dsl Designer install. -->
+    <DslDesignerInstallPath Condition=" $(DslDesignerInstallPath)=='' ">$(VsIdePath)Extensions\Microsoft\DSL SDK\Dsl Designer\$(VisualStudioVersion)\</DslDesignerInstallPath>
+
+    <!-- Add the standard DSL templates folder -->
+    <IncludeFolders>$(IncludeFolders);$(DslDesignerInstallPath)TextTemplates\</IncludeFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Add a ref to the DSL directive processor. -->
+    <DirectiveProcessor Include="DslDirectiveProcessor" >
+      <Class>Microsoft.VisualStudio.Modeling.DslDefinition.DslDirectiveProcessor</Class>
+      <!-- Specify the default install location of the DslDesigner assembly -->
+      <CodeBase>$(DslDesignerInstallPath)Microsoft.VisualStudio.Modeling.Sdk.DslDefinition.15.0.dll</CodeBase>
+    </DirectiveProcessor>
+    <!-- Add VS\...\[Private|Public]Assemblies to the list of places to look for assemblies used by templates. -->
+    <T4ReferencePath Include="$(VsIdePath)PrivateAssemblies\" />
+    <T4ReferencePath Include="$(VsIdePath)PublicAssemblies\" />
+  </ItemGroup>
+
+  <!-- Set the default namespace to use for T4 Transformations.
+       The DSL Defintition directive processor asks the host for the project namespace,
+       so it needs to be specified here as a paramater value.
+       By default, the root project namespace will be returned. If you want to use
+       a different value, set the MSBuild property $(T4DslToolsNamespace).
+  -->
+  <PropertyGroup>
+    <T4DslToolsNamespace Condition=" $(T4DslToolsNamespace) == '' ">$(RootNamespace)</T4DslToolsNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Set the value to return as the project namespace -->
+    <T4ParameterValues Include="ProjectDefaultNamespace" >
+      <Value>$(T4DslToolsNamespace)</Value>
+    </T4ParameterValues>
+  </ItemGroup>
+
+  <!-- Import the T4 targets for optional use of T4 from msbuild for compile-time code generation -->
+  <Import Project="..\TextTemplating\Microsoft.TextTemplating.targets" />
+
+  <!--
+	Target for clearing the toolbox cache in exp hive - required when modifing the mapping between 
+	a toolbox item and the MEL(s) it's creating when dropped on the design surface.
+	Note: The target will clear the cache only in the Exp hive.
+	-->
+  <UsingTask TaskName="CleanToolboxCache" AssemblyFile="Microsoft.DSLTools.Build.Tasks.dll" />
+
+  <PropertyGroup>
+    <ClearToolboxCacheInExpHive Condition="'$(ClearToolboxCacheInExpHive)' == ''">false</ClearToolboxCacheInExpHive>
+    <BuildDependsOn>$(BuildDependsOn);DSLClearToolboxCache</BuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="DSLClearToolboxCache"
+		Condition="'$(ClearToolboxCacheInExpHive)'=='true'">
+    <!-- Disabled pending fix for bug #295428
+		<CleanToolboxCache /> -->
+  </Target>
+
+  <!-- 
+	  Target to set up required VSCT/CTC resource properties/items, if they don't already exist. 
+	  If the project doesn't specify a no-culture .resources file to merge the CTO into, this
+	  target will create one with the name VSPackage.resources; the VS managed resource loader
+	  is optimized to look for a resource with this name first.
+	-->
+  <PropertyGroup>
+    <MergeCtoResourceDependsOn>$(MergeCtoResourceDependsOn);DSLToolsCreatePackageResources</MergeCtoResourceDependsOn>
+  </PropertyGroup>
+  <Target Name="DSLToolsCreatePackageResources"
+		 Condition="'@(_ResourcesToMergeWithCTO)'=='' And '$(PackageResources)'==''"
+		 DependsOnTargets="GenerateResourceToMergeWithCTO">
+    <CreateItem Include="$(IntermediateOutputPath)VSPackage.resources" AdditionalMetadata="Type=Non-Resx;LogicalName=VSPackage.resources;WithCulture=false">
+      <Output ItemName="EmbeddedResource" TaskParameter="Include"/>
+    </CreateItem>
+    <CreateProperty Value="$(IntermediateOutputPath)VSPackage.resources">
+      <Output TaskParameter="Value" PropertyName="PackageResources"/>
+    </CreateProperty>
+  </Target>
+
+  <!--
+    Target to check whether we need to update the DevenvSetup.cache file so that devenv /setup doesn't 
+    run on first build.
+  -->
+  <PropertyGroup>
+    <SettingUpDevenvDependsOn>$(SettingUpDevenvDependsOn);DSLToolsUpdateDevenvSetupCacheFile</SettingUpDevenvDependsOn>
+  </PropertyGroup>
+  <Target Name="DSLToolsUpdateDevenvSetupCacheFile"
+		 Condition="'$(BuildingProject)'=='True' And Exists('$(IntermediateOutputPath)FirstBuild.cache')" >
+    <Delete Files="$(IntermediateOutputPath)FirstBuild.cache" />
+    <WriteLinesToFile File="$(DevenvSetupStateFile)" Lines="' '" Overwrite="true"/>
+  </Target>
+
+  <!-- 
+	  Targets for creating project item template zip archives. 
+	-->
+  <UsingTask TaskName="CreateProjectItemTemplate" AssemblyFile="Microsoft.DSLTools.Build.Tasks.dll" />
+  <UsingTask TaskName="GetProjectItemTemplateInfo" AssemblyFile="Microsoft.DSLTools.Build.Tasks.dll" />
+  <PropertyGroup>
+    <CompileDependsOn>$(CompileDependsOn);DSLToolsCreateProjectItemTemplates;DSLToolsRecordProjectItemTemplateFileWrites</CompileDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ItemTemplateCleanFile Condition="'$(ItemTemplateCleanFile)'==''">$(MSBuildProjectFile).ItemTemplates.txt</ItemTemplateCleanFile>
+  </PropertyGroup>
+  <Target
+	  Name="DSLToolsGetProjectItemTemplateInfo"
+	  Condition="'@(VSItemTemplate)'!='' And '$(BuildingProject)'=='true'">
+    <GetProjectItemTemplateInfo
+			TemplateFiles="@(VSItemTemplate)">
+      <Output TaskParameter="OutputFiles" ItemName="ItemTemplateOutputFiles" />
+      <Output TaskParameter="TemplateContentFiles" ItemName="ItemTemplateContentFiles" />
+    </GetProjectItemTemplateInfo>
+  </Target>
+  <Target
+	  Name="DSLToolsCreateProjectItemTemplates"
+	  Condition="'$(BuildingProject)'=='true'"
+	  Inputs="@(VSItemTemplate);@(ItemTemplateContentFiles)"
+	  Outputs="@(ItemTemplateOutputFiles->'$(OutDir)%(Identity)')"
+	  DependsOnTargets="DSLToolsGetProjectItemTemplateInfo">
+    <CreateProjectItemTemplate
+			TemplateFiles="@(VSItemTemplate)"
+			TemplateContentFiles="@(ItemTemplateContentFiles)"
+			OutputFiles="@(ItemTemplateOutputFiles->'$(OutDir)%(Identity)')" />
+
+    <ItemGroup>
+      <VSIXSourceItem Include="@(ItemTemplateOutputFiles->'$(OutDir)%(Identity)')">
+        <VSIXSubPath>ItemTemplates\%(RelativeDir)</VSIXSubPath>
+      </VSIXSourceItem>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="DSLToolsRecordProjectItemTemplateFileWrites">
+    <!-- Use standard Microsoft.Common.Targets clean mechanism for files in output directory. -->
+    <CreateItem Include="@(ItemTemplateOutputFiles->'$(OutDir)%(Identity)')">
+      <Output ItemName="FileWrites" TaskParameter="Include"/>
+    </CreateItem>
+  </Target>
+</Project>

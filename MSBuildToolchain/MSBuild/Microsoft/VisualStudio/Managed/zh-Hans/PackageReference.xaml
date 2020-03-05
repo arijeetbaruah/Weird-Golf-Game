@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="包属性" DisplayName="打包" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="依赖项说明。" DisplayName="说明" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="要从此引用中排除的资产" DisplayName="排除资产" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="指示是否要使用包的根目录的位置生成 MSBuild 属性。所生成的属性名称采用 &quot;Pkg[PackageID]&quot; 的形式，其中 &quot;[PackageID]&quot; 是包的 ID，且所有句点 &quot;.&quot; 均替换为下划线 &quot;_&quot;。" DisplayName="生成路径属性" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="要从此引用中包括的资产" DisplayName="包含的资产" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="应为此包取消的警告逗号分隔列表" DisplayName="取消显示警告" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="所引用的包的位置。" ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="此引用中的私有资产" DisplayName="私有资产" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="依赖项的版本。" DisplayName="版本" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

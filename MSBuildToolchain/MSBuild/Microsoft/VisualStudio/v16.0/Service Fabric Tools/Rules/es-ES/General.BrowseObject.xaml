@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<!-- Rule definition for project state in property sheet -->
+<Rule Name="ConfigurationGeneralBrowseObject" DisplayName="Propiedades del proyecto" PageTemplate="generic" Description="Propiedades del proyecto" xmlns="http://schemas.microsoft.com/build/2009/properties">
+    <Rule.Categories>
+        <Category Name="Application" DisplayName="Aplicación" Description="Aplicación"/>
+        <Category Name="Misc" DisplayName="Varios" Description="Varios"/>
+        <Category Name="Debugging" DisplayName="Depuración" Description="Depuración"/>
+    </Rule.Categories>
+    <Rule.DataSource>
+        <DataSource Persistence="ProjectFile" Label="Configuration" HasConfigurationCondition="false"/>
+    </Rule.DataSource>
+
+    <StringProperty Name="ProjectFile" ReadOnly="True" Category="Misc" DisplayName="Archivo del proyecto" Description="Nombre del archivo del proyecto.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFile"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="ProjectFolder" ReadOnly="True" Category="Misc" DisplayName="Carpeta de proyecto" Description="Ubicación del archivo del proyecto.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectDirectory"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <StringProperty Name="FullPath" ReadOnly="true" Visible="false">
+        <StringProperty.DataSource>
+            <DataSource Persistence="ProjectFile" PersistedName="MSBuildProjectFullPath"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="ApplicationDebugMode" Category="Debugging" DisplayName="Modo de depuración de la aplicación" Default="Remove" Description="Indica el comportamiento de implementación de la aplicación como parte de la depuración. 
+
+Quitar la aplicación: la aplicación se quitará del clúster una vez que finalice la sesión del depurador. 
+Mantener la aplicación: la aplicación seguirá en ejecución en el clúster una vez que finalice la sesión del depurador. En una depuración subsiguiente, la aplicación se quitará y se volverá a implementar durante la depuración.
+Actualización automática: la aplicación existente se actualizará en el inicio de la depuración y seguirá en ejecución en el clúster una vez que finalice la sesión del depurador. 
+Actualizar la aplicación: actualiza la aplicación con nuevos binarios sin volver a implementarla. Este modo solo es aplicable en un clúster de un nodo.">
+        <EnumValue Name="AutoUpgrade" DisplayName="Actualización automática"/>
+        <EnumValue Name="Remove" DisplayName="Quitar la aplicación"/>
+        <EnumValue Name="Keep" DisplayName="Mantener la aplicación"/>
+        <EnumValue Name="Refresh" DisplayName="Actualizar aplicación"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="LaunchTarget" Category="Debugging" DisplayName="Destino de inicio" Description="El origen de la dirección URL para explorar después de iniciar la aplicación." EnumProvider="LaunchTargetProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+
+    <StringProperty Name="ApplicationUrl" Category="Debugging" DisplayName="Dirección URL de la aplicación" Description="Dirección URL para explorar después de iniciar la aplicación.">
+        <StringProperty.DataSource>
+            <DataSource Persistence="UserFile" HasConfigurationCondition="False"/>
+        </StringProperty.DataSource>
+    </StringProperty>
+
+    <EnumProperty Name="PackageOutputFolder" Category="Application" DisplayName="Carpeta de salida de paquete completo" Default="true" Description="Indica el comportamiento de empaquetado (aplicable solamente a proyectos de servicio que no son ASP.NET destinados a la versión completa de .NET Framework). 
+
+True: se empaquetan todos los archivos en la carpeta Bin. 
+False: se empaquetan archivos específicos en función de una lógica preconfigurada.">
+        <EnumValue Name="true" DisplayName="True"/>
+        <EnumValue Name="false" DisplayName="False"/>
+        <EnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </EnumProperty.DataSource>
+    </EnumProperty>
+
+    <DynamicEnumProperty Name="DebugProfile" Category="Debugging" DisplayName="Perfil de depuración" Description="El perfil usado al depurar la aplicación de Service Fabric." EnumProvider="PublishProfileProvider">
+        <DynamicEnumProperty.DataSource>
+            <DataSource Persistence="ProjectFile" HasConfigurationCondition="False"/>
+        </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+</Rule>

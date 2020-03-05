@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule
+      Name="LinuxLocalBuild"
+      DisplayName="Build"
+      PageTemplate="generic"
+      Description="Build"
+      SwitchPrefix="/"
+      Order="100"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" />
+  </Rule.DataSource>
+  <StringProperty Name="BuildCommandLine" DisplayName="Build Command Line"
+                  Description="Specifies the command line to run for the 'Build' command."
+                  IncludeInCommandLine="false"
+                  Category="General" 
+                  F1Keyword="VC.Project.VCNMakeTool.BuildCommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;Edit...&gt;"/>
+    </StringProperty.ValueEditors>
+  </StringProperty>
+  <StringProperty Name="ReBuildCommandLine" DisplayName="Rebuild All Command Line"
+                  Description="Specifies the command line to run for the 'Rebuild All' command."
+                  IncludeInCommandLine="false"
+                  Category="General"
+                  F1Keyword="VC.Project.VCNMakeTool.ReBuildCommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;Edit...&gt;"/>
+    </StringProperty.ValueEditors>
+  </StringProperty>
+  <StringProperty Name="CleanCommandLine" DisplayName="Clean Command Line"
+                  Description="Specifies the command line to run for the 'Clean' command."
+                  IncludeInCommandLine="false"
+                  Category="General" 
+                  F1Keyword="VC.Project.VCNMakeTool.CleanCommandLine">
+    <StringProperty.ValueEditors>
+      <ValueEditor EditorType="DefaultCommandPropertyEditor" DisplayName="&lt;Edit...&gt;"/>
+    </StringProperty.ValueEditors>
+  </StringProperty>
+</Rule>

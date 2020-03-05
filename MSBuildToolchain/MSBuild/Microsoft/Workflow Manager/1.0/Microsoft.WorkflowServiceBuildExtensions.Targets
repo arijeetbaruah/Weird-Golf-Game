@@ -1,0 +1,119 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <ItemGroup>
+    <!-- 
+      Pass1 extension to generate XmlnsDefinitionAttribute mapping clr-namespace within a workflow x:Class attribute
+      to a well-known workflow service xml namespace.
+    -->
+    <XamlBuildTaskTypeGenerationExtensionName Include ="Microsoft.Workflow.Service.Build.AssemblyInfoGeneratorExtension">
+      <AssemblyFile>$(MSBuildExtensionsPath32)\Microsoft\Workflow Manager\1.0\Microsoft.Workflow.Service.Build.dll</AssemblyFile>
+      <Visible>false</Visible>
+    </XamlBuildTaskTypeGenerationExtensionName>
+
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <TranslatedWorkflowsDestinationFolder Condition="'$(TranslatedWorkflowsDestinationFolder)'==''">$(OutputPath)TranslatedWorkflows\</TranslatedWorkflowsDestinationFolder>
+    <TranslatedWorkflowMapFileName Condition="'$(TranslatedWorkflowMapFileName)'==''">TranslationMap.xml</TranslatedWorkflowMapFileName>
+    <PartitionedWorkflowBuildOutputFolder Condition="'$(PartitionedWorkflowBuildOutputFolder)'==''">$(OutputPath)PartitionedWorkflowBuild\</PartitionedWorkflowBuildOutputFolder>
+    <PartitionedWorkflowBuildIntermediateOutputFolder Condition="'$(PartitionedWorkflowBuildIntermediateOutputFolder)'==''">$(IntermediateOutputPath)PartitionedWorkflowBuild\</PartitionedWorkflowBuildIntermediateOutputFolder>
+  </PropertyGroup>
+
+  <UsingTask Condition="'$(PlatformTarget)'=='x64'" 
+    TaskName="Microsoft.Workflow.Service.Build.ExpressionTranslationBuildTask" 
+    Architecture="x64" 
+    AssemblyFile=".\Microsoft.Workflow.Service.Build.dll"/>
+
+  <UsingTask Condition="'$(PlatformTarget)'=='' Or '$(PlatformTarget)'!='x64'" 
+    TaskName="Microsoft.Workflow.Service.Build.ExpressionTranslationBuildTask" 
+    AssemblyFile=".\Microsoft.Workflow.Service.Build.dll"/>
+
+  <UsingTask Condition="'$(PartitionWorkflowBuild)'=='true'" 
+    TaskName="Microsoft.Workflow.Service.Build.PartitionedWorkflowAssemblyBuildTask" 
+    AssemblyFile=".\Microsoft.Workflow.Service.Build.dll"/>
+  
+  <Target Name="BuildPartitionedWorkflowAssembly"
+          BeforeTargets="XamlMarkupCompilePass1"
+          Condition="'@(XamlAppDef)' != '' And  '$(PartitionWorkflowBuild)'=='true'">
+
+    <PartitionedWorkflowAssemblyBuildTask
+      CurrentProject="$(MSBuildProjectFullPath)"
+      ReferencePaths="@(ReferencePath)"      
+      AssemblyName="$(AssemblyName)"
+      IntermediateOutputPath="$(PartitionedWorkflowBuildIntermediateOutputFolder)"
+      OutputPath="$(PartitionedWorkflowBuildOutputFolder)"
+      TranslatedWorkflowsDestinationFolder="$(TranslatedWorkflowsDestinationFolder)">
+
+      <Output ItemName="PartitionedWorkflowBuildAssembly" TaskParameter="PartitionedWorkflowAssembly" />
+      <Output ItemName="FileWrites" TaskParameter="FilesWritten"/>
+    
+    </PartitionedWorkflowAssemblyBuildTask>
+
+  </Target>
+
+  <Target Name="ClearXamlAppDef"
+        AfterTargets="BuildPartitionedWorkflowAssembly"
+        Condition="'@(XamlAppDef)' != '' And '$(PartitionWorkflowBuild)'=='true'">
+
+    <ItemGroup>
+      <XamlAppDef Remove="@(XamlAppDef)" />
+    </ItemGroup>
+
+  </Target>
+  
+  <Target Name="ResetXamlRequiresCompilationPass2"
+          AfterTargets="XamlMarkupCompilePass1"
+          Condition="'$(PartitionWorkflowBuild)'=='true' And '$(XamlRequiresCompilationPass2)'=='true'">
+
+    <PropertyGroup>
+      <XamlRequiresCompilationPass2>false</XamlRequiresCompilationPass2>
+    </PropertyGroup>
+  
+  </Target>  
+  <!-- 
+    This target executes the ExpressionTranslationBuildTask and outputs
+    translated Xaml files to the TranslatedWorkflowsDestinationFolder. It also outputs
+    a map file in the same directory that maps source xaml files to the corresponding translated 
+    xaml files.
+  -->
+  <Target Name="TranslateWorkflowExpressions"
+          AfterTargets="Compile"
+          Condition="'@(XamlAppDef)' != '' And 
+                     '@(IntermediateAssembly)' != '' And 
+                     Exists('@(IntermediateAssembly)') And
+                     ('$(PartitionWorkflowBuild)'=='' Or '$(PartitionWorkflowBuild)'=='false')"
+          Outputs="@(TranslatedWorkflowMapItem);@(TranslatedWorkflowItems)">
+    
+    <ExpressionTranslationBuildTask
+      ApplicationMarkup="@(XamlFileNames)"
+      References="@(ReferencePath)"
+      RootNamespace="$(RootNamespace)"
+      ProjectLanguage="$(Language)"
+      LocalAssembly="@(IntermediateAssembly)"
+      MapFileName="$(TranslatedWorkflowMapFileName)"
+      OutputDirectory="$(TranslatedWorkflowsDestinationFolder)">
+
+      <Output ItemName="TranslatedWorkflowItems" TaskParameter="TranslatedWorkflows"/>
+      <Output ItemName="TranslatedWorkflowMapItem" TaskParameter="MapFile"/>
+    </ExpressionTranslationBuildTask>
+
+    <Message Text="(out) TranslatedWorkflowItems: '@(TranslatedWorkflowItems)'" />
+    <Message Text="(out) TranslatedWorkflowMapItem: '@(TranslatedWorkflowMapItem)'" />
+
+  </Target>
+
+
+  <!-- 
+    This target enables cleaning up of translated xaml files and the corresponding
+    map file when the CoreClean target is invoked. 
+  -->
+  <Target Name="AddTranslatedXamlFilesToFileWrites"
+          AfterTargets="TranslateWorkflowExpressions">
+
+    <ItemGroup>
+      <FileWrites Include="@(TranslatedWorkflowItems);@(TranslatedWorkflowMapItem)" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

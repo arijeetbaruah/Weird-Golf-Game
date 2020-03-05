@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="Başlat" PageTemplate="debugger" Description="Yerel Hata Ayıklayıcı seçenekleri" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="Başlatma Seçenekleri" Description="Başlatma Seçenekleri"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="Hata Ayıklayıcı Türü" Category="StartOptions" Description="Hangi hata ayıklayıcının etkinleştirileceğini belirtir. Karma olarak ayarlandığında, hem yönetilen hem de yerel kod için hata ayıklayıcılar kullanılır. Betik ile Yerel olarak ayarlandığında, hem yerel hem de betik kodu için hata ayıklayıcılar kullanılır.">
+        <EnumValue Name="NativeOnly" DisplayName="Yalnızca Yerel" Description="Yalnızca Yerel"/>
+        <EnumValue Name="ManagedOnly" DisplayName="Yalnızca Yönetilen" Description="Yalnızca Yönetilen"/>
+        <EnumValue Name="Script" DisplayName="Yalnızca Betik" Description="Yalnızca Betik"/>
+        <EnumValue Name="NativeWithScript" DisplayName="Betik ile Yerel" Description="Betik ile Yerel"/>
+        <EnumValue Name="Mixed" DisplayName="Karma (Yönetilen ve Yerel)" Description="Karma (Yönetilen ve Yerel)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>

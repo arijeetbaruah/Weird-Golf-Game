@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+***********************************************************************************************
+Microsoft.Repository.targets
+
+This targets file contains tasks and targets to load assembly data and other files into a Repository database.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Usage notes:
+  
+  Using this targets file
+  - - - - - - - - - - - -
+  To use this targets file: 
+
+  1) Import this targets file into your project by adding the appropriate <Import ...>
+       e.g. <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\$(VisualStudioVersion)\Repository\Microsoft.Repository.targets" />
+
+  2) Set the properties to control how the build is carried out e.g.
+      <CreateRepository>false</CreateRepository>    // don't create the Repository if it doesn't exist 
+      <Repository>MyCodeIndex</Repository>  // specifies the database to use
+      <RepositoryServer>MyServer\.</RepositoryServer> // specifies the SQL Server instance to use.
+
+  3) Call one of the load targets.
+
+  Specifying the database to use
+  - - - - - - - - - - - - - - - -
+  Unless otherwise specified, a default database called Microsoft.VsCodeIdex on 
+  the SQL LocalDB instance MSSQLLocalDB (i.e. "(LocalDB)\MSSQLLocalDB") will be used.
+  
+  To change the database, set the property $(Repository).
+  To change the server, set the property $(RepositoryServer).
+
+  Note: if you are using Sql Server Management Studio to view the database, make sure the version
+  you use is compatible with the database. By default, the build tasks will load the data into a
+  latest version SQL database, although SQL Server 2008 is supported.
+  SQL Management Studio 2008SP2 does not fully support SQL Server 11.0 or later databases.
+
+  User-callable targets:
+  - - - - - - - - - - - -
+  This file also contains the following targets that you can call directly
+  (e.g. using msbuild /t:LoadFiles) :
+
+    LoadFiles: loads a specified set of files into a repository database.
+      Required parameters: $(LoadFileSpec) - specifies the files to load. Can include wildcards.
+      This target is a simple wrapper around the more general LoadArtifacts target (see below).
+
+
+      Example usage: the following example loads all assemblies in and under the current
+      directory into the default database into a folder called 'Folder1'.
+
+      msbuild Microsoft.Repository.targets /t:LoadFiles /p:LoadFileSpec=**\*.dll /p:RepositoryFolder=Folder1
+ 
+ 
+    LoadArtifacts: loads a specified set of artifacts into a repository database.
+      Required parameters: @(ArtifactsToLoad) - specifies the artifacts to load.
+
+  -->  
+
+  <!-- ################################################################################ -->
+  <!-- Defaults -->
+  <!-- ################################################################################ -->
+  <!-- Set default properties -->
+  <PropertyGroup>
+
+    <!-- Set defaults for the database name and SQL server -->
+    <Repository Condition="$(Repository)==''">Microsoft.VsCodeIndex</Repository>
+    <RepositoryServer Condition="$(RepositoryServer)==''">(LocalDB)\MSSQLLocalDB</RepositoryServer>
+
+    <!-- Whether to create the specified database if it does not exist.-->
+    <CreateRepository Condition="$(CreateRepository)==''">true</CreateRepository>
+
+    <!-- Database connection timeout -->
+    <RepositoryConnectTimeout Condition="$(RepositoryConnectTimeout)==''" >40</RepositoryConnectTimeout>
+
+    <!-- Database operation timeout -->
+    <RepositoryOperationTimeout Condition="$(RepositoryOperationTimeout)==''">300</RepositoryOperationTimeout>
+
+    <!-- Number of retries in the event of a load error-->
+    <NumberOfRetries Condition="$(NumberOfRetries)==''">3</NumberOfRetries>
+
+    <!-- Length of the pause between retry attempts -->
+    <RetryDelaySeconds Condition="$(RetryDelaySeconds)==''">3</RetryDelaySeconds>
+
+  </PropertyGroup>
+
+  <!-- Internal properties -->
+  <PropertyGroup>
+    <!-- Location of the assembly containing the tasks. -->
+    <!-- Currently, the assembly is in the same folder as this targets file, so the $(RepositoryBuildTasksPath) does not need to be set. -->
+    <RepositoryBuildTasksAssemblyFile>$(RepositoryBuildTasksPath)Microsoft.Repository.Build.Tasks.dll</RepositoryBuildTasksAssemblyFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- By default, look for any loaders in dlls in the same directory as this targets file that following the standard naming convention. -->
+    <LoaderAssemblyPaths Condition="@(LoaderAssemblyPaths)=='' " Include="$(MSBuildThisFileDirectory)\*Loader*.dll" />
+  </ItemGroup>
+  
+  <!-- ################################################################################ -->
+  <!-- Task definitions -->
+  <!-- ################################################################################ -->
+  <!-- Uses Assembly.LoadFrom -->
+  <UsingTask TaskName="LoadArtifacts" AssemblyFile="$(RepositoryBuildTasksAssemblyFile)" />
+
+  <!-- ################################################################################ -->
+  <!-- User-callable targets / customisation points -->
+  <!-- ################################################################################ -->
+
+  <!-- Loads the files specified in the $(LoadFileSpec) property. -->
+  <Target Name="LoadFiles" DependsOnTargets="ExpandFileSpecList;LoadArtifacts" >
+  </Target>
+ 
+  <!-- Loads the artifacts specified in the @(ArtifactsToLoad) item group. -->
+  <Target Name="LoadArtifacts" >
+
+    <Message Importance="low" Text="Files to load: @(ArtifactsToLoad)" />
+
+    <LoadArtifacts
+      Repository="$(Repository)"
+      RepositoryServer="$(RepositoryServer)"
+      ArtifactUris="@(ArtifactsToLoad)"
+      TargetFolder="$(RepositoryFolder)"
+      CreateRepository="$(CreateRepository)"
+      RepositoryDirectory="$(RepositoryDatabaseDirectory)"
+      LoaderAssemblyPaths="@(LoaderAssemblyPaths)"
+      ConnectTimeout="$(RepositoryConnectTimeout)"
+      OperationTimeout="$(RepositoryOperationTimeout)"
+      NumberOfRetries="$(NumberOfRetries)"
+      RetryDelaySeconds="$(RetryDelaySeconds)"
+      AdditionalOptions="@(AdditionalLoaderOptions)"
+      >
+
+    </LoadArtifacts>
+  </Target>
+    
+  <!-- ################################################################################ -->
+  <!-- Internal targets -->
+  <!-- ################################################################################ -->
+
+  <Target Name="ExpandFileSpecList" >
+    <Error Condition="$(LoadFileSpec)==''" Text="Specify the file(s) to be loaded in the property 'LoadFileSpec'" />
+    <!-- Convert the property into an item. This is done so that any
+         wildcards in the property are expanded.-->
+    <ItemGroup>
+      <ArtifactsToLoad Include="$(LoadFileSpec)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

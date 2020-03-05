@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<Rule Name="PackageReference" Description="Paketeigenschaften" DisplayName="Paket" PageTemplate="generic" xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.DataSource>
+    <DataSource HasConfigurationCondition="False" ItemType="PackageReference" MSBuildTarget="CollectPackageReferences" Persistence="ProjectFile" SourceOfDefaultValue="AfterContext" SourceType="TargetResults" />
+  </Rule.DataSource>
+  <StringProperty Name="Description" Description="Beschreibung der Abhängigkeit." DisplayName="Beschreibung" ReadOnly="True" Visible="True" />
+  <StringProperty Name="ExcludeAssets" Description="Auszuschließende Ressourcen aus diesem Verweis" DisplayName="Ausgeschlossene Assets" Visible="True" />
+  <StringProperty Name="FrameworkName" ReadOnly="True" Visible="False" />
+  <StringProperty Name="FrameworkVersion" ReadOnly="True" Visible="False" />
+  <BoolProperty Name="GeneratePathProperty" Description="Gibt an, ob eine MSBuild-Eigenschaft mit dem Speicherort des Stammverzeichnisses des Pakets generiert werden soll. Der Name der generierten Eigenschaft weist das Format &quot;Pkg[Paket-ID]&quot; auf, wobei &quot;[Paket-ID]&quot; der ID des Pakets entspricht. Hierbei müssen Punkte (.) jedoch durch Unterstriche (_) ersetzt werden." DisplayName="Pfadeigenschaft generieren" Visible="True" />
+  <StringProperty Name="IncludeAssets" Description="Einzuschließende Ressourcen aus diesem Verweis" DisplayName="Enthaltene Assets" Visible="True" />
+  <StringProperty Name="IsImplicitlyDefined" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Name" ReadOnly="True" Visible="True" />
+  <StringProperty Name="NoWarn" Description="Durch Trennzeichen getrennte Liste von Warnungen, die für dieses Paket unterdrückt werden sollen" DisplayName="Warnungen unterdrücken" Visible="True" />
+  <StringProperty Name="OriginalItemSpec" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Path" Description="Speicherort des Pakets, auf das verwiesen wird." ReadOnly="True" Visible="True" />
+  <StringProperty Name="PrivateAssets" Description="Private Ressourcen in diesem Verweis" DisplayName="Private Objekte" Visible="True" />
+  <StringProperty Name="RuntimeIdentifier" ReadOnly="True" Visible="False" />
+  <StringProperty Name="TargetFramework" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Type" ReadOnly="True" Visible="False" />
+  <StringProperty Name="Version" Description="Version der Abhängigkeit." DisplayName="Version" ReadOnly="True">
+    <StringProperty.DataSource>
+      <DataSource PersistenceStyle="Attribute" SourceOfDefaultValue="AfterContext" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <BoolProperty Name="Visible" ReadOnly="True" Visible="False" />
+</Rule>

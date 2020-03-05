@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule Name="LocalDebugger" DisplayName="시작" PageTemplate="debugger" Description="로컬 디버거 옵션" xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+        <DataSource Persistence="UserFile"/>
+    </Rule.DataSource>
+
+    <Rule.Categories>
+        <Category Name="StartOptions" DisplayName="시작 옵션" Description="시작 옵션"/>
+    </Rule.Categories>
+
+    <EnumProperty Name="DebuggerType" DisplayName="디버거 형식" Category="StartOptions" Description="사용하도록 설정할 디버거를 지정합니다. [혼합]으로 설정하는 경우 관리 코드와 원시 코드 둘 다에 대해 디버거가 사용됩니다. 스크립트를 사용하여 [원시]로 설정하는 경우 코드와 원시 코드 둘 다에 대해 디버거가 사용됩니다.">
+        <EnumValue Name="NativeOnly" DisplayName="네이티브 전용" Description="네이티브 전용"/>
+        <EnumValue Name="ManagedOnly" DisplayName="관리 전용" Description="관리 전용"/>
+        <EnumValue Name="Script" DisplayName="스크립트만" Description="스크립트만"/>
+        <EnumValue Name="NativeWithScript" DisplayName="스크립트가 포함된 네이티브 코드" Description="스크립트가 포함된 네이티브 코드"/>
+        <EnumValue Name="Mixed" DisplayName="혼합(관리/네이티브)" Description="혼합(관리/네이티브)"/>
+        <EnumProperty.Metadata>
+            <NameValuePair Name="IsDebugType" Value="true"/>
+        </EnumProperty.Metadata>
+    </EnumProperty>
+</Rule>
