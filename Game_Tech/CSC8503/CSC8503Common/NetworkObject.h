@@ -4,19 +4,13 @@
 #include "NetworkState.h"
 namespace NCL {
 	namespace CSC8503 {
-		enum NetworkPowerUps {
-			NONE,
-			SQUARE
-		};
 
 		struct PlayerPacket : public GamePacket {
 			int		objectID = -1;
-			NetworkState fullState;
-			NetworkPowerUps powerUps;
+			NetworkState fullState[4];
 
-			PlayerPacket(NetworkPowerUps pu) {
+			PlayerPacket() {
 				type = Received_State;
-				powerUps = pu;
 				size = sizeof(PlayerPacket) - sizeof(GamePacket);
 			}
 		};
@@ -77,7 +71,7 @@ namespace NCL {
 			//Called by servers
 			virtual bool WritePacket(GamePacket** p, bool deltaFrame, int stateID);
 
-			void UpdateStateHistory(int minID);
+			void UpdateStateHistory(int minID, int playerID);
 
 			int GetID() { return networkID; };
 
@@ -92,7 +86,7 @@ namespace NCL {
 
 			NetworkState& GetLatestNetworkState();
 
-			bool GetNetworkState(int frameID, NetworkState& state);
+			bool GetNetworkState(int frameID, NetworkState& state, int playerID);
 
 			virtual bool ReadDeltaPacket(DeltaPacket &p);
 			virtual bool ReadFullPacket(FullPacket& p);
@@ -106,7 +100,7 @@ namespace NCL {
 
 			NetworkState lastFullState;
 
-			std::vector<NetworkState> stateHistory;
+			std::map<int, std::vector<NetworkState>> stateHistory;
 
 			int deltaErrors;
 			int fullErrors;

@@ -21,8 +21,8 @@ namespace NCL {
 			void StartLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
-			void InsertPlayer(int id, Player* p);
-			void RemovePlayer(int ID, Player* p);
+			void InsertPlayer(int id, GameObject* p);
+			void RemovePlayer(int ID, GameObject* p);
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
@@ -49,7 +49,6 @@ namespace NCL {
 			
 			std::vector<NetworkObject*> networkObjects;
 
-			std::map<int, GameObject*> serverPlayers;
 			GameObject* localPlayer;
 		};
 	}

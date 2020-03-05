@@ -15,6 +15,7 @@ enum BasicNetworkMessages {
 	Received_State, //received from a client, informs that its received packet n
 	Player_Connected,
 	Player_Disconnected,
+	Player_ID,
 	Shutdown,
 	Collectable_Count
 };
@@ -69,6 +70,15 @@ struct PlayerDisconnectPacket : public GamePacket {
 		type		= BasicNetworkMessages::Player_Disconnected;
 		playerID	= p;
 		size		= sizeof(int);
+	}
+};
+
+struct PlayerIDPacket : public GamePacket {
+	int playerID;
+	PlayerIDPacket(int p) {
+		type = BasicNetworkMessages::Player_ID;
+		playerID = p;
+		size = sizeof(int);
 	}
 };
 
