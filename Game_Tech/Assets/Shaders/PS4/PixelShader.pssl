@@ -21,13 +21,16 @@ float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 {
 	float4 diffuse = colorMap.Sample(samp0, In.UV.xy);
 
-    float3 incident = normalize(In.lightPos - In.Position);
+    float3 incident = normalize(In.lightPos - In.fragPos);
     float lambert = max(0.0, dot(incident, In.normal));
 
-    float dist = length(In.lightPos - In.Position);
+    float dist = length(In.lightPos - In.fragPos);
     float atten = 1.0 - clamp(dist / In.radius, 0.0, 1.0);
-    float3 viewDir = normalize(In.cameraPos - In.Position);
+    float3 viewDir = normalize(In.cameraPos - In.fragPos);
     float3 halfDir = normalize(incident + viewDir);
+    float3 lightDir = normalize(In.lightPos - In.fragPos);
+    float3 reflectDir = reflect(-lightDir, In.normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
 
     float rFactor = max(0.0, dot(halfDir, In.normal));
     float sFactor = pow(rFactor, 50.0);
@@ -36,6 +39,9 @@ float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
     color += In.lightColor.rgb * sFactor * 0.33;
     float4 fragColor = float4(color * atten * lambert, diffuse.a);
     fragColor.rgb += diffuse.rgb * In.lightColor.rgb * 1.5 * In.intensity;
+    fragColor.rgb += spec * 1 * In.lightColor.rgb;
+
+//fragColor.rgb = float3(In.normal);
 
 	return fragColor;
 }  

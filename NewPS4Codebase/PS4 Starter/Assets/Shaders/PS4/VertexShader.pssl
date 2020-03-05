@@ -67,7 +67,7 @@ VS_OUTPUT main(VS_INPUT Input)
 	//Output.Color = Input.Color;
 	Output.lightColor = lightColor;
 	Output.UV = Input.UV;
-	float3x3 normalMatrix = mul(float3x3(transpose(InvertModelMat)), In.Normal);
+	float3x3 normalMatrix = float3x3(transpose(invertModelMat));
 	Output.normal = normalize(mul(normalMatrix, normalize(Input.Normal)));
 	Output.fragPos = float3(mul(modelMatrix, float4(Input.Position.xyz, 1)));
 	Output.lightPos = lightPos;
