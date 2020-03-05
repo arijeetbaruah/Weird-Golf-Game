@@ -172,7 +172,7 @@ void MeshGeometry::SetVertexTextureCoords(const vector<Vector2>& newTex) {
 	texCoords = newTex;
 }
 
-void MeshGeometry::SetVertexColours(const vector<Vector4>& newColours) {
+void MeshGeometry::SetVertexColors(const vector<Vector4>& newColours) {
 	colours = newColours;
 }
 

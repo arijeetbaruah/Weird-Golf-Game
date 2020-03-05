@@ -22,6 +22,7 @@ GameTimer*	Window::timer		= nullptr;
 Window::Window()	{
 	renderer	= nullptr;
 	window		= this;
+	timer = new GameTimer();
 }
 
 Window::~Window()	{
@@ -57,10 +58,12 @@ void	Window::SetRenderer(RendererBase* r) {
 bool	Window::UpdateWindow() {
 	std::this_thread::yield();
 	timer->Tick();
-
-	mouse->UpdateFrameState(timer->GetTimeDeltaMSec());
-	keyboard->UpdateFrameState(timer->GetTimeDeltaMSec());
-
+	if (mouse) {
+		mouse->UpdateFrameState(timer->GetTimeDeltaMSec());
+}
+	if (keyboard) {
+		keyboard->UpdateFrameState(timer->GetTimeDeltaMSec());
+	}
 	return InternalUpdate();
 }
 
