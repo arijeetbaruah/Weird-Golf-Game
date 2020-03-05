@@ -117,12 +117,14 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
-	otherplayers.push_back(AddSphereObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
-	otherplayers.push_back(AddSphereObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3"));
-	otherplayers.push_back(AddSphereObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
+	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
+	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3"));
+	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
 
 	// add the player controller
-	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0"));
+	Player* p = AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0");
+	p->isCurrentPlayer = true;
+	otherplayers.push_back(p);
 
 }
 
@@ -396,7 +398,7 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	return BallTemp;
 }
 
-GameObject* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
+Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
 {
 	//temp information
 	int playerNum = 0;
@@ -459,6 +461,8 @@ void TutorialGame::UpdateGame(float dt) {
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
+	isNetworkedGame = true;
+	isServer = true;
 	/*
 	if (!isNetworkedGame)
 	{
@@ -576,16 +580,6 @@ bool TutorialGame::SelectObject() {
 	}
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
 
 //following is UIfunction
 vector<GameObject*> TutorialGame::AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, const Vector4& colour, std::string objectName)
@@ -851,6 +845,12 @@ void TutorialGame::SeenObjects() {
 
 void TutorialGame::RenderScoreBoard()
 {
+<<<<<<< HEAD
+	float size = 1.0f;
+	float inverseMass = 0.1f;
+
+	Player* otherBall = new Player(playerNum);
+=======
 	if (isServer)
 	{
 		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
@@ -866,6 +866,7 @@ void TutorialGame::RenderScoreBoard()
 			Vector2(400, 350), Vector4(0, 0, 1, 1));
 	}
 }
+>>>>>>> Develop
 
 
 void TutorialGame::ResetCamera() {
@@ -904,6 +905,12 @@ void TutorialGame::RestartNetworkedGame()
 
 	int collectableCounter = 0;
 
+<<<<<<< HEAD
+	otherBall->SetNetworkObject(new NetworkObject(*otherBall, playerNum));
+
+	world->AddGameObject(otherBall);
+	serverPlayers.insert(std::pair<int, GameObject*>(playerNum, otherBall));
+=======
 	for (auto i = first; i != last; ++i)
 	{
 		// Reset Collectables
@@ -924,6 +931,7 @@ void TutorialGame::RestartNetworkedGame()
 			e->resetPosition();
 		}
 	}
+>>>>>>> Develop
 
 	world->SetCollectableCount(collectableCounter);
 }

@@ -90,7 +90,10 @@ void GameServer::UpdateServer() {
 			NewPlayerPacket player(peer);
 			SendGlobalPacket(player);
 
-			players.insert(std::pair<int, ENetPeer*>(peer, p));				
+			players.insert(std::pair<int, ENetPeer*>(peer, p));
+
+			PlayerIDPacket pID(peer);
+			SendPacketToPeer(pID, peer);
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_DISCONNECT) {
 			log->info("Server: A client has disconnected");

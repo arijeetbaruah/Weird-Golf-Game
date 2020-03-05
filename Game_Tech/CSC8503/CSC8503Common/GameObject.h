@@ -25,7 +25,7 @@ namespace NCL {
 		public:
 			GameObject(string name = "");
 			~GameObject();
-
+			int playerID;
 			virtual void DuringUpdate(float dt);
 
 			template <typename T>
@@ -134,6 +134,13 @@ namespace NCL {
 			void setLayer(unsigned long l) { layer = l; };
 			void setLayerMask(unsigned long m) { layerMask = m; };
 
+
+			OGLMesh* GetCubeMesh() { return cubeMesh; }
+			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
+
+			OGLMesh* GetPlayerMesh() { return playerMesh; }
+			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
+
 		protected:
 			Transform			transform;
 
@@ -141,6 +148,9 @@ namespace NCL {
 			PhysicsObject*		physicsObject;
 			RenderObject*		renderObject;
 			NetworkObject*		networkObject;
+
+			OGLMesh* cubeMesh = nullptr;
+			OGLMesh* playerMesh = nullptr;
 
 			unsigned long layer; // Bit number
 			unsigned long layerMask; // Set bit for each layer that this gameobject should not collide with

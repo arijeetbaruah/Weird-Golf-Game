@@ -109,6 +109,9 @@ void Player::UpdateCamera(float dt)
 // Handles click and drag movement
 void Player::UpdateClientPlayerKeys(float dt)
 {
+	if (!isCurrentPlayer) {
+		return;
+	}
 	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
 
 	float x = (float)sphere->getVelocity().x;
