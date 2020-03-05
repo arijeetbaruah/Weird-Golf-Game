@@ -122,7 +122,7 @@ void TutorialGame::InitWorld() {
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
 
 	// add the player controller
-	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0"));
+	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(0.05, 0.05, 0.05), "player0"));
 
 }
 
@@ -423,12 +423,12 @@ GameObject* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, co
 	//physics component
 	SpherePhysicsComponent* sphere = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	//sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	Ball->addComponent(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball , 10, 0.05, 0.05, 0.05));
+	//Ball->addComponent(sphere);
 
-	Ball->addComponent(sphere);
-
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
+	//sphere->setLinearDamping(0.8);
+	//sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 

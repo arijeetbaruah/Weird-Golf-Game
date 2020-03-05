@@ -1,6 +1,6 @@
 #include "cubeDebuff.h"
 #include "../GameTech/PhysxController.h"
-#include "../GameTech/TriangleMeshPhysicsComponent.h"
+#include "../GameTech/BoxPhysicsComponent.h"
 #include "Transform.h"
 
 using namespace NCL;
@@ -19,8 +19,12 @@ void cubeDebuff::Start() {
 
 
 void cubeDebuff::Apply() {
-	par->GetTransform().SetWorldScale(Vector3(0.05, 0.05, 0.05));
+
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), After, ren->GetDefaultTexture(), ren->GetShader()));
+
+	Vector3 position = par->GetTransform().GetWorldPosition();
+	//par->addComponent(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.00000005, 0.00000005, 0.00000005));
+	
 }
 
 void cubeDebuff::Remove() {
