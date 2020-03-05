@@ -28,6 +28,8 @@ public:
 	virtual void Update(float dt) = 0;
 	virtual void LateUpdate();
 
+	virtual void removeSelf();
+
 	void setParent(GameObject* go);
 	GameObject* getParent();
 

@@ -52,10 +52,21 @@ namespace NCL {
 						todelete.emplace_back(component.second->getName());
 				}
 				for (string s : todelete) {
+					components.at(s)->removeSelf();
 					delete components.at(s);
 					components.erase(s);
 				}
 			}
+
+			void RemoveComponent(string name) {
+				unordered_map<string, Component*>::const_iterator obj = components.find(name);
+				if (obj != components.end()) {
+					obj->second->removeSelf();
+					delete components.at(obj->first);
+					components.erase(obj->first);
+				}
+			}
+
 			void LateUpdate(float dt) {
 				for (pair<string, Component*> component : components) {
 					component.second->LateUpdate();
