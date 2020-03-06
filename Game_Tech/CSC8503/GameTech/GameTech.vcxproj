@@ -233,6 +233,7 @@
     <ClCompile Include="BoxPhysicsComponent.cpp" />
     <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
+    <ClCompile Include="CollisionCallback.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyChaseSuperState.cpp" />
     <ClCompile Include="EnemyPatrolSuperState.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="BoxPhysicsComponent.h" />
     <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
+    <ClInclude Include="CollisionCallback.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyChaseSuperState.h" />
     <ClInclude Include="EnemyPatrolSuperState.h" />

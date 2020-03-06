@@ -2,7 +2,6 @@
 
 #include "PhysxController.h"
 
-
 PhysxController::PhysxController() {
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 
@@ -24,19 +23,18 @@ void PhysxController::stepPhysics(bool interactive, float dt) {
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 										PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 										PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
-	// let triggers through
-	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	// generate contacts for all that were not filtered above
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	PX_UNUSED(attributes0);
+	PX_UNUSED(attributes1);
+	PX_UNUSED(filterData0);
+	PX_UNUSED(filterData1);
+	PX_UNUSED(constantBlockSize);
+	PX_UNUSED(constantBlock);
 
-	// trigger the contact callback for pairs (A,B) where
-	// the filtermask of A contains the ID of B and vice versa.
-	if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
-		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
-
+	// all initial and persisting reports for everything, with per-point data
+	pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
+		| PxPairFlag::eNOTIFY_TOUCH_FOUND
+		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
+		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
 	return PxFilterFlag::eDEFAULT;
 }
 
@@ -46,7 +44,7 @@ void PhysxController::createDefaultScene() {
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc->cpuDispatcher = gDispatcher;
 	sceneDesc->filterShader = contactReportFilterShader;
-	sceneDesc->simulationEventCallback = &testCallback;
+	sceneDesc->simulationEventCallback = &callback;
 	//sceneDesc->contactModifyCallback = &testCallback;
 	actualScene = gPhysics->createScene(*sceneDesc);
 
@@ -62,6 +60,10 @@ void PhysxController::createDefaultScene() {
 
 void PhysxController::addActor(PxActor* actor) {
 	actualScene->addActor(*actor);
+}
+
+void PhysxController::removeActor(PxActor* actor) {
+	actualScene->removeActor(*actor);
 }
 
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
