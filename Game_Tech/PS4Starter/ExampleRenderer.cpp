@@ -46,6 +46,8 @@ ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) :
 	building->Translate(Vector3(0, -10, -5));
 	golfLevel->AddChild(building);
 	golfLevel->AddChild(tree);
+
+	InitDepthBuffer();
 }
 
 ExampleRenderer::~ExampleRenderer()	
@@ -59,6 +61,7 @@ ExampleRenderer::~ExampleRenderer()
 	delete building;
 	delete treeTex;
 	delete mainLight;
+	delete depthBuffer;
 }
 
 void ExampleRenderer::Update(float dt)	{
@@ -143,6 +146,33 @@ void ExampleRenderer::RenderActiveScene()
 			DrawRenderObject(object.get());
 		}
 	}
+}
+
+void NCL::PS4::ExampleRenderer::InitDepthBuffer()
+{
+	depthBuffer = new PS4ScreenBuffer();
+	Gnm::DepthRenderTargetSpec spec;
+	spec.init();
+	spec.m_width = 1920;
+	spec.m_height = 1080;
+	spec.m_numFragments = Gnm::kNumFragments1;
+	spec.m_zFormat = Gnm::ZFormat::kZFormat32Float;
+	spec.m_stencilFormat = Gnm::kStencilInvalid;
+
+	GpuAddress::computeSurfaceTileMode(Gnm::GpuMode::kGpuModeBase, &spec.m_tileModeHint, GpuAddress::kSurfaceTypeDepthTarget, Gnm::DataFormat::build(spec.m_zFormat), 1);
+
+	void* stencilMemory = 0;
+
+	depthBuffer->depthTarget.init(&spec);
+
+	void* depthMemory = stackAllocators[GARLIC].allocate(depthBuffer->depthTarget.getZSizeAlign());
+
+	Gnm::registerResource(nullptr, ownerHandle, depthMemory, depthBuffer->depthTarget.getZSizeAlign().m_size,
+		"Depth", Gnm::kResourceTypeDepthRenderTargetBaseAddress, 0);
+
+	depthBuffer->depthTarget.setAddresses(depthMemory, stencilMemory);
+	Gnm::Texture tex;
+	tex.initFromDepthRenderTarget(&depthBuffer->depthTarget, false);
 }
 
 void ExampleRenderer::DrawRenderObject(RenderObject* o) {

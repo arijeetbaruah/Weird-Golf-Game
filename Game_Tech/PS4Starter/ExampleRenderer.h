@@ -25,6 +25,7 @@ namespace NCL {
 			void DrawRenderObject(RenderObject* o);
 			void	RenderFrame()	override;
 			void RenderActiveScene() override;
+			void InitDepthBuffer();
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
@@ -50,6 +51,8 @@ namespace NCL {
 			SceneNode* tree;
 
 			Light* mainLight;
+
+			PS4ScreenBuffer* depthBuffer;
 		};
 	}
 }
