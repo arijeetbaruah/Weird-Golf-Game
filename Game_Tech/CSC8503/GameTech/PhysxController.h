@@ -44,6 +44,7 @@ public:
 	void stepPhysics(bool interactive, float dt);
 	void createDefaultScene();
 	void addActor(PxActor* actor);
+	void removeActor(PxActor* actor);
 
 	PxPhysics* Physics() const { return gPhysics; };
 	PxCooking* Cooking() const { return gCooking; };

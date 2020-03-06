@@ -9,7 +9,10 @@ PhysicsComponent::PhysicsComponent(std::string name, PxTransform transform, Game
 	gPhysics = PhysxController::getInstance().Physics();
 	actor = gPhysics->createRigidDynamic(transform);
 	actor->userData = go;
-	//PhysxController::getInstance().setupFiltering(actor, FilterGroup::eLEVEL, FilterGroup::eLEVEL);
+}
+
+PhysicsComponent::~PhysicsComponent() {
+	PhysxController::getInstance().removeActor(actor);
 }
 
 void PhysicsComponent::Start() {
