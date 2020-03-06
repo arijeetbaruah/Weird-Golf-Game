@@ -18,7 +18,6 @@
 #include "OBJ_Loader.h"
 
 #include "SpherePhysicsComponent.h"
-#include "SpherePhysicsComponent.h"
 #include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
@@ -198,6 +197,7 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	Ball->SetRenderObject(
 	new RenderObject(&Ball->GetTransform(), playerMesh1, golfLevelTex, basicShader));
 	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(playerPos1.x, playerPos1.y, playerPos1.z)), Ball, 10, 0.05, mMaterial);
+	PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
 	thisMesh = playerMesh1;
 
 	Ball->addComponent(sphere);
@@ -515,6 +515,7 @@ vector<GameObject*> TutorialGame::AddSomeObject(MeshSceneNode* sceneNode, const 
 		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial);
+		PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
@@ -542,6 +543,7 @@ GameObject* TutorialGame::AddSphereObjectToWorld(MeshSceneNode* sceneNode, const
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial);
+	PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
 	BallTemp->addComponent(sphere);
 
 	sphere->setLinearDamping(0.8);
@@ -1049,11 +1051,12 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	TriangleMeshPhysicsComponent* physicsC = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), floor, 10000, verts, tris, mMaterial);
+	PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 	floor->addComponent(physicsC);
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
-	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
-	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->InitCubeInertia();
+	//floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
+	//floor->GetPhysicsObject()->SetInverseMass(0);
+	//floor->GetPhysicsObject()->InitCubeInertia();
 	world->AddGameObject(floor);
 	return floor;
 }
