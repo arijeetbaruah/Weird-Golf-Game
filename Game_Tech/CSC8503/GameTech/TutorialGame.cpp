@@ -18,7 +18,6 @@
 #include "OBJ_Loader.h"
 
 #include "SpherePhysicsComponent.h"
-#include "SpherePhysicsComponent.h"
 #include "BoxPhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
@@ -361,6 +360,7 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial);
 
+		PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
@@ -388,6 +388,7 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial);
+	PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
 	BallTemp->addComponent(sphere);
 
 	sphere->setLinearDamping(0.8);
@@ -845,12 +846,10 @@ void TutorialGame::SeenObjects() {
 
 void TutorialGame::RenderScoreBoard()
 {
-<<<<<<< HEAD
 	float size = 1.0f;
 	float inverseMass = 0.1f;
 
 	Player* otherBall = new Player(playerNum);
-=======
 	if (isServer)
 	{
 		renderer->DrawString("YOUR TOTAL SCORE: " + std::to_string(world->GetPlayerOneTotal()),
@@ -866,7 +865,6 @@ void TutorialGame::RenderScoreBoard()
 			Vector2(400, 350), Vector4(0, 0, 1, 1));
 	}
 }
->>>>>>> Develop
 
 
 void TutorialGame::ResetCamera() {
@@ -905,12 +903,10 @@ void TutorialGame::RestartNetworkedGame()
 
 	int collectableCounter = 0;
 
-<<<<<<< HEAD
 	otherBall->SetNetworkObject(new NetworkObject(*otherBall, playerNum));
 
 	world->AddGameObject(otherBall);
 	serverPlayers.insert(std::pair<int, GameObject*>(playerNum, otherBall));
-=======
 	for (auto i = first; i != last; ++i)
 	{
 		// Reset Collectables
@@ -931,7 +927,6 @@ void TutorialGame::RestartNetworkedGame()
 			e->resetPosition();
 		}
 	}
->>>>>>> Develop
 
 	world->SetCollectableCount(collectableCounter);
 }
@@ -955,11 +950,12 @@ GameObject* TutorialGame::AddGolfLevelToWorld(const Vector3& position, const Vec
 	TriangleMeshPhysicsComponent* physicsC = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 	physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), floor, 10000, verts, tris, mMaterial);
+	PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 	floor->addComponent(physicsC);
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), golfLevelMeshes[index], golfLevelTex, basicShader));
-	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
-	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->InitCubeInertia();
+	//floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
+	//floor->GetPhysicsObject()->SetInverseMass(0);
+	//floor->GetPhysicsObject()->InitCubeInertia();
 	world->AddGameObject(floor);
 	return floor;
 }
