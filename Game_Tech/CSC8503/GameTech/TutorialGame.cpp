@@ -18,7 +18,6 @@
 #include "OBJ_Loader.h"
 
 #include "SpherePhysicsComponent.h"
-#include "SpherePhysicsComponent.h"
 #include "TriangleMeshPhysicsComponent.h"
 
 #include <functional>
@@ -220,6 +219,58 @@ GameObject* TutorialGame::AddPlayerToWorld(Vector3 position, int playerNum)
 	return Ball;
 }
 
+GameObject* TutorialGame::AddStarToWorld(Vector3 position)
+{
+	std::vector<GameObject*> resultList;
+	std::vector<RenderObject*> renderList = powerUpStar->GetAllMesh();
+
+	for (RenderObject* tempRender : renderList)
+	{
+		Star* star = new Star();
+
+		//build rander object
+		RenderObject* newRender = new RenderObject(tempRender);
+		Vector3 size = Vector3(10, 10, 10);
+		star->GetTransform().SetWorldScale(size);
+
+		star->GetTransform().SetWorldPosition(position);
+
+		newRender->SetParentTransform(&star->GetTransform());
+		star->SetRenderObject(newRender);
+
+		//build physics volume
+		std::vector<PxVec3> verts;
+		std::vector<PxU32> tris;
+		Matrix4 tempScale = Matrix4::Scale(size);
+
+		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())
+		{
+			vert = tempScale * vert;
+			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		}
+		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+
+		Quaternion rotate = Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0)));
+
+		//TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 1, verts, tris, mMaterial);
+		//star->addComponent(physicsC);
+
+		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 5, 0.1, mMaterial);
+		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+
+		star->addComponent(sphere);
+		
+		star->setPhysxComponent(sphere);
+		
+
+		resultList.push_back(star);
+		world->AddGameObject(star);
+	}
+
+	return resultList[0];
+}
+
 
 
 TutorialGame::~TutorialGame()	{
@@ -277,6 +328,8 @@ void TutorialGame::InitWorld() {
 	// The player to act as the server
 	AddPlayerToWorld(Vector3(0, 1, 0), 1);
 
+	AddStarToWorld(Vector3(0, 0.15, -0.5));
+
 	//			 RenderObject(must)	    Position(must)					scale					rotation													colour					name
 	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
 	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"map");
@@ -285,7 +338,7 @@ void TutorialGame::InitWorld() {
 	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
 	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
 	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4( 1, 1, 1, 1),	"tree");
-	AddSomeObject(powerUpStar, Vector3(0, 0, -0.3), Vector3(10, 10, 10), Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))), Vector4(1, 1, 1, 1), "star");
+	//AddSomeObject(powerUpStar,		Vector3(  0,    0.2, -0.5),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		Vector4(1, 1, 1, 1),	"star");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddSphereObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
@@ -474,11 +527,11 @@ void TutorialGame::LoadColladaRenderObjects() {
 	colladaLoadFunc(&gameMapExplode,	"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
-	colladaLoadFunc(&powerUpStar, "Star.dae", nullptr, basicShader);
+	colladaLoadFunc(&powerUpStar,		"Star.dae",			"star.png",					basicShader);
 
 	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",		basicShader);
+	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",	basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");

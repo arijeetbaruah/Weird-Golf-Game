@@ -13,6 +13,7 @@
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
+#include "Star.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -67,6 +68,7 @@ namespace NCL {
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 			*/
 
+			GameObject* AddStarToWorld(Vector3 position);
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 

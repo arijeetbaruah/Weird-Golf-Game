@@ -16,6 +16,8 @@ public:
 
 	PxVec3 getVelocity();
 
+	PxRigidDynamic* getActor() const { return actor; }
+
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
