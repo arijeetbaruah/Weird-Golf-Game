@@ -85,6 +85,11 @@ namespace NCL {
 			void IncreasePlayerTwoTotal(int i) { playerTwoTotalScore += i; };
 			void SetPlayerTwoTotal(int i) { playerTwoTotalScore = i; };
 			int GetPlayerTwoTotal() { return playerTwoTotalScore; };
+
+			void SetUIactive(bool state) { isUIactive = state; }
+			bool GetUIactive() { return isUIactive; }
+
+			void SetObjectList(std::vector<GameObject*> newList) { gameObjects = newList; }
 		protected:
 			void UpdateTransforms();
 			void UpdateQuadTree();
@@ -112,6 +117,7 @@ namespace NCL {
 
 			bool shuffleConstraints;
 			bool shuffleObjects;
+			bool isUIactive;
 		};
 	}
 }

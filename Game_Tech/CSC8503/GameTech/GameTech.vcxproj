@@ -230,8 +230,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoxPhysicsComponent.cpp" />
     <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
+    <ClCompile Include="CollisionCallback.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyChaseSuperState.cpp" />
     <ClCompile Include="EnemyPatrolSuperState.cpp" />
@@ -249,10 +251,13 @@
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
+    <ClCompile Include="UIPushDownMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxPhysicsComponent.h" />
     <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
+    <ClInclude Include="CollisionCallback.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyChaseSuperState.h" />
     <ClInclude Include="EnemyPatrolSuperState.h" />
@@ -270,6 +275,7 @@
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />
+    <ClInclude Include="UIPushDownMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\Logger\Logger.vcxproj">

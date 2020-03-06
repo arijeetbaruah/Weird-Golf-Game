@@ -245,7 +245,7 @@ void OGLRenderer::DrawDebugStrings() {
 
 	textMesh.SetVertexPositions(vertPos);
 	textMesh.SetVertexTextureCoords(vertTex);
-	textMesh.SetVertexColours(vertColours);
+	textMesh.SetVertexColors(vertColours);
 
 	textMesh.UploadToGPU();
 
@@ -271,7 +271,7 @@ void OGLRenderer::DrawDebugLines() {
 	OGLMesh lineMesh = OGLMesh();
 
 	lineMesh.SetVertexPositions(vertPos);
-	lineMesh.SetVertexColours(vertCol);
+	lineMesh.SetVertexColors(vertCol);
 	lineMesh.SetPrimitiveType(GeometryPrimitive::Lines);
 
 	lineMesh.UploadToGPU();

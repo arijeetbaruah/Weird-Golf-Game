@@ -69,6 +69,20 @@ namespace NCL {
 			void    Invert();
 			Matrix4 Inverse() const;
 
+			Matrix4 GetTransposedRotation()
+			{
+				Matrix4 temp;
+				temp.array[0] = array[0];
+				temp.array[5] = array[5];
+				temp.array[10] = array[10];
+				temp.array[1] = array[4];
+				temp.array[4] = array[1];
+				temp.array[2] = array[8];
+				temp.array[8] = array[2];
+				temp.array[6] = array[9];
+				temp.array[9] = array[6];
+				return temp;
+			}
 			inline void Transpose() {
 				for (int i = 0; i < 4; ++i) {
 					for (int j = i+1; j < 4; ++j) {

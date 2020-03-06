@@ -10,6 +10,7 @@ using namespace NCL::PS4;
 ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) : 
 	PS4RendererBase(window), input(input)
 {
+	mainLight = new Light(Vector3(0, 100, 0), Vector4(1, 1, 1, 1), 5000, 0.5f);
 	defaultShader = PS4Shader::GenerateShader(
 		"/app0/Assets/Shaders/PS4/VertexShader.sb",
 		"/app0/Assets/Shaders/PS4/PixelShader.sb"
@@ -57,6 +58,7 @@ ExampleRenderer::~ExampleRenderer()
 	delete golfLevel;
 	delete building;
 	delete treeTex;
+	delete mainLight;
 }
 
 void ExampleRenderer::Update(float dt)	{
@@ -151,10 +153,46 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	constantBuffer.initAsConstantBuffer(transformMat, sizeof(Matrix4));
 	constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
+	Gnm::Buffer lightColorBuffer;
+	Vector4* lightColorVec4 = (Vector4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector4), Gnm::kEmbeddedDataAlignment4);
+	*lightColorVec4 = mainLight->GetColor();
+	lightColorBuffer.initAsConstantBuffer(lightColorVec4, sizeof(Vector4));
+	lightColorBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	Gnm::Buffer lightPosBuffer;
+	Vector3* lightPosVec3 = (Vector3*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector3), Gnm::kEmbeddedDataAlignment4);
+	*lightPosVec3 = mainLight->GetPosition();
+	lightPosBuffer.initAsConstantBuffer(lightPosVec3, sizeof(Vector3));
+	lightPosBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	Gnm::Buffer lightRadiusBuffer;
+	float* lightRadiusFloat = (float*)currentGFXContext->allocateFromCommandBuffer(sizeof(float), Gnm::kEmbeddedDataAlignment4);
+	*lightRadiusFloat = mainLight->GetRadius();
+	lightRadiusBuffer.initAsConstantBuffer(lightRadiusFloat, sizeof(float));
+	lightRadiusBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	Gnm::Buffer lightInensityBuffer;
+	float* lightIntensityFloat = (float*)currentGFXContext->allocateFromCommandBuffer(sizeof(float), Gnm::kEmbeddedDataAlignment4);
+	*lightIntensityFloat = mainLight->GetIntensity();
+	lightInensityBuffer.initAsConstantBuffer(lightIntensityFloat, sizeof(float));
+	lightInensityBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	Gnm::Buffer cameraPosBuffer;
+	Vector3* cameraPosVec3 = (Vector3*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector3), Gnm::kEmbeddedDataAlignment4);
+	*cameraPosVec3 = mainCamera.GetPosition();
+	cameraPosBuffer.initAsConstantBuffer(cameraPosVec3, sizeof(Vector3));
+	cameraPosBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
 	PS4Shader* realShader = (PS4Shader*)o->GetShader();
 
 	int objIndex = realShader->GetConstantBuffer("RenderObjectData");
 	int camIndex = realShader->GetConstantBuffer("CameraData");
+	int lightColor = realShader->GetConstantBuffer("LightColor");
+	int lightPos = realShader->GetConstantBuffer("LightPos");
+	int lightRadius = realShader->GetConstantBuffer("LightRadius");
+	int lightIntensity = realShader->GetConstantBuffer("LightIntensity");
+	int cameraPos = realShader->GetConstantBuffer("CameraPos");
+
 
 	Gnm::Sampler trilinearSampler;
 	trilinearSampler.init();
@@ -166,6 +204,11 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	*viewProjMat = mainCamera.BuildProjectionMatrix(1920.0f/1080) * mainCamera.BuildViewMatrix();
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightColor, 1, &lightColorBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightPos, 1, &lightPosBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightRadius, 1, &lightRadiusBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightIntensity, 1, &lightInensityBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, cameraPos, 1, &cameraPosBuffer);
 
 	realShader->SubmitShaderSwitch(*currentGFXContext);
 	DrawMesh(*((PS4Mesh*)o->GetMesh()));

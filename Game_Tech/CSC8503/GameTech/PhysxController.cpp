@@ -12,6 +12,7 @@ PhysxController::PhysxController() {
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
 	createDefaultScene();
+	
 }
 
 void PhysxController::stepPhysics(bool interactive, float dt) {
@@ -19,13 +20,33 @@ void PhysxController::stepPhysics(bool interactive, float dt) {
 	actualScene->fetchResults(interactive);
 }
 
+PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+										PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+										PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+	PX_UNUSED(attributes0);
+	PX_UNUSED(attributes1);
+	PX_UNUSED(filterData0);
+	PX_UNUSED(filterData1);
+	PX_UNUSED(constantBlockSize);
+	PX_UNUSED(constantBlock);
+
+	// all initial and persisting reports for everything, with per-point data
+	pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
+		| PxPairFlag::eNOTIFY_TOUCH_FOUND
+		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
+		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	return PxFilterFlag::eDEFAULT;
+}
+
 void PhysxController::createDefaultScene() {
-	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+	sceneDesc = new PxSceneDesc(gPhysics->getTolerancesScale());
+	sceneDesc->gravity = PxVec3(0.0f, -9.81f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
-	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-	actualScene = gPhysics->createScene(sceneDesc);
+	sceneDesc->cpuDispatcher = gDispatcher;
+	sceneDesc->filterShader = contactReportFilterShader;
+	sceneDesc->simulationEventCallback = &callback;
+	//sceneDesc->contactModifyCallback = &testCallback;
+	actualScene = gPhysics->createScene(*sceneDesc);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(gPhysics->getTolerancesScale()));
 
@@ -35,11 +56,24 @@ void PhysxController::createDefaultScene() {
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-
-	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-	//actualScene->addActor(*groundPlane);
 }
 
 void PhysxController::addActor(PxActor* actor) {
 	actualScene->addActor(*actor);
+}
+
+void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
+	PxFilterData filterData;
+    filterData.word0 = filterGroup; // word0 = own ID
+    filterData.word1 = filterMask;  // word1 = ID mask to filter pairs that trigger a
+                                    // contact callback;
+    const PxU32 numShapes = actor->getNbShapes();
+    PxShape** shapes = (PxShape**)malloc(sizeof(PxShape*)*numShapes);
+    actor->getShapes(shapes, numShapes);
+    for(PxU32 i = 0; i < numShapes; i++)
+    {
+        PxShape* shape = shapes[i];
+        shape->setSimulationFilterData(filterData);
+    }
+    free(shapes);
 }

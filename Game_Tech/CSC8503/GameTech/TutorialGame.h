@@ -8,12 +8,12 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
-#include "PhysxController.h"
 #include "ColladaBase.h"
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
 #include "Star.h"
+#include "UIPushDownMachine.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -22,30 +22,15 @@ namespace NCL {
 			TutorialGame();
 			~TutorialGame();
 
-			OGLMesh* cubeMesh = nullptr;
-			OGLMesh* sphereMesh = nullptr;
-
 			virtual void UpdateGame(float dt);
 
+
+			OGLMesh* cubeMesh = nullptr;
 		protected:
-			void InitialiseAssets();
 
-			void InitCamera();
-			void ResetCamera();
-			void UpdateKeys();
-
-			void InitWorld();
-
-			/*
-			These are some of the world/object creation functions I created when testing the functionality
-			in the module. Feel free to mess around with them to see different objects being created in different
-			test scenarios (constraints, collision types, and so on). 
-			*/
-			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
-			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
-			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
-			void SimpleGJKTest();
-
+			//need check
+			//need check
+			//need check
 			bool SelectObject();
 			void SeenObjects();
 			void MoveSelectedObject();
@@ -73,60 +58,84 @@ namespace NCL {
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 
 			Vector3 playerPos1;
+			Vector3 playerPos2;
+			Vector3 playerPos3;
+			Vector3 playerPos4;
 
 			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
 			std::unique_ptr<Logger> log;
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
-			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-			Player* Ball;
 
-			GameObject* playerTwo;
+			Player* Ball;
+			Player* playerTwo;
+			vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
 
-			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
-
-			void StoreHighScore();
-
-			int secondPlayerScore;
-
-			void RenderMenu();
-			void RenderScoreBoard();
-			bool playing;
-			void StartGame();
-
 			bool isNetworkedGame;
 			bool isServer;
-			int playerID;
 
-			void RestartNetworkedGame();
+			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
+			GameObject* selectionObject = nullptr;
 
-			bool newSession;
 
-			float matchTimer;
-			float gameOverScreenCoolDown;
 
-			GameTechRenderer*	renderer;
-			PhysicsSystem*		physics;
-			GameWorld*			world;
+			//initiate the game
+			void InitialiseAssets();
+			void InitCamera();
+			void InitWorld();
+			void StartGame();
+			void LoadColladaRenderObjects();
+			//sub functions of initiate
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
+			GameObject*			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+			Player*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 
-			bool useGravity;
+			//update game 
+			void UpdateKeys();
+
+			//debugfunction
+
+
+			//load render objects
+			MeshSceneNode* gameMapOrigin;
+			MeshSceneNode* gameMapExplode;
+			MeshSceneNode* treeFormRhino;
+			MeshSceneNode* treeFromBlender;
+			MeshSceneNode* treeWithMultiTex;
+
+			MeshSceneNode* playerTemp0;
+			MeshSceneNode* playerTemp1;
+			MeshSceneNode* playerTemp2;
+			MeshSceneNode* playerTemp3;
+
+			//world basic parameters
+			GameTechRenderer* renderer;
+			GameWorld* world;
 			bool inSelectionMode;
+			OGLShader* basicShader = nullptr;
 
 			float	forceMagnitude;
 
-			GameObject* selectionObject = nullptr;
-
+			std::map<int, GameObject*> serverPlayers;
 			
+			OGLTexture* basicTex	= nullptr;
 			OGLTexture* golfLevelTex = nullptr;
-			OGLShader*	basicShader = nullptr;
+
+			NavigationGrid grid;
 
 			//Coursework Meshes
-
-
+			OGLMesh*	gooseMesh	= nullptr;
+			OGLMesh*	keeperMesh	= nullptr;
+			OGLMesh*	appleMesh	= nullptr;
+			OGLMesh*	charA		= nullptr;
+			OGLMesh*	charB		= nullptr;
 			OGLMesh* testLevel = nullptr;
 			OGLMesh* playerMesh1 = nullptr;
+			OGLMesh* playerMesh2 = nullptr;
+			OGLMesh* playerMesh3 = nullptr;
+			OGLMesh* playerMesh4 = nullptr;
 
 			vector<OGLMesh*> golfLevelMeshes;
 
@@ -136,6 +145,7 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
+			std::vector<GameObject*> otherplayers;
 
 
 			//load render objects
@@ -147,12 +157,17 @@ namespace NCL {
 			MeshSceneNode* treeWithMultiTex;
 			MeshSceneNode* powerUpStar;
 
-			MeshSceneNode* playerTemp1;
-			MeshSceneNode* playerTemp2;
-			MeshSceneNode* playerTemp3;
-
-			//load otherplayers
-			std::vector<GameObject*> otherplayers;
+			//UI system, still fix , do not need check
+			Camera* UIcamera;
+			MeshSceneNode* UIbar;
+			vector<GameObject*> AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1, 1, 1, 1), std::string objectName = "");
+			GameWorld* UIworld;
+			void InitUIWorld();
+			void UpdateUIWorld(float dt);
+			UIPushDownMachine*	UImachine;
+			GameTechRenderer*	UIrenderer;
+			stateObj* beginState;
+			OGLShader* UIShader = nullptr;
 		};
 	}
 }

@@ -10,7 +10,7 @@
 
 class PlayerPacketReceiver : public PacketReceiver {
 public:
-	PlayerPacketReceiver(GameWorld& w, Player* player, GameObject* ghost) : world(w), controlledplayer(player), secondPlayer(ghost){
+	PlayerPacketReceiver(GameWorld& w, Player* player, std::map<int, GameObject*> &ghost) : world(w), controlledplayer(player), serverPlayers(ghost){
 		log = std::unique_ptr<Logger>(new Logger("Player Packet"));
 	}
 
@@ -18,27 +18,28 @@ public:
 		if (type == Received_State) {
 			PlayerPacket* realPacket = (PlayerPacket*)payload;
 
-			packet = realPacket->fullState;
-
-			controlledplayer->GetTransform().SetWorldPosition(packet.position);
-			controlledplayer->GetTransform().SetLocalOrientation(packet.orientation);
-			log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
-
-			AddComponent(realPacket->powerUps);
+			for (NetworkState& packet : realPacket->fullState) {
+				if (!packet.valid) {
+					continue;
+				}
+				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
+				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
+				log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
+				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
+			}
 		}
 	}
 
-	void AddComponent(NetworkPowerUps powerUps) {
+	void AddComponent(NetworkPowerUps powerUps, GameObject* target) {
 		if (powerUps == NetworkPowerUps::SQUARE) {
-			cubeDebuff* cubed = new cubeDebuff(controlledplayer->GetPlayerMesh(), controlledplayer->GetCubeMesh());
-			controlledplayer->addComponent(cubed);
+			cubeDebuff* cubed = new cubeDebuff(target->GetPlayerMesh(), target->GetCubeMesh());
+			target->addComponent(cubed);
 		}
 	}
 
 	GameWorld& world;
-	NetworkState packet;
 	Player* controlledplayer;
-	GameObject* secondPlayer;
+	std::map<int, GameObject*> serverPlayers;
 	std::unique_ptr<Logger> log;
 };
 
@@ -61,6 +62,19 @@ public:
 	Player* controlledplayer;
 	NetworkedGame* game;
 	std::unique_ptr<Logger> log;
+};
+
+class PlayerIDPacketRecevier : public PacketReceiver {
+public:
+	PlayerIDPacketRecevier(Player* p) : player(p) {}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_ID) {
+			PlayerIDPacket* realPacket = (PlayerIDPacket*)payload;
+			
+		}
+	}
+	Player* player;
 };
 
 class PlayerDisconnectPacketReceiver : public PacketReceiver {
@@ -252,7 +266,7 @@ protected:
 NetworkedGame::NetworkedGame()
 {
 	port = NetworkBase::GetDefaultPort();
-	SpawnPlayer();
+	//SpawnPlayer();
 }
 
 NetworkedGame::~NetworkedGame()
@@ -262,7 +276,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, Ball, playerTwo);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, Ball, serverPlayers);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
@@ -274,8 +288,8 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	FullPacketReceiver* clientReceiver = new FullPacketReceiver(*world, isServer, Ball, playerTwo);
 	thisClient->RegisterPacketHandler(Full_State, &(*clientReceiver));
 
-	CollectableCountReceiver* countReceiver = new CollectableCountReceiver(*world);
-	thisClient->RegisterPacketHandler(Collectable_Count, &(*countReceiver));
+	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(Ball);
+	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
 
 	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, Ball, this);
 	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
@@ -283,22 +297,21 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	thisClient->Connect(127, 0, 0, 1, port);
 }
 
-void NetworkedGame::InsertPlayer(int ID, Player* p) {
-	serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));
+void NetworkedGame::InsertPlayer(int ID, GameObject* p) {
+	serverPlayers.insert(std::pair<int, GameObject*>(1, Ball));
 }
 
-void NetworkedGame::RemovePlayer(int ID, Player* p) {
+void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 	std::map<int, GameObject*>::iterator it = serverPlayers.find(1);
 	serverPlayers.erase(it);
 }
-
 void NetworkedGame::UpdateGame(float dt)
 {
 	
 	TutorialGame::UpdateGame(dt);
 
-	if (playerTwo && serverPlayers.size() == 1)
-		serverPlayers.insert(std::pair<int, GameObject*>(2, (GameObject*)playerTwo));
+	if (Ball && serverPlayers.size() == 0)
+		serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));
 
 	if (!isNetworkedGame)
 		return;
@@ -318,11 +331,15 @@ void NetworkedGame::UpdateGame(float dt)
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	if (!thisClient)
 		return;
-	PlayerPacket packet(NetworkPowerUps::NONE);
+	PlayerPacket packet;
 
-	packet.fullState.position = Ball->GetTransform().GetWorldPosition();
-	packet.fullState.orientation = Ball->GetTransform().GetLocalOrientation();
-	log->info("({}, {}, {})", packet.fullState.position.x, packet.fullState.position.y, packet.fullState.position.z);
+	for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
+		packet.fullState[it->first].position = it->second->GetTransform().GetWorldPosition();
+		packet.fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
+		packet.fullState[it->first].playerID = it->first;
+		packet.fullState[it->first].valid = true;
+		log->info("({}, {}, {})", packet.fullState[it->first].position.x, packet.fullState[it->first].position.y, packet.fullState[it->first].position.z);
+	}
 
 	this->thisClient->SendPacket(packet);
 
@@ -344,7 +361,7 @@ void NetworkedGame::SpawnPlayer()
 
 	playerTwo = secondPlayer;
 
-	serverPlayers.insert(std::pair<int, GameObject*>(2, (GameObject*)secondPlayer));
+	serverPlayers.insert(std::pair<int, Player*>(2, secondPlayer));
 }
 
 void NetworkedGame::StartLevel()
