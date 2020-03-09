@@ -58,12 +58,12 @@ namespace NCL {
 						GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 									vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
-			*/
+			
 			Vector3 playerPos1;
 			Vector3 playerPos2;
 			Vector3 playerPos3;
 			Vector3 playerPos4;
-
+			*/
 
 
 			std::unique_ptr<Logger> log;

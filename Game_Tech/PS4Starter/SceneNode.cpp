@@ -31,7 +31,7 @@ namespace NCL
 		this->scale = scale;
 	}
 
-	auto SceneNode::GetWorldTransform()
+	Matrix4 SceneNode::GetWorldTransform()
 	{
 		if (parent == nullptr)
 		{
