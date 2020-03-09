@@ -247,6 +247,7 @@
     <ClCompile Include="PhysxController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpherePhysicsComponent.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="PhysxController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpherePhysicsComponent.h" />
+    <ClInclude Include="Star.h" />
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />

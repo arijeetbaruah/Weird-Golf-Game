@@ -12,6 +12,7 @@
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
+#include "Star.h"
 #include "UIPushDownMachine.h"
 
 namespace NCL {
@@ -53,10 +54,12 @@ namespace NCL {
 			GameObject* AddBonusItemToWorld(const Vector3& position);
 			
 
+			//GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
+			//GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
-						GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
-									vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			
 			Vector3 playerPos1;
@@ -92,7 +95,8 @@ namespace NCL {
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
 			GameObject*			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-
+			GameObject* AddStarToWorld(Vector3 position);
+			
 			//update game 
 			void UpdateKeys();
 
@@ -105,6 +109,7 @@ namespace NCL {
 			MeshSceneNode* treeFormRhino;
 			MeshSceneNode* treeFromBlender;
 			MeshSceneNode* treeWithMultiTex;
+			MeshSceneNode* powerUpStar;
 
 			MeshSceneNode* playerTemp0;
 			MeshSceneNode* playerTemp1;
@@ -147,11 +152,6 @@ namespace NCL {
 				lockedObject = o;
 			}
 			std::vector<GameObject*> otherplayers;
-
-
-
-
-
 
 
 			//UI system, still fix , do not need check
