@@ -11,6 +11,7 @@ cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
 	maxTime = 5;
 	this->Before = before;
 	this->After = after;
+	mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 }
 
 void cubeDebuff::Start() {
@@ -20,21 +21,20 @@ void cubeDebuff::Start() {
 
 
 void cubeDebuff::Apply() {
-	par->GetTransform().SetWorldScale(Vector3(0.05,0.05,0.05));
-	par->SetRenderObject(new RenderObject(&par->GetTransform(), After, ren->GetDefaultTexture(), ren->GetShader()));
 	Vector3 position = par->GetTransform().GetWorldPosition();
-	par->RemoveComponent("PhysicsComponent");
-	par->addComponent(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.1, 0.1, 0.1));
+	applyTransformation(Vector3(0.05, 0.05, 0.05), After, new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.1, 0.1, 0.1));
 }
 
 void cubeDebuff::Remove() {
-	par->GetTransform().SetWorldScale(Vector3(1, 1, 1));
-	par->SetRenderObject(new RenderObject(&par->GetTransform(), Before, ren->GetDefaultTexture(), ren->GetShader()));
 	Vector3 position = par->GetTransform().GetWorldPosition();
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+	applyTransformation(Vector3 (1,1,1), Before, new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05, mat));
+}
+
+void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC) {
+	par->GetTransform().SetWorldScale(scale);
+	par->SetRenderObject(new RenderObject(&par->GetTransform(), mesh, ren->GetDefaultTexture(), ren->GetShader()));
 	par->RemoveComponent("PhysicsComponent");
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05, mMaterial);
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
-	par->addComponent(sphere);
+	physC->setLinearDamping(0.8);
+	physC->setAngularDamping(2);
+	par->addComponent(physC);
 }
