@@ -20,7 +20,7 @@
 using namespace NCL;
 using namespace CSC8503;
 using namespace physx;
-
+/*
 class TestPacketReceiver : public PacketReceiver {
 public:
 	TestPacketReceiver(string name) {
@@ -91,8 +91,8 @@ void TestPathfinding() {
 	Vector3 startPos(20, 0, 20);
 	Vector3 endPos(250, 0, 280);
 
-	/*Vector3 startPos(80, 0, 10);
-	Vector3 endPos(80, 0, 80);*/
+	Vector3 startPos(80, 0, 10);
+	Vector3 endPos(80, 0, 80);
 	
 	bool found = grid.FindPath(startPos, endPos, outPath);
 	
@@ -118,7 +118,7 @@ void DisplayPathfinding() {
 		Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
 	}
 }
-
+*/
 /*
 
 The main function should look pretty familar to you!
@@ -164,7 +164,7 @@ int main() {
 		
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
-		DisplayPathfinding();
+		//DisplayPathfinding();
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 

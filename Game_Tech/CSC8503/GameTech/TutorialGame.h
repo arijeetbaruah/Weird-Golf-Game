@@ -31,12 +31,13 @@ namespace NCL {
 			//need check
 			//need check
 			bool SelectObject();
+			/*
 			void SeenObjects();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
-			/*
+			
 			// Stuff from goose game
 			GameObject* AddFloorToWorld(const Vector3& position);
 			void AddObstacles();
@@ -50,20 +51,22 @@ namespace NCL {
 			GameObject* AddCharacterToWorld(const Vector3& position);
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
-			*/
+			
 
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
+						GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+									vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
+			*/
 			Vector3 playerPos1;
 			Vector3 playerPos2;
 			Vector3 playerPos3;
 			Vector3 playerPos4;
 
-			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+
 
 			std::unique_ptr<Logger> log;
-			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
 			Player* playerTwo;
