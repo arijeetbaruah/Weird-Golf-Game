@@ -13,7 +13,7 @@ void Homing::Apply() {
 	Vector3 pass = dest;
 	sc->setLambda([pass](GameObject* go) {
 		std::cout << "Destination " << pass << std::endl;
-		BoxPhysicsComponent* spc = go->getComponent<BoxPhysicsComponent*>("BoxPhysicsComponent");
+		PhysicsComponent* spc = go->getComponent<PhysicsComponent*>("PhysicsComponent");
 		PxVec3 pvec = spc->getVelocity();
 		Vector3 vcel = Vector3(pvec.x, pvec.y, pvec.z);
 		vcel.y = 0;
