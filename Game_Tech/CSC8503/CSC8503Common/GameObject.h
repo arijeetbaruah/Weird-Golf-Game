@@ -134,7 +134,6 @@ namespace NCL {
 			void setLayer(unsigned long l) { layer = l; };
 			void setLayerMask(unsigned long m) { layerMask = m; };
 
-
 			OGLMesh* GetCubeMesh() { return cubeMesh; }
 			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
 

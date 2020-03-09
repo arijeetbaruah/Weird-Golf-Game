@@ -102,13 +102,16 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 		//TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 1, verts, tris, mMaterial);
 		//star->addComponent(physicsC);
 
-		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 5, 0.1, mMaterial);
+		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial);
 		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 
 		star->addComponent(sphere);
 		
 		star->setPhysxComponent(sphere);
+
+		sphere->setAsTrigger();
 		
+		star->setGameWorld(world);
 
 		resultList.push_back(star);
 		world->AddGameObject(star);
@@ -160,7 +163,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 
 	// The player to act as the server
-	AddPlayerToWorld(Vector3(0, 1, 0), 1);
+	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 
 	AddStarToWorld(Vector3(0, 0.15, -0.5));
 
@@ -320,8 +323,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 			OGLTexture* tempTex = (OGLTexture*)TextureLoader::LoadAPITexture((textureName[i]));
 			tempTexture[i] = tempTex;
 		}
-
-
 
 		std::vector<EnjoyMesh> meshList = tempMesh->GetMeshes();
 		for (int j = 0; j < meshList.size(); j++)

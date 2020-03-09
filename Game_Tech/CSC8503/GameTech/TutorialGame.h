@@ -54,8 +54,8 @@ namespace NCL {
 			*/
 
 			GameObject* AddStarToWorld(Vector3 position);
-			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
-			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
+			//GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
+			//GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 
 			Vector3 playerPos1;
 			Vector3 playerPos2;
@@ -104,6 +104,7 @@ namespace NCL {
 			MeshSceneNode* treeFormRhino;
 			MeshSceneNode* treeFromBlender;
 			MeshSceneNode* treeWithMultiTex;
+			MeshSceneNode* powerUpStar;
 
 			MeshSceneNode* playerTemp0;
 			MeshSceneNode* playerTemp1;
@@ -147,15 +148,6 @@ namespace NCL {
 			}
 			std::vector<GameObject*> otherplayers;
 
-
-			//load render objects
-			void LoadColladaRenderObjects();
-			MeshSceneNode* gameMapOrigin;
-			MeshSceneNode* gameMapExplode;
-			MeshSceneNode* treeFormRhino;
-			MeshSceneNode* treeFromBlender;
-			MeshSceneNode* treeWithMultiTex;
-			MeshSceneNode* powerUpStar;
 
 			//UI system, still fix , do not need check
 			Camera* UIcamera;

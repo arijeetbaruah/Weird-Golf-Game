@@ -22,6 +22,9 @@ class CollisionCallback : public PxSimulationEventCallback {
 			PxActor* a2 = pairHeader.actors[1];
 			GameObject* go2 = (GameObject*)a2->userData;
 
+			go1->OnCollisionBegin(go2);
+			go2->OnCollisionBegin(go1);
+
 			std::cout << go1 << std::endl;
 			std::cout << go2 << std::endl;
 			std::cout << std::endl;

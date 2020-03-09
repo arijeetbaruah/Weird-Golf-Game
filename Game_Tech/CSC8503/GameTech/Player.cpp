@@ -19,7 +19,7 @@ Player::Player(int id) : GameObject("PLAYER")
 	for (int i = 0; i < 6; i++)
 		buttonStates[i] = false;
 
-	layer = 2;
+	layer = 1;
 	layerMask = 0; // Collide with everything
 
 	initialMousePos = Vector2(0, 0);

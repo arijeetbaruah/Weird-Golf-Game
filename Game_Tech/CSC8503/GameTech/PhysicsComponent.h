@@ -19,13 +19,13 @@ public:
 
 	PxRigidDynamic* getActor() const { return actor; }
 
+	void setAsTrigger();
+
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
 
 	virtual void Start() override;
 	virtual void Update(float dt) override;
-
-	void setAsTrigger();
 };
 
