@@ -426,12 +426,12 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 	//physics component
 	SpherePhysicsComponent* sphere = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	//sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	Ball->addComponent(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball , 10, 0.05, 0.05, 0.05));
+	//Ball->addComponent(sphere);
 
-	Ball->addComponent(sphere);
-
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
+	//sphere->setLinearDamping(0.8);
+	//sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 

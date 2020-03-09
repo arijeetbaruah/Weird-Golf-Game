@@ -3,7 +3,7 @@
 #include <iostream>
 
 TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, GameObject* go, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris, PxMaterial* mMaterial)
-	: PhysicsComponent("TriangleMeshPhysicsComponent", transform, go) {
+	: PhysicsComponent(transform, go) {
 	PxTriangleMeshDesc meshDesc;
 
 	meshDesc.points.count = verts.size();

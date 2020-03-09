@@ -56,6 +56,15 @@ namespace NCL {
 					components.erase(s);
 				}
 			}
+
+			void RemoveComponent(string name) {
+				unordered_map<string, Component*>::const_iterator obj = components.find(name);
+				if (obj != components.end()) {
+					delete components.at(obj->first);
+					components.erase(obj->first);
+				}
+			}
+
 			void LateUpdate(float dt) {
 				for (pair<string, Component*> component : components) {
 					component.second->LateUpdate();
