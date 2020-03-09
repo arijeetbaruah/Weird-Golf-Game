@@ -62,6 +62,10 @@ void PhysxController::addActor(PxActor* actor) {
 	actualScene->addActor(*actor);
 }
 
+void PhysxController::removeActor(PxActor* actor) {
+	actualScene->removeActor(*actor);
+}
+
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
 	PxFilterData filterData;
     filterData.word0 = filterGroup; // word0 = own ID
