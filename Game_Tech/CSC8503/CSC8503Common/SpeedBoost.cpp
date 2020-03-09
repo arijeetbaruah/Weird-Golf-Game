@@ -6,7 +6,7 @@ SpeedBoost::SpeedBoost() {
 }
 
 void SpeedBoost::Apply() {
-	po->setSpeed(origSpeed * 4);
+	po->setSpeed(origSpeed * 2);
 }
 
 void SpeedBoost::Remove() {
