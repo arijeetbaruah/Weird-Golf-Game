@@ -13,6 +13,11 @@ PhysicsComponent::PhysicsComponent(PxTransform transform, GameObject* go) : Comp
 	//PhysxController::getInstance().setupFiltering(actor, FilterGroup::eLEVEL, FilterGroup::eLEVEL);
 }
 
+PhysicsComponent::~PhysicsComponent() {
+	PhysxController::getInstance().removeActor(actor);
+}
+
+
 void PhysicsComponent::Start() {
 	PhysxController::getInstance().addActor(actor);
 }
