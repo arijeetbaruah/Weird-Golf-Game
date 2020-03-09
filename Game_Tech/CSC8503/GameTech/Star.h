@@ -34,8 +34,6 @@ namespace NCL {
 
 			vector<PowerUp*> powerUps;
 
-			bool used;
-
 			GameWorld* world;
 		};
 	}

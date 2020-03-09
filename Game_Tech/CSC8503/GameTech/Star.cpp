@@ -8,7 +8,6 @@ Star::Star() : GameObject("STAR")
 	layer = 2;
 	layerMask = 1; // Collide with only player
 
-	used = false;
 }
 
 Star::~Star() 
@@ -18,6 +17,12 @@ Star::~Star()
 
 void Star::DuringUpdate(float dt) 
 {
+	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
+	{
+		world->RemoveGameObject(this);
+		return;
+	}
+
 	RotateStar(dt);
 }
 
@@ -26,8 +31,6 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 	// Player collision
 	if (otherObject->getLayer() == 1)
 	{
-		if (used)
-			return;
 
 		int randNum = rand() % 4 + 1;
 
@@ -44,10 +47,8 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		case 4: p->addComponent(new offForward());
 			break;
 		}
-
-		world->RemoveGameObject(this);
-
-		used = true;
+		this->getComponent<SpherePhysicsComponent*>("PhysicsComponent")->toRemove = true;
+		
 	}
 }
 

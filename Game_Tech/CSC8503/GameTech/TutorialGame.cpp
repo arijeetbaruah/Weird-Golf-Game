@@ -104,6 +104,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 
 		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial);
 		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+		PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
 
 		star->addComponent(sphere);
 		
@@ -165,17 +166,20 @@ void TutorialGame::InitWorld() {
 	// The player to act as the server
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 
-	AddStarToWorld(Vector3(0, 0.15, -0.5));
+	AddStarToWorld(Vector3(-0.4, 0.3, 1));
+	AddStarToWorld(Vector3(-0.1, 0.3, 1));
+	AddStarToWorld(Vector3(0.1, 0.3, 1));
+	AddStarToWorld(Vector3(0.4, 0.3, 1));
 
 	//			 RenderObject(must)	    Position(must)					scale					rotation													name
 	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
+	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
@@ -494,12 +498,12 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 	//physics component
 	SpherePhysicsComponent* sphere = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	//sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
-	Ball->addComponent(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball , 10, 0.05, 0.05, 0.05));
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	Ball->addComponent(sphere);
 	//Ball->addComponent(sphere);
 
-	//sphere->setLinearDamping(0.8);
-	//sphere->setAngularDamping(2);
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 

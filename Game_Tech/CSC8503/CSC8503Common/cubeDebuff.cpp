@@ -33,5 +33,8 @@ void cubeDebuff::Remove() {
 	Vector3 position = par->GetTransform().GetWorldPosition();
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 	par->RemoveComponent("PhysicsComponent");
-	par->addComponent(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05, mMaterial));
+	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05, mMaterial);
+	sphere->setLinearDamping(0.8);
+	sphere->setAngularDamping(2);
+	par->addComponent(sphere);
 }
