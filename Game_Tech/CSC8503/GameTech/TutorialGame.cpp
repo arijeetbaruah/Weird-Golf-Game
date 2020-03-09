@@ -600,7 +600,7 @@ void TutorialGame::UpdateGame(float dt) {
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
-		selectionObject = nullptr;
+		//selectionObject = nullptr;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -622,7 +622,7 @@ bool TutorialGame::SelectObject() {
 	}
 	if (inSelectionMode) {
 		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-
+		/*
 		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
 			if (selectionObject) {	//set colour to deselected;
 				//selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
@@ -646,7 +646,7 @@ bool TutorialGame::SelectObject() {
 			else {
 				return false;
 			}
-		}
+		}*/
 	}
 	else {
 		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
@@ -655,68 +655,34 @@ bool TutorialGame::SelectObject() {
 }
 
 //following is UIfunction
-vector<GameObject*> TutorialGame::AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, const Vector4& colour, std::string objectName)
-{
-	std::vector<GameObject*> resultList;
-	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
-
-	for (RenderObject* tempRender : renderList)
-	{
-		//build object list
-		GameObject* tempObject = new GameObject(objectName);
-
-		//build rander object
-		RenderObject* newRender = new RenderObject(tempRender);
-
-		tempObject->GetTransform().SetWorldScale(size);
-		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-		tempObject->GetTransform().SetWorldOrientation(rotate);
-
-		newRender->SetParentTransform(&tempObject->GetTransform());
-		tempObject->SetRenderObject(newRender);
-		tempObject->GetRenderObject()->SetColour(colour);
-
-		resultList.push_back(tempObject);
-		state->state.push_back(tempObject);
-	}
-	return resultList;
-}
 
 void TutorialGame::InitUIWorld()
 {
-	//initiate UIworld
-
-	UIworld->ClearAndErase();
-	UIworld->SetUIactive(true);
-	
-
 	//initiate camera
 	UIworld->GetMainCamera()->SetNearPlane(0.5f);
 	UIworld->GetMainCamera()->SetFarPlane(500.0f);
 	UIworld->GetMainCamera()->SetPitch(0.0f);
 	UIworld->GetMainCamera()->SetYaw(0.0f);
 	UIworld->GetMainCamera()->SetPosition(Vector3(-20,20,20));
+
+	//initiate UIworld
+	UIworld->ClearAndErase();
+	UIworld->SetUIactive(true);
 	
-
-
 	//initiate state
-	beginState = new stateObj(begin_menu);
-	UImachine = new UIPushDownMachine(beginState);
 
-	//Add Strip To state	state		scenenode	position		scale			rotate													colour			text
-	AddStripToState(		beginState,	UIbar,		Vector3(0,0,-0.3),	Vector3(0.1, 0.1, 0.1), Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),	Vector3(1,1,1),	"");
 
 	//Add State to UI state machine
 
 
 	//Set Default state
-	UIworld->SetObjectList(UImachine->GetMenuList());
+
 
 }
 
 void TutorialGame::UpdateUIWorld(float dt)
 {
-	UIworld->UpdateWorld(dt);
+	UIrenderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
 	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw() + 5);
 	UIworld->GetMainCamera()->UpdateCamera(dt);
 

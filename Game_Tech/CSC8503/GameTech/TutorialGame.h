@@ -73,7 +73,7 @@ namespace NCL {
 
 			Player* Ball;
 			Player* playerTwo;
-			vector<Enemy*> enemies;
+			//vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
 
@@ -81,7 +81,7 @@ namespace NCL {
 			bool isServer;
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
-			GameObject* selectionObject = nullptr;
+			//GameObject* selectionObject = nullptr;
 
 
 
@@ -130,7 +130,7 @@ namespace NCL {
 			OGLTexture* golfLevelTex = nullptr;
 
 			NavigationGrid grid;
-
+			/*
 			//Coursework Meshes
 			OGLMesh*	gooseMesh	= nullptr;
 			OGLMesh*	keeperMesh	= nullptr;
@@ -151,19 +151,20 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
+			*/
 			std::vector<GameObject*> otherplayers;
 
 
 			//UI system, still fix , do not need check
-			Camera* UIcamera;
 			MeshSceneNode* UIbar;
-			vector<GameObject*> AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1, 1, 1, 1), std::string objectName = "");
+			
 			GameWorld* UIworld;
+			GameTechRenderer* UIrenderer;
+
 			void InitUIWorld();
 			void UpdateUIWorld(float dt);
 			UIPushDownMachine*	UImachine;
-			GameTechRenderer*	UIrenderer;
-			stateObj* beginState;
+
 			OGLShader* UIShader = nullptr;
 		};
 	}

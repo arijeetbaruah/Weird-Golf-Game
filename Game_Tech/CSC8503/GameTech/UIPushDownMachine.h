@@ -2,36 +2,47 @@
 #include "MeshSceneNode.h"
 #include "../CSC8503Common/GameObject.h"
 #include <stack>
+#include <vector>
 
-enum StateType
+
+
+struct UIFunction
 {
-	begin_menu
+	int key;
+	void (*funPoint)(void*);
+	UIState* subState;
+	std::string words;
+	UIFunction::UIFunction() {
+		key = -1;
+		funPoint = NULL;
+		words = "";
+		subState = NULL;
+	}
 };
 
-struct stateObj
+class UIState
 {
-	std::vector<GameObject*> state;
-	stateObj* parentState;
-	StateType stateType;
-	bool operator==(stateObj* object) {
-		return	this->stateType == object->stateType;
+public:
+	void UseFunction(int newKey) {
+		for (UIFunction* tempFun : funList)
+		{
+			if (tempFun->key == newKey && tempFun->funPoint != NULL)	tempFun->funPoint(NULL);
+			if (tempFun->subState != NULL)								ShowState(tempFun->subState);
+		}
 	}
-	stateObj(StateType statetype)
-	{
-		stateType = statetype;
-	}
+
+protected:
+	void ShowState(UIState*) {}
+
+	vector<UIFunction*> funList;
+
 };
 
 class UIPushDownMachine
 {
-protected:
-	std::stack<stateObj*>	stateList;
-	stateObj* currentState;
 public:
-	UIPushDownMachine(stateObj* basicState);
-	void AddState(stateObj* newstate);
-	bool CheckState(stateObj* newState);
-	void BackToBegin();
-	std::vector<GameObject*> GetMenuList() { return currentState->state; }
+
+protected:
+	vector<UIState> stateList;
 };
 
