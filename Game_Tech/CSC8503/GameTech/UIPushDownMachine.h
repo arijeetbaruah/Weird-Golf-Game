@@ -4,7 +4,7 @@
 #include <stack>
 #include <vector>
 
-
+class UIState;
 
 struct UIFunction
 {
