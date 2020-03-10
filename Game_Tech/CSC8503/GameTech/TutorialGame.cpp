@@ -669,7 +669,16 @@ void TutorialGame::InitUIWorld()
 	auto intogame = [this]() {UIworld->SetUIactive(true); };
 	gameMode1->funL = intogame;
 
-	gameMode2 = new UIBar("NoFunctionNow");
+	gameMode1->funL = intogame;
+
+	gameMode2 = new UIBar("Connect to Server");
+
+	auto servergame = [this]() { 
+		isNetworkedGame = true;
+		isServer = true;
+	};
+	//gameMode2->funL = servergame;
+
 	gameMode3 = new UIBar("Back to meun");
 
 	//initialize UIState
