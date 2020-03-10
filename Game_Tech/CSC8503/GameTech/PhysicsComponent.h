@@ -16,6 +16,12 @@ public:
 	void setLinearDamping(PxReal value);
 	void setAngularDamping(PxReal value);
 
+	PxVec3 getLinearVelocity(); 
+	PxVec3 getAngularVelocity();
+
+	void setLinearVelocity(PxVec3);
+	void setAngularVelocity(PxVec3);
+
 	PxVec3 getVelocity();
 
 	PxRigidDynamic* getActor() const { return actor; }

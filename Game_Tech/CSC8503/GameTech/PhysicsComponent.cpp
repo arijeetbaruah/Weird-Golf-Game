@@ -52,5 +52,20 @@ void PhysicsComponent::setAngularDamping(PxReal value) {
 PxVec3 PhysicsComponent::getVelocity()
 {
 	return actor->getLinearVelocity() + actor->getAngularVelocity();
-	
+}
+
+PxVec3 PhysicsComponent::getLinearVelocity() {
+	return actor->getLinearVelocity();
+}
+
+PxVec3 PhysicsComponent::getAngularVelocity() {
+	return actor->getAngularVelocity();
+}
+
+void PhysicsComponent::setLinearVelocity(PxVec3 linVec) {
+	actor->setLinearVelocity(linVec);
+}
+
+void PhysicsComponent::setAngularVelocity(PxVec3 angVec) {
+	actor->setAngularVelocity(angVec);
 }
