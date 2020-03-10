@@ -20,6 +20,7 @@ void Star::DuringUpdate(float dt)
 	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
 	{
 		world->RemoveGameObject(this);
+		
 		return;
 	}
 
@@ -39,12 +40,16 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		switch (randNum)
 		{
 		case 1: p->addComponent(new cubeDebuff(p->GetPlayerMesh(), p->GetCubeMesh()));
+			game->setPowerUpName("BOXED IN!");
 			break;
 		case 2: p->addComponent(new Homing(Vector3(0, 0, 3)));
+			game->setPowerUpName("HOMING BALL!");
 			break;
 		case 3: p->addComponent(new SpeedBoost());
+			game->setPowerUpName("SPEED BOOST!");
 			break;
 		case 4: p->addComponent(new offForward());
+			game->setPowerUpName("DIRECTION CHANGE!");
 			break;
 		}
 		this->getComponent<SpherePhysicsComponent*>("PhysicsComponent")->toRemove = true;

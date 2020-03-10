@@ -10,6 +10,7 @@
 #include <stdlib.h> 
 #include "Player.h"
 #include "../CSC8503Common/GameWorld.h"
+#include "TutorialGame.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -26,6 +27,7 @@ namespace NCL {
 			void setPhysxComponent(SpherePhysicsComponent* component) { physx = component; };
 
 			void setGameWorld(GameWorld* w) { world = w; };
+			void setTutorialGame(TutorialGame* g) { game = g; };
 
 		protected:
 			void RotateStar(float dt);
@@ -35,6 +37,7 @@ namespace NCL {
 			vector<PowerUp*> powerUps;
 
 			GameWorld* world;
+			TutorialGame* game;
 		};
 	}
 }
