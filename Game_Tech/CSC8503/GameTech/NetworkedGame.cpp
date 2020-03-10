@@ -10,13 +10,14 @@
 
 class PlayerPacketReceiver : public PacketReceiver {
 public:
-	PlayerPacketReceiver(GameWorld& w, Player* player, std::map<int, GameObject*> &ghost) : world(w), controlledplayer(player), serverPlayers(ghost){
+	PlayerPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g){
 		log = std::unique_ptr<Logger>(new Logger("Player Packet"));
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Received_State) {
 			PlayerPacket* realPacket = (PlayerPacket*)payload;
+			auto serverPlayers = game->GetServerPlayers();
 
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
@@ -38,14 +39,13 @@ public:
 	}
 
 	GameWorld& world;
-	Player* controlledplayer;
-	std::map<int, GameObject*> serverPlayers;
+	NetworkedGame* game;
 	std::unique_ptr<Logger> log;
 };
 
 class NewPlayerPacketReceiver : public PacketReceiver {
 public:
-	NewPlayerPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
+	NewPlayerPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
 		log = std::unique_ptr<Logger>(new Logger("New Player"));
 	}
 
@@ -54,27 +54,26 @@ public:
 			NewPlayerPacket* realPacket = (NewPlayerPacket*)payload;
 
 			log->info("New Player Connected");
-			game->InsertPlayer(realPacket->playerID, controlledplayer);
+			game->InsertPlayer(realPacket->playerID, game->GetCurrentPlayer());
 		}
 	}
 
 	GameWorld& world;
-	Player* controlledplayer;
 	NetworkedGame* game;
 	std::unique_ptr<Logger> log;
 };
 
 class PlayerIDPacketRecevier : public PacketReceiver {
 public:
-	PlayerIDPacketRecevier(Player* p) : player(p) {}
+	PlayerIDPacketRecevier(NetworkedGame* ng) : game(ng) {}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Player_ID) {
 			PlayerIDPacket* realPacket = (PlayerIDPacket*)payload;
-			
+			game->InsertPlayer(realPacket->playerID, game->GetCurrentPlayer());
 		}
 	}
-	Player* player;
+	NetworkedGame* game;
 };
 
 class PlayerDisconnectPacketReceiver : public PacketReceiver {
@@ -276,7 +275,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, Ball, serverPlayers);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, this);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
 }
@@ -284,14 +283,16 @@ void NetworkedGame::StartAsServer()
 void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
-
+	Player* player = AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0");
+	player->isCurrentPlayer = true;
+	 
 	FullPacketReceiver* clientReceiver = new FullPacketReceiver(*world, isServer, Ball, playerTwo);
 	thisClient->RegisterPacketHandler(Full_State, &(*clientReceiver));
 
-	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(Ball);
+	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
 	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
 
-	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, Ball, this);
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, this);
 	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
 
 	thisClient->Connect(127, 0, 0, 1, port);
@@ -305,6 +306,23 @@ void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 	std::map<int, GameObject*>::iterator it = serverPlayers.find(1);
 	serverPlayers.erase(it);
 }
+
+void NetworkedGame::CreateNewPlayer(int id) {
+	GameObject* other;
+	if (id == 2) {
+		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2");
+	}
+	else if (id == 3) {
+		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3");
+	}
+	else {
+		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4");
+	}
+
+	otherplayers.push_back(other);
+	InsertPlayer(id, other);
+}
+
 void NetworkedGame::UpdateGame(float dt)
 {
 	

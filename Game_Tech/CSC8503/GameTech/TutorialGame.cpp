@@ -181,15 +181,13 @@ void TutorialGame::InitWorld() {
 	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	//AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
 	
-	//						RenderObject(must)				   Position(must)			Scale				Name
-	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
-	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3"));
-	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
+	////						RenderObject(must)				   Position(must)			Scale				Name
+	//otherplayers.push_back(AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
+	//otherplayers.push_back(AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3"));
+	//otherplayers.push_back(AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4"));
 
-	// add the player controller
-	Player* p = AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0");
-	p->isCurrentPlayer = true;
-	otherplayers.push_back(p);
+	//// add the player controller
+	//AddPlayerObjectToWorld(playerTemp0, Vector3(-0.4, 0.1, -0.9), Vector3(1, 1, 1), "player0");
 
 }
 
@@ -527,59 +525,25 @@ void TutorialGame::UpdateGame(float dt) {
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
+
+	/*if (!isNetworkedGame) {
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+			log->info("server");
+			isNetworkedGame = true;
+			isServer = true;
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
+			log->info("client");
+			isNetworkedGame = true;
+		}
+
+		return;
+	}*/
 	
 
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
-	isNetworkedGame = true;
-	isServer = true;
-	/*
-	if (!isNetworkedGame)
-	{
-		isNetworkedGame = true;
-		isServer = true;
-
-		matchTimer -= dt;
-		int seconds = matchTimer;
-		renderer->DrawString(std::to_string(seconds / 60) + "." + std::to_string(seconds % 60),
-			Vector2(640, 600), Vector4(0, 0, 1, 1));
-
-		renderer->DrawString("SCORE: " + std::to_string(world->getScore()),
-			Vector2(50, 600), Vector4(0, 0, 1, 1));
-	}
-	else
-	{
-		
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::TAB))
-			RenderScoreBoard();
-		
-
-		if (isServer)
-		{
-			renderer->DrawString("YOUR SCORE: " + std::to_string(world->getPlayerOneScore()),
-				Vector2(50, 600), Vector4(0, 0, 1, 1));
-			renderer->DrawString("THEIR SCORE: " + std::to_string(world->getPlayerTwoScore()),
-				Vector2(50, 550), Vector4(1, 0, 0, 1));
-		}
-		else
-		{
-			renderer->DrawString("YOUR SCORE: " + std::to_string(world->getPlayerTwoScore()),
-				Vector2(50, 600), Vector4(1, 0, 0, 1));
-			renderer->DrawString("THEIR SCORE: " + std::to_string(world->getPlayerOneScore()),
-				Vector2(50, 550), Vector4(0, 0, 1, 1));
-		}
-	}
-	// Gameover
-	if ((matchTimer <= 0) || (world->GetCollectableCount() == 0))
-	{
-		playing = false;
-		matchTimer = gameOverScreenCoolDown;
-	}
-	if (lockedObject != nullptr) {
-		LockedCameraMovement();
-			//MoveSelectedObject();
-	*/
 
 	UpdateKeys();
 
@@ -664,9 +628,13 @@ void TutorialGame::InitUIWorld()
 	auto quitgame = [this]() {ifQuitGame = true; };
 	interBar3->funL = quitgame;
 
-	gameMode1 = new UIBar("NormalMode");
+	gameMode1 = new UIBar("Create Server");
 
-	auto intogame = [this]() {UIworld->SetUIactive(true); };
+	auto intogame = [this]() {
+		isNetworkedGame = true;
+		isServer = true;
+		UIworld->SetUIactive(true);
+	};
 	gameMode1->funL = intogame;
 
 	gameMode1->funL = intogame;
@@ -675,11 +643,11 @@ void TutorialGame::InitUIWorld()
 
 	auto servergame = [this]() { 
 		isNetworkedGame = true;
-		isServer = true;
+		UIworld->SetUIactive(true);
 	};
-	//gameMode2->funL = servergame;
+	gameMode2->funL = servergame;
 
-	gameMode3 = new UIBar("Back to meun");
+	gameMode3 = new UIBar("Back to menu");
 
 	//initialize UIState
 	interFace = new UIState();
