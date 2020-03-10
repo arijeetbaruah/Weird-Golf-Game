@@ -524,19 +524,7 @@ void TutorialGame::UpdateGame(float dt) {
 		if (UIworld->GetUIactive() == false)return;
 	}
 
-	/*if (!isNetworkedGame) {
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
-			log->info("server");
-			isNetworkedGame = true;
-			isServer = true;
-		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
-			log->info("client");
-			isNetworkedGame = true;
-		}
 
-		return;
-	}*/
 	
 	//update Render
 	UpdateInGame();
@@ -548,55 +536,21 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Render();
 
 	//update NetWork
-	isNetworkedGame = true;
-	isServer = true;
 	UpdateNetworkPostion(Ball);
-	/*
-	if (!isNetworkedGame)
-	{
+	/*if (!isNetworkedGame) {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+		log->info("server");
 		isNetworkedGame = true;
 		isServer = true;
-
-		matchTimer -= dt;
-		int seconds = matchTimer;
-		renderer->DrawString(std::to_string(seconds / 60) + "." + std::to_string(seconds % 60),
-			Vector2(640, 600), Vector4(0, 0, 1, 1));
-
-		renderer->DrawString("SCORE: " + std::to_string(world->getScore()),
-			Vector2(50, 600), Vector4(0, 0, 1, 1));
 	}
-	else
-	{
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::TAB))
-			RenderScoreBoard();
-
-
-		if (isServer)
-		{
-			renderer->DrawString("YOUR SCORE: " + std::to_string(world->getPlayerOneScore()),
-				Vector2(50, 600), Vector4(0, 0, 1, 1));
-			renderer->DrawString("THEIR SCORE: " + std::to_string(world->getPlayerTwoScore()),
-				Vector2(50, 550), Vector4(1, 0, 0, 1));
-		}
-		else
-		{
-			renderer->DrawString("YOUR SCORE: " + std::to_string(world->getPlayerTwoScore()),
-				Vector2(50, 600), Vector4(1, 0, 0, 1));
-			renderer->DrawString("THEIR SCORE: " + std::to_string(world->getPlayerOneScore()),
-				Vector2(50, 550), Vector4(0, 0, 1, 1));
-		}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
+		log->info("client");
+		isNetworkedGame = true;
 	}
-	// Gameover
-	if ((matchTimer <= 0) || (world->GetCollectableCount() == 0))
-	{
-		playing = false;
-		matchTimer = gameOverScreenCoolDown;
-	}
-	if (lockedObject != nullptr) {
-		LockedCameraMovement();
-			//MoveSelectedObject();
-	*/
+
+	return;
+}*/
+
 
 }
 
@@ -640,23 +594,34 @@ void TutorialGame::InitUIWorld()
 	interBar3 = new UIBar("Quit game");
 
 	gameMode1 = new UIBar("NormalMode");
-	gameMode2 = new UIBar("Connect to Server");
-	gameMode3 = new UIBar("Connect to Client");
-	gameMode4 = new UIBar("Back to meun");
+	gameMode2 = new UIBar("Creat Server");
+	gameMode3 = new UIBar("Creat Client");
+	gameMode4 = new UIBar("Back to menu");
 
 	//link function to UIBar
-
 	auto quitgame = [this]() {ifQuitGame = true; };
 	interBar3->funL = quitgame;
 
-	auto intogame = [this]() {UIworld->SetUIactive(true); };
+	auto intogame = [this]() {
+		isNetworkedGame = true;
+		isServer = true;
+		UIworld->SetUIactive(true); 
+	};
 	gameMode1->funL = intogame;
 
-	auto servergame = [this]() { isNetworkedGame = isServer = true;};
-	/*gameMode2->funL = servergame;*/
+	auto servergame = [this]() { 
+		isNetworkedGame = true;
+		isServer = true;
+		UIworld->SetUIactive(true);
+	};
+	gameMode2->funL = servergame;
 
-	auto clientgame = [this]() { isNetworkedGame = isServer = true; };
-	/*gameMode4->funL = clientgame;*/
+	auto clientgame = [this]() { 
+		isNetworkedGame = true;
+		isServer = true;
+		UIworld->SetUIactive(true);
+	};
+	gameMode3->funL = clientgame;
 
 	//initialize UIState
 	interFace = new UIState();
