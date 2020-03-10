@@ -6,3 +6,7 @@ NCL::PS4::PGameObject::PGameObject(std::string objectName)
 	isActive = true;
 	name = objectName;
 }
+
+NCL::PS4::PGameObject::~PGameObject()
+{
+}

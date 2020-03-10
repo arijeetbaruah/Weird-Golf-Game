@@ -172,10 +172,12 @@ namespace NCL {
 			UIBar* gameMode1;
 			UIBar* gameMode2;
 			UIBar* gameMode3;
+			UIBar* gameMode4;
 
 			void InitUIWorld();
 			void UpdateUIWorld(float dt);
 			void UpdateUIKeyWords(UIPushDownMachine* UIMachine);
+			void UpdateInGame();
 			bool ifQuitGame = false;
 			OGLShader* UIShader = nullptr;
 
