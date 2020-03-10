@@ -126,7 +126,7 @@ namespace NCL {
 			}
 
 			virtual void OnCollisionBegin(GameObject* otherObject) {
-				std::cout << "OnCollisionBegin event occured!\n";
+				//std::cout << "OnCollisionBegin event occured!\n";
 			}
 
 			virtual void OnCollisionEnd(GameObject* otherObject) {

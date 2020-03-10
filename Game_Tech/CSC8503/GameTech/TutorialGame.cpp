@@ -392,8 +392,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 	temp.push_back("greenglass.jpg");
 	colladaLoadFuncMulTex(&treeWithMultiTex,"tree.dae",		temp,						basicShader);
 
-	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png",		UIShader);
-
 }
 
 vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, std::string objectName)
@@ -658,38 +656,79 @@ bool TutorialGame::SelectObject() {
 
 void TutorialGame::InitUIWorld()
 {
-	//initiate camera
-	UIworld->GetMainCamera()->SetNearPlane(0.5f);
-	UIworld->GetMainCamera()->SetFarPlane(500.0f);
-	UIworld->GetMainCamera()->SetPitch(0.0f);
-	UIworld->GetMainCamera()->SetYaw(0.0f);
-	UIworld->GetMainCamera()->SetPosition(Vector3(-20,20,20));
+	//initialize UIBar
+	interBar1 = new UIBar("Begin game");
+	interBar2 = new UIBar("NoFunctionNow");
+	interBar3 = new UIBar("Quit game");
+
+	auto quitgame = [this]() {ifQuitGame = true; };
+	interBar3->funL = quitgame;
+
+	gameMode1 = new UIBar("NormalMode");
+
+	auto intogame = [this]() {UIworld->SetUIactive(true); };
+	gameMode1->funL = intogame;
+
+	gameMode2 = new UIBar("NoFunctionNow");
+	gameMode3 = new UIBar("Back to meun");
+
+	//initialize UIState
+	interFace = new UIState();
+	interFace->AddBar(interBar1);
+	interFace->AddBar(interBar2);
+	interFace->AddBar(interBar3);
+	interFace->SetCurrentBar(interFace->GetUIList().front());
+
+	gameMode = new UIState();
+	gameMode->AddBar(gameMode1);
+	gameMode->AddBar(gameMode2);
+	gameMode->AddBar(gameMode3);
+	gameMode->SetCurrentBar(gameMode->GetUIList().front());
+
+	gameMode3->subState = interFace;
+	interBar1->subState = gameMode;
+
+	//initialize UImachine
+	UIMachine = new UIPushDownMachine();
+	UIMachine->SetVertical(50,600);
+	UIMachine->AddPositions(450);
+	UIMachine->AddPositions(300);
+	UIMachine->AddPositions(150);
+	UIMachine->AddState(interFace);
+	UIMachine->AddState(gameMode);
+	UIMachine->SetCurrentState(UIMachine->GetStateList().front());
+
 
 	//initiate UIworld
 	UIworld->ClearAndErase();
-	UIworld->SetUIactive(true);
-	
-	//initiate state
-
-
-	//Add State to UI state machine
-
-
-	//Set Default state
-
+	UIworld->SetUIactive(false);
 
 }
 
 void TutorialGame::UpdateUIWorld(float dt)
 {
-	UIrenderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
+	UIrenderer->DrawString("W S choose mode, D into select", Vector2(10, 0),Vector4(0,1,0,0));
+	UIMachine->LoadUIState(UIrenderer);
 	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw() + 5);
 	UIworld->GetMainCamera()->UpdateCamera(dt);
-
+	UpdateUIKeyWords(UIMachine);
 	UIrenderer->Update(dt);
-	UIworld->SetUIactive(false);
 	UIrenderer->Render();
 }
+
+void NCL::CSC8503::TutorialGame::UpdateUIKeyWords(UIPushDownMachine* UIMachine)
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::W)) {
+		UIMachine->UpBar();
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::S)) {
+		UIMachine->DownBar();
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::D)) {
+		UIMachine->IntoBar();
+	}
+}
+
 
 
 //followings codes are some useless code and check if can be deleted

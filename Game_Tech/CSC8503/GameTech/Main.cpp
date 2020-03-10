@@ -148,7 +148,7 @@ int main() {
 
 	NetworkBase::Initialise();
 
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
+	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE) && g->IfQiutGame() != true) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 
 		if (dt > 1.0f) {
