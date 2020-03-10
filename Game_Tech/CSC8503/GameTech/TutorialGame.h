@@ -163,7 +163,6 @@ namespace NCL {
 
 			void InitUIWorld();
 			void UpdateUIWorld(float dt);
-			UIPushDownMachine*	UImachine;
 
 			OGLShader* UIShader = nullptr;
 		};
