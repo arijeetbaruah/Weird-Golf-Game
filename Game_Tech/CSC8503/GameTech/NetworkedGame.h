@@ -16,12 +16,14 @@ namespace NCL {
 			void StartAsClient(char a, char b, char c, char d);
 
 			void UpdateGame(float dt) override;
+			Player* GetCurrentPlayer() { return Ball; }
 
 
 			void StartLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
 			void InsertPlayer(int id, GameObject* p);
+			void CreateNewPlayer(int id);
 			void RemovePlayer(int ID, GameObject* p);
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
