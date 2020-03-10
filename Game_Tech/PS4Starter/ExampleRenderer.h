@@ -10,6 +10,17 @@
 #include "SceneNode.h"
 #include "Light.h"
 
+#define ASSET_DIR "/app0/Assets/"
+
+static const float biasValues[16] =
+{
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 0.5, 0.0,
+	0.5, 0.5, 0.5, 1.0
+};
+static const NCL::Maths::Matrix4 biasMatrix(const_cast<float*>(biasValues));
+
 namespace NCL {
 	namespace PS4 {
 		class ExampleRenderer : public PS4RendererBase
@@ -26,6 +37,9 @@ namespace NCL {
 			void	RenderFrame()	override;
 			void RenderActiveScene() override;
 			void InitDepthBuffer();
+			void SwitchToDepthBuffer();
+			void DrawShadow();
+			void DrawObjectShadow(RenderObject* obj);
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
@@ -53,6 +67,10 @@ namespace NCL {
 			Light* mainLight;
 
 			PS4ScreenBuffer* depthBuffer;
+
+			PS4Shader* ShadowShader;
+
+			Gnmx::GnmxGfxContext shadowContext;
 		};
 	}
 }

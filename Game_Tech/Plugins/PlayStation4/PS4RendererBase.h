@@ -42,7 +42,7 @@ namespace NCL {
 			
 			void	DrawMesh(PS4Mesh& mesh);
 
-		private:
+		protected:
 			void	InitialiseGCMRendering();
 			void	DestroyGCMRendering();
 

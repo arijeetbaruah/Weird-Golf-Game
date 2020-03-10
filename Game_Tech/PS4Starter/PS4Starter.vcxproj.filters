@@ -87,7 +87,10 @@
     <WavePsslc Include="..\Assets\Shaders\PS4\ComputeShader.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
-    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowPixel.pssl">
+      <Filter>Shaders</Filter>
+    </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowVert.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
   </ItemGroup>
