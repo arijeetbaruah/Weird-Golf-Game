@@ -17,6 +17,10 @@ struct UIBar
 	UIState* subState;
 	UIStateN funN;
 	UIStateL funL;
+
+	UIBar* left;
+	UIBar* right;
+
 	bool isSelected;
 	std::string words;
 
@@ -26,6 +30,8 @@ struct UIBar
 		subState = NULL;
 		isSelected = false;
 		words = barName;
+		left = NULL;
+		right = NULL;
 	}
 };
 
@@ -35,9 +41,8 @@ public:
 	UIState();
 	~UIState();
 
-	void AddBar();
-	void UpdateKeyWords();
-	void UseBar();
+	void AddBar(UIBar* newBar);
+
 	vector<UIBar*> GetUIList() { return UIList; }
 
 	UIBar* const GetCurrentBar() { return	currentBar; }
@@ -46,8 +51,8 @@ public:
 	bool hasSubState(){
 		return currentBar->subState == NULL ? false: true;
 	}
-	UIBar* GetLastBar() { return currentBar; }
-	UIBar* GetNextBar() { return currentBar; }
+	UIBar* GetLeftBar() { return currentBar->left; }
+	UIBar* GetRightBar() { return currentBar->right; }
 
 private:
 	vector<UIBar*> UIList;
@@ -64,19 +69,27 @@ public:
 	void AddState(UIState* newState) {
 		stateList.push_back(newState);
 	}
+	vector<UIState*> GetStateList() {
+		return	stateList;
+	}
 
 	void SetCurrentState(UIState* newState);
 
-
 	void LoadUIState(GameTechRenderer* render);
+
+	void AddPositions(float newPostion){
+		positions.push_back(newPostion);
+	}
+	void SetVertical(float ver1,float ver2) {
+		verticalPos[0] = ver1;
+		verticalPos[1] = ver2;
+	}
 
 	void IntoBar();
 	void UpBar();
 	void DownBar();
 
 private:
-
-
 
 	vector<UIState*> stateList;
 	UIState* curLeftState;

@@ -24,6 +24,7 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			bool IfQiutGame() { return ifQuitGame; }
 
 			OGLMesh* cubeMesh = nullptr;
 		protected:
@@ -156,15 +157,29 @@ namespace NCL {
 
 
 			//UI system, still fix , do not need check
-			MeshSceneNode* UIbar;
 			
 			GameWorld* UIworld;
 			GameTechRenderer* UIrenderer;
 
+			UIPushDownMachine* UIMachine;
+			UIState* interFace;
+			UIState* gameMode;
+
+			UIBar* interBar1;
+			UIBar* interBar2;
+			UIBar* interBar3;
+
+			UIBar* gameMode1;
+			UIBar* gameMode2;
+			UIBar* gameMode3;
+
 			void InitUIWorld();
 			void UpdateUIWorld(float dt);
-
+			void UpdateUIKeyWords(UIPushDownMachine* UIMachine);
+			bool ifQuitGame = false;
 			OGLShader* UIShader = nullptr;
+
+
 		};
 	}
 }
