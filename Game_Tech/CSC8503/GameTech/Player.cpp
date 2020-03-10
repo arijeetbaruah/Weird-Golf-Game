@@ -113,6 +113,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 	if (!isCurrentPlayer) {
 		return;
 	}
+
 	PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
 
 	float x = (float)sphere->getVelocity().x;
@@ -136,12 +137,19 @@ void Player::UpdateClientPlayerKeys(float dt)
 
 		float distance = dir.Length();
 
+		std::cout << "Distance: " << distance;
+
 		// Minimum distance
 		if (distance < 50) 
 		{
 			initialMousePos.x = 0;
 			initialMousePos.y = 0;
 			return;
+		}
+
+		if (distance > 500) 
+		{
+			distance = 500;
 		}
 
 		dir.Normalise();
