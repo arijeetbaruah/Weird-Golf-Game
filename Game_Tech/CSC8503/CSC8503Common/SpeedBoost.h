@@ -5,7 +5,7 @@
 
 class SpeedBoost : public Timed {
 	public:
-		SpeedBoost();
+		SpeedBoost(float multiplier = 2, string name = "SpeedBoost");
 
 		void Apply();
 		void Remove();
@@ -13,5 +13,6 @@ class SpeedBoost : public Timed {
 
 	protected:
 		float origSpeed = 0;
+		float multiplier = 2;
 		Player* po = nullptr;
 };
