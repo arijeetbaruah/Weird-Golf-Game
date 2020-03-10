@@ -39,6 +39,9 @@ TutorialGame::TutorialGame()	{
 
 	Ball = nullptr;
 
+	powerUpTxtLength = 5;
+	powerUpTxtTimer = powerUpTxtLength;
+
 	isNetworkedGame = false;
 	isServer = false;
 
@@ -107,6 +110,8 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 		PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
 
 		star->addComponent(sphere);
+
+		star->setTutorialGame(this);
 		
 		star->setPhysxComponent(sphere);
 
@@ -549,6 +554,8 @@ void TutorialGame::UpdateGame(float dt) {
 
 	SelectObject();
 
+	if (powerUpName.size() > 0)
+		displayPowerUpText(dt);
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -557,6 +564,19 @@ void TutorialGame::UpdateGame(float dt) {
 	UpdateNetworkPostion(Ball);
 
 	renderer->Render();
+}
+
+void TutorialGame::displayPowerUpText(float dt)
+{
+	renderer->DrawString(powerUpName, Vector2(500, 600));
+
+	powerUpTxtTimer -= dt;
+
+	if (powerUpTxtTimer <= 0) 
+	{
+		powerUpName.clear();
+		powerUpTxtTimer = powerUpTxtLength;
+	}
 }
 
 void TutorialGame::UpdateKeys() {
