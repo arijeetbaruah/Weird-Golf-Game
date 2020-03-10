@@ -1,4 +1,5 @@
 #include "Homing.h"
+#include "../GameTech/BoxPhysicsComponent.h"
 
 Homing::Homing(Vector3 destCoords) {
 	setName("Homing");
@@ -12,7 +13,7 @@ void Homing::Apply() {
 	Vector3 pass = dest;
 	sc->setLambda([pass](GameObject* go) {
 		std::cout << "Destination " << pass << std::endl;
-		SpherePhysicsComponent* spc = go->getComponent<SpherePhysicsComponent*>("SpherePhysicsComponent");
+		PhysicsComponent* spc = go->getComponent<PhysicsComponent*>("PhysicsComponent");
 		PxVec3 pvec = spc->getVelocity();
 		Vector3 vcel = Vector3(pvec.x, pvec.y, pvec.z);
 		vcel.y = 0;

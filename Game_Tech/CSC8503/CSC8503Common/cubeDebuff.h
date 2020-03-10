@@ -2,6 +2,7 @@
 #include "Timed.h"
 #include "GameObject.h"
 #include "RenderObject.h"
+#include "../GameTech/PhysicsComponent.h"
 #include "../GameTech/GameTechRenderer.h"
 namespace NCL {
 	namespace CSC8503 {
@@ -23,5 +24,7 @@ class cubeDebuff : public Timed {
 		RenderObject* ren;
 		OGLMesh* Before;
 		OGLMesh* After;
+		PxMaterial* mat;
+		void applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC);
 };
 

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "SpherePhysicsComponent.h"
 #include "../CSC8503Common/ShotTracker.h"
+#include "../GameTech/BoxPhysicsComponent.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -19,7 +20,7 @@ Player::Player(int id) : GameObject("PLAYER")
 	for (int i = 0; i < 6; i++)
 		buttonStates[i] = false;
 
-	layer = 2;
+	layer = 1;
 	layerMask = 0; // Collide with everything
 
 	initialMousePos = Vector2(0, 0);
@@ -112,7 +113,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 	if (!isCurrentPlayer) {
 		return;
 	}
-	SpherePhysicsComponent* sphere = (SpherePhysicsComponent*)components.at("SpherePhysicsComponent");
+	PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
 
 	float x = (float)sphere->getVelocity().x;
 	float y = (float)sphere->getVelocity().y;

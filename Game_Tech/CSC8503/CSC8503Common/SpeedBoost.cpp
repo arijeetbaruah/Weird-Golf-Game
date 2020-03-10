@@ -1,12 +1,13 @@
 #include "SpeedBoost.h"
 
-SpeedBoost::SpeedBoost() {
-	setName("SpeedBoost");
+SpeedBoost::SpeedBoost(float multiplier, string name) {
+	setName(name);
 	maxTime = 10;
+	this->multiplier = multiplier;
 }
 
 void SpeedBoost::Apply() {
-	po->setSpeed(origSpeed * 4);
+	po->setSpeed(origSpeed * multiplier);
 }
 
 void SpeedBoost::Remove() {

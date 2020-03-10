@@ -9,6 +9,7 @@
 #include "EnjoyColladaMesh.h"
 #include "SceneNode.h"
 #include "Light.h"
+#include "PGameObject.h"
 
 #define ASSET_DIR "/app0/Assets/"
 

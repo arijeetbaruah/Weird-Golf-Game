@@ -69,6 +69,7 @@
     <ClCompile Include="MeshSceneNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Star.cpp">
     <ClCompile Include="BoxPhysicsComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,6 +135,7 @@
     <ClInclude Include="MeshSceneNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Star.h">
     <ClInclude Include="BoxPhysicsComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -14,7 +14,8 @@ using namespace physx;
 struct FilterGroup {
 	enum Enum {
 		ePLAYER = (1 << 0),
-		eLEVEL = (1 << 1)
+		eLEVEL = (1 << 1),
+		eSTAR = (1 << 2)
 	};
 };
 

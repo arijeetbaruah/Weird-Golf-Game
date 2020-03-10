@@ -5,15 +5,18 @@
 #include "PhysxController.h"
 #include <iostream>
 
-PhysicsComponent::PhysicsComponent(std::string name, PxTransform transform, GameObject* go) : Component(name) {
+PhysicsComponent::PhysicsComponent(PxTransform transform, GameObject* go) : Component() {
 	gPhysics = PhysxController::getInstance().Physics();
 	actor = gPhysics->createRigidDynamic(transform);
 	actor->userData = go;
+	setName("PhysicsComponent");
+	//PhysxController::getInstance().setupFiltering(actor, FilterGroup::eLEVEL, FilterGroup::eLEVEL);
 }
 
 PhysicsComponent::~PhysicsComponent() {
 	PhysxController::getInstance().removeActor(actor);
 }
+
 
 void PhysicsComponent::Start() {
 	PhysxController::getInstance().addActor(actor);
@@ -49,5 +52,20 @@ void PhysicsComponent::setAngularDamping(PxReal value) {
 PxVec3 PhysicsComponent::getVelocity()
 {
 	return actor->getLinearVelocity() + actor->getAngularVelocity();
-	
+}
+
+PxVec3 PhysicsComponent::getLinearVelocity() {
+	return actor->getLinearVelocity();
+}
+
+PxVec3 PhysicsComponent::getAngularVelocity() {
+	return actor->getAngularVelocity();
+}
+
+void PhysicsComponent::setLinearVelocity(PxVec3 linVec) {
+	actor->setLinearVelocity(linVec);
+}
+
+void PhysicsComponent::setAngularVelocity(PxVec3 angVec) {
+	actor->setAngularVelocity(angVec);
 }

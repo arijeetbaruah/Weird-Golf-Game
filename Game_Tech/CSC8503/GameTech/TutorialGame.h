@@ -12,6 +12,7 @@
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
+#include "Star.h"
 #include "UIPushDownMachine.h"
 
 namespace NCL {
@@ -23,6 +24,7 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			bool IfQiutGame() { return ifQuitGame; }
 
 			OGLMesh* cubeMesh = nullptr;
 		protected:
@@ -31,12 +33,13 @@ namespace NCL {
 			//need check
 			//need check
 			bool SelectObject();
+			/*
 			void SeenObjects();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
-			/*
+			
 			// Stuff from goose game
 			GameObject* AddFloorToWorld(const Vector3& position);
 			void AddObstacles();
@@ -50,24 +53,28 @@ namespace NCL {
 			GameObject* AddCharacterToWorld(const Vector3& position);
 			GameObject* AddAppleToWorld(const Vector3& position);
 			GameObject* AddBonusItemToWorld(const Vector3& position);
-			*/
+			
 
+			//GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
+			//GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddPlayerToWorld(Vector3 position, int playerNum);
 			GameObject* AddOtherPlayerToWorld(Vector3 position, int playerNum);
+			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
+			
 			Vector3 playerPos1;
 			Vector3 playerPos2;
 			Vector3 playerPos3;
 			Vector3 playerPos4;
+			*/
 
-			GameObject* AddGolfLevelToWorld(const Vector3& position, const Vector3& size, const Vector4& colour, int index);
 
 			std::unique_ptr<Logger> log;
-			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1,1,1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1,1,1,1), std::string objectName = "");
 
 			Player* Ball;
 			Player* playerTwo;
-			vector<Enemy*> enemies;
+			//vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
 
@@ -75,7 +82,7 @@ namespace NCL {
 			bool isServer;
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
-			GameObject* selectionObject = nullptr;
+			//GameObject* selectionObject = nullptr;
 
 
 
@@ -89,7 +96,8 @@ namespace NCL {
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
 			GameObject*			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-
+			GameObject* AddStarToWorld(Vector3 position);
+			
 			//update game 
 			void UpdateKeys();
 
@@ -102,6 +110,7 @@ namespace NCL {
 			MeshSceneNode* treeFormRhino;
 			MeshSceneNode* treeFromBlender;
 			MeshSceneNode* treeWithMultiTex;
+			MeshSceneNode* powerUpStar;
 
 			MeshSceneNode* playerTemp0;
 			MeshSceneNode* playerTemp1;
@@ -122,7 +131,7 @@ namespace NCL {
 			OGLTexture* golfLevelTex = nullptr;
 
 			NavigationGrid grid;
-
+			/*
 			//Coursework Meshes
 			OGLMesh*	gooseMesh	= nullptr;
 			OGLMesh*	keeperMesh	= nullptr;
@@ -143,25 +152,34 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
+			*/
 			std::vector<GameObject*> otherplayers;
 
 
-
-
-
-
-
 			//UI system, still fix , do not need check
-			Camera* UIcamera;
-			MeshSceneNode* UIbar;
-			vector<GameObject*> AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), const Vector4& colour = Vector4(1, 1, 1, 1), std::string objectName = "");
+			
 			GameWorld* UIworld;
+			GameTechRenderer* UIrenderer;
+
+			UIPushDownMachine* UIMachine;
+			UIState* interFace;
+			UIState* gameMode;
+
+			UIBar* interBar1;
+			UIBar* interBar2;
+			UIBar* interBar3;
+
+			UIBar* gameMode1;
+			UIBar* gameMode2;
+			UIBar* gameMode3;
+
 			void InitUIWorld();
 			void UpdateUIWorld(float dt);
-			UIPushDownMachine*	UImachine;
-			GameTechRenderer*	UIrenderer;
-			stateObj* beginState;
+			void UpdateUIKeyWords(UIPushDownMachine* UIMachine);
+			bool ifQuitGame = false;
 			OGLShader* UIShader = nullptr;
+
+
 		};
 	}
 }

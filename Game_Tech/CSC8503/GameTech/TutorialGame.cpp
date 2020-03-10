@@ -65,6 +65,64 @@ void TutorialGame::InitialiseAssets() {
 	LoadColladaRenderObjects();
 }
 
+GameObject* TutorialGame::AddStarToWorld(Vector3 position)
+{
+	std::vector<GameObject*> resultList;
+	std::vector<RenderObject*> renderList = powerUpStar->GetAllMesh();
+
+	for (RenderObject* tempRender : renderList)
+	{
+		Star* star = new Star();
+
+		//build rander object
+		RenderObject* newRender = new RenderObject(tempRender);
+		Vector3 size = Vector3(10, 10, 10);
+		star->GetTransform().SetWorldScale(size);
+
+		star->GetTransform().SetWorldPosition(position);
+
+		newRender->SetParentTransform(&star->GetTransform());
+		star->SetRenderObject(newRender);
+
+		//build physics volume
+		std::vector<PxVec3> verts;
+		std::vector<PxU32> tris;
+		Matrix4 tempScale = Matrix4::Scale(size);
+
+		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())
+		{
+			vert = tempScale * vert;
+			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
+		}
+		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+
+		Quaternion rotate = Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0)));
+
+		//TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 1, verts, tris, mMaterial);
+		//star->addComponent(physicsC);
+
+		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial);
+		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+		PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
+
+		star->addComponent(sphere);
+		
+		star->setPhysxComponent(sphere);
+
+		sphere->setAsTrigger();
+		
+		star->setGameWorld(world);
+
+		resultList.push_back(star);
+		world->AddGameObject(star);
+	}
+
+	return resultList[0];
+}
+
+
+
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
 	delete basicShader;
@@ -105,15 +163,23 @@ void TutorialGame::InitCamera() {
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 
+	// The player to act as the server
+	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
+
+	AddStarToWorld(Vector3(-0.4, 0.3, 1));
+	AddStarToWorld(Vector3(-0.1, 0.3, 1));
+	AddStarToWorld(Vector3(0.1, 0.3, 1));
+	AddStarToWorld(Vector3(0.4, 0.3, 1));
+
 	//			 RenderObject(must)	    Position(must)					scale					rotation													name
 	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 	AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-	AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
+	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+	//AddSomeObject(UIbar,			Vector3(0, 0, -0.3),			Vector3(0.1,0.1,0.1),		Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),		"");
 	
 	//						RenderObject(must)				   Position(must)			Scale				Name
 	otherplayers.push_back(AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2"));
@@ -156,7 +222,10 @@ void TutorialGame::LoadColladaRenderObjects() {
 		ColladaBase* tempMesh = new ColladaBase(meshName);
 
 		int meshSize = tempMesh->GetNumMeshes();
-		OGLTexture* tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
+
+		OGLTexture* tempTexture = nullptr;
+
+		tempTexture = (OGLTexture*)TextureLoader::LoadAPITexture(textureName);
 
 		for (EnjoyMesh tempIn : tempMesh->GetMeshes()) {
 			float tempF[16];
@@ -183,7 +252,9 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 				vertics.push_back(Vector3(tempVec) * 0.01);
 				normals.push_back(Vector3(tempIn.normals[i].x, tempIn.normals[i].y, tempIn.normals[i].z));
+
 				texCoords.push_back(Vector2(tempIn.texcoords[i].x, tempIn.texcoords[i].y));
+
 				indices.push_back(i);
 			}
 
@@ -191,7 +262,9 @@ void TutorialGame::LoadColladaRenderObjects() {
 			tempOGLMesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 			tempOGLMesh->SetVertexPositions(vertics);
 			tempOGLMesh->SetVertexNormals(normals);
+
 			tempOGLMesh->SetVertexTextureCoords(texCoords);
+
 			tempOGLMesh->SetVertexIndices(indices);
 			tempOGLMesh->UploadToGPU();
 
@@ -255,8 +328,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 			tempTexture[i] = tempTex;
 		}
 
-
-
 		std::vector<EnjoyMesh> meshList = tempMesh->GetMeshes();
 		for (int j = 0; j < meshList.size(); j++)
 		{
@@ -309,6 +380,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 	colladaLoadFunc(&gameMapExplode,	"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
+	colladaLoadFunc(&powerUpStar,		"Star.dae",			"star.png",					basicShader);
 
 	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
 	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
@@ -319,8 +391,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 	temp.push_back("wood.png");
 	temp.push_back("greenglass.jpg");
 	colladaLoadFuncMulTex(&treeWithMultiTex,"tree.dae",		temp,						basicShader);
-
-	mshLoadFunc(&UIbar,					"cube.msh",			"tex_MinigolfPack.png",		UIShader);
 
 }
 
@@ -427,8 +497,8 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 	SpherePhysicsComponent* sphere = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
-
 	Ball->addComponent(sphere);
+	//Ball->addComponent(sphere);
 
 	sphere->setLinearDamping(0.8);
 	sphere->setAngularDamping(2);
@@ -528,7 +598,7 @@ void TutorialGame::UpdateGame(float dt) {
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
-		selectionObject = nullptr;
+		//selectionObject = nullptr;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -550,7 +620,7 @@ bool TutorialGame::SelectObject() {
 	}
 	if (inSelectionMode) {
 		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-
+		/*
 		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
 			if (selectionObject) {	//set colour to deselected;
 				//selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
@@ -574,7 +644,7 @@ bool TutorialGame::SelectObject() {
 			else {
 				return false;
 			}
-		}
+		}*/
 	}
 	else {
 		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
@@ -583,75 +653,91 @@ bool TutorialGame::SelectObject() {
 }
 
 //following is UIfunction
-vector<GameObject*> TutorialGame::AddStripToState(stateObj* state, MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, const Vector4& colour, std::string objectName)
-{
-	std::vector<GameObject*> resultList;
-	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
-
-	for (RenderObject* tempRender : renderList)
-	{
-		//build object list
-		GameObject* tempObject = new GameObject(objectName);
-
-		//build rander object
-		RenderObject* newRender = new RenderObject(tempRender);
-
-		tempObject->GetTransform().SetWorldScale(size);
-		tempObject->GetTransform().SetWorldPosition(position + Vector3(150, 150, 150));
-		tempObject->GetTransform().SetWorldOrientation(rotate);
-
-		newRender->SetParentTransform(&tempObject->GetTransform());
-		tempObject->SetRenderObject(newRender);
-		tempObject->GetRenderObject()->SetColour(colour);
-
-		resultList.push_back(tempObject);
-		state->state.push_back(tempObject);
-	}
-	return resultList;
-}
 
 void TutorialGame::InitUIWorld()
 {
+	//initialize UIBar
+	interBar1 = new UIBar("Begin game");
+	interBar2 = new UIBar("NoFunctionNow");
+	interBar3 = new UIBar("Quit game");
+
+	auto quitgame = [this]() {ifQuitGame = true; };
+	interBar3->funL = quitgame;
+
+	gameMode1 = new UIBar("NormalMode");
+
+	auto intogame = [this]() {UIworld->SetUIactive(true); };
+	gameMode1->funL = intogame;
+
+	gameMode1->funL = intogame;
+
+	gameMode2 = new UIBar("Connect to Server");
+
+	auto servergame = [this]() { 
+		isNetworkedGame = true;
+		isServer = true;
+	};
+	//gameMode2->funL = servergame;
+
+	gameMode3 = new UIBar("Back to meun");
+
+	//initialize UIState
+	interFace = new UIState();
+	interFace->AddBar(interBar1);
+	interFace->AddBar(interBar2);
+	interFace->AddBar(interBar3);
+	interFace->SetCurrentBar(interFace->GetUIList().front());
+
+	gameMode = new UIState();
+	gameMode->AddBar(gameMode1);
+	gameMode->AddBar(gameMode2);
+	gameMode->AddBar(gameMode3);
+	gameMode->SetCurrentBar(gameMode->GetUIList().front());
+
+	gameMode3->subState = interFace;
+	interBar1->subState = gameMode;
+
+	//initialize UImachine
+	UIMachine = new UIPushDownMachine();
+	UIMachine->SetVertical(50,600);
+	UIMachine->AddPositions(450);
+	UIMachine->AddPositions(300);
+	UIMachine->AddPositions(150);
+	UIMachine->AddState(interFace);
+	UIMachine->AddState(gameMode);
+	UIMachine->SetCurrentState(UIMachine->GetStateList().front());
+
+
 	//initiate UIworld
-
 	UIworld->ClearAndErase();
-	UIworld->SetUIactive(true);
-	
-
-	//initiate camera
-	UIworld->GetMainCamera()->SetNearPlane(0.5f);
-	UIworld->GetMainCamera()->SetFarPlane(500.0f);
-	UIworld->GetMainCamera()->SetPitch(0.0f);
-	UIworld->GetMainCamera()->SetYaw(0.0f);
-	UIworld->GetMainCamera()->SetPosition(Vector3(-20,20,20));
-	
-
-
-	//initiate state
-	beginState = new stateObj(begin_menu);
-	UImachine = new UIPushDownMachine(beginState);
-
-	//Add Strip To state	state		scenenode	position		scale			rotate													colour			text
-	AddStripToState(		beginState,	UIbar,		Vector3(0,0,-0.3),	Vector3(0.1, 0.1, 0.1), Quaternion(Matrix4::Rotation(00, Vector3(0, 0, 0))),	Vector3(1,1,1),	"");
-
-	//Add State to UI state machine
-
-
-	//Set Default state
-	UIworld->SetObjectList(UImachine->GetMenuList());
+	UIworld->SetUIactive(false);
 
 }
 
 void TutorialGame::UpdateUIWorld(float dt)
 {
-	UIworld->UpdateWorld(dt);
+	UIrenderer->DrawString("W S choose mode, D into select", Vector2(10, 0),Vector4(0,1,0,0));
+	UIMachine->LoadUIState(UIrenderer);
 	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw() + 5);
 	UIworld->GetMainCamera()->UpdateCamera(dt);
-
+	UpdateUIKeyWords(UIMachine);
 	UIrenderer->Update(dt);
-	UIworld->SetUIactive(false);
 	UIrenderer->Render();
 }
+
+void NCL::CSC8503::TutorialGame::UpdateUIKeyWords(UIPushDownMachine* UIMachine)
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::W)) {
+		UIMachine->UpBar();
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::S)) {
+		UIMachine->DownBar();
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::D)) {
+		UIMachine->IntoBar();
+	}
+}
+
 
 
 //followings codes are some useless code and check if can be deleted
