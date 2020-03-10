@@ -175,8 +175,8 @@ void NCL::PS4::ExampleRenderer::InitDepthBuffer()
 		"Depth", Gnm::kResourceTypeDepthRenderTargetBaseAddress, 0);
 
 	depthBuffer->depthTarget.setAddresses(depthMemory, stencilMemory);
-	Gnm::Texture tex;
-	tex.initFromDepthRenderTarget(&depthBuffer->depthTarget, false);
+
+	ShadowTex.initFromDepthRenderTarget(&depthBuffer->depthTarget, false);
 }
 
 void NCL::PS4::ExampleRenderer::SwitchToDepthBuffer()
@@ -320,6 +320,7 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
 	PS4Texture* tex = (PS4Texture*)o->GetTexture(0);
 	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &tex->GetAPITexture());
+	currentGFXContext->setTextures(Gnm::kShaderStagePs, 1, 1, &ShadowTex);
 	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
 
 	*viewProjMat = mainCamera.BuildProjectionMatrix(1920.0f/1080) * mainCamera.BuildViewMatrix();

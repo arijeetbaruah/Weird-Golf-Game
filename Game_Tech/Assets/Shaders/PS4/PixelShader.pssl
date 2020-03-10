@@ -3,6 +3,8 @@ SamplerState samp0 : register(s0);
 
 Texture2D colorMap : register( t0 );
 
+Texture2D shadowMap: register(t1);
+
 
 struct VS_OUTPUT
 {

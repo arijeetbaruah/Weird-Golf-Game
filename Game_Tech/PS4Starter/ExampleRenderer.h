@@ -71,6 +71,8 @@ namespace NCL {
 			PS4Shader* ShadowShader;
 
 			Gnmx::GnmxGfxContext shadowContext;
+
+			Gnm::Texture ShadowTex;
 		};
 	}
 }
