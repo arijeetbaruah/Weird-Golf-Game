@@ -116,12 +116,16 @@
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">CS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
-    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowPixel.pssl">
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">PS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
     <WavePsslc Include="..\Assets\Shaders\PS4\PixelShader.pssl">
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">PS</Profile>
+      <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
+    </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowVert.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">VSVS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
     <WavePsslc Include="..\Assets\Shaders\PS4\VertexShader.pssl">

@@ -1,0 +1,16 @@
+
+SamplerState samp0 : register(s0);
+
+Texture2D colorMap : register( t0 );
+
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+};
+
+float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
+{
+	float4 test = float4(1.0, 1.0, 1.0, 1.0);
+	return test;
+}  
