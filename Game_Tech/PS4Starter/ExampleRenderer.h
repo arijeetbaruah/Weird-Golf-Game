@@ -9,6 +9,7 @@
 #include "EnjoyColladaMesh.h"
 #include "SceneNode.h"
 #include "Light.h"
+#include "PGameObject.h"
 
 namespace NCL {
 	namespace PS4 {

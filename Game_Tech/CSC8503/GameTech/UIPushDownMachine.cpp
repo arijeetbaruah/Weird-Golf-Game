@@ -1,38 +1,64 @@
 #include "UIPushDownMachine.h"
 
-UIPushDownMachine::UIPushDownMachine(stateObj* basicState)
+void UIPushDownMachine::SetCurrentState(UIState* newState)
 {
-	currentState = basicState;
-	stateList.push(basicState);
+	curLeftState = newState;
+	if (curLeftState->hasSubState()) {
+		curRightState = curLeftState->GetCurrentBar()->subState;
+	}
 }
 
-void UIPushDownMachine::AddState(stateObj* newstate)
+void UIPushDownMachine::LoadUIState(GameTechRenderer* render)
 {
-	if (newstate == stateList.top()) return;
-	if (newstate->parentState == stateList.top())
-	{
-		stateList.push(newstate);
-		currentState = newstate;
-	}
-	else
-	{
-		while (stateList.size() > 1 || stateList.top() != newstate)
-		{
-			stateList.pop();
+	int leftPos = 0;
+	if (curLeftState != NULL){
+		for (UIBar* tempBar : curLeftState->GetUIList()) {
+			if (curLeftState->GetCurrentBar() != tempBar) render->DrawString(tempBar->words, Vector2(positions[leftPos], verticalPos[0]));
+			else render->DrawString(tempBar->words, Vector2(positions[leftPos], verticalPos[0]),Vector4(1,1,1,1));
+			leftPos++;
 		}
-		currentState =  stateList.top();
+	}
+	int rightPos = 0;
+	if (curRightState != NULL) {
+		for (UIBar* tempBar : curRightState->GetUIList()) {
+			render->DrawString(tempBar->words, Vector2(positions[leftPos], verticalPos[1]));
+			rightPos++;
+		}
 	}
 }
 
-bool UIPushDownMachine::CheckState(stateObj* newState)
+void UIPushDownMachine::IntoBar()
 {
-	return	newState->state == stateList.top()->state;
+	if (curLeftState != NULL)
+	{
+		UIBar* tempBar = curLeftState->GetCurrentBar();
+		if (tempBar->subState != NULL)
+		{
+			SetCurrentState(tempBar->subState);
+		}
+		else if (tempBar->funL != NULL)
+		{
+			tempBar->funL();
+		}
+		else if (tempBar->funN != NULL)
+		{
+			tempBar->funN();
+		}
+	}
 }
 
-void UIPushDownMachine::BackToBegin()
+void UIPushDownMachine::UpBar()
 {
-	while (stateList.size() > 1)
+	if (curLeftState != NULL)
 	{
-		stateList.pop();
+		curLeftState->SetCurrentBar(curLeftState->GetLastBar());
+	}
+}
+
+void UIPushDownMachine::DownBar()
+{
+	if (curLeftState != NULL)
+	{
+		curLeftState->SetCurrentBar(curLeftState->GetNextBar());
 	}
 }

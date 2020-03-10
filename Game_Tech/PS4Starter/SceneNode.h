@@ -60,7 +60,7 @@ namespace NCL
 			return renderObjects;
 		}
 
-		auto GetWorldTransform();
+		Matrix4 GetWorldTransform();
 
 		auto& GetChildren()
 		{
