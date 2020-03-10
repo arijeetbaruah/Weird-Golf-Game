@@ -34,7 +34,7 @@ namespace NCL {
 
 			this->fov		= 45.0f;
 			this->nearPlane = 1.0f;
-			this->farPlane	= 100.0f;
+			this->farPlane	= 10000.0f;
 
 			this->camType	= CameraType::Perspective;
 		}
