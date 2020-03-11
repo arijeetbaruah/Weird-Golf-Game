@@ -126,8 +126,6 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 	return resultList[0];
 }
 
-
-
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
 	delete basicShader;
@@ -508,48 +506,49 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 
-	Script* test = new Script();
+	/*Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
-	test->setLambda(std::function<void(GameObject*)>(script));
+	test->setLambda(std::function<void(GameObject*)>(script));*/
 
-	cubeDebuff* cubed = new cubeDebuff(objOGL, Ball->GetCubeMesh());
-	Ball->addComponent(cubed);
+	/*cubeDebuff* cubed = new cubeDebuff(objOGL, Ball->GetCubeMesh());
+	Ball->addComponent(cubed);*/
 
-	TestBuff* testBuff = new TestBuff();
-	Ball->addComponent(testBuff);
-	Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+	/*TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);*/
+
+	//Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+
 	world->AddGameObject(Ball);
 
 	return Ball;
 }
 
+MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
+	if (ID == 0) {
+		return playerTemp0;
+	} else if (ID == 1) {
+		return playerTemp1;
+	}
+	else if (ID == 2) {
+		return playerTemp2;
+	}
+	else if (ID == 3) {
+		return playerTemp3;
+	}
+}
+
 void TutorialGame::UpdateGame(float dt) {
-	
+	//update inter UI
 	if (UIworld->GetUIactive() == false)
 	{
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
 
-	/*if (!isNetworkedGame) {
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
-			log->info("server");
-			isNetworkedGame = true;
-			isServer = true;
-		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
-			log->info("client");
-			isNetworkedGame = true;
-		}
 
-		return;
-	}*/
 	
-
-	if (!inSelectionMode) {
-		world->GetMainCamera()->UpdateCamera(dt);
-	}
-
+	//update Render
+	UpdateInGame();
 	UpdateKeys();
 
 	SelectObject();
@@ -559,11 +558,27 @@ void TutorialGame::UpdateGame(float dt) {
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
-
+	SelectObject();
 	Debug::FlushRenderables();
-	UpdateNetworkPostion(Ball);
-
 	renderer->Render();
+
+	//update NetWork
+	UpdateNetworkPostion(Ball);
+	/*if (!isNetworkedGame) {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+		log->info("server");
+		isNetworkedGame = true;
+		isServer = true;
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
+		log->info("client");
+		isNetworkedGame = true;
+	}
+
+	return;
+}*/
+
+
 }
 
 void TutorialGame::displayPowerUpText(float dt)
@@ -582,10 +597,10 @@ void TutorialGame::displayPowerUpText(float dt)
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
-		//selectionObject = nullptr;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
+		UIworld->SetUIactive(false);
 		//de something else
 	}
 }
@@ -602,41 +617,14 @@ bool TutorialGame::SelectObject() {
 			Window::GetWindow()->LockMouseToWindow(true);
 		}
 	}
-	if (inSelectionMode) {
-		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-		/*
-		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
-			if (selectionObject) {	//set colour to deselected;
-				//selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
-
-				renderer->DrawString("DEBUG INFO: ",
-					Vector2(10, 300), Vector4(0, 0, 1, 1));
-				renderer->DrawString("POSITION: " + selectionObject->GetTransform().GetWorldPosition().ToString(),
-					Vector2(10, 200), Vector4(0, 0, 1, 1));
-				renderer->DrawString("SIZE: " + selectionObject->GetTransform().GetLocalScale().ToString(),
-					Vector2(10, 100), Vector4(0, 0, 1, 1));
-				selectionObject = nullptr;
-			}
-
-			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
-
-			RayCollision closestCollision;
-			if (world->Raycast(ray, closestCollision, true)) {
-				selectionObject = (GameObject*)closestCollision.node;
-				return true;
-			}
-			else {
-				return false;
-			}
-		}*/
-	}
-	else {
-		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
-	}
 	return false;
 }
 
 //following is UIfunction
+
+void TutorialGame::UpdateInGame() {
+	renderer->DrawString("test wordssssssssss!", Vector2(10, 0));
+}
 
 void TutorialGame::InitUIWorld()
 {
@@ -645,29 +633,35 @@ void TutorialGame::InitUIWorld()
 	interBar2 = new UIBar("NoFunctionNow");
 	interBar3 = new UIBar("Quit game");
 
+	gameMode1 = new UIBar("NormalMode");
+	gameMode2 = new UIBar("Create Server");
+	gameMode3 = new UIBar("Create Client");
+	gameMode4 = new UIBar("Back to menu");
+
+	//link function to UIBar
 	auto quitgame = [this]() {ifQuitGame = true; };
 	interBar3->funL = quitgame;
-
-	gameMode1 = new UIBar("Create Server");
 
 	auto intogame = [this]() {
 		isNetworkedGame = true;
 		isServer = true;
-		UIworld->SetUIactive(true);
+		UIworld->SetUIactive(true); 
 	};
 	gameMode1->funL = intogame;
 
-	gameMode1->funL = intogame;
-
-	gameMode2 = new UIBar("Connect to Server");
-
 	auto servergame = [this]() { 
 		isNetworkedGame = true;
+		isServer = true;
 		UIworld->SetUIactive(true);
 	};
 	gameMode2->funL = servergame;
 
-	gameMode3 = new UIBar("Back to menu");
+	auto clientgame = [this]() { 
+		isNetworkedGame = true;
+		isServer = false;
+		UIworld->SetUIactive(true);
+	};
+	gameMode3->funL = clientgame;
 
 	//initialize UIState
 	interFace = new UIState();
@@ -680,21 +674,20 @@ void TutorialGame::InitUIWorld()
 	gameMode->AddBar(gameMode1);
 	gameMode->AddBar(gameMode2);
 	gameMode->AddBar(gameMode3);
+	gameMode->AddBar(gameMode4);
 	gameMode->SetCurrentBar(gameMode->GetUIList().front());
 
-	gameMode3->subState = interFace;
+
+	//link layout relationships
+	gameMode4->subState = interFace;
 	interBar1->subState = gameMode;
 
 	//initialize UImachine
 	UIMachine = new UIPushDownMachine();
 	UIMachine->SetVertical(50,600);
-	UIMachine->AddPositions(450);
-	UIMachine->AddPositions(300);
-	UIMachine->AddPositions(150);
 	UIMachine->AddState(interFace);
 	UIMachine->AddState(gameMode);
 	UIMachine->SetCurrentState(UIMachine->GetStateList().front());
-
 
 	//initiate UIworld
 	UIworld->ClearAndErase();
@@ -704,16 +697,14 @@ void TutorialGame::InitUIWorld()
 
 void TutorialGame::UpdateUIWorld(float dt)
 {
-	UIrenderer->DrawString("W S choose mode, D into select", Vector2(10, 0),Vector4(0,1,0,0));
+	UIrenderer->DrawString("W S choose mode, D into select", Vector2(50, 0),Vector4(0,1,0,0));
 	UIMachine->LoadUIState(UIrenderer);
-	UIworld->GetMainCamera()->SetYaw(UIworld->GetMainCamera()->GetYaw() + 5);
-	UIworld->GetMainCamera()->UpdateCamera(dt);
 	UpdateUIKeyWords(UIMachine);
 	UIrenderer->Update(dt);
 	UIrenderer->Render();
 }
 
-void NCL::CSC8503::TutorialGame::UpdateUIKeyWords(UIPushDownMachine* UIMachine)
+void TutorialGame::UpdateUIKeyWords(UIPushDownMachine* UIMachine)
 {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::W)) {
 		UIMachine->UpBar();

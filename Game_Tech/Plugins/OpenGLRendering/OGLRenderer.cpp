@@ -210,22 +210,25 @@ void OGLRenderer::DrawDebugData() {
 		return; //don't mess with OGL state if there's no point!
 	}
 	BindShader(debugShader);
-
-	if (forceValidDebugState) {
-		glEnable(GL_BLEND);
-		glDisable(GL_DEPTH_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-
+	
 	int switchLocation = glGetUniformLocation(debugShader->GetProgramID(), "useMatrix");
-
 	glUniform1i(switchLocation, 0);
-	DrawDebugStrings();
 	SetupDebugMatrix(debugShader);
 	glUniform1i(switchLocation, 1);
 	DrawDebugLines();
 
-	if (forceValidDebugState) {
+
+	if (!forceValidDebugState) {
+		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	glUniform1i(switchLocation, 0);
+	DrawDebugStrings();
+	SetupDebugMatrix(debugShader);
+	glUniform1i(switchLocation, 1);
+
+	if (!forceValidDebugState) {
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
