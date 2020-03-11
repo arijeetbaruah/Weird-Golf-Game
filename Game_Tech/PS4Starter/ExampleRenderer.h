@@ -41,6 +41,7 @@ namespace NCL {
 			void SwitchToDepthBuffer();
 			void DrawShadow();
 			void DrawObjectShadow(RenderObject* obj);
+			Matrix4 GetLightView();
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;

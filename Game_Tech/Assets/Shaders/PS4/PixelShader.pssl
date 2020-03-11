@@ -46,16 +46,21 @@ float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 	
 	float2 projCoords;
 	projCoords.x = In.fragPosLightSpace.x / In.fragPosLightSpace.w;
-	projCoords.y = -In.fragPosLightSpace.y / In.fragPosLightSpace.w;
+	projCoords.y = (-In.fragPosLightSpace.y) / In.fragPosLightSpace.w;
 
 	projCoords = projCoords * 0.5 + 0.5;
 
 	float closestDepth = shadowMap.Sample(shadowSampler, projCoords.xy).r;
 
-	float currentDepth = In.fragPosLightSpace.z / In.fragPosLightSpace.w * 0.5 + 0.5;
-	float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
-    fragColor.rgb += (1.0 - shadow) * diffuse.rgb * In.lightColor.rgb * 1.5 * In.intensity;
+	float bias = 0.0003; 
+	float currentDepth = In.fragPosLightSpace.z/ In.fragPosLightSpace.w * 0.5 + 0.5;
+	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.5;
+	if(In.fragPosLightSpace.w <= 0)
+	{
+		shadow = 0;
+	}
+    fragColor.rgb += max((1.0 - shadow), 0.1) * diffuse.rgb * In.lightColor.rgb * 1.5 * In.intensity;
     fragColor.rgb += spec * 1 * In.lightColor.rgb;
 	
 	return fragColor;
