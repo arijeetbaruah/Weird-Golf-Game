@@ -506,16 +506,18 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 
-	Script* test = new Script();
+	/*Script* test = new Script();
 	auto script = [](GameObject* (Ball)) {std::cout << "I am a Player" << std::endl; };
-	test->setLambda(std::function<void(GameObject*)>(script));
+	test->setLambda(std::function<void(GameObject*)>(script));*/
 
-	cubeDebuff* cubed = new cubeDebuff(objOGL, Ball->GetCubeMesh());
-	Ball->addComponent(cubed);
+	/*cubeDebuff* cubed = new cubeDebuff(objOGL, Ball->GetCubeMesh());
+	Ball->addComponent(cubed);*/
 
-	TestBuff* testBuff = new TestBuff();
-	Ball->addComponent(testBuff);
-	Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+	/*TestBuff* testBuff = new TestBuff();
+	Ball->addComponent(testBuff);*/
+
+	//Ball->addComponent(new Homing(Vector3(0, 0, 3)));
+
 	world->AddGameObject(Ball);
 
 	return Ball;
