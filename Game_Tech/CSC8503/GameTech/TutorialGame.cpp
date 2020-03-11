@@ -583,7 +583,7 @@ bool TutorialGame::SelectObject() {
 //following is UIfunction
 
 void TutorialGame::UpdateInGame() {
-	renderer->DrawString("test wordssssssssss!", Vector2(10, 0));
+	renderer->DrawString("Your point : XXXXXX ", Vector2(10, 0));
 }
 
 void TutorialGame::InitUIWorld()
