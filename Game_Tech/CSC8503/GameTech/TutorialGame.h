@@ -26,6 +26,8 @@ namespace NCL {
 
 			bool IfQiutGame() { return ifQuitGame; }
 
+			void setPowerUpName(string name) { powerUpName = name; };
+
 			OGLMesh* cubeMesh = nullptr;
 		protected:
 
@@ -124,6 +126,11 @@ namespace NCL {
 			OGLShader* basicShader = nullptr;
 
 			float	forceMagnitude;
+
+			void displayPowerUpText(float dt);
+			string powerUpName;
+			float powerUpTxtLength;
+			float powerUpTxtTimer;
 
 			std::map<int, GameObject*> serverPlayers;
 			
