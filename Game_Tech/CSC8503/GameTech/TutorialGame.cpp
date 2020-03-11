@@ -523,6 +523,20 @@ Player* TutorialGame::			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const 
 	return Ball;
 }
 
+MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
+	if (ID == 0) {
+		return playerTemp0;
+	} else if (ID == 1) {
+		return playerTemp1;
+	}
+	else if (ID == 2) {
+		return playerTemp2;
+	}
+	else if (ID == 3) {
+		return playerTemp3;
+	}
+}
+
 void TutorialGame::UpdateGame(float dt) {
 	//update inter UI
 	if (UIworld->GetUIactive() == false)
@@ -620,8 +634,8 @@ void TutorialGame::InitUIWorld()
 	interBar3 = new UIBar("Quit game");
 
 	gameMode1 = new UIBar("NormalMode");
-	gameMode2 = new UIBar("Creat Server");
-	gameMode3 = new UIBar("Creat Client");
+	gameMode2 = new UIBar("Create Server");
+	gameMode3 = new UIBar("Create Client");
 	gameMode4 = new UIBar("Back to menu");
 
 	//link function to UIBar
@@ -644,7 +658,7 @@ void TutorialGame::InitUIWorld()
 
 	auto clientgame = [this]() { 
 		isNetworkedGame = true;
-		isServer = true;
+		isServer = false;
 		UIworld->SetUIactive(true);
 	};
 	gameMode3->funL = clientgame;

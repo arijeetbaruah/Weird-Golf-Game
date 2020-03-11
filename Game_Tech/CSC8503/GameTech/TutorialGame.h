@@ -29,6 +29,10 @@ namespace NCL {
 			void setPowerUpName(string name) { powerUpName = name; };
 
 			OGLMesh* cubeMesh = nullptr;
+			MeshSceneNode* getPlayerMesh(int ID = 0);
+
+			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 		protected:
 
 			//need check
@@ -96,8 +100,6 @@ namespace NCL {
 			void LoadColladaRenderObjects();
 			//sub functions of initiate
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
-			GameObject*			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-			Player*			AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			GameObject* AddStarToWorld(Vector3 position);
 			
 			//update game 
