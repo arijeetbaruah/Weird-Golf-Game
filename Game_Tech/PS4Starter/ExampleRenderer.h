@@ -2,6 +2,8 @@
 #include <move.h>
 #include <queue>
 
+#include <PxScene.h>
+
 #include "../Plugins/PlayStation4/PS4RendererBase.h"
 #include "../Plugins/PlayStation4/PS4Input.h"
 #include "../Common/Camera.h"
@@ -41,6 +43,7 @@ namespace NCL {
 			void SwitchToDepthBuffer();
 			void DrawShadow();
 			void DrawObjectShadow(RenderObject* obj);
+			Matrix4 GetLightView();
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
@@ -74,6 +77,8 @@ namespace NCL {
 			Gnmx::GnmxGfxContext shadowContext;
 
 			Gnm::Texture ShadowTex;
+
+			physx::PxScene* scene;
 		};
 	}
 }
