@@ -2,6 +2,8 @@
 #include <move.h>
 #include <queue>
 
+#include <PxScene.h>
+
 #include "../Plugins/PlayStation4/PS4RendererBase.h"
 #include "../Plugins/PlayStation4/PS4Input.h"
 #include "../Common/Camera.h"
@@ -75,6 +77,8 @@ namespace NCL {
 			Gnmx::GnmxGfxContext shadowContext;
 
 			Gnm::Texture ShadowTex;
+
+			physx::PxScene* scene;
 		};
 	}
 }
