@@ -50,6 +50,8 @@ namespace NCL {
 			float getSpeed() { return speed; }
 			void setSpeed(float s) { speed = s; }
 
+			int getID() { return playerID; }
+
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);

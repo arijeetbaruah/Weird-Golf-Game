@@ -53,6 +53,13 @@ public:
 		if (type == Player_Connected) {
 			NewPlayerPacket* realPacket = (NewPlayerPacket*)payload;
 
+			if (game->GetCurrentPlayer() == NULL) {
+				return;
+			}
+			if (game->GetCurrentPlayer()->getID() == realPacket->playerID) {
+				return;
+			}
+
 			Vector3 pos;
 			if (realPacket->playerID == 0) {
 				pos = Vector3(-0.4, 0.1, -0.9);
@@ -124,6 +131,25 @@ public:
 
 	GameWorld& world;
 	Player* controlledplayer;
+	NetworkedGame* game;
+	std::unique_ptr<Logger> log;
+};
+
+class SendPacketReceiver : public PacketReceiver {
+public:
+	SendPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
+		log = std::unique_ptr<Logger>(new Logger("SendPacketReceiver"));
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Disconnected) {
+			SendPacket* realPacket = (SendPacket*)payload;
+
+			log->info("Player Disconnected");
+		}
+	}
+
+	GameWorld& world;
 	NetworkedGame* game;
 	std::unique_ptr<Logger> log;
 };
@@ -306,14 +332,17 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, this);
+	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*world, this);
 	thisServer = new GameServer(port, 2);
-	thisServer->RegisterPacketHandler(Received_State, serverReceiver);
+	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
 }
 
 void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
+
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, this);
+	thisClient->RegisterPacketHandler(Received_State, serverReceiver);
 
 	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
 	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));

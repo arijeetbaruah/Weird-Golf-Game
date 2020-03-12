@@ -15,6 +15,18 @@ namespace NCL {
 			}
 		};
 
+
+		struct SendPacket : public GamePacket {
+			int playerID;
+			NetworkState fullState;
+
+			SendPacket(int p) {
+				type = BasicNetworkMessages::Send_Packet;
+				playerID = p;
+				size = sizeof(SendPacket) - sizeof(GamePacket);
+			}
+		};
+
 		struct FullPacket : public GamePacket {
 			int		objectID = -1;
 			NetworkState fullState;
