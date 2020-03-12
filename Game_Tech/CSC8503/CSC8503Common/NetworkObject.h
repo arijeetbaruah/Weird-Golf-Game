@@ -28,10 +28,8 @@ namespace NCL {
 		};
 
 		struct FullPacket : public GamePacket {
-			int		objectID = -1;
-			NetworkState fullState;
-			int score;
-			int totalScore;
+			int		playerID = -1;
+			Vector3 force = Vector3(0, 0, 0);
 
 			FullPacket() {
 				type = Full_State;

@@ -3,8 +3,10 @@
 #include "../CSC8503Common/GameServer.h"
 #include "../CSC8503Common/GameClient.h"
 #include "../../Plugins/Logger/Logger.h"
+#include "../CSC8503Common/ShotTracker.h"
 #include "../CSC8503Common/cubeDebuff.h"
 #include <memory>
+#include <iostream>
 
 #define COLLISION_MSG 30
 
@@ -156,57 +158,25 @@ public:
 
 class FullPacketReceiver : public PacketReceiver {
 public:
-	FullPacketReceiver(GameWorld& w, bool p, GameObject* controlled, GameObject* ghost) : world(w), isPlayerServer(p), controlledGoose(controlled), ghostGoose(ghost) {
-
+	FullPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
-
-		if (isPlayerServer)
-			return;
-
 		if (type == Full_State) {
 			FullPacket* realPacket = (FullPacket*)payload;
 
-			packet = realPacket->fullState;
+			auto players = game->GetServerPlayers();
 
-			if (realPacket->objectID == 1000)
-			{
-				world.setPlayerOneScore(realPacket->score);
-				world.SetPlayerOneTotal(realPacket->totalScore);
-				ghostGoose->GetTransform().SetWorldPosition(packet.position);
-				ghostGoose->GetTransform().SetLocalOrientation(packet.orientation);
-				return;
-			}
-			else if (realPacket->objectID == 2000)
-			{
-				world.setPlayerTwoScore(realPacket->score);
-				world.SetPlayerTwoTotal(realPacket->totalScore);
-				controlledGoose->GetTransform().SetWorldPosition(packet.position);
-				//controlledGoose->GetTransform().SetLocalOrientation(packet.orientation);
-				return;
-			}
-			
-			std::vector <GameObject*>::const_iterator first;
-			std::vector <GameObject*>::const_iterator last;
+			Player* p = dynamic_cast<Player*>(players[realPacket->playerID]);
 
-			world.GetObjectIterators(first, last);
-
-			first += realPacket->objectID;
-
-			std::cout << "Full Packet Received..." << std::endl;
-
-			(*first)->GetRenderObject()->SetColour(packet.colour);
-			(*first)->GetTransform().SetWorldPosition(packet.position);
-			(*first)->GetTransform().SetLocalOrientation(packet.orientation);
+			Component* test = p->getComponent<ShotTracker*>("Shots");
+			p->getComponent<ShotTracker*>("ShotTracker")->addShots();
+			p->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 		}
 	}
 protected:
 	GameWorld& world;
-	NetworkState packet;
-	bool isPlayerServer;
-	GameObject* controlledGoose;
-	GameObject* ghostGoose;
+	NetworkedGame* game;
 };
 
 class ConnectedPacketReceiver : public PacketReceiver {
@@ -258,9 +228,13 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
+	thisServer = new GameServer(port, 4);
+
 	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*world, this);
-	thisServer = new GameServer(port, 2);
+	FullPacketReceiver* fullReceiver = new FullPacketReceiver(*world, this);
+
 	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
+	thisServer->RegisterPacketHandler(Full_State, fullReceiver);
 }
 
 void NetworkedGame::StartAsClient(char a, char b, char c, char d)
@@ -281,11 +255,11 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 
 void NetworkedGame::InsertPlayer(int ID, GameObject* p) {
 	otherplayers.push_back(p);
-	serverPlayers.insert(std::pair<int, GameObject*>(1, Ball));
+	serverPlayers.insert(std::pair<int, GameObject*>(ID, p));
 }
 
 void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
-	std::map<int, GameObject*>::iterator it = serverPlayers.find(1);
+	std::map<int, GameObject*>::iterator it = serverPlayers.find(ID);
 	serverPlayers.erase(it);
 }
 
@@ -328,23 +302,27 @@ void NetworkedGame::UpdateGame(float dt)
 	
 }
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
-	if (!thisClient)
-		return;
-	PlayerPacket packet;
-	NetworkState fullState[4];
+	if (thisServer) {
+		PlayerPacket packet;
+		NetworkState fullState[4];
 
-	for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
-		if (it->second == NULL) {
-			continue;
+		for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
+			if (it->second == NULL) {
+				continue;
+			}
+			fullState[it->first].position = it->second->GetTransform().GetWorldPosition();
+			fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
+			fullState[it->first].playerID = it->first;
+			fullState[it->first].valid = true;
+			log->info("({}, {}, {})", fullState[it->first].position.x, fullState[it->first].position.y, fullState[it->first].position.z);
 		}
-		fullState[it->first].position = it->second->GetTransform().GetWorldPosition();
-		fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
-		fullState[it->first].playerID = it->first;
-		fullState[it->first].valid = true;
-		log->info("({}, {}, {})", fullState[it->first].position.x, fullState[it->first].position.y, fullState[it->first].position.z);
+
+		this->thisServer->SendGlobalPacket(packet);
 	}
 
-	this->thisClient->SendPacket(packet);
+	if (thisClient) {
+		
+	}
 
 }
 
@@ -468,27 +446,13 @@ void NetworkedGame::UpdateAsClient(float dt) {
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
-	std::vector < GameObject* >::const_iterator first;
-	std::vector < GameObject* >::const_iterator last;
-	
-	world -> GetObjectIterators(first, last);
-	
-	for (int j = 0; j < serverPlayers.size(); j++) 
-	{
-		
-		for (auto i = first; i != last; ++i) {
-			NetworkObject * o = (*i) -> GetNetworkObject();
-			if (!o) {
-				continue;
-			}
-			int playerState = 0; // You ’ll need to do this bit !
-			GamePacket * newPacket = nullptr;
-			if (o -> WritePacket(&newPacket, deltaFrame, playerState)) {
-				//thisServer -> SendGlobalPacket(*newPacket); // change ...
-
-				thisServer->SendPacketToPeer(*newPacket, j + 1);
-				delete newPacket;
-			}
-		}
+	if (Ball == NULL)
+		return;
+	if (thisClient) {
+		FullPacket packet;
+		packet.playerID = Ball->getID();
+		packet.force = Ball->getForceState();
+		Ball->resetForceState();
+		thisClient->SendPacket(packet);
 	}
 }

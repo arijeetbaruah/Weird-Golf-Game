@@ -52,6 +52,8 @@ namespace NCL {
 
 			int getID() { return playerID; }
 
+			Vector3 getForceState() { return forceState; }
+			void resetForceState() { forceState = Vector3(); }
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -77,6 +79,7 @@ namespace NCL {
 			int testYaw;
 
 			bool buttonStates[6];
+			Vector3 forceState;
 
 			std::queue<GameObject*> collectables;
 		};
