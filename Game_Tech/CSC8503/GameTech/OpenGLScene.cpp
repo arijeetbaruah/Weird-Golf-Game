@@ -69,10 +69,10 @@ void NCL::CSC8503::OpenGLScene::AddObject(GameObject* newObject)
 	{
 		std::cout << objectName << " don't have RenderObject" << std::endl;
 	}
-	if (newObject->GetPhysicsObject() == NULL)
-	{
-		std::cout << objectName << " don't have PhysicsObject" << std::endl;
-	}
+	//if (newObject->GetPhysicsObject() == NULL)
+	//{
+	//	std::cout << objectName << " don't have PhysicsObject" << std::endl;
+	//}
 	objArray.push_back(newObject);
 	objectNum++;
 }
