@@ -28,6 +28,9 @@
     <Filter Include="Other\Pathfinding">
       <UniqueIdentifier>{84f869c2-c73b-4eb0-ace4-ff4d685ef4ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UISystem">
+      <UniqueIdentifier>{47aacd2d-7d87-41a6-90fe-e576f3f760b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionDetection.h">
@@ -156,6 +159,12 @@
     <ClInclude Include="Homing.h">
       <Filter>Buffs</Filter>
     </ClInclude>
+    <ClInclude Include="UIPushDownMachine.h">
+      <Filter>UISystem</Filter>
+    </ClInclude>
+    <ClInclude Include="UIState.h">
+      <Filter>UISystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -253,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="Homing.cpp">
       <Filter>Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPushDownMachine.cpp">
+      <Filter>UISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="UIState.cpp">
+      <Filter>UISystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

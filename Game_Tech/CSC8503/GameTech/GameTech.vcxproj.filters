@@ -19,7 +19,6 @@
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
-    <ClCompile Include="UIPushDownMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxPhysicsComponent.h" />
@@ -40,6 +39,5 @@
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />
-    <ClInclude Include="UIPushDownMachine.h" />
   </ItemGroup>
 </Project>

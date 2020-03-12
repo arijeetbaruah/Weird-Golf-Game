@@ -176,6 +176,8 @@
     <ClInclude Include="StateTransition.h" />
     <ClInclude Include="Targeted.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIPushDownMachine.h" />
+    <ClInclude Include="UIState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoundingAABB.cpp" />
@@ -210,6 +212,8 @@
     <ClCompile Include="TestBuff.cpp" />
     <ClCompile Include="Timed.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIPushDownMachine.cpp" />
+    <ClCompile Include="UIState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\Logger\Logger.vcxproj">
