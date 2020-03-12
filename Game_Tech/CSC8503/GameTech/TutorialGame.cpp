@@ -515,6 +515,10 @@ MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
 }
 
 void TutorialGame::UpdateGame(float dt) {
+
+#ifdef _ORBIS
+	//PS4 code
+#else 
 	//update inter UI
 	if (UIworld->GetUIactive() == false)
 	{
@@ -540,6 +544,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	//update NetWork
 	UpdateNetworkPostion(Ball);
+#endif
 }
 
 void TutorialGame::displayPowerUpText(float dt)
