@@ -544,8 +544,6 @@ void TutorialGame::UpdateGame(float dt) {
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
-
-
 	
 	//update Render
 	UpdateInGame();
