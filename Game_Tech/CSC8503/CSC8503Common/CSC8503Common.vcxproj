@@ -139,11 +139,13 @@
     <ClInclude Include="BoundingOOBB.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolume.h" />
+    <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
     <ClInclude Include="Homing.h" />
     <ClInclude Include="LimitedShot.h" />
     <ClInclude Include="offForward.h" />
+    <ClInclude Include="OpenGLScene.h" />
     <ClInclude Include="ShotTracker.h" />
     <ClInclude Include="SpeedBoost.h" />
     <ClInclude Include="TestBuff.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StateTransition.h" />
     <ClInclude Include="Targeted.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIPushDownMachine.h" />
     <ClInclude Include="UIState.h" />
@@ -184,6 +187,7 @@
     <ClCompile Include="BoundingOOBB.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="cubeDebuff.cpp" />
@@ -200,6 +204,7 @@
     <ClCompile Include="NetworkObject.cpp" />
     <ClCompile Include="NetworkState.cpp" />
     <ClCompile Include="offForward.cpp" />
+    <ClCompile Include="OpenGLScene.cpp" />
     <ClCompile Include="PushdownMachine.cpp" />
     <ClCompile Include="PushdownState.cpp" />
     <ClCompile Include="QuadTree.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="StateTransition.cpp" />
     <ClCompile Include="TestBuff.cpp" />
     <ClCompile Include="Timed.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIPushDownMachine.cpp" />
     <ClCompile Include="UIState.cpp" />

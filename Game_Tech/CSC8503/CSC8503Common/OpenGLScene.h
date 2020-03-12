@@ -1,9 +1,10 @@
+//@Author: Yi Han
 #pragma once
 
 #include <vector>
-#include "..\CSC8503Common\Ray.h"
-#include "..\CSC8503Common\CollisionDetection.h"
-#include "..\CSC8503Common\QuadTree.h"
+#include "Ray.h"
+#include "CollisionDetection.h"
+#include "QuadTree.h"
 #include"..\..\Common\Matrix4.h"
 namespace NCL {
 	class Camera;

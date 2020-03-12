@@ -31,6 +31,12 @@
     <Filter Include="UISystem">
       <UniqueIdentifier>{47aacd2d-7d87-41a6-90fe-e576f3f760b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OpenGLSceneNode">
+      <UniqueIdentifier>{b1b6f018-0b64-4ea0-9451-949b6e52ee5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColladaLoad">
+      <UniqueIdentifier>{ac1e2796-6230-4c0c-abb5-0f8198554997}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionDetection.h">
@@ -165,6 +171,15 @@
     <ClInclude Include="UIState.h">
       <Filter>UISystem</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGLScene.h">
+      <Filter>OpenGLSceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ColladaBase.h">
+      <Filter>ColladaLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>ColladaLoad</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -268,6 +283,15 @@
     </ClCompile>
     <ClCompile Include="UIState.cpp">
       <Filter>UISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLScene.cpp">
+      <Filter>OpenGLSceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ColladaBase.cpp">
+      <Filter>ColladaLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>ColladaLoad</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

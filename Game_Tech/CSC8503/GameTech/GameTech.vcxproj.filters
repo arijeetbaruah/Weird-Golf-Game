@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="BoxPhysicsComponent.cpp" />
-    <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="CollisionCallback.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
@@ -10,19 +9,16 @@
     <ClCompile Include="MeshSceneNode.cpp" />
     <ClCompile Include="NetworkedGame.cpp" />
     <ClCompile Include="NetworkPlayer.cpp" />
-    <ClCompile Include="OpenGLScene.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PhysxController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpherePhysicsComponent.cpp" />
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
-    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxPhysicsComponent.h" />
-    <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="CollisionCallback.h" />
     <ClInclude Include="GameTechRenderer.h" />
@@ -30,14 +26,12 @@
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
     <ClInclude Include="OBJ_Loader.h" />
-    <ClInclude Include="OpenGLScene.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PhysxController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpherePhysicsComponent.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
-    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>
 </Project>

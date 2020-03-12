@@ -7,7 +7,7 @@
 #include <string> 
 #include <iostream>
 #include <fstream>
-#include "ColladaBase.h"
+#include "../CSC8503Common/ColladaBase.h"
 #include "PhysxController.h"
 #include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
@@ -42,7 +42,6 @@ namespace NCL {
 
 			Player* Ball;
 			Player* playerTwo;
-			//vector<Enemy*> enemies;
 
 			PhysxController physxC = PhysxController::getInstance();
 
@@ -111,15 +110,16 @@ namespace NCL {
 			std::vector<GameObject*> otherplayers;
 
 
+
 			//UI system, still fix , do not need check
-			
 			GameWorld* UIworld;
 			GameTechRenderer* UIrenderer;
 
 			UIPushDownMachine* UIMachine;
 			UIState* interFace;
 			UIState* gameMode;
-
+			
+			//buttons in interface
 			UIBar* interBar1;
 			UIBar* interBar2;
 			UIBar* interBar3;
