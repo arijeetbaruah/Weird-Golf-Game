@@ -123,6 +123,12 @@ namespace NCL {
 			//world basic parameters
 			GameTechRenderer* renderer;
 			GameWorld* world;
+
+
+
+
+
+
 			bool inSelectionMode;
 			OGLShader* basicShader = nullptr;
 

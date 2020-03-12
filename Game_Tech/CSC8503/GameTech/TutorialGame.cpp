@@ -522,6 +522,7 @@ void TutorialGame::UpdateGame(float dt) {
 		if (UIworld->GetUIactive() == false)return;
 	}
 
+	
 	//update Render
 	UpdateInGame();
 	UpdateKeys();

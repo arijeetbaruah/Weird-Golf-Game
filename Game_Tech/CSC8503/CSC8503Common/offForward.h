@@ -11,6 +11,5 @@ class offForward : public LimitedShot {
 
 		void Apply();
 		void Remove();
-		void Start();
 };
 
