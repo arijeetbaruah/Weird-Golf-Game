@@ -15,6 +15,7 @@ enum BasicNetworkMessages {
 	Received_State, //received from a client, informs that its received packet n
 	Player_Connected,
 	Player_Disconnected,
+	Send_Packet,
 	Player_ID,
 	Shutdown,
 	Collectable_Count
