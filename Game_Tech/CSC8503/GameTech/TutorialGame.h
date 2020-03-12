@@ -2,7 +2,6 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "Player.h"
-#include "Enemy.h"
 #include <stdlib.h>
 #include "Collectable.h"
 #include <string> 
@@ -139,29 +138,8 @@ namespace NCL {
 			OGLTexture* basicTex	= nullptr;
 			OGLTexture* golfLevelTex = nullptr;
 
-			NavigationGrid grid;
-			/*
-			//Coursework Meshes
-			OGLMesh*	gooseMesh	= nullptr;
-			OGLMesh*	keeperMesh	= nullptr;
-			OGLMesh*	appleMesh	= nullptr;
-			OGLMesh*	charA		= nullptr;
-			OGLMesh*	charB		= nullptr;
-			OGLMesh* testLevel = nullptr;
-			OGLMesh* playerMesh1 = nullptr;
-			OGLMesh* playerMesh2 = nullptr;
-			OGLMesh* playerMesh3 = nullptr;
-			OGLMesh* playerMesh4 = nullptr;
+			//NavigationGrid grid;
 
-			vector<OGLMesh*> golfLevelMeshes;
-
-			//Coursework Additional functionality	
-			GameObject* lockedObject	= nullptr;
-			Vector3 lockedOffset		= Vector3(0, 14, 20);
-			void LockCameraToObject(GameObject* o) {
-				lockedObject = o;
-			}
-			*/
 			std::vector<GameObject*> otherplayers;
 
 

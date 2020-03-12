@@ -234,9 +234,6 @@
     <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="CollisionCallback.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyChaseSuperState.cpp" />
-    <ClCompile Include="EnemyPatrolSuperState.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeshSceneNode.cpp" />
@@ -258,9 +255,6 @@
     <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="CollisionCallback.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyChaseSuperState.h" />
-    <ClInclude Include="EnemyPatrolSuperState.h" />
     <ClInclude Include="GameTechRenderer.h" />
     <ClInclude Include="MeshSceneNode.h" />
     <ClInclude Include="NetworkedGame.h" />

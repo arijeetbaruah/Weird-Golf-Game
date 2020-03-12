@@ -7,14 +7,12 @@ GameObject::GameObject(string objectName)	{
 	name			= objectName;
 	isActive		= true;
 	boundingVolume	= nullptr;
-	physicsObject	= nullptr;
 	renderObject	= nullptr;
 	networkObject	= nullptr;
 }
 
 GameObject::~GameObject()	{
  	delete boundingVolume;
-	delete physicsObject;
 	delete renderObject;
 	delete networkObject;
 }

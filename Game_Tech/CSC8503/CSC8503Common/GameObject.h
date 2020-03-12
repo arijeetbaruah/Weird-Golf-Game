@@ -1,8 +1,6 @@
 #pragma once
 #include "Transform.h"
 #include "CollisionVolume.h"
-
-#include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "NetworkObject.h"
 #include "Component.h"
@@ -101,20 +99,12 @@ namespace NCL {
 				return renderObject;
 			}
 
-			PhysicsObject* GetPhysicsObject() const {
-				return physicsObject;
-			}
-
 			NetworkObject* GetNetworkObject() const {
 				return networkObject;
 			}
 
 			void SetRenderObject(RenderObject* newObject) {
 				renderObject = newObject;
-			}
-
-			void SetPhysicsObject(PhysicsObject* newObject) {
-				physicsObject = newObject;
 			}
 
 			void SetNetworkObject(NetworkObject* newObject) {
@@ -133,16 +123,6 @@ namespace NCL {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
 
-			bool GetBroadphaseAABB(Vector3&outsize) const;
-
-			void UpdateBroadphaseAABB();
-
-			unsigned long getLayer() { return layer; };
-			unsigned long getLayerMask() { return layerMask; };
-
-			void setLayer(unsigned long l) { layer = l; };
-			void setLayerMask(unsigned long m) { layerMask = m; };
-
 			OGLMesh* GetCubeMesh() { return cubeMesh; }
 			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
 
@@ -153,7 +133,6 @@ namespace NCL {
 			Transform			transform;
 
 			CollisionVolume*	boundingVolume;
-			PhysicsObject*		physicsObject;
 			RenderObject*		renderObject;
 			NetworkObject*		networkObject;
 
