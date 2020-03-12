@@ -123,6 +123,13 @@ namespace NCL {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
 
+			unsigned long getLayer() { return layer; };
+			unsigned long getLayerMask() { return layerMask; };
+
+			void setLayer(unsigned long l) { layer = l; };
+			void setLayerMask(unsigned long m) { layerMask = m; };
+
+
 			OGLMesh* GetCubeMesh() { return cubeMesh; }
 			void SetCubeMesh(OGLMesh* cm) { cubeMesh = cm; }
 
