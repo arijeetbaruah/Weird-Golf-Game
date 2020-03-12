@@ -268,7 +268,7 @@ public:
 	virtual		const char*			getConcreteTypeName() const			{ return "PxVehicleDrive4W";	}
 //~serialization	
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrive4W) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrive4W) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

@@ -11,6 +11,7 @@
 #define PI 3.14159265
 namespace NCL {
 	namespace CSC8503 {
+		
 		class Player : public GameObject
 		{
 		public:

@@ -1,5 +1,7 @@
 #pragma once
+#ifdef _WIN32
 #include <winsock2.h>
+#endif
 #include <enet/enet.h>
 #include <map>
 #include <string>

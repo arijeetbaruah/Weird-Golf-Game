@@ -270,7 +270,7 @@ protected:
 											~PxVehicleDriveTank(){}
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDriveTank) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDriveTank) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

@@ -37,6 +37,8 @@ int main() {
 		return -1;
 	}	
 
+	size_t wat;
+
 	PhysxController c = PhysxController::getInstance();
 	
 	w->ShowOSPointer(true);

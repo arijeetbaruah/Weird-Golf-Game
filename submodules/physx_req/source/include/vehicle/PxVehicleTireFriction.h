@@ -213,7 +213,7 @@ private:
 	PxVehicleDrivableSurfaceToTireFrictionPairs(){}
 	~PxVehicleDrivableSurfaceToTireFrictionPairs(){}
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrivableSurfaceToTireFrictionPairs) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrivableSurfaceToTireFrictionPairs) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

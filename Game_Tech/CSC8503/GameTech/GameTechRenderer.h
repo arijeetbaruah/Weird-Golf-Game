@@ -9,8 +9,9 @@
 
 #ifdef _ORBIS
 namespace NCL {
-	class Maths::Vector3;
-	class Maths::Vector4;
+	using namespace NCL::Maths;
+	class Vector3;
+	class Vector4;
 	namespace CSC8503 {
 		class RenderObject;
 
@@ -32,6 +33,7 @@ namespace NCL {
 }
 #else 
 namespace NCL {
+
 	class Maths::Vector3;
 	class Maths::Vector4;
 	namespace CSC8503 {
