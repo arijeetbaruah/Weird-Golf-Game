@@ -66,6 +66,8 @@ public:
 	UIPushDownMachine();
 	~UIPushDownMachine();
 
+	void ResetPositions();
+
 	void AddState(UIState* newState) {
 		stateList.push_back(newState);
 	}

@@ -4,12 +4,23 @@ UIPushDownMachine::UIPushDownMachine()
 {
 	stateList.clear();
 	positions.clear();
+	positions.push_back(600);
+	positions.push_back(500);
+	positions.push_back(400);
+	positions.push_back(300);
+	positions.push_back(200);
+	positions.push_back(100);
 	curLeftState = NULL;
 	curRightState = NULL;
 }
 
 UIPushDownMachine::~UIPushDownMachine()
 {
+}
+
+void UIPushDownMachine::ResetPositions()
+{
+	positions.clear();
 }
 
 void UIPushDownMachine::SetCurrentState(UIState* newState)
@@ -50,6 +61,7 @@ void UIPushDownMachine::IntoBar()
 	if (curLeftState != NULL)
 	{
 		UIBar* tempBar = curLeftState->GetCurrentBar();
+		curLeftState->SetCurrentBar(curLeftState->GetUIList().front());
 		if (tempBar->subState != NULL)
 		{
 			SetCurrentState(tempBar->subState);

@@ -4,9 +4,6 @@
     <Filter Include="CollisionDetection">
       <UniqueIdentifier>{7c45a941-5f3a-4dc9-b113-df0c37be8dd0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Physics">
-      <UniqueIdentifier>{9aee0dfe-4d09-49bb-903b-0c7f2a8a6134}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Networking">
       <UniqueIdentifier>{dddf3464-b165-4008-a2e5-453151aa4c21}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,6 @@
     <ClInclude Include="CollisionDetection.h">
       <Filter>CollisionDetection</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObject.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>CollisionDetection</Filter>
     </ClInclude>
@@ -65,15 +59,6 @@
     </ClInclude>
     <ClInclude Include="GameClient.h">
       <Filter>Networking</Filter>
-    </ClInclude>
-    <ClInclude Include="Constraint.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PositionConstraint.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSystem.h">
-      <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="SphereVolume.h">
       <Filter>CollisionDetection</Filter>
@@ -176,9 +161,6 @@
     <ClCompile Include="CollisionDetection.cpp">
       <Filter>CollisionDetection</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsObject.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
     <ClCompile Include="StateMachine.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -199,12 +181,6 @@
     </ClCompile>
     <ClCompile Include="GameClient.cpp">
       <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="PositionConstraint.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Physics</Filter>
     </ClCompile>
     <ClCompile Include="NavigationGrid.cpp">
       <Filter>Other\Pathfinding</Filter>
