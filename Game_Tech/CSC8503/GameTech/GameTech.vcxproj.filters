@@ -1,37 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="BoxPhysicsComponent.cpp" />
     <ClCompile Include="Collectable.cpp" />
-    <ClCompile Include="CollisionCallback.cpp" />
-    <ClCompile Include="GameTechRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MeshSceneNode.cpp" />
-    <ClCompile Include="NetworkedGame.cpp" />
-    <ClCompile Include="NetworkPlayer.cpp" />
-    <ClCompile Include="PhysicsComponent.cpp" />
-    <ClCompile Include="PhysxController.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SpherePhysicsComponent.cpp" />
-    <ClCompile Include="Star.cpp" />
-    <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
+    <ClCompile Include="BoxPhysicsComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionCallback.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SpherePhysicsComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysxController.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleMeshPhysicsComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTechRenderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSceneNode.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkPlayer.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkedGame.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoxPhysicsComponent.h" />
     <ClInclude Include="Collectable.h" />
-    <ClInclude Include="CollisionCallback.h" />
-    <ClInclude Include="GameTechRenderer.h" />
-    <ClInclude Include="MeshSceneNode.h" />
-    <ClInclude Include="NetworkedGame.h" />
-    <ClInclude Include="NetworkPlayer.h" />
-    <ClInclude Include="OBJ_Loader.h" />
-    <ClInclude Include="PhysicsComponent.h" />
-    <ClInclude Include="PhysxController.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SpherePhysicsComponent.h" />
-    <ClInclude Include="Star.h" />
-    <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="TutorialGame.h" />
+    <ClInclude Include="BoxPhysicsComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionCallback.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SpherePhysicsComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysxController.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleMeshPhysicsComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTechRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSceneNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJ_Loader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkPlayer.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkedGame.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{e96c1403-55de-4c0b-afa7-ffa111accb01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{a8693a7f-5970-45bd-828b-c63430e40726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{5096994f-c0db-42d6-8f76-7e4b50a881d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{b13affc7-ee2a-4b52-a40c-ed2132eb6cfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
