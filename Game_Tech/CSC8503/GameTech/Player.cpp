@@ -167,8 +167,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 		Vector3 vec = getShotDir() * distance * speed;
 		Component* test = this->getComponent<ShotTracker*>("Shots");
 		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
-		sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
-		
+		//sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
+		std::cout << vec.x << "," << vec.y << "," << vec.z;
+		forceState = vec;		
 
 		initialMousePos.x = 0;
 		initialMousePos.y = 0;
