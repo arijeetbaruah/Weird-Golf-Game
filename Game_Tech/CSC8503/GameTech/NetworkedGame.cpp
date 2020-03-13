@@ -258,7 +258,7 @@ NetworkedGame::~NetworkedGame()
 
 void NetworkedGame::StartAsServer()
 {
-	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*world, this);
+	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*worlds[currentWorld], this);
 	thisServer = new GameServer(port, 2);
 	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
 }
@@ -267,13 +267,13 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
 
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, this);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Received_State, serverReceiver);
 
 	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
 	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
 
-	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, this);
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
 
 	thisClient->Connect(127, 0, 0, 1, port);
@@ -387,11 +387,11 @@ void NetworkedGame::UpdateAsServer(float dt)
 	thisServer->UpdateServer();
 	BroadcastSnapshot(false);
 
-	CollectableCountPacket* packet = new CollectableCountPacket();
-	packet->count = world->GetCollectableCount();
+	/*CollectableCountPacket* packet = new CollectableCountPacket();
+	packet->count = world->GetCollectableCount();*/
 
-	thisServer->SendPacketToPeer(*packet, 2);
-	delete packet;
+	//thisServer->SendPacketToPeer(*packet, 2);
+	//delete packet;
 
 }
 
@@ -471,7 +471,7 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 	std::vector < GameObject* >::const_iterator first;
 	std::vector < GameObject* >::const_iterator last;
 	
-	world -> GetObjectIterators(first, last);
+	worlds[currentWorld] -> GetObjectIterators(first, last);
 	
 	for (int j = 0; j < serverPlayers.size(); j++) 
 	{
