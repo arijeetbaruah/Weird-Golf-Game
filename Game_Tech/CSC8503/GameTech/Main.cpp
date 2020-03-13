@@ -9,8 +9,6 @@
 
 #include "../CSC8503Common/NavigationGrid.h"
 
-#include "../../Plugins/Logger/Logger.h"
-
 #include "TutorialGame.h"
 #include "NetworkedGame.h"
 
@@ -31,7 +29,6 @@ using namespace physx;
 
 int main() {
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
-	Logger log("main");
 
 	if (!w->HasInitialised()) {
 		return -1;
@@ -52,7 +49,7 @@ int main() {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 
 		if (dt > 1.0f) {
-			log.info("Skipping large time delta");
+			std::cerr << "Skipping large time delta";
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::PRIOR)) {

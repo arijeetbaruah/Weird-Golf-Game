@@ -35,7 +35,6 @@ TutorialGame::TutorialGame()	{
 	UIrenderer = new GameTechRenderer(*UIworld);
 
 	inSelectionMode = false;
-	log = std::unique_ptr<Logger>(new Logger("Tutorial Game"));
 
 	Ball = nullptr;
 

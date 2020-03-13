@@ -2,7 +2,6 @@
 #include "NetworkPlayer.h"
 #include "../CSC8503Common/GameServer.h"
 #include "../CSC8503Common/GameClient.h"
-#include "../../Plugins/Logger/Logger.h"
 #include "../CSC8503Common/ShotTracker.h"
 #include "../CSC8503Common/cubeDebuff.h"
 #include <memory>
@@ -13,7 +12,6 @@
 class PlayerPacketReceiver : public PacketReceiver {
 public:
 	PlayerPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g){
-		log = std::unique_ptr<Logger>(new Logger("Player Packet"));
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
@@ -27,7 +25,6 @@ public:
 				}
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
-				log->info("({}, {}, {})", packet.position.x, packet.position.y, packet.position.z);
 				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
 		}
@@ -42,13 +39,11 @@ public:
 
 	GameWorld& world;
 	NetworkedGame* game;
-	std::unique_ptr<Logger> log;
 };
 
 class NewPlayerPacketReceiver : public PacketReceiver {
 public:
 	NewPlayerPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
-		log = std::unique_ptr<Logger>(new Logger("New Player"));
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
@@ -78,14 +73,12 @@ public:
 
 			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, Vector3(1, 1, 1), "player" + realPacket->playerID);
 			
-			log->info("New Player Connected");
 			game->InsertPlayer(realPacket->playerID, b);
 		}
 	}
 
 	GameWorld& world;
 	NetworkedGame* game;
-	std::unique_ptr<Logger> log;
 };
 
 class PlayerIDPacketRecevier : public PacketReceiver {
@@ -119,14 +112,12 @@ public:
 class PlayerDisconnectPacketReceiver : public PacketReceiver {
 public:
 	PlayerDisconnectPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
-		log = std::unique_ptr<Logger>(new Logger("Player Disconnected"));
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Player_Disconnected) {
 			PlayerDisconnectPacket* realPacket = (PlayerDisconnectPacket*)payload;
 
-			log->info("Player Disconnected");
 			game->RemovePlayer(realPacket->playerID, controlledplayer);
 		}
 	}
@@ -134,26 +125,21 @@ public:
 	GameWorld& world;
 	Player* controlledplayer;
 	NetworkedGame* game;
-	std::unique_ptr<Logger> log;
 };
 
 class SendPacketReceiver : public PacketReceiver {
 public:
 	SendPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
-		log = std::unique_ptr<Logger>(new Logger("SendPacketReceiver"));
 	}
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Player_Disconnected) {
 			SendPacket* realPacket = (SendPacket*)payload;
-
-			log->info("Player Disconnected");
 		}
 	}
 
 	GameWorld& world;
 	NetworkedGame* game;
-	std::unique_ptr<Logger> log;
 };
 
 class FullPacketReceiver : public PacketReceiver {
@@ -314,7 +300,6 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 			fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
 			fullState[it->first].playerID = it->first;
 			fullState[it->first].valid = true;
-			log->info("({}, {}, {})", fullState[it->first].position.x, fullState[it->first].position.y, fullState[it->first].position.z);
 		}
 
 		this->thisServer->SendGlobalPacket(packet);

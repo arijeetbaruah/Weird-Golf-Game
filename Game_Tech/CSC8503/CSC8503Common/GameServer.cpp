@@ -12,7 +12,6 @@ GameServer::GameServer(int onPort, int maxClients)	{
 	netHandle	= nullptr;
 	//threadAlive = false;
 	HasSecondPlayer = false;
-	log = std::unique_ptr<Logger>(new Logger("Game Server"));
 
 	Initialise();
 }
@@ -39,7 +38,7 @@ bool GameServer::Initialise() {
 	netHandle = enet_host_create(&address, clientMax, 1, 0, 0);
 
 	if (!netHandle) {
-		log->error("{} failed to create network handle!", __FUNCTION__);
+		std::cerr << __FUNCTION__ << "failed to create network handle!";
 		return false;
 	}
 	//threadAlive		= true;
@@ -86,7 +85,7 @@ void GameServer::UpdateServer() {
 		int peer = p->incomingPeerID;
 
 		if (type == ENetEventType::ENET_EVENT_TYPE_CONNECT) {
-			log->info("Server: New client connected");
+			std::cerr << "Server: New client connected";
 			NewPlayerPacket player(peer);
 			SendGlobalPacket(player);
 
@@ -96,7 +95,7 @@ void GameServer::UpdateServer() {
 			SendPacketToPeer(pID, peer);
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_DISCONNECT) {
-			log->info("Server: A client has disconnected");
+			std::cerr << "Server: A client has disconnected";
 			PlayerDisconnectPacket player(peer);
 			SendGlobalPacket(player);
 

@@ -162,7 +162,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINSOCKAPI_;_ORBIS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\spdlog\include;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link />
@@ -262,11 +262,6 @@
     <ClInclude Include="Star.h" />
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="TutorialGame.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Plugins\Logger\Logger.vcxproj">
-      <Project>{4ec7c2f2-38d0-4ba3-82d1-88cf5d297609}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

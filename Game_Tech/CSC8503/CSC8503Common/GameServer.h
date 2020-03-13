@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "NetworkBase.h"
-#include "../../Plugins/Logger/Logger.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -34,7 +33,6 @@ namespace NCL {
 			int			clientMax;
 			int			clientCount;
 			GameWorld*	gameWorld;
-			std::unique_ptr<Logger> log;
 
 			//std::atomic<bool> threadAlive;
 
