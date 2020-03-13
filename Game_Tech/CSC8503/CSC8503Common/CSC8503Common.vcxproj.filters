@@ -180,6 +180,9 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>ColladaLoad</Filter>
     </ClInclude>
+    <ClInclude Include="CurveBall.h">
+      <Filter>Debuffs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -292,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
       <Filter>ColladaLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="CurveBall.cpp">
+      <Filter>Debuffs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

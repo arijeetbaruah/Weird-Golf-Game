@@ -12,6 +12,7 @@ public:
 	~PhysicsComponent();
 	PhysicsComponent(PxTransform transform, GameObject* go);
 	void addForce(PxVec3 force);
+	void addTorque(PxVec3 torque);
 
 	void setLinearDamping(PxReal value);
 	void setAngularDamping(PxReal value);

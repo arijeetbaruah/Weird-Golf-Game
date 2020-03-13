@@ -12,6 +12,7 @@
 #include "../CSC8503Common/TestBuff.h"
 #include "../CSC8503Common/SpeedBoost.h"
 #include "../CSC8503Common/Homing.h"
+#include "../CSC8503Common/CurveBall.h"]
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -28,6 +29,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 TutorialGame::TutorialGame()	{
+	srand(time(NULL));
 	world = new GameWorld();
 	renderer = new GameTechRenderer(*world);
 
@@ -493,7 +495,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
-
+	Ball->addComponent(new CurveBall());
 	world->AddGameObject(Ball);
 
 	return Ball;
