@@ -9,7 +9,6 @@
 #include <fstream>
 #include "../CSC8503Common/ColladaBase.h"
 #include "PhysxController.h"
-#include "../../Plugins/Logger/Logger.h"
 #include "MeshSceneNode.h"
 #include "Star.h"
 #include "../CSC8503Common/UIPushDownMachine.h"
@@ -36,9 +35,6 @@ namespace NCL {
 
 			//check if you need show mouse on window
 			bool SelectObject();
-
-
-			std::unique_ptr<Logger> log;
 
 			Player* Ball;
 			Player* playerTwo;

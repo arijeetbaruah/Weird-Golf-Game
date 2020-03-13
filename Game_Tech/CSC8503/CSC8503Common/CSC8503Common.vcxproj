@@ -138,7 +138,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\FMOD\windows\api\studio\inc;$(SolutionDir)..\submodules\FMOD\windows\api\fsbank\inc;$(SolutionDir)..\submodules\FMOD\windows\api\core\inc;$(SolutionDir)..\submodules\spdlog\include;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\FMOD\windows\api\studio\inc;$(SolutionDir)..\submodules\FMOD\windows\api\fsbank\inc;$(SolutionDir)..\submodules\FMOD\windows\api\core\inc;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -279,11 +279,6 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIPushDownMachine.cpp" />
     <ClCompile Include="UIState.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Plugins\Logger\Logger.vcxproj">
-      <Project>{4ec7c2f2-38d0-4ba3-82d1-88cf5d297609}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
