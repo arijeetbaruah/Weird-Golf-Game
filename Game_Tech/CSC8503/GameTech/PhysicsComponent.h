@@ -29,8 +29,6 @@ public:
 	PxRigidDynamic* getActor() const { return actor; }
 	std::vector<PxShape*> getShapes();
 
-	void setAsTrigger();
-
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
