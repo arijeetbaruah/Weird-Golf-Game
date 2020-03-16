@@ -158,10 +158,6 @@ public:
 			Player* p = (Player*)(players[realPacket->playerID]);
 #endif
 			
-			
-
-			Component* test = p->getComponent<ShotTracker*>("Shots");
-			p->getComponent<ShotTracker*>("ShotTracker")->addShots();
 			p->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 		}
 	}
