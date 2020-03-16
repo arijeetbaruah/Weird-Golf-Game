@@ -35,8 +35,8 @@ TutorialGame::TutorialGame()	{
 		worlds.push_back(new GameWorld());
 	}
 
-	renderer = new GameTechRenderer(*worlds[0]);
-	currentWorld = 0;
+	renderer = new GameTechRenderer(*worlds[1]);
+	currentWorld = 1;
 
 	UIworld = new GameWorld();
 	UIrenderer = new GameTechRenderer(*UIworld);
@@ -150,10 +150,12 @@ void TutorialGame::StartGame()
 {
 	InitCamera();
 
-	for (int i = 0; i < numberOfLevels; i++) 
+	/*for (int i = 0; i < numberOfLevels; i++) 
 	{
 		InitWorld(i);
-	}
+	}*/
+
+	InitWorld(1);
 
 	InitUIWorld();
 
@@ -204,7 +206,7 @@ void TutorialGame::InitWorld(int worldIndex) {
 	}
 	else if (worldIndex == 1)
 	{
-		AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
+		/*AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
@@ -212,10 +214,10 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(-0.4, 0.3, 2), worldIndex);
 		AddStarToWorld(Vector3(-0.1, 0.3, 2), worldIndex);
 		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);
+		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
-		AddSomeObject(gameMapOrigin, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		AddSomeObject(gameMapExplode, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	
 
@@ -412,15 +414,15 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	//				target					mesh				texture						shader
 	colladaLoadFunc(&gameMapOrigin,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
-	colladaLoadFunc(&gameMapExplode,	"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&gameMapExplode,	"Level3.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
 	colladaLoadFunc(&powerUpStar,		"Star.dae",			"star.png",					basicShader);
 
-	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",	basicShader);
-	objLoadFunc	   (&playerTemp0,		"Assets/Ball3.obj", "tex_MinigolfPack.png",	basicShader);
+	objLoadFunc(&playerTemp1, "Assets/Ball6.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp2, "Assets/Ball9.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp3, "Assets/Ball10.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp0, "Assets/Ball3.obj", "tex_MinigolfPack.png", basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
@@ -564,7 +566,6 @@ void TutorialGame::UpdateGame(float dt) {
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
-
 	
 	//update Render
 	UpdateInGame();
