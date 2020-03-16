@@ -15,5 +15,6 @@ void LimitedShot::Update(float dt) {
 }
 
 bool LimitedShot::conditionCheck() {
+	std::cout << "shots: " << this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots() << " " << startingShots + maxShots << std::endl;
 	return this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots() >= startingShots + maxShots;
 }

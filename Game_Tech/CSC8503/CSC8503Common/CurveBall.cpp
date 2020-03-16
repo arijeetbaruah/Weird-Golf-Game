@@ -2,7 +2,7 @@
 
 CurveBall::CurveBall() {
 	setName("CurveBall");
-	maxShots = 4;
+	maxShots = 15;
 }
 
 void CurveBall::Apply() {
@@ -17,20 +17,24 @@ void CurveBall::Apply() {
 
 		
 		PxVec3 pvec = spc->getVelocity();
-		Vector3 vec = Vector3(direction, 0, 0) - tf.GetWorldPosition();
 		pvec.y = 0;
+		float ang = 120;
+		PxVec3 curve = PxVec3(pvec.x * cos(ang) - pvec.z * sin(ang), 0, pvec.x * sin(ang) + pvec.z * cos(ang));
+		curve = curve - pvec;
 		if (pvec.magnitude() > 1) {
-			
-			spc->addForce(PxVec3(vec.x, vec.y, vec.z) * 0.03);
+			spc->addForce(curve);
 		}
 	});
 	po->addComponent(sp);
 }
 
 void CurveBall::Remove() {
-
+	Script* sp = this->getParent()->getComponent<Script*>("Spin");
+	if (sp != NULL)
+		sp->toRemove = true;
 }
 
 void CurveBall::Start() {
+	LimitedShot::Start();
 	po = dynamic_cast<Player*>(this->getParent());
 }

@@ -156,7 +156,8 @@ public:
 			Player* p = dynamic_cast<Player*>(players[realPacket->playerID]);
 
 			Component* test = p->getComponent<ShotTracker*>("Shots");
-			p->getComponent<ShotTracker*>("ShotTracker")->addShots();
+			//p->getComponent<ShotTracker*>("ShotTracker")->addShots();
+			//Use setShots, to keep track, so it doesn't increase every frame
 			p->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 		}
 	}
