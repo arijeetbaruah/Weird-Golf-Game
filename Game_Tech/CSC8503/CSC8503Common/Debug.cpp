@@ -1,5 +1,6 @@
 #include "Debug.h"
 
+#ifdef WIN32
 using namespace NCL;
 
 OGLRenderer* Debug::renderer = nullptr;
@@ -8,12 +9,12 @@ std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
 std::vector<Debug::DebugLineEntry>		Debug::lineEntries;
 
 
-void Debug::Print(const std::string& text, const Vector2&pos, const Vector4& colour) {
+void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
 
-	newEntry.data		= text;
-	newEntry.position	= pos;
-	newEntry.colour		= colour;
+	newEntry.data = text;
+	newEntry.position = pos;
+	newEntry.colour = colour;
 
 	stringEntries.emplace_back(newEntry);
 }
@@ -21,8 +22,8 @@ void Debug::Print(const std::string& text, const Vector2&pos, const Vector4& col
 void Debug::DrawLine(const Vector3& startpoint, const Vector3& endpoint, const Vector4& colour) {
 	DebugLineEntry newEntry;
 
-	newEntry.start	= startpoint;
-	newEntry.end	= endpoint;
+	newEntry.start = startpoint;
+	newEntry.end = endpoint;
 	newEntry.colour = colour;
 
 	lineEntries.emplace_back(newEntry);
@@ -43,3 +44,24 @@ void Debug::FlushRenderables() {
 	stringEntries.clear();
 	lineEntries.clear();
 }
+#else 
+using namespace NCL;
+
+OGLRenderer* Debug::renderer = nullptr;
+
+std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
+std::vector<Debug::DebugLineEntry>		Debug::lineEntries;
+
+
+void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
+
+}
+
+void Debug::DrawLine(const Vector3& startpoint, const Vector3& endpoint, const Vector4& colour) {
+
+}
+
+void Debug::FlushRenderables() {
+
+}
+#endif

@@ -36,5 +36,10 @@ void Homing::Remove() {
 
 void Homing::Start() {
 	LimitedShot::Start();
+
+#ifdef WIN32
 	po = dynamic_cast<Player*>(this->getParent());
+#else 
+	po = (Player*)(this->getParent());
+#endif
 }

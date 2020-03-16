@@ -43,8 +43,12 @@ TutorialGame::TutorialGame()	{
 
 	isNetworkedGame = false;
 	isServer = false;
-
+#ifdef WIN32
 	Debug::SetRenderer(renderer);
+#else 
+	//PS4 code
+#endif
+	
 
 	InitialiseAssets();
 	StartGame();
@@ -91,12 +95,12 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 		std::vector<PxU32> tris;
 		Matrix4 tempScale = Matrix4::Scale(size);
 
-		for each (Vector3 vert in newRender->GetMesh()->GetPositionData())
+		for (Vector3 vert : newRender->GetMesh()->GetPositionData())
 		{
 			vert = tempScale * vert;
 			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		}
-		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		for (unsigned int index : newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 
 		Quaternion rotate = Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0)));
@@ -411,12 +415,12 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 		std::vector<PxU32> tris;
 		Matrix4 tempScale = Matrix4::Scale(size);
 
-		for each (Vector3 vert in newRender->GetMesh()->GetPositionData()) 
+		for (Vector3 vert : newRender->GetMesh()->GetPositionData()) 
 		{
 			vert = tempScale * vert;
 			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		}
-		for each (unsigned int index in newRender->GetMesh()->GetIndexData())		tris.push_back(index);
+		for(unsigned int index : newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 
 		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial);
@@ -549,7 +553,11 @@ void TutorialGame::UpdateGame(float dt) {
 
 void TutorialGame::displayPowerUpText(float dt)
 {
+#ifdef WIN32
 	renderer->DrawString(powerUpName, Vector2(500, 600));
+#else 
+#endif
+	
 
 	powerUpTxtTimer -= dt;
 
@@ -589,7 +597,12 @@ bool TutorialGame::SelectObject() {
 //following is UIfunction
 
 void TutorialGame::UpdateInGame() {
+#ifdef WIN32
 	renderer->DrawString("Your point : XXXXXX ", Vector2(10, 0));
+#else 
+	//PS4 code
+#endif
+
 }
 
 void TutorialGame::InitUIWorld()
@@ -663,11 +676,16 @@ void TutorialGame::InitUIWorld()
 
 void TutorialGame::UpdateUIWorld(float dt)
 {
-	UIrenderer->DrawString("W S choose mode, D into select", Vector2(50, 0),Vector4(0,1,0,0));
+#ifdef WIN32
+	UIrenderer->DrawString("W S choose mode, D into select", Vector2(50, 0), Vector4(0, 1, 0, 0));
 	UIMachine->LoadUIState(UIrenderer);
 	UpdateUIKeyWords(UIMachine);
 	UIrenderer->Update(dt);
 	UIrenderer->Render();
+#else 
+	//PS4 code
+#endif
+
 }
 
 void TutorialGame::UpdateUIKeyWords(UIPushDownMachine* UIMachine)

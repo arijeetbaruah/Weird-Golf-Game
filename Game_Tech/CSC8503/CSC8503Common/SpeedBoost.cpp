@@ -16,6 +16,10 @@ void SpeedBoost::Remove() {
 }
 
 void SpeedBoost::Start() {
+#ifdef WIN32
 	po = dynamic_cast<Player*>(this->getParent());
+#else 
+	po = (Player*)(this->getParent());
+#endif
 	origSpeed = po->getSpeed();
 }

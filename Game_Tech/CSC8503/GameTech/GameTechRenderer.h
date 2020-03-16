@@ -36,8 +36,10 @@ namespace NCL {
 #else 
 namespace NCL {
 
-	class Maths::Vector3;
-	class Maths::Vector4;
+	namespace Maths {
+		class Vector3;
+		class Vector4;
+	}
 	namespace CSC8503 {
 		class RenderObject;
 

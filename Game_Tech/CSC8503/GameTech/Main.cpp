@@ -19,6 +19,14 @@ using namespace NCL;
 using namespace CSC8503;
 using namespace physx;
 
+
+
+#ifdef WIN32
+	//PC Code
+#else 
+	//PS4 code
+#endif
+
 #ifdef _ORBIS
 	//PS4 code
 #else 

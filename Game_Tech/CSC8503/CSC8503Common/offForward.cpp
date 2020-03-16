@@ -6,9 +6,21 @@ offForward::offForward() {
 }
 
 void offForward::Apply() {
+#ifdef WIN32
 	dynamic_cast<Player*>(this->getParent())->setIsOffset(true);
+#else 
+	Player* temp= (Player*)(this->getParent());
+	temp->setIsOffset(true);
+#endif
+
 }
 
 void offForward::Remove() {
-	dynamic_cast<Player*>(this->getParent())->setIsOffset(false);
+#ifdef WIN32
+	dynamic_cast<Player*>(this->getParent())->setIsOffset(true);
+#else 
+	Player* temp = (Player*)(this->getParent());
+	temp->setIsOffset(false);
+#endif
+
 }

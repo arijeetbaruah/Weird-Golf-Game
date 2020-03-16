@@ -152,8 +152,13 @@ public:
 			FullPacket* realPacket = (FullPacket*)payload;
 
 			auto players = game->GetServerPlayers();
-
+#ifdef WIN32
 			Player* p = dynamic_cast<Player*>(players[realPacket->playerID]);
+#else 
+			Player* p = (Player*)(players[realPacket->playerID]);
+#endif
+			
+			
 
 			Component* test = p->getComponent<ShotTracker*>("Shots");
 			p->getComponent<ShotTracker*>("ShotTracker")->addShots();

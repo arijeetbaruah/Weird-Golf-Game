@@ -34,8 +34,11 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 	{
 
 		int randNum = rand() % 4 + 1;
-
+#ifdef WIN32
 		Player* p = dynamic_cast<Player*>(otherObject);
+#else 
+		Player* p = (Player*)(otherObject);
+#endif
 
 		switch (randNum)
 		{
