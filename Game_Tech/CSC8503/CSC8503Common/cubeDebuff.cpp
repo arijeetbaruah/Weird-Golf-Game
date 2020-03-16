@@ -15,23 +15,24 @@ cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
 }
 
 void cubeDebuff::Start() {
-	par = this->getParent();
+	par = (Player*) this->getParent();
 	ren = this->getParent()->GetRenderObject();
 }
 
 
 void cubeDebuff::Apply() {
 	Vector3 position = par->GetTransform().GetWorldPosition();
-	applyTransformation(Vector3(0.05, 0.05, 0.05), After, new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.1, 0.1, 0.1));
+	float size = 0.1 * par->getSizeScale();
+	applyTransformation(Vector3(0.05, 0.05, 0.05), After, new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, size, size, size));
 }
 
 void cubeDebuff::Remove() {
 	Vector3 position = par->GetTransform().GetWorldPosition();
-	applyTransformation(Vector3 (1,1,1), Before, new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05, mat));
+	applyTransformation(Vector3 (1,1,1), Before, new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05 * par->getSizeScale(), mat));
 }
 
 void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC) {
-	par->GetTransform().SetWorldScale(scale);
+	par->GetTransform().SetWorldScale(scale * par->getSizeScale());
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), mesh, ren->GetDefaultTexture(), ren->GetShader()));
 	PhysicsComponent* pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 	PxVec3 angVec = pc->getAngularVelocity();

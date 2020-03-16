@@ -23,9 +23,11 @@ TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform
 	PxTriangleMeshGeometry geom(mesh);
 
 	PxShape* meshShape;
+	
 	if (actor) {
 		actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
 		meshShape = PxRigidActorExt::createExclusiveShape(*actor, geom, *mMaterial);
+		meshShape->setName("Mesh");
 	}
 }
 

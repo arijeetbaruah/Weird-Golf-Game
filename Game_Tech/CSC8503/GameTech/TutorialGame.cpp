@@ -12,7 +12,9 @@
 #include "../CSC8503Common/TestBuff.h"
 #include "../CSC8503Common/SpeedBoost.h"
 #include "../CSC8503Common/Homing.h"
-#include "../CSC8503Common/CurveBall.h"]
+#include "../CSC8503Common/CurveBall.h"
+#include "../CSC8503Common/sizeChange.h"
+#include "../CSC8503Common/sizeChange.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -500,7 +502,8 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
-	Ball->addComponent(new CurveBall());
+	Ball->addComponent(new sizeChange(2));
+	Ball->addComponent(new cubeDebuff(objOGL, cubeMesh));
 	world->AddGameObject(Ball);
 
 	return Ball;
