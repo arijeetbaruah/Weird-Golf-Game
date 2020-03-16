@@ -18,7 +18,15 @@ namespace NCL {
 
 			RenderObject(MeshGeometry* m, Rendering::ShaderBase* shader, Rendering::TextureBase* tex);
 
+			void SetDefaultTexture(Rendering::TextureBase* t) {
+				textures[0] = t;
+			}
+			Rendering::TextureBase* GetDefaultTexture() const {
+				return textures[0];
+			}
+
 			const Maths::Matrix4& GetLocalTransform() const;
+
 			void	SetLocalTransform(const Maths::Matrix4& mat);
 
 			Rendering::ShaderBase* GetShader() const {
@@ -33,13 +41,12 @@ namespace NCL {
 				return textures[index];
 			}
 		protected:
-			MeshGeometry*	mesh;
-			Rendering::ShaderBase*		shader;
-
 			static const int TEXTURE_COUNT = 4;
-			Rendering::TextureBase* textures[TEXTURE_COUNT];
 
-			Maths::Matrix4		localTransform;
+			MeshGeometry*				mesh;
+			Rendering::TextureBase*		textures[TEXTURE_COUNT];
+			Rendering::ShaderBase*		shader;
+			Maths::Matrix4				localTransform;
 		};
 	}
 }

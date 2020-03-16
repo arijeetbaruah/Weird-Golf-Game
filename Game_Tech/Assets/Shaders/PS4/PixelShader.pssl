@@ -1,7 +1,11 @@
 
 SamplerState samp0 : register(s0);
 
+SamplerState shadowSampler: register (s1);
+
 Texture2D colorMap : register( t0 );
+
+Texture2D shadowMap: register(t1);
 
 
 struct VS_OUTPUT
@@ -15,19 +19,23 @@ struct VS_OUTPUT
 	float radius;
 	float3 cameraPos;
 	float intensity;
+	float4 fragPosLightSpace;
 };
 
 float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 {
 	float4 diffuse = colorMap.Sample(samp0, In.UV.xy);
 
-    float3 incident = normalize(In.lightPos - In.Position);
+    float3 incident = normalize(In.lightPos - In.fragPos);
     float lambert = max(0.0, dot(incident, In.normal));
 
-    float dist = length(In.lightPos - In.Position);
+    float dist = length(In.lightPos - In.fragPos);
     float atten = 1.0 - clamp(dist / In.radius, 0.0, 1.0);
-    float3 viewDir = normalize(In.cameraPos - In.Position);
+    float3 viewDir = normalize(In.cameraPos - In.fragPos);
     float3 halfDir = normalize(incident + viewDir);
+    float3 lightDir = normalize(In.lightPos - In.fragPos);
+    float3 reflectDir = reflect(-lightDir, In.normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
 
     float rFactor = max(0.0, dot(halfDir, In.normal));
     float sFactor = pow(rFactor, 50.0);
@@ -35,7 +43,25 @@ float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
     float3 color = diffuse.rgb * In.lightColor.rgb;
     color += In.lightColor.rgb * sFactor * 0.33;
     float4 fragColor = float4(color * atten * lambert, diffuse.a);
-    fragColor.rgb += diffuse.rgb * In.lightColor.rgb * 1.5 * In.intensity;
+	
+	float2 projCoords;
+	projCoords.x = In.fragPosLightSpace.x / In.fragPosLightSpace.w;
+	projCoords.y = (-In.fragPosLightSpace.y) / In.fragPosLightSpace.w;
 
+	projCoords = projCoords * 0.5 + 0.5;
+
+	float closestDepth = shadowMap.Sample(shadowSampler, projCoords.xy).r;
+
+
+	float bias = 0.0003; 
+	float currentDepth = In.fragPosLightSpace.z/ In.fragPosLightSpace.w * 0.5 + 0.5;
+	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.5;
+	if(In.fragPosLightSpace.w <= 0)
+	{
+		shadow = 0;
+	}
+    fragColor.rgb += max((1.0 - shadow), 0.1) * diffuse.rgb * In.lightColor.rgb * 1.5 * In.intensity;
+    fragColor.rgb += spec * 1 * In.lightColor.rgb;
+	
 	return fragColor;
 }  

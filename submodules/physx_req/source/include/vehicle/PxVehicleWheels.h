@@ -582,7 +582,7 @@ public:
 	~PxVehicleWheelsSimData(){}
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleWheelsSimData) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleWheelsSimData) & 15));
 
 /**
 \brief Data structure with instanced dynamics data for wheels
@@ -864,7 +864,7 @@ public:
 	virtual void release() { free(); }
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleWheels) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleWheels) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

@@ -224,7 +224,7 @@ public:
 	virtual	bool				isKindOf(const char* name)	const	{ return !::strcmp("PxVehicleDriveNW", name) || PxBase::isKindOf(name); }
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDriveNW) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDriveNW) & 15));
 
 
 

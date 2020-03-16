@@ -9,6 +9,13 @@ using namespace CSC8503;
 
 #define SHADOWSIZE 4096
 
+#ifdef _ORBIS
+//PS4 code
+#else 
+
+
+
+
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5, 0.5, 0.5)) * Matrix4::Scale(Vector3(0.5, 0.5, 0.5));
 
 GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world)	{
@@ -206,3 +213,5 @@ void GameTechRenderer::SetupDebugMatrix(OGLShader*s) {
 
 	glUniformMatrix4fv(matLocation, 1, false, (float*)&vp);
 }
+
+#endif

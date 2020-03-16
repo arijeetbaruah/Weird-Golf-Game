@@ -2,6 +2,8 @@
 #include <move.h>
 #include <queue>
 
+#include <PxScene.h>
+
 #include "../Plugins/PlayStation4/PS4RendererBase.h"
 #include "../Plugins/PlayStation4/PS4Input.h"
 #include "../Common/Camera.h"
@@ -9,6 +11,18 @@
 #include "EnjoyColladaMesh.h"
 #include "SceneNode.h"
 #include "Light.h"
+#include "PGameObject.h"
+
+#define ASSET_DIR "/app0/Assets/"
+
+static const float biasValues[16] =
+{
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 0.5, 0.0,
+	0.5, 0.5, 0.5, 1.0
+};
+static const NCL::Maths::Matrix4 biasMatrix(const_cast<float*>(biasValues));
 
 namespace NCL {
 	namespace PS4 {
@@ -25,6 +39,11 @@ namespace NCL {
 			void DrawRenderObject(RenderObject* o);
 			void	RenderFrame()	override;
 			void RenderActiveScene() override;
+			void InitDepthBuffer();
+			void SwitchToDepthBuffer();
+			void DrawShadow();
+			void DrawObjectShadow(RenderObject* obj);
+			Matrix4 GetLightView();
 
 			PS4ComputeShader*	computeTest;
 			PS4Shader*	defaultShader;
@@ -50,6 +69,16 @@ namespace NCL {
 			SceneNode* tree;
 
 			Light* mainLight;
+
+			PS4ScreenBuffer* depthBuffer;
+
+			PS4Shader* ShadowShader;
+
+			Gnmx::GnmxGfxContext shadowContext;
+
+			Gnm::Texture ShadowTex;
+
+			physx::PxScene* scene;
 		};
 	}
 }

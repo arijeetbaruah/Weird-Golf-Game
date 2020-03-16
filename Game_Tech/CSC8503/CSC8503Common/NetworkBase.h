@@ -1,5 +1,7 @@
 #pragma once
+#ifdef _WIN32
 #include <winsock2.h>
+#endif
 #include <enet/enet.h>
 #include <map>
 #include <string>
@@ -15,6 +17,7 @@ enum BasicNetworkMessages {
 	Received_State, //received from a client, informs that its received packet n
 	Player_Connected,
 	Player_Disconnected,
+	Send_Packet,
 	Player_ID,
 	Shutdown,
 	Collectable_Count

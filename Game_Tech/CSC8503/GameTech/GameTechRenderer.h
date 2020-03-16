@@ -6,13 +6,42 @@
 
 #include "../CSC8503Common/GameWorld.h"
 
+
+#ifdef _ORBIS
 namespace NCL {
+	using namespace NCL::Maths;
+	namespace Maths {
+		class Vector3;
+		class Vector4;
+	}
+	namespace CSC8503 {
+		class RenderObject;
+
+		class GameTechRenderer{
+		public:
+			GameTechRenderer(GameWorld& world);
+			~GameTechRenderer();
+
+		protected:
+			void RenderFrame() {}
+			void BuildObjectList() {}
+			void SortObjectList() {}
+			void RenderShadowMap() {}
+			void RenderCamera() {}
+
+			void SetupDebugMatrix(OGLShader* s) {}
+		};
+	}
+}
+#else 
+namespace NCL {
+
 	class Maths::Vector3;
 	class Maths::Vector4;
 	namespace CSC8503 {
 		class RenderObject;
 
-		class GameTechRenderer : public OGLRenderer	{
+		class GameTechRenderer : public OGLRenderer {
 		public:
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
@@ -20,21 +49,21 @@ namespace NCL {
 		protected:
 			void RenderFrame()	override;
 
-			OGLShader*		defaultShader;
+			OGLShader* defaultShader;
 
-			GameWorld&	gameWorld;
+			GameWorld& gameWorld;
 
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
+			void RenderCamera();
 
-			void SetupDebugMatrix(OGLShader*s) override;
+			void SetupDebugMatrix(OGLShader* s) override;
 
 			vector<const RenderObject*> activeObjects;
 
 			//shadow mapping things
-			OGLShader*	shadowShader;
+			OGLShader* shadowShader;
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
@@ -45,4 +74,7 @@ namespace NCL {
 		};
 	}
 }
+#endif
+
+
 

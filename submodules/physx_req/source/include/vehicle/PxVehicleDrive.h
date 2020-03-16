@@ -555,7 +555,7 @@ protected:
 	virtual bool isKindOf(const char* name)	const { return !::strcmp("PxVehicleDrive", name) || PxBase::isKindOf(name); }
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrive) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleDrive) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

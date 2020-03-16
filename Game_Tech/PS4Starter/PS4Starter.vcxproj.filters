@@ -47,6 +47,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExampleRenderer.h">
@@ -76,6 +79,9 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <WavePsslc Include="..\Assets\Shaders\PS4\PixelShader.pssl">
@@ -87,7 +93,10 @@
     <WavePsslc Include="..\Assets\Shaders\PS4\ComputeShader.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
-    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowPixel.pssl">
+      <Filter>Shaders</Filter>
+    </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowVert.pssl">
       <Filter>Shaders</Filter>
     </WavePsslc>
   </ItemGroup>

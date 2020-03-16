@@ -12,7 +12,3 @@ void offForward::Apply() {
 void offForward::Remove() {
 	dynamic_cast<Player*>(this->getParent())->setIsOffset(false);
 }
-
-void offForward::Start() {
-
-}

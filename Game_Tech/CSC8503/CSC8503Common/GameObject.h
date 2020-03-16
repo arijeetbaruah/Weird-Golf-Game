@@ -1,8 +1,6 @@
 #pragma once
 #include "Transform.h"
 #include "CollisionVolume.h"
-
-#include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "NetworkObject.h"
 #include "Component.h"
@@ -56,6 +54,15 @@ namespace NCL {
 					components.erase(s);
 				}
 			}
+
+			void RemoveComponent(string name) {
+				unordered_map<string, Component*>::const_iterator obj = components.find(name);
+				if (obj != components.end()) {
+					delete components.at(obj->first);
+					components.erase(obj->first);
+				}
+			}
+
 			void LateUpdate(float dt) {
 				for (pair<string, Component*> component : components) {
 					component.second->LateUpdate();
@@ -92,20 +99,12 @@ namespace NCL {
 				return renderObject;
 			}
 
-			PhysicsObject* GetPhysicsObject() const {
-				return physicsObject;
-			}
-
 			NetworkObject* GetNetworkObject() const {
 				return networkObject;
 			}
 
 			void SetRenderObject(RenderObject* newObject) {
 				renderObject = newObject;
-			}
-
-			void SetPhysicsObject(PhysicsObject* newObject) {
-				physicsObject = newObject;
 			}
 
 			void SetNetworkObject(NetworkObject* newObject) {
@@ -117,16 +116,12 @@ namespace NCL {
 			}
 
 			virtual void OnCollisionBegin(GameObject* otherObject) {
-				std::cout << "OnCollisionBegin event occured!\n";
+				//std::cout << "OnCollisionBegin event occured!\n";
 			}
 
 			virtual void OnCollisionEnd(GameObject* otherObject) {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
-
-			bool GetBroadphaseAABB(Vector3&outsize) const;
-
-			void UpdateBroadphaseAABB();
 
 			unsigned long getLayer() { return layer; };
 			unsigned long getLayerMask() { return layerMask; };
@@ -145,7 +140,6 @@ namespace NCL {
 			Transform			transform;
 
 			CollisionVolume*	boundingVolume;
-			PhysicsObject*		physicsObject;
 			RenderObject*		renderObject;
 			NetworkObject*		networkObject;
 

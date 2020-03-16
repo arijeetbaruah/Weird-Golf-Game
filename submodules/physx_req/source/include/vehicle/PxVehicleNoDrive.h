@@ -206,7 +206,7 @@ protected:
 									~PxVehicleNoDrive() {}
 //~serialization
 };
-PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleNoDrive) & 15));
+//PX_COMPILE_TIME_ASSERT(0==(sizeof(PxVehicleNoDrive) & 15));
 
 #if !PX_DOXYGEN
 } // namespace physx

@@ -38,6 +38,11 @@ ConstantBuffer InvertModelMat
 	column_major matrix invertModelMat; 
 };
 
+ConstantBuffer LightViewProj
+{
+	column_major matrix lightViewProj;
+};
+
 struct VS_INPUT
 {
 	float3 Position		: POSITION0;
@@ -57,6 +62,7 @@ struct VS_OUTPUT
 	float radius;
 	float3 cameraPos;
 	float intensity;
+	float4 fragPosLightSpace;
 };
 
 VS_OUTPUT main(VS_INPUT Input)
@@ -74,5 +80,6 @@ VS_OUTPUT main(VS_INPUT Input)
 	Output.radius = radius;
 	Output.cameraPos = cameraPos;
 	Output.intensity = intensity;
+	Output.fragPosLightSpace = mul(mul(lightViewProj, modelMatrix), float4(Input.Position.xyz, 1));
 	return Output;
 }

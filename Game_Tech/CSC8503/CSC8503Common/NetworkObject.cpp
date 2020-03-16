@@ -110,17 +110,6 @@ bool NetworkObject::WritePlayerPacket(GamePacket** p, int stateID) {
 }
 
 bool NetworkObject::ReadFullPacket(FullPacket &p) {
-
-	if (p.fullState.stateID < lastFullState.stateID) {
-		return false; // received an 'old' packet, ignore!
-	}
-	lastFullState = p.fullState;
-
-	object.GetTransform().SetWorldPosition(lastFullState.position);
-	object.GetTransform().SetLocalOrientation(lastFullState.orientation);
-
-	//stateHistory.emplace_back(lastFullState);
-
 	return true;
 }
 
@@ -156,17 +145,6 @@ bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) {
 }
 
 bool NetworkObject::WriteFullPacket(GamePacket**p) {
-	FullPacket* fp = new FullPacket();
-
-	fp->score = playerScore;
-	fp->totalScore = playerTotalScore;
-	fp->fullState.colour = object.GetRenderObject()->GetColour();
-	fp->objectID				= networkID;
-	fp->fullState.position		= object.GetTransform().GetWorldPosition();
-	fp->fullState.orientation	= object.GetTransform().GetWorldOrientation();
-	fp->fullState.stateID		= lastFullState.stateID++;
-
-	*p = fp;
 	return true;
 }
 

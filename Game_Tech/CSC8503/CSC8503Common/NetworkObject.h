@@ -15,11 +15,21 @@ namespace NCL {
 			}
 		};
 
-		struct FullPacket : public GamePacket {
-			int		objectID = -1;
+
+		struct SendPacket : public GamePacket {
+			int playerID;
 			NetworkState fullState;
-			int score;
-			int totalScore;
+
+			SendPacket(int p) {
+				type = BasicNetworkMessages::Send_Packet;
+				playerID = p;
+				size = sizeof(SendPacket) - sizeof(GamePacket);
+			}
+		};
+
+		struct FullPacket : public GamePacket {
+			int		playerID = -1;
+			Vector3 force = Vector3(0, 0, 0);
 
 			FullPacket() {
 				type = Full_State;

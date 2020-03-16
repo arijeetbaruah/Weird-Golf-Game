@@ -10,7 +10,11 @@ using namespace NCL::PS4;
 ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) : 
 	PS4RendererBase(window), input(input)
 {
-	mainLight = new Light(Vector3(0, 100, 0), Vector4(1, 1, 1, 1), 5000, 0.7f);
+	mainLight = new Light(Vector3(5, 25, 25), Vector4(1, 1, 1, 1), 5000, 0.7f);
+	ShadowShader = PS4Shader::GenerateShader(
+		ASSET_DIR"Shaders/PS4/ShadowVert.sb",
+		ASSET_DIR"Shaders/PS4/ShadowPixel.sb"
+	);
 	defaultShader = PS4Shader::GenerateShader(
 		"/app0/Assets/Shaders/PS4/VertexShader.sb",
 		"/app0/Assets/Shaders/PS4/PixelShader.sb"
@@ -46,6 +50,8 @@ ExampleRenderer::ExampleRenderer(PS4Window* window, PS4Input* input) :
 	building->Translate(Vector3(0, -10, -5));
 	golfLevel->AddChild(building);
 	golfLevel->AddChild(tree);
+
+	InitDepthBuffer();
 }
 
 ExampleRenderer::~ExampleRenderer()	
@@ -59,6 +65,7 @@ ExampleRenderer::~ExampleRenderer()
 	delete building;
 	delete treeTex;
 	delete mainLight;
+	delete depthBuffer;
 }
 
 void ExampleRenderer::Update(float dt)	{
@@ -145,6 +152,117 @@ void ExampleRenderer::RenderActiveScene()
 	}
 }
 
+void NCL::PS4::ExampleRenderer::InitDepthBuffer()
+{
+	depthBuffer = new PS4ScreenBuffer();
+	Gnm::DepthRenderTargetSpec spec;
+	spec.init();
+	spec.m_width = 1920*2;
+	spec.m_height = 1080*2;
+	spec.m_numFragments = Gnm::kNumFragments1;
+	spec.m_zFormat = Gnm::ZFormat::kZFormat32Float;
+	spec.m_stencilFormat = Gnm::kStencilInvalid;
+
+	GpuAddress::computeSurfaceTileMode(Gnm::GpuMode::kGpuModeBase, &spec.m_tileModeHint, GpuAddress::kSurfaceTypeDepthTarget, Gnm::DataFormat::build(spec.m_zFormat), 1);
+
+	void* stencilMemory = 0;
+
+	depthBuffer->depthTarget.init(&spec);
+
+	void* depthMemory = stackAllocators[GARLIC].allocate(depthBuffer->depthTarget.getZSizeAlign());
+
+	Gnm::registerResource(nullptr, ownerHandle, depthMemory, depthBuffer->depthTarget.getZSizeAlign().m_size,
+		"Depth", Gnm::kResourceTypeDepthRenderTargetBaseAddress, 0);
+
+	depthBuffer->depthTarget.setAddresses(depthMemory, stencilMemory);
+
+	ShadowTex.initFromDepthRenderTarget(&depthBuffer->depthTarget, false);
+}
+
+void NCL::PS4::ExampleRenderer::SwitchToDepthBuffer()
+{
+	currentGFXContext->setRenderTargetMask(0);
+	currentGFXContext->setRenderTarget(0, &depthBuffer->colourTarget);
+	currentGFXContext->setDepthRenderTarget(&depthBuffer->depthTarget);
+
+	currentGFXContext->setupScreenViewport(0, 0, depthBuffer->depthTarget.getWidth() * 2, depthBuffer->depthTarget.getHeight() * 2, 0.5f, 0.5f);
+	currentGFXContext->setScreenScissor(0, 0, depthBuffer->depthTarget.getWidth() * 2, depthBuffer->depthTarget.getHeight() * 2);
+	currentGFXContext->setWindowScissor(0, 0, depthBuffer->depthTarget.getWidth() * 2, depthBuffer->depthTarget.getHeight() * 2, sce::Gnm::WindowOffsetMode::kWindowOffsetDisable);
+	currentGFXContext->setGenericScissor(0, 0, depthBuffer->depthTarget.getWidth() * 2, depthBuffer->depthTarget.getHeight() * 2, sce::Gnm::WindowOffsetMode::kWindowOffsetDisable);
+
+	ClearBuffer(depthBuffer, false, true, false);
+}
+
+void NCL::PS4::ExampleRenderer::DrawShadow()
+{
+	SwitchToDepthBuffer();
+
+	ShadowShader->SubmitShaderSwitch(*currentGFXContext);
+
+	//Primitive Setup State
+	Gnm::PrimitiveSetup primitiveSetup;
+	primitiveSetup.init();
+	primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceFront);
+	primitiveSetup.setFrontFace(Gnm::kPrimitiveSetupFrontFaceCcw);
+	//primitiveSetup.setPolygonMode()
+	currentGFXContext->setPrimitiveSetup(primitiveSetup);
+
+	////Screen Access State
+	Gnm::DepthStencilControl dsc;
+	dsc.init();
+	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
+	dsc.setDepthEnable(true);
+	currentGFXContext->setDepthStencilControl(dsc);
+
+	std::queue<SceneNode*> q;
+	q.push(golfLevel);
+	while (!q.empty())
+	{
+		auto* item = q.front();
+		q.pop();
+		for (auto* child : item->GetChildren())
+		{
+			q.push(child);
+		}
+		for (const auto& object : item->GetRenderObjects())
+		{
+			DrawObjectShadow(object.get());
+		}
+	}
+
+
+	SetRenderBuffer(drawBuffer, true, true, true);
+}
+
+void NCL::PS4::ExampleRenderer::DrawObjectShadow(RenderObject* obj)
+{
+	Gnm::Buffer viewProjBuffer;
+	Matrix4* viewProj = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+	*viewProj = (mainCamera.BuildProjectionMatrix(1920.0 / 1080) * GetLightView());
+	viewProjBuffer.initAsConstantBuffer(viewProj, sizeof(Matrix4));
+	viewProjBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	Gnm::Buffer modelBuffer;
+	Matrix4* model = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+	*model = obj->GetLocalTransform();
+	modelBuffer.initAsConstantBuffer(model, sizeof(Matrix4));
+	modelBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
+	int modelIndex = ShadowShader->GetConstantBuffer("RenderObjectData");
+	int viewProjIndex = ShadowShader->GetConstantBuffer("CameraData");
+
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, viewProjIndex, 1, &viewProjBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, modelIndex, 1, &modelBuffer);
+
+	ShadowShader->SubmitShaderSwitch(*currentGFXContext);
+	DrawMesh(*((PS4Mesh*)obj->GetMesh()));
+}
+
+NCL::Maths::Matrix4 NCL::PS4::ExampleRenderer::GetLightView()
+{
+	return Matrix4::BuildViewMatrix(mainLight->GetPosition(), Vector3(0, 5, 0), Vector3(0, 1, 0));
+}
+
 void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	Matrix4* transformMat = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
 	*transformMat = o->GetLocalTransform();
@@ -189,6 +307,12 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	invertModelMatBuffer.initAsConstantBuffer(invertModelMat, sizeof(Matrix4));
 	invertModelMatBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
 
+	Gnm::Buffer lightViewProjBuffer;
+	Matrix4* lightViewProj = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+	*lightViewProj = (mainCamera.BuildProjectionMatrix(1920.0/1080) * GetLightView());
+	lightViewProjBuffer.initAsConstantBuffer(lightViewProj, sizeof(Matrix4));
+	lightViewProjBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
+
 	PS4Shader* realShader = (PS4Shader*)o->GetShader();
 
 	int objIndex = realShader->GetConstantBuffer("RenderObjectData");
@@ -199,14 +323,25 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	int lightIntensity = realShader->GetConstantBuffer("LightIntensity");
 	int cameraPos = realShader->GetConstantBuffer("CameraPos");
 	int invertModelMatrix = realShader->GetConstantBuffer("InvertModelMat");
+	int lightViewProjIndex = realShader->GetConstantBuffer("LightViewProj");
 
 
 	Gnm::Sampler trilinearSampler;
 	trilinearSampler.init();
 	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+
+	Gnm::Sampler shadowSampler;
+	shadowSampler.init();
+	shadowSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+	shadowSampler.setWrapMode(Gnm::WrapMode::kWrapModeClampLastTexel,
+										Gnm::WrapMode::kWrapModeClampLastTexel,
+										Gnm::WrapMode::kWrapModeClampLastTexel);
+
 	PS4Texture* tex = (PS4Texture*)o->GetTexture(0);
 	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &tex->GetAPITexture());
+	currentGFXContext->setTextures(Gnm::kShaderStagePs, 1, 1, &ShadowTex);
 	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 1, 1, &shadowSampler);
 
 	*viewProjMat = mainCamera.BuildProjectionMatrix(1920.0f/1080) * mainCamera.BuildViewMatrix();
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
@@ -217,12 +352,16 @@ void ExampleRenderer::DrawRenderObject(RenderObject* o) {
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightIntensity, 1, &lightInensityBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, cameraPos, 1, &cameraPosBuffer);
 	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, invertModelMatrix, 1, & invertModelMatBuffer);
+	currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, lightViewProjIndex, 1, &lightViewProjBuffer);
 
 	realShader->SubmitShaderSwitch(*currentGFXContext);
 	DrawMesh(*((PS4Mesh*)o->GetMesh()));
 }
 
-void ExampleRenderer::RenderFrame() {
+void ExampleRenderer::RenderFrame() 
+{
+	// mainLight->SetPosition(mainLight->GetPosition() + Vector3(0, 0, 0.01f));
+	DrawShadow();
 	UpdateRotationAmount(time);
 	defaultShader->SubmitShaderSwitch(*currentGFXContext);
 
@@ -240,6 +379,5 @@ void ExampleRenderer::RenderFrame() {
 	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
 	dsc.setDepthEnable(true);
 	currentGFXContext->setDepthStencilControl(dsc);
-
 	RenderActiveScene();
 }

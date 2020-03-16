@@ -58,6 +58,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp17</CppLanguageStd>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\spdlog\include;$(SolutionDir)..\submodules\physx_req\source\pxshared\include;$(SolutionDir)..\submodules\physx_req\source\geomutils\include;$(SolutionDir)..\submodules\physx_req\source\foundation\include;$(SolutionDir)..\submodules\physx_req\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)ORBIS_Debug;$(SolutionDir)ORBIS\Debug;$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -88,6 +89,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="PGameObject.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
@@ -99,6 +101,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OBJMesh.h" />
+    <ClInclude Include="PGameObject.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="tinyxml2.h" />
@@ -114,12 +117,16 @@
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">CS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
-    <WavePsslc Include="..\Assets\Shaders\PS4\lol.pssl">
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowPixel.pssl">
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">PS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
     <WavePsslc Include="..\Assets\Shaders\PS4\PixelShader.pssl">
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">PS</Profile>
+      <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
+    </WavePsslc>
+    <WavePsslc Include="..\Assets\Shaders\PS4\ShadowVert.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">VSVS</Profile>
       <OutputFileName Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">%(RelativeDir)%(FileName).sb</OutputFileName>
     </WavePsslc>
     <WavePsslc Include="..\Assets\Shaders\PS4\VertexShader.pssl">
