@@ -11,16 +11,17 @@ void CurveBall::Apply() {
 	int direction = (rand() % 2 + 1 == 1) ? 1 : -1;
 	sp->setLambda([direction](GameObject* go) {
 		PhysicsComponent* spc = go->getComponent<PhysicsComponent*>("PhysicsComponent");
-		
+		Transform tf = go->GetTransform();
 		//spin
 		spc->setAngularVelocity(PxVec3(0, direction * 10, 0));
 
+		
 		PxVec3 pvec = spc->getVelocity();
+		Vector3 vec = Vector3(direction, 0, 0) - tf.GetWorldPosition();
 		pvec.y = 0;
-		Vector3 vcel = Vector3(pvec.x, pvec.y, pvec.z);
-
-		if (vcel.Length() > 3) {
-			spc->addForce(PxVec3(direction, 0, 0) * 0.05);
+		if (pvec.magnitude() > 1) {
+			
+			spc->addForce(PxVec3(vec.x, vec.y, vec.z) * 0.03);
 		}
 	});
 	po->addComponent(sp);
