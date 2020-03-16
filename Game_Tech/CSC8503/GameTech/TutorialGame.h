@@ -29,6 +29,8 @@ namespace NCL {
 			OGLMesh* cubeMesh = nullptr;
 			MeshSceneNode* getPlayerMesh(int ID = 0);
 
+			int currentWorld;
+
 			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 		protected:
@@ -51,12 +53,12 @@ namespace NCL {
 			//initiate the game
 			void InitialiseAssets();
 			void InitCamera();
-			void InitWorld();
+			void InitWorld(int worldIndex);
 			void StartGame();
 			void LoadColladaRenderObjects();
 			//sub functions of initiate
-			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
-			GameObject* AddStarToWorld(Vector3 position);
+			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const int worldIndex, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
+			GameObject* AddStarToWorld(Vector3 position, int worldIndex);
 			
 			//update game 
 			void UpdateKeys();
@@ -79,11 +81,13 @@ namespace NCL {
 
 			//world basic parameters
 			GameTechRenderer* renderer;
-			GameWorld* world;
+			//GameWorld* world;
 
 
+			// Testing multiple levels
+			vector<GameWorld*> worlds;
 
-
+			int numberOfLevels;
 
 
 			bool inSelectionMode;

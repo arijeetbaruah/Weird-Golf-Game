@@ -228,13 +228,13 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
 
-	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*world, this);
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Received_State, serverReceiver);
 
 	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
 	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
 
-	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*world, this);
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
 
 	thisClient->Connect(127, 0, 0, 1, port);
@@ -351,11 +351,11 @@ void NetworkedGame::UpdateAsServer(float dt)
 	thisServer->UpdateServer();
 	BroadcastSnapshot(false);
 
-	CollectableCountPacket* packet = new CollectableCountPacket();
-	packet->count = world->GetCollectableCount();
+	/*CollectableCountPacket* packet = new CollectableCountPacket();
+	packet->count = world->GetCollectableCount();*/
 
-	thisServer->SendPacketToPeer(*packet, 2);
-	delete packet;
+	//thisServer->SendPacketToPeer(*packet, 2);
+	//delete packet;
 
 }
 

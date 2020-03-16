@@ -30,8 +30,15 @@ using namespace CSC8503;
 
 TutorialGame::TutorialGame()	{
 	srand(time(NULL));
-	world = new GameWorld();
-	renderer = new GameTechRenderer(*world);
+
+	numberOfLevels = 2;
+	for (int i = 0; i < numberOfLevels; i++)
+	{
+		worlds.push_back(new GameWorld());
+	}
+
+	renderer = new GameTechRenderer(*worlds[1]);
+	currentWorld = 1;
 
 	UIworld = new GameWorld();
 	UIrenderer = new GameTechRenderer(*UIworld);
@@ -73,7 +80,7 @@ void TutorialGame::InitialiseAssets() {
 	LoadColladaRenderObjects();
 }
 
-GameObject* TutorialGame::AddStarToWorld(Vector3 position)
+GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 {
 	std::vector<GameObject*> resultList;
 	std::vector<RenderObject*> renderList = powerUpStar->GetAllMesh();
@@ -122,10 +129,10 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position)
 
 		sphere->setAsTrigger();
 		
-		star->setGameWorld(world);
+		star->setGameWorld(worlds[worldIndex]);
 
 		resultList.push_back(star);
-		world->AddGameObject(star);
+		worlds[worldIndex]->AddGameObject(star);
 	}
 
 	return resultList[0];
@@ -136,19 +143,33 @@ TutorialGame::~TutorialGame()	{
 	delete basicShader;
 	delete Ball;
 	delete renderer;
-	delete world;
+	//delete world;
+
+	for (int i = 0; i < worlds.size(); i++) 
+	{
+		delete worlds[i];
+	}
 }
 
 void TutorialGame::StartGame()
 {
 	InitCamera();
-	InitWorld();
+
+	/*for (int i = 0; i < numberOfLevels; i++) 
+	{
+		InitWorld(i);
+	}*/
+
+	InitWorld(1);
+
 	InitUIWorld();
 
 	std::vector < GameObject* >::const_iterator first;
 	std::vector < GameObject* >::const_iterator last;
 
-	world->GetObjectIterators(first, last);
+	//world->GetObjectIterators(first, last);
+
+	worlds[currentWorld]->GetObjectIterators(first, last);
 
 	int counter = 0;
 
@@ -161,29 +182,53 @@ void TutorialGame::StartGame()
 }
 
 void TutorialGame::InitCamera() {
-	world->GetMainCamera()->SetNearPlane(0.5f);
-	world->GetMainCamera()->SetFarPlane(500.0f);
-	world->GetMainCamera()->SetPitch(-15.0f);
-	world->GetMainCamera()->SetYaw(315.0f);
-	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
+	worlds[currentWorld]->GetMainCamera()->SetNearPlane(0.5f);
+	worlds[currentWorld]->GetMainCamera()->SetFarPlane(500.0f);
+	worlds[currentWorld]->GetMainCamera()->SetPitch(-15.0f);
+	worlds[currentWorld]->GetMainCamera()->SetYaw(315.0f);
+	worlds[currentWorld]->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
 }
 
-void TutorialGame::InitWorld() {
-	world->ClearAndErase();
+void TutorialGame::InitWorld(int worldIndex) {
+	//world->ClearAndErase();
+	/*for (int i = 0; i < worlds.size(); i++) 
+		worlds[i]->ClearAndErase();*/
 
 	// The player to act as the server
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
+	if (worldIndex == 0) 
+	{
+		AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
 
-	AddStarToWorld(Vector3(-0.4, 0.3, 1));
-	AddStarToWorld(Vector3(-0.1, 0.3, 1));
-	AddStarToWorld(Vector3(0.1, 0.3, 1));
-	AddStarToWorld(Vector3(0.4, 0.3, 1));
+		//			 RenderObject(must)	    Position(must)							scale						rotation													name
+		AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+	}
+	else if (worldIndex == 1)
+	{
+		/*AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
 
-	//			 RenderObject(must)	    Position(must)					scale					rotation													name
-	AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-	AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-	AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-	AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddStarToWorld(Vector3(-0.4, 0.3, 2), worldIndex);
+		AddStarToWorld(Vector3(-0.1, 0.3, 2), worldIndex);
+		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
+		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
+
+		//			 RenderObject(must)	    Position(must)							scale						rotation													name
+		AddSomeObject(gameMapExplode, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+	}
+	
+
+
+
+
 	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	//AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
@@ -374,15 +419,15 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	//				target					mesh				texture						shader
 	colladaLoadFunc(&gameMapOrigin,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
-	colladaLoadFunc(&gameMapExplode,	"TestLevel2.dae",	"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&gameMapExplode,	"Level3.dae",	"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
 	colladaLoadFunc(&powerUpStar,		"Star.dae",			"star.png",					basicShader);
 
-	objLoadFunc    (&playerTemp1,		"Assets/Ball6.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc	   (&playerTemp2,		"Assets/Ball9.obj", "tex_MinigolfPack.png",		basicShader);
-	objLoadFunc    (&playerTemp3,		"Assets/Ball10.obj", "tex_MinigolfPack.png",	basicShader);
-	objLoadFunc	   (&playerTemp0,		"Assets/Ball3.obj", "tex_MinigolfPack.png",	basicShader);
+	objLoadFunc(&playerTemp1, "Assets/Ball6.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp2, "Assets/Ball9.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp3, "Assets/Ball10.obj", "tex_MinigolfPack.png", basicShader);
+	objLoadFunc(&playerTemp0, "Assets/Ball3.obj", "tex_MinigolfPack.png", basicShader);
 
 	std::vector<char*> temp;
 	temp.push_back("wood.png");
@@ -391,7 +436,7 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 }
 
-vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, Quaternion rotate, std::string objectName)
+vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const int worldIndex, const Vector3& size, Quaternion rotate, std::string objectName)
 {
 	std::vector<GameObject*> resultList;
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
@@ -431,7 +476,7 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 		tempObject->addComponent(physicsC);
 
 		resultList.push_back(tempObject);
-		world->AddGameObject(tempObject);
+		worlds[worldIndex]->AddGameObject(tempObject);
 	}
 	return resultList;
 }
@@ -462,7 +507,7 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	sphere->setAngularDamping(2);
 
 
-	world->AddGameObject(BallTemp);
+	worlds[currentWorld]->AddGameObject(BallTemp);
 	return BallTemp;
 }
 
@@ -473,7 +518,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 
 	//real code
 	Ball = new Player(playerNum);
-	Ball->setCamera(world->GetMainCamera());
+	Ball->setCamera(worlds[currentWorld]->GetMainCamera());
 
 	//build render object
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
@@ -501,7 +546,8 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
 	Ball->addComponent(new CurveBall());
-	world->AddGameObject(Ball);
+
+	worlds[currentWorld]->AddGameObject(Ball);
 
 	return Ball;
 }
@@ -531,7 +577,6 @@ void TutorialGame::UpdateGame(float dt) {
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
-
 	
 	//update Render
 	UpdateInGame();
@@ -542,7 +587,7 @@ void TutorialGame::UpdateGame(float dt) {
 	if (powerUpName.size() > 0)
 		displayPowerUpText(dt);
 
-	world->UpdateWorld(dt);
+	worlds[currentWorld]->UpdateWorld(dt);
 	renderer->Update(dt);
 	SelectObject();
 	Debug::FlushRenderables();
@@ -572,7 +617,7 @@ void TutorialGame::displayPowerUpText(float dt)
 
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		InitWorld(); //We can reset the simulation at any time with F1
+		InitWorld(0); //We can reset the simulation at any time with F1
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {

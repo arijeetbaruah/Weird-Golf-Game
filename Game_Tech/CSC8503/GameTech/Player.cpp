@@ -147,9 +147,9 @@ void Player::UpdateClientPlayerKeys(float dt)
 			return;
 		}
 
-		if (distance > 500) 
+		if (distance > 300) 
 		{
-			distance = 500;
+			distance = 300;
 		}
 
 		dir.Normalise();
