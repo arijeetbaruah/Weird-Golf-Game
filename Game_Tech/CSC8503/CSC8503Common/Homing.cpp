@@ -25,7 +25,7 @@ void Homing::Apply() {
 			spc->addForce(PxVec3(distVec.x, 0, distVec.z ) * 0.006);
 		}
 	});
-	this->getParent()->addComponent(sc);
+	po->addComponent(sc);
 }
 
 void Homing::Remove() {

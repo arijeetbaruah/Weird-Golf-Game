@@ -42,6 +42,10 @@ void PhysicsComponent::addForce(PxVec3 force) {
 	actor->addForce(force);
 }
 
+void PhysicsComponent::addTorque(PxVec3 torque) {
+	actor->addTorque(torque);
+}
+
 void PhysicsComponent::setLinearDamping(PxReal value) {
 	actor->setLinearDamping(value);
 }

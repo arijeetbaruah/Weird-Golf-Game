@@ -198,6 +198,7 @@
     <ClInclude Include="BoundingOOBB.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolume.h" />
+    <ClInclude Include="CurveBall.h" />
     <ClInclude Include="ColladaBase.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="cubeDebuff.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="BoundingOOBB.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="CurveBall.cpp" />
     <ClCompile Include="ColladaBase.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Component.cpp" />
