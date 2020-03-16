@@ -29,6 +29,7 @@ void PhysicsComponent::Update(float dt) {
 
 void PhysicsComponent::setAsTrigger() {
 	PxShape* shape;
+	actor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
 	actor->getShapes(&shape, 1);
 	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
@@ -49,5 +50,16 @@ void PhysicsComponent::setAngularDamping(PxReal value) {
 PxVec3 PhysicsComponent::getVelocity()
 {
 	return actor->getLinearVelocity() + actor->getAngularVelocity();
-	
+}
+
+vector<PxShape*> PhysicsComponent::getShapes() {
+	const PxU32 numShapes = actor->getNbShapes();
+	PxShape** shapes = (PxShape**)malloc(sizeof(PxShape*) * numShapes);
+	actor->getShapes(shapes, numShapes);
+
+	vector<PxShape*> vShapes;
+	for (size_t i = 0; i < numShapes; i++) {
+		vShapes.push_back(shapes[i]);
+	}
+	return vShapes;
 }
