@@ -2,7 +2,7 @@
 
 CurveBall::CurveBall() {
 	setName("CurveBall");
-	maxShots = 15;
+	maxShots = 5;
 }
 
 void CurveBall::Apply() {
@@ -14,7 +14,6 @@ void CurveBall::Apply() {
 		Transform tf = go->GetTransform();
 		//spin
 		spc->setAngularVelocity(PxVec3(0, direction * 10, 0));
-
 		
 		PxVec3 pvec = spc->getVelocity();
 		pvec.y = 0;
@@ -22,7 +21,7 @@ void CurveBall::Apply() {
 		PxVec3 curve = PxVec3(pvec.x * cos(ang) - pvec.z * sin(ang), 0, pvec.x * sin(ang) + pvec.z * cos(ang));
 		curve = curve - pvec;
 		if (pvec.magnitude() > 1) {
-			spc->addForce(curve);
+			spc->addForce(curve * 0.03);
 		}
 	});
 	po->addComponent(sp);
