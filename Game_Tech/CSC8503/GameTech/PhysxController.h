@@ -35,6 +35,8 @@ private:
 	PxScene* actualScene = NULL;
 	PxSceneDesc* sceneDesc;
 
+	std::vector<PxScene*> scenes;
+
 	CollisionCallback callback;
 public:
 	static PhysxController& getInstance() {
@@ -46,6 +48,8 @@ public:
 	void createDefaultScene();
 	void addActor(PxActor* actor);
 	void removeActor(PxActor* actor);
+	void addScene(PxScene* scene);
+	void setActiveScene(int index);
 
 	PxPhysics* Physics() const { return gPhysics; };
 	PxCooking* Cooking() const { return gCooking; };

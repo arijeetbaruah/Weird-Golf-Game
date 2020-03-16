@@ -47,15 +47,8 @@ void PhysxController::createDefaultScene() {
 	sceneDesc->simulationEventCallback = &callback;
 	//sceneDesc->contactModifyCallback = &testCallback;
 	actualScene = gPhysics->createScene(*sceneDesc);
-
+	addScene(actualScene);
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(gPhysics->getTolerancesScale()));
-
-	PxPvdSceneClient* pvdClient = actualScene->getScenePvdClient();
-	if (pvdClient) {
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-	}
 }
 
 void PhysxController::addActor(PxActor* actor) {
@@ -64,6 +57,20 @@ void PhysxController::addActor(PxActor* actor) {
 
 void PhysxController::removeActor(PxActor* actor) {
 	actualScene->removeActor(*actor);
+}
+
+void PhysxController::addScene(PxScene* scene) {
+	scenes.push_back(scene);
+	PxPvdSceneClient* pvdClient = actualScene->getScenePvdClient();
+	if (pvdClient) {
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	}
+}
+
+void PhysxController::setActiveScene(int index) {
+	actualScene = scenes[index];
 }
 
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
