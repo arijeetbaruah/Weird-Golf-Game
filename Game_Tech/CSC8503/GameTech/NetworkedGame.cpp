@@ -217,8 +217,8 @@ void NetworkedGame::StartAsServer()
 {
 	thisServer = new GameServer(port, 4);
 
-	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*world, this);
-	FullPacketReceiver* fullReceiver = new FullPacketReceiver(*world, this);
+	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*worlds[currentWorld], this);
+	FullPacketReceiver* fullReceiver = new FullPacketReceiver(*worlds[currentWorld], this);
 
 	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
 	thisServer->RegisterPacketHandler(Full_State, fullReceiver);
