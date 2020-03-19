@@ -291,8 +291,8 @@ void GameTechRenderer::DrawSkyBox()
 	glUniform1i(cubeTexNightIndex, 0);
 	glUniform1f(offsetXIndex, offsetX);
 	glUniform3fv(cameraPosIndex, 1, (float*)&gameWorld.GetMainCamera()->GetPosition());
-	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildViewMatrix());
-	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildProjectionMatrix());
+	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&Matrix4::Perspective(0, 10000, 1920/1080, 120));
+	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildViewMatrix());
 
 	BindMesh(quad);
 	DrawBoundMesh();
