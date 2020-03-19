@@ -22,6 +22,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glEnable(GL_DEPTH_TEST);
 
 	shadowShader = new OGLShader("GameTechShadowVert.glsl", "GameTechShadowFrag.glsl");
+	skyboxShader = new OGLShader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -47,16 +48,42 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(-200.0f, 60.0f, -200.0f);
+
+	std::vector<std::string> textures = 
+	{
+		SKYBOX_TEXTURES
+	};
+	skyboxTex = LoadSkyBox(textures);
+
+	quad = new OGLMesh();
+	
+	quad->SetVertexIndices({0, 1, 2, 3});
+	quad->SetPrimitiveType(NCL::GeometryPrimitive::TriangleStrip);
+	quad->SetVertexPositions({Vector3(-1.0f, -1.0f, 0.0f), 
+		Vector3(-1.0f, 1.0f, 0.0f), 
+		Vector3(1.0f, -1.0f, 0.0f), 
+		Vector3(1.0f, 1.0f, 0.0f)});
+
+	quad->SetVertexTextureCoords({Vector2(0.0f, 1.0f), 
+		Vector2(0.0f, 0.0f), 
+		Vector2(1.0f, 1.0f), 
+		Vector2(1.0f, 0.0f)});
+	quad->UploadToGPU();
 }
 
 GameTechRenderer::~GameTechRenderer()	{
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
+	glDeleteTextures(1, &skyboxTex);
+	delete shadowShader;
+	delete skyboxShader;
+	delete quad;
 }
 
 void GameTechRenderer::RenderFrame() {
 	glEnable(GL_CULL_FACE);
 	glClearColor(0, 0.41, 0.58, 1);
+	DrawSkyBox();
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
@@ -214,4 +241,63 @@ void GameTechRenderer::SetupDebugMatrix(OGLShader*s) {
 	glUniformMatrix4fv(matLocation, 1, false, (float*)&vp);
 }
 
+GLuint GameTechRenderer::LoadSkyBox(const std::vector<std::string>& textures)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < textures.size(); i++)
+	{
+		unsigned char* data = stbi_load(textures[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+			);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Invalid Texture path: " << textures[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}
+
+void GameTechRenderer::DrawSkyBox()
+{
+	glDepthMask(GL_FALSE);
+	glDisable(GL_CULL_FACE);
+	BindShader(skyboxShader);
+	offsetX += SKY_BOX_ROTATION_SPEED;
+	int cubeTexNightIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "cubeTexNight");
+	int cameraPosIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "cameraPos");
+	int offsetXIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "offsetX");
+	int projMatrixIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "projMatrix");
+	int viewMatrixIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "viewMatrix");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTex);
+
+	glUniform1i(cubeTexNightIndex, 0);
+	glUniform1f(offsetXIndex, offsetX);
+	glUniform3fv(cameraPosIndex, 1, (float*)&gameWorld.GetMainCamera()->GetPosition());
+	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildViewMatrix());
+	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildProjectionMatrix());
+
+	BindMesh(quad);
+	DrawBoundMesh();
+
+	glEnable(GL_CULL_FACE);
+	glDepthMask(GL_TRUE);
+}
 #endif
