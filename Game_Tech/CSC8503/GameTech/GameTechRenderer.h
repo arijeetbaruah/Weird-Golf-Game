@@ -8,6 +8,7 @@
 
 #include "../../Common/stb/stb_image.h"
 #include "../../Common/Assets.h"
+#include "Player.h"
 
 constexpr float SKY_BOX_ROTATION_SPEED = 0.0005f;
 
@@ -58,6 +59,10 @@ namespace NCL {
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
 
+			void SetBallObject(Player* obj)
+			{
+				ballObject = obj;
+			}
 		protected:
 			void RenderFrame()	override;
 
@@ -70,6 +75,7 @@ namespace NCL {
 			void RenderShadowMap();
 			void RenderCamera();
 			void DrawSkyBox();
+			void DrawOcclusion();
 
 			GLuint LoadSkyBox(const std::vector<std::string>& textures);
 
@@ -80,6 +86,7 @@ namespace NCL {
 			//shadow mapping things
 			OGLShader* shadowShader;
 			OGLShader* skyboxShader;
+			OGLShader* OcclusionShader;
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			GLuint		skyboxTex;
@@ -90,6 +97,8 @@ namespace NCL {
 			Vector3		lightPosition;
 
 			MeshGeometry* quad;
+
+			Player* ballObject = nullptr;
 
 			float offsetX;
 		};
