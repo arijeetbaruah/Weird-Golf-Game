@@ -534,6 +534,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	/////////////////////
 	Ball->SetPlayerMesh(objOGL);
 
+	renderer->SetBallObject(Ball);
 
 	//physics component
 	SpherePhysicsComponent* sphere = nullptr;

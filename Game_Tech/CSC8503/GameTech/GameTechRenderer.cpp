@@ -20,9 +20,12 @@ Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5, 0.5, 0.5)) * Matrix4::Sca
 
 GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world)	{
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	shadowShader = new OGLShader("GameTechShadowVert.glsl", "GameTechShadowFrag.glsl");
 	skyboxShader = new OGLShader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
+	OcclusionShader = new OGLShader("OcclusionVertex.glsl", "OcclusionFragment.glsl");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -88,6 +91,7 @@ void GameTechRenderer::RenderFrame() {
 	SortObjectList();
 	RenderShadowMap();
 	RenderCamera();
+	DrawOcclusion();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 }
 
@@ -299,5 +303,33 @@ void GameTechRenderer::DrawSkyBox()
 
 	glEnable(GL_CULL_FACE);
 	glDepthMask(GL_TRUE);
+}
+
+void GameTechRenderer::DrawOcclusion()
+{
+	if (ballObject == nullptr)
+	{
+		return;
+	}
+	glDepthFunc(GL_GREATER);
+	BindShader(OcclusionShader);
+
+	float screenAspect = (float)currentWidth / (float)currentHeight;
+
+	GLuint projLocation = glGetUniformLocation(OcclusionShader->GetProgramID(), "projMatrix");
+	GLuint viewLocation = glGetUniformLocation(OcclusionShader->GetProgramID(), "viewMatrix");
+	GLuint modelLocation = glGetUniformLocation(OcclusionShader->GetProgramID(), "modelMatrix");
+
+	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
+	Matrix4 modelMatrix = ballObject->GetTransform().GetWorldMatrix();
+
+	glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
+	glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
+	glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
+
+	BindMesh(ballObject->GetRenderObject()->GetMesh());
+	DrawBoundMesh();
+	glDepthFunc(GL_LESS);
 }
 #endif
