@@ -279,6 +279,11 @@ GLuint GameTechRenderer::LoadSkyBox(const std::vector<std::string>& textures)
 
 void GameTechRenderer::DrawSkyBox()
 {
+	if (isStarted)
+	{
+		SkyBoxT += 0.01;
+		SkyBoxT = min(SkyBoxT, 1);
+	}
 	glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 	BindShader(skyboxShader);
@@ -288,6 +293,7 @@ void GameTechRenderer::DrawSkyBox()
 	int offsetXIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "offsetX");
 	int projMatrixIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "projMatrix");
 	int viewMatrixIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "viewMatrix");
+	int skyboxTIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "skyboxT");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTex);
@@ -297,6 +303,7 @@ void GameTechRenderer::DrawSkyBox()
 	glUniform3fv(cameraPosIndex, 1, (float*)&gameWorld.GetMainCamera()->GetPosition());
 	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&Matrix4::Perspective(0, 10000, 1920/1080, 120));
 	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildViewMatrix());
+	glUniform1f(skyboxTIndex, SkyBoxT);
 
 	BindMesh(quad);
 	DrawBoundMesh();

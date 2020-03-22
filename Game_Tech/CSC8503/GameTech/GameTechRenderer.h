@@ -63,6 +63,10 @@ namespace NCL {
 			{
 				ballObject = obj;
 			}
+			void SetGameStarted()
+			{
+				isStarted = true;
+			}
 		protected:
 			void RenderFrame()	override;
 
@@ -101,6 +105,9 @@ namespace NCL {
 			Player* ballObject = nullptr;
 
 			float offsetX;
+			
+			bool isStarted = false;
+			float SkyBoxT = 0.2;
 		};
 	}
 }
