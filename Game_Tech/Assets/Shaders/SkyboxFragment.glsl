@@ -3,6 +3,7 @@
 uniform samplerCube cubeTexNight;
 uniform vec3 cameraPos;
 uniform float offsetX;
+uniform float skyboxT;
 
 vec4 colorLerp(vec4 from, vec4 to, float t)
 {
@@ -40,9 +41,8 @@ in Vertex
 } IN;
 
 out vec4 fragColor;
-
 void main()
 {
 	vec4 nightColor = texture(cubeTexNight, normalize(vec4(IN.normal, 1.0) * rotationY(offsetX) * rotationX(offsetX / 2)).xyz);
-    fragColor = nightColor;
+	fragColor = colorLerp(vec4(0, 0, 0, 0), nightColor, skyboxT);
 }

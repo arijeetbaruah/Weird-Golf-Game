@@ -673,6 +673,7 @@ void TutorialGame::InitUIWorld()
 		isNetworkedGame = true;
 		isServer = true;
 		UIworld->SetUIactive(true); 
+		renderer->SetGameStarted();
 	};
 	gameMode1->funL = intogame;
 
@@ -680,6 +681,7 @@ void TutorialGame::InitUIWorld()
 		isNetworkedGame = true;
 		isServer = true;
 		UIworld->SetUIactive(true);
+		renderer->SetGameStarted();
 	};
 	gameMode2->funL = servergame;
 
@@ -687,6 +689,7 @@ void TutorialGame::InitUIWorld()
 		isNetworkedGame = true;
 		isServer = false;
 		UIworld->SetUIactive(true);
+		renderer->SetGameStarted();
 	};
 	gameMode3->funL = clientgame;
 
