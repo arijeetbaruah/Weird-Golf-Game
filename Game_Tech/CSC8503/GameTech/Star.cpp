@@ -54,7 +54,11 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		case 4: p->addComponent(new offForward());
 			game->setPowerUpName("DIRECTION CHANGE!");
 			break;
+		case 5: p->addComponent(new CurveBall());
+			game->setPowerUpName("CURVE BALL!");
+			break;
 		}
+
 		this->getComponent<SpherePhysicsComponent*>("PhysicsComponent")->toRemove = true;
 		
 	}

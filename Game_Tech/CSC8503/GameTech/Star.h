@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "../CSC8503Common/GameWorld.h"
 #include "TutorialGame.h"
+#include "../CSC8503Common/CurveBall.h"
 
 namespace NCL {
 	namespace CSC8503 {

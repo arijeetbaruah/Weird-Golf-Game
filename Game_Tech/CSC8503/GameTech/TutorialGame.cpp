@@ -12,7 +12,7 @@
 #include "../CSC8503Common/TestBuff.h"
 #include "../CSC8503Common/SpeedBoost.h"
 #include "../CSC8503Common/Homing.h"
-#include "../CSC8503Common/CurveBall.h"]
+#include "../CSC8503Common/CurveBall.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
@@ -187,6 +187,24 @@ void TutorialGame::InitCamera() {
 	worlds[currentWorld]->GetMainCamera()->SetPitch(-15.0f);
 	worlds[currentWorld]->GetMainCamera()->SetYaw(315.0f);
 	worlds[currentWorld]->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
+}
+
+void TutorialGame::NewLevel()
+{
+	int newWorldIndex = currentWorld;
+
+	while (newWorldIndex == currentWorld)
+	{
+		newWorldIndex = rand() % numberOfLevels;
+	}
+
+	currentWorld = newWorldIndex;
+
+	delete renderer;
+
+	renderer = new GameTechRenderer(*worlds[currentWorld]);
+
+	// Reset PhysX scene
 }
 
 void TutorialGame::InitWorld(int worldIndex) {
@@ -546,7 +564,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	sphere->setAngularDamping(2);
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
-	Ball->addComponent(new CurveBall());
+	//Ball->addComponent(new CurveBall());
 
 	worlds[currentWorld]->AddGameObject(Ball);
 

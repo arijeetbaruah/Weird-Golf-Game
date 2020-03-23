@@ -48,7 +48,7 @@ namespace NCL {
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
-
+			void NewLevel();
 
 			//initiate the game
 			void InitialiseAssets();
