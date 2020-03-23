@@ -25,6 +25,9 @@
 #include "PhysxController.h"
 
 #include <functional>
+
+#include <stdlib.h>
+
 using namespace NCL;
 using namespace CSC8503;
 
@@ -78,6 +81,8 @@ void TutorialGame::InitialiseAssets() {
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
 	UIShader = new OGLShader("GameUIVert.glsl", "GameUIFrag.glsl");
+
+	PlaySound(TEXT("BGM.wav"), NULL, SND_LOOP | SND_FILENAME | SND_ASYNC);
 
 	LoadColladaRenderObjects();
 }
