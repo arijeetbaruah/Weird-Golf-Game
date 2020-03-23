@@ -31,14 +31,17 @@ using namespace CSC8503;
 TutorialGame::TutorialGame()	{
 	srand(time(NULL));
 
-	numberOfLevels = 2;
+	numberOfLevels = 4;
 	for (int i = 0; i < numberOfLevels; i++)
 	{
 		worlds.push_back(new GameWorld());
+
+		if (i != numberOfLevels - 1)
+			physxC.addNewScene();
 	}
 
-	renderer = new GameTechRenderer(*worlds[1]);
-	currentWorld = 1;
+	renderer = new GameTechRenderer(*worlds[0]);
+	currentWorld = 0;
 
 	UIworld = new GameWorld();
 	UIrenderer = new GameTechRenderer(*UIworld);
@@ -57,7 +60,6 @@ TutorialGame::TutorialGame()	{
 #else 
 	//PS4 code
 #endif
-	
 
 	InitialiseAssets();
 	StartGame();
@@ -155,12 +157,13 @@ void TutorialGame::StartGame()
 {
 	InitCamera();
 
-	/*for (int i = 0; i < numberOfLevels; i++) 
+	for (int i = 0; i < numberOfLevels; i++) 
 	{
 		InitWorld(i);
-	}*/
+	}
+	physxC.setActiveScene(0);
 
-	InitWorld(1);
+	//InitWorld(0);
 
 	InitUIWorld();
 
@@ -204,7 +207,9 @@ void TutorialGame::NewLevel()
 
 	renderer = new GameTechRenderer(*worlds[currentWorld]);
 
-	// Reset PhysX scene
+	InitCamera();
+
+	physxC.setActiveScene(currentWorld);
 }
 
 void TutorialGame::InitWorld(int worldIndex) {
@@ -216,16 +221,17 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
+		physxC.setActiveScene(0);
 		AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
-		AddSomeObject(gameMapOrigin,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		/*AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");*/
 	}
 	else if (worldIndex == 1)
 	{
@@ -239,14 +245,24 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
 		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
 
+		physxC.setActiveScene(1);
+
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
-		AddSomeObject(gameMapExplode, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		AddSomeObject(level2, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+	}
+	else if (worldIndex == 2)
+	{
+		physxC.setActiveScene(2);
+		//			 RenderObject(must)	    Position(must)							scale						rotation													name
+		AddSomeObject(level3, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+	}
+	else if (worldIndex == 3)
+	{
+		physxC.setActiveScene(3);
+		//			 RenderObject(must)	    Position(must)							scale						rotation													name
+		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	
-
-
-
-
 	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	//AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
 	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
@@ -437,10 +453,27 @@ void TutorialGame::LoadColladaRenderObjects() {
 
 	//				target					mesh				texture						shader
 	colladaLoadFunc(&gameMapOrigin,		"TestLevel.dae",	"tex_MinigolfPack.png",		basicShader);
-	colladaLoadFunc(&gameMapExplode,	"Level3.dae",	"tex_MinigolfPack.png",		basicShader);
+	colladaLoadFunc(&gameMapExplode,	"Level3.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFormRhino,		"treeR.dae",		"tex_MinigolfPack.png",		basicShader);
 	colladaLoadFunc(&treeFromBlender,	"enjoyTree.dae",	"tex_tree.png",				basicShader);
 	colladaLoadFunc(&powerUpStar,		"Star.dae",			"star.png",					basicShader);
+
+	colladaLoadFunc(&level1, "Level1.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&level2, "Level2.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&level3, "Level3.dae", "tex_MinigolfPack.png", basicShader);
+	colladaLoadFunc(&level4, "Level4.dae", "tex_MinigolfPack.png", basicShader);
+
+	/*for (int i = 0; i < numberOfLevels; i++) 
+	{
+		MeshSceneNode* node = new MeshSceneNode();
+		levelMeshes.push_back(node);
+
+		char name[11] = "Level#.dae";
+
+ 		name[5] = '0' + (i + 1);
+
+		colladaLoadFunc(&node, name, "tex_MinigolfPack.png", basicShader);
+	}*/
 
 	objLoadFunc(&playerTemp1, "Assets/Ball6.obj", "tex_MinigolfPack.png", basicShader);
 	objLoadFunc(&playerTemp2, "Assets/Ball9.obj", "tex_MinigolfPack.png", basicShader);
@@ -451,7 +484,6 @@ void TutorialGame::LoadColladaRenderObjects() {
 	temp.push_back("wood.png");
 	temp.push_back("greenglass.jpg");
 	colladaLoadFuncMulTex(&treeWithMultiTex,"tree.dae",		temp,						basicShader);
-
 }
 
 vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const int worldIndex, const Vector3& size, Quaternion rotate, std::string objectName)

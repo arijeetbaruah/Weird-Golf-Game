@@ -12,7 +12,7 @@ PhysxController::PhysxController() {
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
 	createDefaultScene();
-	
+
 }
 
 void PhysxController::stepPhysics(bool interactive, float dt) {

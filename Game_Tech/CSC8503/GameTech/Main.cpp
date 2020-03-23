@@ -44,12 +44,14 @@ int main() {
 
 	size_t wat;
 
-	PhysxController c = PhysxController::getInstance();
+	
 	
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();
+
+	PhysxController c = PhysxController::getInstance();
 
 	NetworkBase::Initialise();
 

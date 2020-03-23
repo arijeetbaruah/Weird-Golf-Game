@@ -44,6 +44,12 @@ public:
 		return instance;
 	}
 
+	void addNewScene() 
+	{
+		PxScene* newScene = gPhysics->createScene(*sceneDesc);
+		addScene(newScene);
+	}
+
 	void stepPhysics(bool interactive, float dt);
 	void createDefaultScene();
 	void addActor(PxActor* actor);

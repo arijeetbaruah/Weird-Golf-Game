@@ -86,9 +86,14 @@ namespace NCL {
 
 			// Testing multiple levels
 			vector<GameWorld*> worlds;
+			vector<MeshSceneNode*> levelMeshes;
+
+			MeshSceneNode* level1;
+			MeshSceneNode* level2;
+			MeshSceneNode* level3;
+			MeshSceneNode* level4;
 
 			int numberOfLevels;
-
 
 			bool inSelectionMode;
 			OGLShader* basicShader = nullptr;
