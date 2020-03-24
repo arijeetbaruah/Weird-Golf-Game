@@ -31,6 +31,8 @@
 using namespace NCL;
 using namespace CSC8503;
 
+const int world = 1;
+
 TutorialGame::TutorialGame()	{
 	srand(time(NULL));
 
@@ -40,11 +42,11 @@ TutorialGame::TutorialGame()	{
 		worlds.push_back(new GameWorld());
 
 		if (i != numberOfLevels - 1)
-			physxC.addNewScene();
+			PhysxController::getInstance().addNewScene();
 	}
 
-	renderer = new GameTechRenderer(*worlds[0]);
-	currentWorld = 0;
+	renderer = new GameTechRenderer(*worlds[world]);
+	currentWorld = world;
 
 	UIworld = new GameWorld();
 	UIrenderer = new GameTechRenderer(*UIworld);
@@ -124,7 +126,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 		//TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 1, verts, tris, mMaterial);
 		//star->addComponent(physicsC);
 
-		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial);
+		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial, worldIndex);
 		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 		PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
 
@@ -166,7 +168,7 @@ void TutorialGame::StartGame()
 	{
 		InitWorld(i);
 	}
-	physxC.setActiveScene(0);
+	PhysxController::getInstance().setActiveScene(world);
 
 	//InitWorld(0);
 
@@ -214,7 +216,7 @@ void TutorialGame::NewLevel()
 
 	InitCamera();
 
-	physxC.setActiveScene(currentWorld);
+	PhysxController::getInstance().setActiveScene(currentWorld);
 }
 
 void TutorialGame::InitWorld(int worldIndex) {
@@ -226,7 +228,7 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
-		physxC.setActiveScene(0);
+		PhysxController::getInstance().setActiveScene(0);
 		AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
 		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
@@ -250,20 +252,20 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
 		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
 
-		physxC.setActiveScene(1);
+		PhysxController::getInstance().setActiveScene(1);
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level2, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	else if (worldIndex == 2)
 	{
-		physxC.setActiveScene(2);
+		PhysxController::getInstance().setActiveScene(2);
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level3, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	else if (worldIndex == 3)
 	{
-		physxC.setActiveScene(3);
+		PhysxController::getInstance().setActiveScene(3);
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
@@ -525,7 +527,7 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 		for(unsigned int index : newRender->GetMesh()->GetIndexData())		tris.push_back(index);
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 
-		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial);
+		TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), tempObject, 10000, verts, tris, mMaterial, worldIndex);
 
 		PhysxController::getInstance().setupFiltering(physicsC->getActor(), FilterGroup::eLEVEL, FilterGroup::ePLAYER);
 		tempObject->addComponent(physicsC);
@@ -536,7 +538,7 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 	return resultList;
 }
 
-GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
+GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size, std::string objectName)
 {
 	GameObject* BallTemp = new GameObject();
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
@@ -553,7 +555,7 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	OGLMesh* tempOGL = new OGLMesh(newRender->GetMesh());
 
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial);
+	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial, scene);
 	PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
 	sphere->setAsTrigger();
 	BallTemp->addComponent(sphere);
@@ -566,7 +568,7 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	return BallTemp;
 }
 
-Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size, std::string objectName)
+Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size, std::string objectName)
 {
 	//temp information
 	int playerNum = 0;
@@ -594,7 +596,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	//physics component
 	SpherePhysicsComponent* sphere = nullptr;
 	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial);
+	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial, scene);
 	Ball->addComponent(sphere);
 
 	sphere->setLinearDamping(0.8);

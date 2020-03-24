@@ -4,7 +4,7 @@
 
 class SpherePhysicsComponent : public PhysicsComponent {
 public:
-	SpherePhysicsComponent(PxTransform transform, GameObject* go, float mass, float radius, PxMaterial* mMaterial);
+	SpherePhysicsComponent(PxTransform transform, GameObject* go, float mass, float radius, PxMaterial* mMaterial, int scene);
 
 	virtual void Start() override;
 	virtual void Update(float dt) override;

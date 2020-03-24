@@ -31,8 +31,8 @@ namespace NCL {
 
 			int currentWorld;
 
-			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
-			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+			GameObject* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 		protected:
 
 			//check if you need show mouse on window
@@ -40,8 +40,6 @@ namespace NCL {
 
 			Player* Ball;
 			Player* playerTwo;
-
-			PhysxController physxC = PhysxController::getInstance();
 
 			bool isNetworkedGame;
 			bool isServer;

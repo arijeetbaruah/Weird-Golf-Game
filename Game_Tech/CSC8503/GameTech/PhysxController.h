@@ -52,7 +52,7 @@ public:
 
 	void stepPhysics(bool interactive, float dt);
 	void createDefaultScene();
-	void addActor(PxActor* actor);
+	void addActor(PxActor* actor, int index);
 	void removeActor(PxActor* actor);
 	void addScene(PxScene* scene);
 	void setActiveScene(int index);

@@ -11,7 +11,7 @@ using namespace physx;
 class PhysicsComponent : public Component {
 public:
 	~PhysicsComponent();
-	PhysicsComponent(PxTransform transform, GameObject* go);
+	PhysicsComponent(PxTransform transform, GameObject* go, int scene);
 	void addForce(PxVec3 force);
 	void addTorque(PxVec3 torque);
 
@@ -26,6 +26,7 @@ public:
 	void setAngularVelocity(PxVec3);
 
 	PxVec3 getVelocity();
+	int getScene() { return scene; }
 
 	PxRigidDynamic* getActor() const { return actor; }
 	std::vector<PxShape*> getShapes();
@@ -33,6 +34,7 @@ public:
 protected:
 	PxRigidDynamic* actor;
 	PxPhysics* gPhysics;
+	int scene;
 
 	virtual void Start() override;
 	virtual void Update(float dt) override;

@@ -2,8 +2,8 @@
 #include "PhysxController.h"
 #include <iostream>
 
-TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, GameObject* go, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris, PxMaterial* mMaterial)
-	: PhysicsComponent(transform, go) {
+TriangleMeshPhysicsComponent::TriangleMeshPhysicsComponent(PxTransform transform, GameObject* go, float mass, std::vector<PxVec3> verts, std::vector<PxU32> tris, PxMaterial* mMaterial, int scene)
+	: PhysicsComponent(transform, go, scene) {
 	PxTriangleMeshDesc meshDesc;
 
 	meshDesc.points.count = verts.size();

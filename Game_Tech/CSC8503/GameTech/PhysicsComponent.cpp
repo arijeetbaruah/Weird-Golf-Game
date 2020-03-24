@@ -5,11 +5,13 @@
 #include "PhysxController.h"
 #include <iostream>
 
-PhysicsComponent::PhysicsComponent(PxTransform transform, GameObject* go) : Component() {
+PhysicsComponent::PhysicsComponent(PxTransform transform, GameObject* go, int scene) : Component() {
 	gPhysics = PhysxController::getInstance().Physics();
 	actor = gPhysics->createRigidDynamic(transform);
 	actor->userData = go;
 	setName("PhysicsComponent");
+	PhysxController::getInstance().addActor(actor, scene);
+	this->scene = scene;
 	//PhysxController::getInstance().setupFiltering(actor, FilterGroup::eLEVEL, FilterGroup::eLEVEL);
 }
 
@@ -19,7 +21,6 @@ PhysicsComponent::~PhysicsComponent() {
 
 
 void PhysicsComponent::Start() {
-	PhysxController::getInstance().addActor(actor);
 }
 
 void PhysicsComponent::Update(float dt) {

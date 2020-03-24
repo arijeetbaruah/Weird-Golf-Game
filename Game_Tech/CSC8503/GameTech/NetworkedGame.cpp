@@ -71,7 +71,8 @@ public:
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
-			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, Vector3(1, 1, 1), "player" + realPacket->playerID);
+			// TODO BOH
+			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, Vector3(1, 1, 1), "player" + realPacket->playerID);
 			
 			game->InsertPlayer(realPacket->playerID, b);
 		}
@@ -101,7 +102,7 @@ public:
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
-			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, Vector3(1, 1, 1), "player" + realPacket->playerID);
+			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 1,Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
 			player->isCurrentPlayer = true;
 			game->InsertPlayer(realPacket->playerID, player);
 		}
@@ -250,16 +251,17 @@ void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 	serverPlayers.erase(it);
 }
 
+// TODO: BOH
 void NetworkedGame::CreateNewPlayer(int id) {
 	GameObject* other;
 	if (id == 2) {
-		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), Vector3(1, 1, 1), "player2");
+		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player2");
 	}
 	else if (id == 3) {
-		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9) , Vector3(1, 1, 1), "player3");
+		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player3");
 	}
 	else {
-		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9) , Vector3(1, 1, 1), "player4");
+		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9), 0, Vector3(1, 1, 1), "player4");
 	}
 
 	InsertPlayer(id, other);

@@ -11,7 +11,7 @@ PhysxController::PhysxController() {
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
-	createDefaultScene();
+	createDefaultScene(); createDefaultScene(); createDefaultScene();
 
 }
 
@@ -51,8 +51,8 @@ void PhysxController::createDefaultScene() {
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(gPhysics->getTolerancesScale()));
 }
 
-void PhysxController::addActor(PxActor* actor) {
-	actualScene->addActor(*actor);
+void PhysxController::addActor(PxActor* actor, int index) {
+	scenes[index]->addActor(*actor);
 }
 
 void PhysxController::removeActor(PxActor* actor) {
@@ -61,7 +61,7 @@ void PhysxController::removeActor(PxActor* actor) {
 
 void PhysxController::addScene(PxScene* scene) {
 	scenes.push_back(scene);
-	PxPvdSceneClient* pvdClient = actualScene->getScenePvdClient();
+	PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
 	if (pvdClient) {
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
