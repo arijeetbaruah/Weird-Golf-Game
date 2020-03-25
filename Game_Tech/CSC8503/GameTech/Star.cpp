@@ -34,7 +34,7 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 	if (otherObject->getLayer() == 1)
 	{
 
-		int randNum = rand() % 4 + 1;
+		int randNum = rand() % 6 + 1;
 #ifdef WIN32
 		Player* p = dynamic_cast<Player*>(otherObject);
 #else 
