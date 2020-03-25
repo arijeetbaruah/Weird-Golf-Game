@@ -8,6 +8,7 @@
 #include "../CSC8503Common/Homing.h"
 #include "../CSC8503Common/PowerUp.h"
 #include "../CSC8503Common/offForward.h"
+#include "../CSC8503Common/sizeChange.h"
 #include <stdlib.h> 
 #include "Player.h"
 #include "../CSC8503Common/GameWorld.h"

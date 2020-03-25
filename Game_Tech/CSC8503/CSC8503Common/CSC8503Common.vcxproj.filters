@@ -183,6 +183,9 @@
     <ClInclude Include="CurveBall.h">
       <Filter>Debuffs</Filter>
     </ClInclude>
+    <ClInclude Include="sizeChange.h">
+      <Filter>Debuffs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetection.cpp">
@@ -297,6 +300,9 @@
       <Filter>ColladaLoad</Filter>
     </ClCompile>
     <ClCompile Include="CurveBall.cpp">
+      <Filter>Debuffs</Filter>
+    </ClCompile>
+    <ClCompile Include="sizeChange.cpp">
       <Filter>Debuffs</Filter>
     </ClCompile>
   </ItemGroup>

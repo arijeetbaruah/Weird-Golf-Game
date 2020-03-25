@@ -4,6 +4,7 @@
 #include "RenderObject.h"
 #include "../GameTech/PhysicsComponent.h"
 #include "../GameTech/GameTechRenderer.h"
+#include "../GameTech/Player.h"
 namespace NCL {
 	namespace CSC8503 {
 		class GameObject;
@@ -20,7 +21,7 @@ class cubeDebuff : public Timed {
 		void Remove();
 		void Start();
 	protected:
-		GameObject* par;
+		Player* par;
 		RenderObject* ren;
 		OGLMesh* Before;
 		OGLMesh* After;

@@ -56,6 +56,11 @@ namespace NCL {
 
 			Vector3 getForceState() { return forceState; }
 			void resetForceState() { forceState = Vector3(); }
+			void setSizeScale(float s) { sizeScale = s; }
+			float getSizeScale() { return sizeScale; }
+
+			float boxSize = 0.1;
+			float sphereSize = 0.05;
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);
@@ -64,6 +69,7 @@ namespace NCL {
 			float orbitSpeed;
 			float orbitDistance;
 			float speed = 0.005;
+			float sizeScale = 1;
 
 			bool isOffset = false;
 

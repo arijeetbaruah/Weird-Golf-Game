@@ -34,7 +34,7 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 	if (otherObject->getLayer() == 1)
 	{
 
-		int randNum = rand() % 4 + 1;
+		int randNum = rand() % 6 + 1;
 #ifdef WIN32
 		Player* p = dynamic_cast<Player*>(otherObject);
 #else 
@@ -57,6 +57,9 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 			break;
 		case 5: p->addComponent(new CurveBall());
 			game->setPowerUpName("CURVE BALL!");
+			break;
+		case 6: p->addComponent(new sizeChange(2));
+			game->setPowerUpName("BIG BALL!");
 			break;
 		}
 
