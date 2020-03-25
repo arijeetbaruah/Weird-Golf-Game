@@ -22,6 +22,7 @@ class cubeDebuff : public Timed {
 		void Start();
 	protected:
 		Player* par;
+		PhysicsComponent* pc;
 		RenderObject* ren;
 		OGLMesh* Before;
 		OGLMesh* After;

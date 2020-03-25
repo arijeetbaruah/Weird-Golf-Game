@@ -56,7 +56,6 @@ void sizeChange::Start() {
 
 
 void sizeChange::applyTransformation(PhysicsComponent* physC) {
-	PhysicsComponent* pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 	PxVec3 angVec = pc->getAngularVelocity();
 	PxVec3 linVec = pc->getLinearVelocity();
 	po->RemoveComponent("PhysicsComponent");
@@ -65,4 +64,5 @@ void sizeChange::applyTransformation(PhysicsComponent* physC) {
 	physC->setLinearVelocity(linVec);
 	physC->setAngularVelocity(angVec);
 	po->addComponent(physC);
+	pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 }
