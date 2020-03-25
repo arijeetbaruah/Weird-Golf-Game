@@ -10,6 +10,9 @@
 #include "../../Common/Assets.h"
 #include "Player.h"
 
+constexpr auto WIDTH = 1280;
+constexpr auto HEIGHT = 720;
+
 constexpr float SKY_BOX_ROTATION_SPEED = 0.0005f;
 
 const auto TEXTURE_PATH = NCL::Assets::TEXTUREDIR;
@@ -80,6 +83,8 @@ namespace NCL {
 			void RenderCamera();
 			void DrawSkyBox();
 			void DrawOcclusion();
+			void DrawMinimap();
+			void AttachMinimap();
 
 			GLuint LoadSkyBox(const std::vector<std::string>& textures);
 
@@ -91,9 +96,16 @@ namespace NCL {
 			OGLShader* shadowShader;
 			OGLShader* skyboxShader;
 			OGLShader* OcclusionShader;
+			OGLShader* minimapShader;
+
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			GLuint		skyboxTex;
+
+			GLuint		minimapTex;
+			GLuint		minimapDepth;
+			GLuint		minimapFBO;
+
 			Matrix4     shadowMatrix;
 
 			Vector4		lightColour;
@@ -101,6 +113,7 @@ namespace NCL {
 			Vector3		lightPosition;
 
 			MeshGeometry* quad;
+			OGLMesh* minimapQuad;
 
 			Player* ballObject = nullptr;
 
