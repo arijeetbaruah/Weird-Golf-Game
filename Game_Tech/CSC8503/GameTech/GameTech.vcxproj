@@ -234,6 +234,7 @@
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="CollisionCallback.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
+    <ClCompile Include="KillPlane.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeshSceneNode.cpp" />
     <ClCompile Include="NetworkedGame.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="CollisionCallback.h" />
     <ClInclude Include="GameTechRenderer.h" />
+    <ClInclude Include="KillPlane.h" />
     <ClInclude Include="MeshSceneNode.h" />
     <ClInclude Include="NetworkedGame.h" />
     <ClInclude Include="NetworkPlayer.h" />
