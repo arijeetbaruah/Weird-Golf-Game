@@ -98,7 +98,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 	{
 		Star* star = new Star();
 
-		//build rander object
+		//build render object
 		RenderObject* newRender = new RenderObject(tempRender);
 		Vector3 size = Vector3(10, 10, 10);
 		star->GetTransform().SetWorldScale(size);
@@ -136,7 +136,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 		
 		star->setPhysxComponent(sphere);
 
-		sphere->setAsTrigger();
+		//sphere->setAsTrigger();
 		
 		star->setGameWorld(worlds[worldIndex]);
 
@@ -229,10 +229,10 @@ void TutorialGame::InitWorld(int worldIndex) {
 	if (worldIndex == 0) 
 	{
 		PhysxController::getInstance().setActiveScene(0);
-		/*AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex);
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex);
 		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex);*/
+		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex);
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");

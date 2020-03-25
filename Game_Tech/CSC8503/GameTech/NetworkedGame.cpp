@@ -26,7 +26,7 @@ public:
 				}
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
-				//AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
+				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
 		}
 	}
