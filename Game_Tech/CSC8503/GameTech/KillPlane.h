@@ -13,7 +13,7 @@ namespace NCL {
 			KillPlane(PxTransform pos, float xSide, float ySide, float zSide, int scene);
 			~KillPlane();
 
-			virtual void OnCollisionBegin(GameObject* otherObject);
+			virtual void OnCollisionBegin(GameObject* otherObject) override;
 		};
 	}
 }

@@ -102,7 +102,7 @@ public:
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
-			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 1,Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
+			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0,Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
 			player->isCurrentPlayer = true;
 			game->InsertPlayer(realPacket->playerID, player);
 		}

@@ -40,7 +40,9 @@
     <ClCompile Include="NetworkedGame.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="KillPlane.cpp" />
+    <ClCompile Include="KillPlane.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectable.h" />
@@ -84,7 +86,9 @@
     <ClInclude Include="NetworkedGame.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="KillPlane.h" />
+    <ClInclude Include="KillPlane.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Physics">
