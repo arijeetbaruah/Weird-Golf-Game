@@ -114,9 +114,7 @@ public:
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
-			Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
-			b->isCurrentPlayer = false;
-			b->setLayer(5);
+			Player* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
 
 			b->isServer = true;
 			
@@ -134,53 +132,47 @@ public:
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Player_ID) {
+			if (game->hasPlayer())
+				return;
+
 			PlayerIDPacket* realPacket = (PlayerIDPacket*)payload;
 			//game->InsertPlayer(realPacket->playerID, game->GetCurrentPlayer());
 
 			Vector3 pos;
 			if (realPacket->playerID == 0) {
 				pos = Vector3(-0.4, 0.1, -0.9);
+
 			} else if (realPacket->playerID == 1) {
 				pos = Vector3(-0.2, 0.1, -0.9);
-				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
-				b->isCurrentPlayer = false;
-				b->setLayer(5);
+				Player* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
 				game->InsertPlayer(0, b);
+
 			} else if (realPacket->playerID == 2) {
 				pos = Vector3(0.2, 0.1, -0.9);
 
-				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
-				b->isCurrentPlayer = false;
-				b->setLayer(5);
+				Player* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
 				game->InsertPlayer(0, b);
 
-				Player* c = game->AddPlayerObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
-				c->isCurrentPlayer = false;
-				c->setLayer(5);
+				Player* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
 				game->InsertPlayer(1, c);
+
 			} else if (realPacket->playerID == 3) {
 				pos = Vector3(0.4, 0.1, -0.9);
 
-				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
-				b->isCurrentPlayer = false;
-				b->setLayer(5);
+				Player* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
 				game->InsertPlayer(0, b);
 
-				Player* c = game->AddPlayerObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
-				c->isCurrentPlayer = false;
-				c->setLayer(5);
+				Player* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
 				game->InsertPlayer(1, c);
 
-				Player* d = game->AddPlayerObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
-				d->isCurrentPlayer = false;
-				d->setLayer(5);
+				Player* d = game->AddSphereObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
 				game->InsertPlayer(2, d);
 			}
 
 			//GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
 			//game->InsertPlayer(1, b);
 
-			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
+			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
 
 			if (realPacket->playerID == 0)
 				player->isServer = true;

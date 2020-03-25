@@ -56,6 +56,7 @@ TutorialGame::TutorialGame()	{
 	inSelectionMode = false;
 
 	Ball = nullptr;
+	playerConnected = false;
 
 	powerUpTxtLength = 5;
 	powerUpTxtTimer = powerUpTxtLength;
@@ -542,51 +543,56 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 	return resultList;
 }
 
-GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size, std::string objectName)
+Player* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size, std::string objectName)
 {
-	GameObject* BallTemp = new GameObject();
-	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
+	Player* BallTemp = new Player(playerID);
 
 	BallTemp->setLayer(5);
+	BallTemp->isCurrentPlayer = false;
+
+	//build render object
+	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
+	OGLMesh* objOGL = new OGLMesh(renderList[0]->GetMesh());
+	RenderObject* newRender = new RenderObject(renderList[0]);
 
 	BallTemp->GetTransform().SetWorldScale(size);
 	BallTemp->GetTransform().SetWorldPosition(position);
-
-	OGLMesh* objOGL = new OGLMesh(renderList[0]->GetMesh());
-
-	RenderObject* newRender = new RenderObject(renderList[0]);
 	newRender->SetParentTransform(&BallTemp->GetTransform());
 	BallTemp->SetRenderObject(newRender);
+	/////////////////////
+	BallTemp->SetCubeMesh(cubeMesh);
+	/////////////////////
+	BallTemp->SetPlayerMesh(objOGL);
 
-	OGLMesh* tempOGL = new OGLMesh(newRender->GetMesh());
+	//renderer->SetBallObject(BallTemp);
 
+	//physics component
 	if (isServer)
 	{
+		SpherePhysicsComponent* sphere = nullptr;
 		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial, scene);
-		//PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
-		//sphere->setAsTrigger();
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial, scene);
 		BallTemp->addComponent(sphere);
-
 		sphere->setLinearDamping(0.8);
 		sphere->setAngularDamping(2);
 	}
 
 	BallTemp->SetNetworkObject(new NetworkObject(*BallTemp, playerID));
-
-	BallTemp->addComponent(new ShotTracker());
-
+	//Ball->addComponent(new CurveBall());
 
 	worlds[currentWorld]->AddGameObject(BallTemp);
+
 	return BallTemp;
 }
 
 Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size, std::string objectName)
 {
-
+	int i = 0;
 	//real code
 	Ball = new Player(playerID);
 	Ball->setCamera(worlds[currentWorld]->GetMainCamera());
+
+	playerConnected = true;
 
 	//build render object
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
