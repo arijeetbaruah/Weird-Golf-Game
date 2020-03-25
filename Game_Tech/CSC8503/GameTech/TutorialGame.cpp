@@ -13,6 +13,7 @@
 #include "../CSC8503Common/SpeedBoost.h"
 #include "../CSC8503Common/Homing.h"
 #include "../CSC8503Common/CurveBall.h"
+#include "../CSC8503Common/sizeChange.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
 
