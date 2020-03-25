@@ -1,3 +1,4 @@
+// @Author: Justin Carter
 #pragma once
 #include "..\CSC8503Common\GameObject.h"
 #include "SpherePhysicsComponent.h"

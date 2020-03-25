@@ -40,8 +40,6 @@ namespace NCL {
 			void UpdateMinimumState();
 			std::map<int, int> stateIDs;
 
-			void SpawnPlayer();
-
 			GameServer* thisServer;
 			GameClient* thisClient;
 			float timeToNextPacket;

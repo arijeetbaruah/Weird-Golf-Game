@@ -1,3 +1,5 @@
+// @Author: Justin Carter
+
 #include "Player.h"
 #include "SpherePhysicsComponent.h"
 #include "../CSC8503Common/ShotTracker.h"
@@ -47,13 +49,14 @@ Player::~Player()
 
 void Player::DuringUpdate(float dt)
 {
-	testYaw += 1;
-	Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, testYaw, 0);
-	transform.SetLocalOrientation(cameraRot);
-	UpdateClientPlayerKeys(dt);
-
 	UpdateCamera(dt);
-	std::cout << "Player: " << transform.GetWorldPosition().x << std::endl;
+
+	/*testYaw += 1;
+	
+	Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, testYaw, 0);
+	transform.SetLocalOrientation(cameraRot);*/
+
+	UpdateClientPlayerKeys(dt);
 }
 
 void Player::Trigger(GameObject& obj)
@@ -114,11 +117,11 @@ void Player::UpdateClientPlayerKeys(float dt)
 		return;
 	}
 
-	PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
+	/*PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
 
 	float x = (float)sphere->getVelocity().x;
 	float y = (float)sphere->getVelocity().y;
-	float z = (float)sphere->getVelocity().z;
+	float z = (float)sphere->getVelocity().z;*/
 
 	// Ball can only be moved when standing still
 	/*if ((x > 0) || (y > 0) || (z > 0))

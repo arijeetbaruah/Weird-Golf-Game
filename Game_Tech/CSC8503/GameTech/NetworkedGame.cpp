@@ -19,13 +19,14 @@ public:
 			PlayerPacket* realPacket = (PlayerPacket*)payload;
 			auto serverPlayers = game->GetServerPlayers();
 
+
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
 					continue;
 				}
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
-				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
+				//AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
 		}
 	}
@@ -67,12 +68,12 @@ public:
 			else if (realPacket->playerID == 2) {
 				pos = Vector3(0.2, 0.1, -0.9);
 			}
-			else if (realPacket->playerID == 2) {
+			else if (realPacket->playerID == 3) {
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
 			// TODO BOH
-			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, Vector3(1, 1, 1), "player" + realPacket->playerID);
+			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
 			
 			game->InsertPlayer(realPacket->playerID, b);
 		}
@@ -96,13 +97,33 @@ public:
 				pos = Vector3(-0.4, 0.1, -0.9);
 			} else if (realPacket->playerID == 1) {
 				pos = Vector3(-0.2, 0.1, -0.9);
+				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				game->InsertPlayer(0, b);
 			} else if (realPacket->playerID == 2) {
 				pos = Vector3(0.2, 0.1, -0.9);
-			} else if (realPacket->playerID == 2) {
+
+				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				game->InsertPlayer(0, b);
+
+				GameObject* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				game->InsertPlayer(1, c);
+			} else if (realPacket->playerID == 3) {
 				pos = Vector3(0.4, 0.1, -0.9);
+
+				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				game->InsertPlayer(0, b);
+
+				GameObject* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				game->InsertPlayer(1, c);
+
+				GameObject* d = game->AddSphereObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
+				game->InsertPlayer(2, d);
 			}
 
-			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 1,Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
+			//GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+			//game->InsertPlayer(1, b);
+
+			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
 			player->isCurrentPlayer = true;
 			game->InsertPlayer(realPacket->playerID, player);
 		}
@@ -153,13 +174,18 @@ public:
 			FullPacket* realPacket = (FullPacket*)payload;
 
 			auto players = game->GetServerPlayers();
-#ifdef WIN32
-			Player* p = dynamic_cast<Player*>(players[realPacket->playerID]);
-#else 
-			Player* p = (Player*)(players[realPacket->playerID]);
-#endif
-			
-			p->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
+//#ifdef WIN32
+//			Player* p = dynamic_cast<Player*>(players[realPacket->playerID]);
+//#else 
+//			Player* p = (Player*)(players[realPacket->playerID]);
+//#endif
+
+			if (realPacket->force.x > 0 || realPacket->force.y > 0 || realPacket->force.z > 0)
+			{
+				int i = 0;
+			}
+
+			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 		}
 	}
 protected:
@@ -230,7 +256,7 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	thisClient = new GameClient();
 
 	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*worlds[currentWorld], this);
-	thisClient->RegisterPacketHandler(Received_State, serverReceiver);
+	thisClient->RegisterPacketHandler(Received_State, &(*serverReceiver));
 
 	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
 	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
@@ -252,20 +278,20 @@ void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 }
 
 // TODO: BOH
-void NetworkedGame::CreateNewPlayer(int id) {
-	GameObject* other;
-	if (id == 2) {
-		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player2");
-	}
-	else if (id == 3) {
-		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player3");
-	}
-	else {
-		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9), 0, Vector3(1, 1, 1), "player4");
-	}
-
-	InsertPlayer(id, other);
-}
+//void NetworkedGame::CreateNewPlayer(int id) {
+//	GameObject* other;
+//	if (id == 2) {
+//		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player2");
+//	}
+//	else if (id == 3) {
+//		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player3");
+//	}
+//	else {
+//		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9), 0, Vector3(1, 1, 1), "player4");
+//	}
+//
+//	InsertPlayer(id, other);
+//}
 
 void NetworkedGame::UpdateGame(float dt)
 {
@@ -290,19 +316,19 @@ void NetworkedGame::UpdateGame(float dt)
 	UpdateAsClient(dt);
 	
 }
+
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	if (thisServer) {
 		PlayerPacket packet;
-		NetworkState fullState[4];
 
 		for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
 			if (it->second == NULL) {
 				continue;
 			}
-			fullState[it->first].position = it->second->GetTransform().GetWorldPosition();
-			fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
-			fullState[it->first].playerID = it->first;
-			fullState[it->first].valid = true;
+			packet.fullState[it->first].position = it->second->GetTransform().GetWorldPosition();
+			packet.fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
+			packet.fullState[it->first].playerID = it->first;
+			packet.fullState[it->first].valid = true;
 		}
 
 		this->thisServer->SendGlobalPacket(packet);
@@ -312,25 +338,6 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 		
 	}
 
-}
-
-void NetworkedGame::SpawnPlayer()
-{
-	float size = 1.0f;
-	Player* secondPlayer = new Player(0);
-
-	SphereVolume* volume = new SphereVolume(size);
-	secondPlayer->SetBoundingVolume((CollisionVolume*)volume);
-
-	secondPlayer->GetTransform().SetWorldScale(Vector3(size, size, size));
-	secondPlayer->GetTransform().SetWorldPosition(Vector3(270, 10, 190));
-
-	secondPlayer->setLayer(2);
-	secondPlayer->setLayerMask(0);
-
-	playerTwo = secondPlayer;
-
-	serverPlayers.insert(std::pair<int, Player*>(2, secondPlayer));
 }
 
 void NetworkedGame::StartLevel()
@@ -367,70 +374,8 @@ void NetworkedGame::UpdateAsClient(float dt) {
 	if (isServer || Ball == NULL)
 		return;
 
-	ClientPacket newPacket;
+	BroadcastSnapshot(false);
 
-	for (int i = 0; i < 6; i++) 
-	{
-		newPacket.buttonstates[i] = false;
-	}
-
-	newPacket.orientation = Ball->GetTransform().GetLocalOrientation();
-
-	if (isServer)
-	{
-		newPacket.objectID = 1000;
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-			newPacket.buttonstates[0] = true;
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-			newPacket.buttonstates[1] = true;
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-			newPacket.buttonstates[2] = true;
-
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-			newPacket.buttonstates[3] = true;
-		}
-	}
-	else
-	{
-		newPacket.objectID = 2000;
-
-		bool* buttonStates = Ball->getButtonStates();
-
-		if (buttonStates[0]) {
-			newPacket.buttonstates[0] = true;
-		}
-
-		if (buttonStates[1]) {
-			newPacket.buttonstates[1] = true;
-		}
-
-		if (buttonStates[2]) {
-			newPacket.buttonstates[2] = true;
-
-		}
-
-		if (buttonStates[3]) {
-			newPacket.buttonstates[3] = true;
-		}
-
-		if (buttonStates[4]) {
-
-			newPacket.buttonstates[4] = true;
-		}
-
-		if (buttonStates[5]) {
-			newPacket.buttonstates[5] = true;
-		}
-	}
-	
-	thisClient -> SendPacket(newPacket);
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {

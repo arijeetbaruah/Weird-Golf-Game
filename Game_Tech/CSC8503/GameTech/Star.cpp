@@ -1,3 +1,4 @@
+// @Author: Justin Carter
 #include "Star.h"
 
 using namespace NCL;
