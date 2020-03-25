@@ -15,7 +15,8 @@ struct FilterGroup {
 	enum Enum {
 		ePLAYER = (1 << 0),
 		eLEVEL = (1 << 1),
-		eSTAR = (1 << 2)
+		eSTAR = (1 << 2),
+		eKILLPLANE = (1 << 3),
 	};
 };
 

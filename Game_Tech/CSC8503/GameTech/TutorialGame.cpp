@@ -23,6 +23,7 @@
 #include "TriangleMeshPhysicsComponent.h"
 
 #include "PhysxController.h"
+#include "KillPlane.h"
 
 #include <functional>
 
@@ -236,6 +237,8 @@ void TutorialGame::InitWorld(int worldIndex) {
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		KillPlane* kPlane = new KillPlane(PxTransform(PxVec3(0,-5, 0)), 30, 2, 30, worldIndex);
+		worlds[worldIndex]->AddGameObject(kPlane);
 		/*AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");*/
