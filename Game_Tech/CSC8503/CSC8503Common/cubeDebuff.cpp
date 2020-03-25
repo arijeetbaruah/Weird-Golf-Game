@@ -17,6 +17,7 @@ cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
 void cubeDebuff::Start() {
 	par = (Player*) this->getParent();
 	ren = this->getParent()->GetRenderObject();
+	pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 }
 
 
@@ -34,7 +35,6 @@ void cubeDebuff::Remove() {
 void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC) {
 	par->GetTransform().SetWorldScale(scale * par->getSizeScale());
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), mesh, ren->GetDefaultTexture(), ren->GetShader()));
-	PhysicsComponent* pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 	PxVec3 angVec = pc->getAngularVelocity();
 	PxVec3 linVec = pc->getLinearVelocity();
 	par->RemoveComponent("PhysicsComponent");
@@ -43,4 +43,5 @@ void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsCompon
 	physC->setLinearVelocity(linVec);
 	physC->setAngularVelocity(angVec);
 	par->addComponent(physC);
+	pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 }

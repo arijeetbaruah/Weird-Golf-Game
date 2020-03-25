@@ -16,12 +16,12 @@ void sizeChange::Apply() {
 		if (sh->getName()) {
 			if (sh->getName() == "Box") {
 				float size = po->boxSize * mult;
-				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size));
+				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size, pc->getScene()));
 			}
 			else {
 				float size = po->sphereSize * mult;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat));
+				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat, pc->getScene()));
 			}
 		}
 	}
@@ -36,11 +36,11 @@ void sizeChange::Remove() {
 		if (sh->getName()) {
 			if (sh->getName() == "Box") {
 				float size = po->boxSize;
-				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size));
+				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size, pc->getScene()));
 			} else {
 				float size = po->sphereSize;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat));
+				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat, pc->getScene()));
 			}
 		}
 	}
@@ -54,7 +54,6 @@ void sizeChange::Start() {
 
 
 void sizeChange::applyTransformation(PhysicsComponent* physC) {
-	PhysicsComponent* pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 	PxVec3 angVec = pc->getAngularVelocity();
 	PxVec3 linVec = pc->getLinearVelocity();
 	po->RemoveComponent("PhysicsComponent");
@@ -63,4 +62,5 @@ void sizeChange::applyTransformation(PhysicsComponent* physC) {
 	physC->setLinearVelocity(linVec);
 	physC->setAngularVelocity(angVec);
 	po->addComponent(physC);
+	pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 }
