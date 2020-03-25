@@ -14,14 +14,15 @@ void sizeChange::Apply() {
 	Vector3 position = po->GetTransform().GetWorldPosition();
 	for (PxShape* sh : shapes) {
 		if (sh->getName()) {
+			pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 			if (sh->getName() == "Box") {
 				float size = po->boxSize * mult;
-				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size));
+				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size, pc->getScene()));
 			}
 			else {
 				float size = po->sphereSize * mult;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat));
+				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat, pc->getScene()));
 			}
 		}
 	}
@@ -34,13 +35,14 @@ void sizeChange::Remove() {
 	Vector3 position = po->GetTransform().GetWorldPosition();
 	for (PxShape* sh : shapes) {
 		if (sh->getName()) {
+			pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
 			if (sh->getName() == "Box") {
 				float size = po->boxSize;
-				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size));
+				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size, pc->getScene()));
 			} else {
 				float size = po->sphereSize;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat));
+				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat, pc->getScene()));
 			}
 		}
 	}
