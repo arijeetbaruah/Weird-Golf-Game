@@ -8,7 +8,12 @@ namespace NCL {
 	namespace CSC8503 {
 		enum NetworkPowerUps {
 			NONE,
-			SQUARE
+			SQUARE,
+			HOMING,
+			SPEED,
+			DIRECTION,
+			CURVE,
+			SIZE
 		};
 
 		class GameObject;

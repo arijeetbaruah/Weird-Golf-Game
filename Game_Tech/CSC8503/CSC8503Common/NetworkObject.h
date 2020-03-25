@@ -15,7 +15,6 @@ namespace NCL {
 			}
 		};
 
-
 		struct SendPacket : public GamePacket {
 			int playerID;
 			NetworkState fullState;
@@ -30,6 +29,7 @@ namespace NCL {
 		struct FullPacket : public GamePacket {
 			int		playerID = -1;
 			Vector3 force = Vector3(0, 0, 0);
+			NetworkPowerUps power;
 
 			FullPacket() {
 				type = Full_State;

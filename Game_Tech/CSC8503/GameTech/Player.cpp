@@ -25,6 +25,10 @@ Player::Player(int id) : GameObject("PLAYER")
 	layer = 1;
 	layerMask = 0; // Collide with everything
 
+	power = NONE;
+
+	isServer = false;
+
 	initialMousePos = Vector2(0, 0);
 
 	// Initial cam position
@@ -49,14 +53,11 @@ Player::~Player()
 
 void Player::DuringUpdate(float dt)
 {
-	UpdateCamera(dt);
-
-	/*testYaw += 1;
-	
-	Quaternion cameraRot = Quaternion::EulerAnglesToQuaternion(0, testYaw, 0);
-	transform.SetLocalOrientation(cameraRot);*/
-
-	UpdateClientPlayerKeys(dt);
+	if (isCurrentPlayer) 
+	{
+		UpdateCamera(dt);
+		UpdateClientPlayerKeys(dt);
+	}
 }
 
 void Player::Trigger(GameObject& obj)

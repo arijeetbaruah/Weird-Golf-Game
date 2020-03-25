@@ -6,7 +6,7 @@
 #include <cmath>
 #include <list> 
 #include <queue>
-#include "Collectable.h"
+#include "../CSC8503Common/PhysicsSystem.h"
 #include <math.h>
 #include <iostream>
 #define PI 3.14159265
@@ -26,14 +26,13 @@ namespace NCL {
 
 			float yaw;
 
-			std::queue<GameObject*>& getCollectables() { return collectables; };
-
 			virtual void OnCollisionBegin(GameObject* otherObject);
 
 			virtual void OnCollisionEnd(GameObject* otherObject);
 
 			bool* getButtonStates() { return buttonStates; };
 			bool isCurrentPlayer;
+			bool isServer;
 
 			Vector3 getShotDir() {
 				if (isOffset)
@@ -61,8 +60,12 @@ namespace NCL {
 
 			float boxSize = 0.1;
 			float sphereSize = 0.05;
+
+			void setCurrentPowerUp(NetworkPowerUps p) { power = p; };
+			NetworkPowerUps getCurrentPowerUp() { return power; };
 			
 		protected:
+
 			void UpdateClientPlayerKeys(float dt);
 			void UpdateCamera(float dt);
 
@@ -83,6 +86,8 @@ namespace NCL {
 			Camera* mainCamera;
 			Vector3 camOffset;
 			int playerID;
+
+			NetworkPowerUps power;
 
 			int testYaw;
 

@@ -32,9 +32,37 @@ public:
 	}
 
 	void AddComponent(NetworkPowerUps powerUps, GameObject* target) {
+
+		
 		if (powerUps == NetworkPowerUps::SQUARE) {
-			cubeDebuff* cubed = new cubeDebuff(target->GetPlayerMesh(), target->GetCubeMesh());
-			target->addComponent(cubed);
+			Player* p = dynamic_cast<Player*>(target);
+			target->GetTransform().SetWorldScale(Vector3(0.05, 0.05, 0.05) * p->getSizeScale());
+			target->SetRenderObject(new RenderObject(&p->GetTransform(), p->GetCubeMesh(), p->GetRenderObject()->GetDefaultTexture(), p->GetRenderObject()->GetShader()));
+			game->setPowerUpName("BOXED IN!");
+		}
+		else if (powerUps == NetworkPowerUps::SIZE) {
+			target->GetTransform().SetWorldScale(target->GetTransform().GetLocalScale() * 2);
+			game->setPowerUpName("BIG BALL!");
+		}
+		else if (powerUps == NetworkPowerUps::HOMING) {
+			game->setPowerUpName("HOMING BALL!");
+		}
+		else if (powerUps == NetworkPowerUps::SPEED) {
+			game->setPowerUpName("SPEED BOOST!");
+		}
+		else if (powerUps == NetworkPowerUps::DIRECTION) {
+			game->setPowerUpName("DIRECTION CHANGE!");
+		}
+		else if (powerUps == NetworkPowerUps::CURVE) {
+			game->setPowerUpName("CURVE BALL!");
+		}
+		else if (powerUps == NetworkPowerUps::NONE) {
+			Player* p = dynamic_cast<Player*>(target);
+
+			if (target->GetRenderObject()->GetMesh() == p->GetCubeMesh())
+				target->SetRenderObject(new RenderObject(&p->GetTransform(), p->GetPlayerMesh(), p->GetRenderObject()->GetDefaultTexture(), p->GetRenderObject()->GetShader()));
+			else if (target->GetTransform().GetLocalScale() != (Vector3(1, 1, 1) * p->getSizeScale()))
+				target->GetTransform().SetWorldScale(Vector3(1, 1, 1) * p->getSizeScale());
 		}
 	}
 
@@ -72,8 +100,11 @@ public:
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
-			// TODO BOH
-			GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
+			Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
+			b->isCurrentPlayer = false;
+			b->setLayer(5);
+
+			b->isServer = true;
 			
 			game->InsertPlayer(realPacket->playerID, b);
 		}
@@ -97,26 +128,38 @@ public:
 				pos = Vector3(-0.4, 0.1, -0.9);
 			} else if (realPacket->playerID == 1) {
 				pos = Vector3(-0.2, 0.1, -0.9);
-				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				b->isCurrentPlayer = false;
+				b->setLayer(5);
 				game->InsertPlayer(0, b);
 			} else if (realPacket->playerID == 2) {
 				pos = Vector3(0.2, 0.1, -0.9);
 
-				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				b->isCurrentPlayer = false;
+				b->setLayer(5);
 				game->InsertPlayer(0, b);
 
-				GameObject* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				Player* c = game->AddPlayerObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				c->isCurrentPlayer = false;
+				c->setLayer(5);
 				game->InsertPlayer(1, c);
 			} else if (realPacket->playerID == 3) {
 				pos = Vector3(0.4, 0.1, -0.9);
 
-				GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				Player* b = game->AddPlayerObjectToWorld(game->getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), 0, 0, Vector3(1, 1, 1), "player" + 0);
+				b->isCurrentPlayer = false;
+				b->setLayer(5);
 				game->InsertPlayer(0, b);
 
-				GameObject* c = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				Player* c = game->AddPlayerObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
+				c->isCurrentPlayer = false;
+				c->setLayer(5);
 				game->InsertPlayer(1, c);
 
-				GameObject* d = game->AddSphereObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
+				Player* d = game->AddPlayerObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
+				d->isCurrentPlayer = false;
+				d->setLayer(5);
 				game->InsertPlayer(2, d);
 			}
 
@@ -124,6 +167,10 @@ public:
 			//game->InsertPlayer(1, b);
 
 			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID); // TODO: BOH
+
+			if (realPacket->playerID == 0)
+				player->isServer = true;
+
 			player->isCurrentPlayer = true;
 			game->InsertPlayer(realPacket->playerID, player);
 		}
@@ -182,7 +229,7 @@ public:
 
 			if (realPacket->force.x > 0 || realPacket->force.y > 0 || realPacket->force.z > 0)
 			{
-				int i = 0;
+				players[realPacket->playerID]->getComponent<ShotTracker*>("ShotTracker")->addShots();
 			}
 
 			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
@@ -329,6 +376,10 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 			packet.fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
 			packet.fullState[it->first].playerID = it->first;
 			packet.fullState[it->first].valid = true;
+
+			Player* p = dynamic_cast<Player*>(it->second);
+			packet.fullState[it->first].powerUps = p->getCurrentPowerUp();
+
 		}
 
 		this->thisServer->SendGlobalPacket(packet);
@@ -385,6 +436,7 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 		FullPacket packet;
 		packet.playerID = Ball->getID();
 		packet.force = Ball->getForceState();
+			
 		Ball->resetForceState();
 		thisClient->SendPacket(packet);
 	}

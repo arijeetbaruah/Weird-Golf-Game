@@ -32,6 +32,8 @@ void cubeDebuff::Remove() {
 	Vector3 position = par->GetTransform().GetWorldPosition();
 	PhysicsComponent* pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 	applyTransformation(Vector3 (1,1,1), Before, new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, 0.05 * par->getSizeScale(), mat, pc->getScene()));
+
+	par->setCurrentPowerUp(NetworkPowerUps::NONE);
 }
 
 void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC) {

@@ -547,6 +547,8 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	GameObject* BallTemp = new GameObject();
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
 
+	BallTemp->setLayer(5);
+
 	BallTemp->GetTransform().SetWorldScale(size);
 	BallTemp->GetTransform().SetWorldPosition(position);
 
@@ -571,6 +573,8 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 	}
 
 	BallTemp->SetNetworkObject(new NetworkObject(*BallTemp, playerID));
+
+	BallTemp->addComponent(new ShotTracker());
 
 
 	worlds[currentWorld]->AddGameObject(BallTemp);

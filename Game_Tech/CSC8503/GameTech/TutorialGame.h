@@ -3,7 +3,6 @@
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "Player.h"
 #include <stdlib.h>
-#include "Collectable.h"
 #include <string> 
 #include <iostream>
 #include <fstream>
@@ -12,6 +11,7 @@
 #include "MeshSceneNode.h"
 #include "Star.h"
 #include "../CSC8503Common/UIPushDownMachine.h"
+#include "../CSC8503Common/ShotTracker.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -63,7 +63,6 @@ namespace NCL {
 
 			//debugfunction
 
-
 			//load render objects
 			MeshSceneNode* gameMapOrigin;
 			MeshSceneNode* gameMapExplode;
@@ -111,8 +110,6 @@ namespace NCL {
 			//NavigationGrid grid;
 
 			std::vector<GameObject*> otherplayers;
-
-
 
 			//UI system, still fix , do not need check
 			GameWorld* UIworld;

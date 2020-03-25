@@ -8,9 +8,12 @@ sizeChange::sizeChange(float multiplier) {
 }
 
 void sizeChange::Apply() {
-	vector<PxShape*> shapes = po->getComponent<PhysicsComponent*>("PhysicsComponent")->getShapes();
+
 	po->GetTransform().SetWorldScale(po->GetTransform().GetLocalScale() * mult);
 	po->setSizeScale(mult);
+
+	vector<PxShape*> shapes = po->getComponent<PhysicsComponent*>("PhysicsComponent")->getShapes();
+	
 	Vector3 position = po->GetTransform().GetWorldPosition();
 	for (PxShape* sh : shapes) {
 		if (sh->getName()) {
@@ -29,9 +32,13 @@ void sizeChange::Apply() {
 }
 
 void sizeChange::Remove() {
-	vector<PxShape*> shapes = po->getComponent<PhysicsComponent*>("PhysicsComponent")->getShapes();
+
+	po->setCurrentPowerUp(NetworkPowerUps::NONE);
 	po->GetTransform().SetWorldScale(po->GetTransform().GetLocalScale() * 1/mult);
 	po->setSizeScale(1);
+
+	vector<PxShape*> shapes = po->getComponent<PhysicsComponent*>("PhysicsComponent")->getShapes();
+	
 	Vector3 position = po->GetTransform().GetWorldPosition();
 	for (PxShape* sh : shapes) {
 		if (sh->getName()) {
