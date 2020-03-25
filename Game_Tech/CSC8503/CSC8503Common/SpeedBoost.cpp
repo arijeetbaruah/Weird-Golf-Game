@@ -12,6 +12,7 @@ void SpeedBoost::Apply() {
 
 void SpeedBoost::Remove() {
 	po->setSpeed(origSpeed);
+	po->setCurrentPowerUp(NetworkPowerUps::NONE);
 	po = nullptr;
 }
 

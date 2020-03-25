@@ -30,7 +30,11 @@ void CurveBall::Apply() {
 void CurveBall::Remove() {
 	Script* sp = this->getParent()->getComponent<Script*>("Spin");
 	if (sp != NULL)
+	{
 		sp->toRemove = true;
+		po->setCurrentPowerUp(NetworkPowerUps::NONE);
+	}
+		
 }
 
 void CurveBall::Start() {

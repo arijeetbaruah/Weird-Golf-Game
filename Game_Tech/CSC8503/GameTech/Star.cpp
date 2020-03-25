@@ -35,12 +35,17 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		otherObject->getLayer() == 5)
 	{
 
-		int randNum = rand() % 6 + 1;
+
+		
 #ifdef WIN32
 		Player* p = dynamic_cast<Player*>(otherObject);
 #else 
 		Player* p = (Player*)(otherObject);
 #endif
+		/*if (p->getCurrentPowerUp() != NetworkPowerUps::NONE)
+			return;*/
+
+		int randNum = rand() % 6 + 1;
 
 		switch (randNum)
 		{

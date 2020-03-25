@@ -16,6 +16,10 @@ public:
 
 	void ReceivePacket(int type, GamePacket* payload, int source) {
 		if (type == Received_State) {
+
+			if (game->getIsServer())
+				return;
+
 			PlayerPacket* realPacket = (PlayerPacket*)payload;
 			auto serverPlayers = game->GetServerPlayers();
 
@@ -26,6 +30,8 @@ public:
 				}
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
+
+				
 				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
 		}
@@ -41,8 +47,13 @@ public:
 			game->setPowerUpName("BOXED IN!");
 		}
 		else if (powerUps == NetworkPowerUps::SIZE) {
-			target->GetTransform().SetWorldScale(target->GetTransform().GetLocalScale() * 2);
-			game->setPowerUpName("BIG BALL!");
+			Player* p = dynamic_cast<Player*>(target);
+			if (target->GetTransform().GetLocalScale() == (Vector3(1, 1, 1) * p->getSizeScale()))
+			{
+				p->GetTransform().SetWorldScale(p->GetTransform().GetLocalScale() * 2);
+				//p->setSizeScale(2);
+				game->setPowerUpName("BIG BALL!");
+			}
 		}
 		else if (powerUps == NetworkPowerUps::HOMING) {
 			game->setPowerUpName("HOMING BALL!");
@@ -62,7 +73,10 @@ public:
 			if (target->GetRenderObject()->GetMesh() == p->GetCubeMesh())
 				target->SetRenderObject(new RenderObject(&p->GetTransform(), p->GetPlayerMesh(), p->GetRenderObject()->GetDefaultTexture(), p->GetRenderObject()->GetShader()));
 			else if (target->GetTransform().GetLocalScale() != (Vector3(1, 1, 1) * p->getSizeScale()))
+			{
+				p->setSizeScale(1);
 				target->GetTransform().SetWorldScale(Vector3(1, 1, 1) * p->getSizeScale());
+			}
 		}
 	}
 
@@ -380,6 +394,9 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 			Player* p = dynamic_cast<Player*>(it->second);
 			packet.fullState[it->first].powerUps = p->getCurrentPowerUp();
 
+			/*if ((p->getCurrentPowerUp() != NetworkPowerUps::SQUARE) &&
+				(p->getCurrentPowerUp() != NetworkPowerUps::SIZE))
+				p->setCurrentPowerUp(NetworkPowerUps::NONE);*/
 		}
 
 		this->thisServer->SendGlobalPacket(packet);

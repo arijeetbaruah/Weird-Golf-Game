@@ -31,7 +31,11 @@ void Homing::Apply() {
 void Homing::Remove() {
 	Script* sc = this->getParent()->getComponent<Script*>("HomingScript");
 	if (sc != NULL)
+	{
 		sc->toRemove = true;
+		po->setCurrentPowerUp(NetworkPowerUps::NONE);
+	}
+		
 }
 
 void Homing::Start() {
