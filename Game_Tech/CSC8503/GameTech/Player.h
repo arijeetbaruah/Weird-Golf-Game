@@ -58,8 +58,8 @@ namespace NCL {
 			void setSizeScale(float s) { sizeScale = s; }
 			float getSizeScale() { return sizeScale; }
 
-			float boxSize = 0.05;
-			float sphereSize = 0.1;
+			float boxSize = 0.1;
+			float sphereSize = 0.05;
 			
 		protected:
 			void UpdateClientPlayerKeys(float dt);

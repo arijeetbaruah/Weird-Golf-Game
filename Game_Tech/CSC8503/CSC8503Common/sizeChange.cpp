@@ -29,16 +29,16 @@ void sizeChange::Apply() {
 
 void sizeChange::Remove() {
 	vector<PxShape*> shapes = po->getComponent<PhysicsComponent*>("PhysicsComponent")->getShapes();
-	po->GetTransform().SetWorldScale(po->GetTransform().GetLocalScale() * 1);
+	po->GetTransform().SetWorldScale(po->GetTransform().GetLocalScale() * 1/mult);
 	po->setSizeScale(1);
 	Vector3 position = po->GetTransform().GetWorldPosition();
 	for (PxShape* sh : shapes) {
 		if (sh->getName()) {
 			if (sh->getName() == "Box") {
-				float size = po->boxSize * 1;
+				float size = po->boxSize;
 				applyTransformation(new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, size, size));
 			} else {
-				float size = po->sphereSize * 1;
+				float size = po->sphereSize;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat));
 			}
