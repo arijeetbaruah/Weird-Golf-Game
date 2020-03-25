@@ -33,10 +33,9 @@ using namespace physx;
 	//PC Code
 #endif
 
-
-
-int main() {
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
+int main(int argc, char* argv[]) 
+{
+	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", WIDTH, HEIGHT);
 
 	if (!w->HasInitialised()) {
 		return -1;

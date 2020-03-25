@@ -129,6 +129,14 @@ namespace NCL {
 				o << "\t\t" << m.array[12] << "," << m.array[13] << "," << m.array[14] << "," << m.array[15] << " )" << std::endl;
 				return o;
 			}
+
+			void ToIdentity() {
+				ToZero();
+				array[0] = 1.0f;
+				array[5] = 1.0f;
+				array[10] = 1.0f;
+				array[15] = 1.0f;
+			}
 		};
 	}
 }

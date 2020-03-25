@@ -26,6 +26,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	shadowShader = new OGLShader("GameTechShadowVert.glsl", "GameTechShadowFrag.glsl");
 	skyboxShader = new OGLShader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
 	OcclusionShader = new OGLShader("OcclusionVertex.glsl", "OcclusionFragment.glsl");
+	minimapShader = new OGLShader("TexturedVertex.glsl", "TexturedFragment.glsl");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -43,6 +44,34 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, shadowTex, 0);
 	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenTextures(1, &minimapTex);
+	glGenTextures(1, &minimapDepth);
+	glGenFramebuffers(1, &minimapFBO);
+	glBindTexture(GL_TEXTURE_2D, minimapTex);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, WIDTH / 2, HEIGHT / 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
+	glBindTexture(GL_TEXTURE_2D, minimapDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, WIDTH / 2, WIDTH / 2, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, minimapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D, minimapTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, minimapDepth, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, minimapDepth, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClearColor(1, 1, 1, 1);
@@ -72,26 +101,84 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 		Vector2(1.0f, 1.0f), 
 		Vector2(1.0f, 0.0f)});
 	quad->UploadToGPU();
+
+	minimapQuad = new OGLMesh();
+
+	minimapQuad->SetVertexIndices({ 0, 1, 2, 3 });
+	minimapQuad->SetPrimitiveType(NCL::GeometryPrimitive::TriangleStrip);
+	minimapQuad->SetVertexPositions({ Vector3(-1.0f, -1.0f, 0.0f),
+		Vector3(-1.0f, 1.0f, 0.0f),
+		Vector3(1.0f, -1.0f, 0.0f),
+		Vector3(1.0f, 1.0f, 0.0f) });
+
+	minimapQuad->SetVertexTextureCoords({ Vector2(0.0f, 1.0f),
+		Vector2(0.0f, 0.0f),
+		Vector2(1.0f, 1.0f),
+		Vector2(1.0f, 0.0f)});
+	minimapQuad->UploadToGPU();
 }
 
 GameTechRenderer::~GameTechRenderer()	{
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
 	glDeleteTextures(1, &skyboxTex);
+	glDeleteTextures(1, &minimapTex);
+	glDeleteTextures(1, &minimapDepth);
+	glDeleteFramebuffers(1, &minimapFBO);
 	delete shadowShader;
 	delete skyboxShader;
+	delete minimapShader;
 	delete quad;
+	delete minimapQuad;
+}
+
+void GameTechRenderer::AttachMinimap()
+{
+	BindShader(minimapShader);
+	GLuint textureIndex = glGetUniformLocation(minimapShader->GetProgramID(), "diffuseTex");
+	GLuint modelMatrixIndex = glGetUniformLocation(minimapShader->GetProgramID(), "modelMatrix");
+	GLuint viewMatrixIndex = glGetUniformLocation(minimapShader->GetProgramID(), "viewMatrix");
+	GLuint projMatrixIndex = glGetUniformLocation(minimapShader->GetProgramID(), "projMatrix");
+
+	Matrix4 modelMatrix = Matrix4::Translation(Vector3(-0.7, -0.7, 0)) *
+		Matrix4::Scale(Vector3(0.3, 0.3, 0.3));
+	Matrix4 projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+	Matrix4 viewMatrix = Matrix4();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, minimapTex);
+
+	glUniform1d(textureIndex, 0);
+	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&projMatrix);
+	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&viewMatrix);
+	glUniformMatrix4fv(modelMatrixIndex, 1, false, (float*)&modelMatrix);
+	
+	glDisable(GL_CULL_FACE);
+	BindMesh(minimapQuad);
+	DrawBoundMesh();
+	glEnable(GL_CULL_FACE);
 }
 
 void GameTechRenderer::RenderFrame() {
 	glEnable(GL_CULL_FACE);
 	glClearColor(0, 0.41, 0.58, 1);
+	offsetX += SKY_BOX_ROTATION_SPEED;
+	if (isStarted)
+	{
+		SkyBoxT += 0.01;
+		SkyBoxT = min(SkyBoxT, 1);
+	}
 	DrawSkyBox();
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
 	RenderCamera();
 	DrawOcclusion();
+	if (isStarted)
+	{
+		DrawMinimap();
+		AttachMinimap();
+	}
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 }
 
@@ -115,6 +202,33 @@ void GameTechRenderer::BuildObjectList() {
 
 void GameTechRenderer::SortObjectList() {
 
+}
+
+void GameTechRenderer::DrawMinimap()
+{
+	if (ballObject == nullptr)
+	{
+		return;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, minimapFBO);
+
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	float tempPitch = gameWorld.GetMainCamera()->GetPitch();
+	float tempYaw = gameWorld.GetMainCamera()->GetYaw();
+	Vector3 tempPosition = gameWorld.GetMainCamera()->GetPosition();
+
+	gameWorld.GetMainCamera()->SetPosition(
+		ballObject->GetTransform().GetWorldPosition() + Vector3(.7, 2, -.5)
+		);
+	gameWorld.GetMainCamera()->SetYaw(0);
+	gameWorld.GetMainCamera()->SetPitch(-90);
+	DrawSkyBox();
+	RenderCamera();
+	DrawOcclusion();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	gameWorld.GetMainCamera()->SetPosition(tempPosition);
+	gameWorld.GetMainCamera()->SetYaw(tempYaw);
+	gameWorld.GetMainCamera()->SetPitch(tempPitch);
 }
 
 void GameTechRenderer::RenderShadowMap() {
@@ -279,15 +393,9 @@ GLuint GameTechRenderer::LoadSkyBox(const std::vector<std::string>& textures)
 
 void GameTechRenderer::DrawSkyBox()
 {
-	if (isStarted)
-	{
-		SkyBoxT += 0.01;
-		SkyBoxT = min(SkyBoxT, 1);
-	}
 	glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 	BindShader(skyboxShader);
-	offsetX += SKY_BOX_ROTATION_SPEED;
 	int cubeTexNightIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "cubeTexNight");
 	int cameraPosIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "cameraPos");
 	int offsetXIndex = glGetUniformLocation(skyboxShader->GetProgramID(), "offsetX");
@@ -301,7 +409,7 @@ void GameTechRenderer::DrawSkyBox()
 	glUniform1i(cubeTexNightIndex, 0);
 	glUniform1f(offsetXIndex, offsetX);
 	glUniform3fv(cameraPosIndex, 1, (float*)&gameWorld.GetMainCamera()->GetPosition());
-	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&Matrix4::Perspective(0, 10000, 1920/1080, 120));
+	glUniformMatrix4fv(projMatrixIndex, 1, false, (float*)&Matrix4::Perspective(0, 10000, WIDTH/HEIGHT, 120));
 	glUniformMatrix4fv(viewMatrixIndex, 1, false, (float*)&gameWorld.GetMainCamera()->BuildViewMatrix());
 	glUniform1f(skyboxTIndex, SkyBoxT);
 
