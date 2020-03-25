@@ -58,6 +58,9 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		case 5: p->addComponent(new CurveBall());
 			game->setPowerUpName("CURVE BALL!");
 			break;
+		case 6: p->addComponent(new sizeChange(2));
+			game->setPowerUpName("BIG BALL!");
+			break;
 		}
 
 		this->getComponent<SpherePhysicsComponent*>("PhysicsComponent")->toRemove = true;
