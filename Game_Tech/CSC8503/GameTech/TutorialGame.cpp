@@ -31,7 +31,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-const int world = 1;
+const int world = 0;
 
 TutorialGame::TutorialGame()	{
 	srand(time(NULL));
@@ -98,7 +98,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 	{
 		Star* star = new Star();
 
-		//build rander object
+		//build render object
 		RenderObject* newRender = new RenderObject(tempRender);
 		Vector3 size = Vector3(10, 10, 10);
 		star->GetTransform().SetWorldScale(size);
@@ -136,7 +136,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 		
 		star->setPhysxComponent(sphere);
 
-		sphere->setAsTrigger();
+		//sphere->setAsTrigger();
 		
 		star->setGameWorld(worlds[worldIndex]);
 
@@ -229,10 +229,10 @@ void TutorialGame::InitWorld(int worldIndex) {
 	if (worldIndex == 0) 
 	{
 		PhysxController::getInstance().setActiveScene(0);
-		AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex);
+		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex);
+		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex);
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
@@ -538,7 +538,7 @@ vector<GameObject*> TutorialGame::	AddSomeObject(MeshSceneNode* sceneNode, const
 	return resultList;
 }
 
-GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size, std::string objectName)
+GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size, std::string objectName)
 {
 	GameObject* BallTemp = new GameObject();
 	std::vector<RenderObject*> renderList = sceneNode->GetAllMesh();
@@ -554,27 +554,30 @@ GameObject* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, co
 
 	OGLMesh* tempOGL = new OGLMesh(newRender->GetMesh());
 
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial, scene);
-	PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
-	sphere->setAsTrigger();
-	BallTemp->addComponent(sphere);
+	if (isServer)
+	{
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), BallTemp, 10, 0.05, mMaterial, scene);
+		//PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::ePLAYER, FilterGroup::eLEVEL);
+		//sphere->setAsTrigger();
+		BallTemp->addComponent(sphere);
 
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
+		sphere->setLinearDamping(0.8);
+		sphere->setAngularDamping(2);
+	}
+
+	BallTemp->SetNetworkObject(new NetworkObject(*BallTemp, playerID));
 
 
 	worlds[currentWorld]->AddGameObject(BallTemp);
 	return BallTemp;
 }
 
-Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, const Vector3& size, std::string objectName)
+Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size, std::string objectName)
 {
-	//temp information
-	int playerNum = 0;
 
 	//real code
-	Ball = new Player(playerNum);
+	Ball = new Player(playerID);
 	Ball->setCamera(worlds[currentWorld]->GetMainCamera());
 
 	//build render object
@@ -594,15 +597,17 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	renderer->SetBallObject(Ball);
 
 	//physics component
-	SpherePhysicsComponent* sphere = nullptr;
-	PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-	sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial, scene);
-	Ball->addComponent(sphere);
+	if (isServer)
+	{
+		SpherePhysicsComponent* sphere = nullptr;
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
+		sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), Ball, 10, 0.05, mMaterial, scene);
+		Ball->addComponent(sphere);
+		sphere->setLinearDamping(0.8);
+		sphere->setAngularDamping(2);
+	}
 
-	sphere->setLinearDamping(0.8);
-	sphere->setAngularDamping(2);
-
-	Ball->SetNetworkObject(new NetworkObject(*Ball, playerNum));
+	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
 	//Ball->addComponent(new CurveBall());
 
 	worlds[currentWorld]->AddGameObject(Ball);
