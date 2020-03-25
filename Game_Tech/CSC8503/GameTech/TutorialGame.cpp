@@ -33,8 +33,6 @@
 using namespace NCL;
 using namespace CSC8503;
 
-const int world = 0;
-
 TutorialGame::TutorialGame()	{
 	srand(time(NULL));
 
@@ -47,9 +45,9 @@ TutorialGame::TutorialGame()	{
 			PhysxController::getInstance().addNewScene();
 	}
 
-	renderer = new GameTechRenderer(*worlds[world]);
-	currentWorld = world;
-
+	currentWorld = 0;
+	renderer = new GameTechRenderer(*worlds[currentWorld]);
+	
 	UIworld = new GameWorld();
 	UIrenderer = new GameTechRenderer(*UIworld);
 
@@ -170,7 +168,7 @@ void TutorialGame::StartGame()
 	{
 		InitWorld(i);
 	}
-	PhysxController::getInstance().setActiveScene(world);
+	PhysxController::getInstance().setActiveScene(currentWorld);
 
 	//InitWorld(0);
 

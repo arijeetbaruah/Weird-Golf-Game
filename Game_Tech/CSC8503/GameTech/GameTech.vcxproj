@@ -246,6 +246,7 @@
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="TriangleMeshPhysicsComponent.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
+    <ClCompile Include="WinningTriggerPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxPhysicsComponent.h" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Star.h" />
     <ClInclude Include="TriangleMeshPhysicsComponent.h" />
     <ClInclude Include="TutorialGame.h" />
+    <ClInclude Include="WinningTriggerPlane.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

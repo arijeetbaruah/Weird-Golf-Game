@@ -43,6 +43,7 @@
     <ClCompile Include="KillPlane.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="WinningTriggerPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectable.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="KillPlane.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="WinningTriggerPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Physics">
