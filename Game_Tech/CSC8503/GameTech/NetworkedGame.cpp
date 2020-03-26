@@ -238,7 +238,11 @@ public:
 				players[realPacket->playerID]->getComponent<ShotTracker*>("ShotTracker")->addShots();
 			}
 
-			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
+			PxVec3 temp = PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z);
+			if (players[realPacket->playerID]->getOffset()) {
+				temp = PxVec3(temp.z, temp.y, temp.x);
+			}
+			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(temp);
 		}
 	}
 protected:
@@ -359,20 +363,6 @@ void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 	serverPlayers.erase(it);
 }
 
-//void NetworkedGame::CreateNewPlayer(int id) {
-//	GameObject* other;
-//	if (id == 2) {
-//		other = AddPlayerObjectToWorld(playerTemp1, Vector3(-0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player2");
-//	}
-//	else if (id == 3) {
-//		other = AddPlayerObjectToWorld(playerTemp2, Vector3(0.2, 0.1, -0.9), 0, Vector3(1, 1, 1), "player3");
-//	}
-//	else {
-//		other = AddPlayerObjectToWorld(playerTemp3, Vector3(0.4, 0.1, -0.9), 0, Vector3(1, 1, 1), "player4");
-//	}
-//
-//	InsertPlayer(id, other);
-//}
 
 void NetworkedGame::UpdateGame(float dt)
 {

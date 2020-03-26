@@ -41,6 +41,10 @@ namespace NCL {
 				component->Start();
 			}
 
+			void setIsOffset(bool b) {
+				isOffset = b;
+			}
+
 			void Update(float dt) {
 				DuringUpdate(dt);
 				vector<string> todelete;
@@ -136,6 +140,7 @@ namespace NCL {
 			OGLMesh* GetPlayerMesh() { return playerMesh; }
 			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
 
+			const bool getOffset() { return isOffset; }
 		protected:
 			Transform			transform;
 
@@ -145,6 +150,8 @@ namespace NCL {
 
 			OGLMesh* cubeMesh = nullptr;
 			OGLMesh* playerMesh = nullptr;
+
+			bool isOffset = false;
 
 			unsigned long layer; // Bit number
 			unsigned long layerMask; // Set bit for each layer that this gameobject should not collide with

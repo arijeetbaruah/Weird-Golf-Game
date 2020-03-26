@@ -44,9 +44,7 @@ namespace NCL {
 				shotDir = v;
 			}
 
-			void setIsOffset(bool b) {
-				isOffset = b;
-			}
+
 
 			float getSpeed() { return speed; }
 			void setSpeed(float s) { speed = s; }
@@ -74,7 +72,7 @@ namespace NCL {
 			float speed = 0.005;
 			float sizeScale = 1;
 
-			bool isOffset = false;
+		
 
 			Vector3 camPos;
 			Vector3 direction;

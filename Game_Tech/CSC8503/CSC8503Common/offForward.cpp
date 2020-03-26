@@ -7,7 +7,7 @@ offForward::offForward() {
 
 void offForward::Apply() {
 #ifdef WIN32
-	dynamic_cast<Player*>(this->getParent())->setIsOffset(true);
+	((Player*)this->getParent())->setIsOffset(true);
 #else 
 	Player* temp= (Player*)(this->getParent());
 	temp->setIsOffset(true);
@@ -18,7 +18,7 @@ void offForward::Apply() {
 void offForward::Remove() {
 #ifdef WIN32
 	
-	Player* temp = dynamic_cast<Player*>(this->getParent());
+	Player* temp = (Player*)this->getParent();
 	temp->setIsOffset(false);
 	temp->setCurrentPowerUp(NetworkPowerUps::NONE);
 #else 
