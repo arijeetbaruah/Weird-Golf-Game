@@ -441,7 +441,7 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 
 void NetworkedGame::EndSession()
 {
-	if (isServer)
+	if (isServer || !Ball)
 		return;
 
 	int packetCount = 1000;
