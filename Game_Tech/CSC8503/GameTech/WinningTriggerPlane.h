@@ -14,6 +14,7 @@ namespace NCL {
 			virtual void OnCollisionBegin(GameObject* otherObject) override;
 
 		private:
+			vector<GameObject*>	playersCollided;
 			TutorialGame* game;
 		};
 	}

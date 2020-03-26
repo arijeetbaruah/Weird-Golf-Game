@@ -206,26 +206,6 @@ void TutorialGame::InitCamera() {
 	worlds[currentWorld]->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
 }
 
-void TutorialGame::NewLevel()
-{
-	int newWorldIndex = currentWorld;
-
-	while (newWorldIndex == currentWorld)
-	{
-		newWorldIndex = rand() % numberOfLevels;
-	}
-
-	currentWorld = newWorldIndex;
-
-	delete renderer;
-
-	renderer = new GameTechRenderer(*worlds[currentWorld]);
-
-	InitCamera();
-
-	PhysxController::getInstance().setActiveScene(currentWorld);
-}
-
 void TutorialGame::InitWorld(int worldIndex) {
 	//world->ClearAndErase();
 	/*for (int i = 0; i < worlds.size(); i++) 
@@ -640,6 +620,22 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 
 void TutorialGame::changeLevel()
 {
+	int newWorldIndex = currentWorld;
+
+	while (newWorldIndex == currentWorld)
+	{
+		newWorldIndex = rand() % numberOfLevels;
+	}
+
+	currentWorld = newWorldIndex;
+
+	delete renderer;
+
+	renderer = new GameTechRenderer(*worlds[currentWorld]);
+
+	InitCamera();
+
+	PhysxController::getInstance().setActiveScene(currentWorld);
 }
 
 MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
