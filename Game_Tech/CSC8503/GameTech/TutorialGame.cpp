@@ -672,7 +672,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	SelectObject();
 	if (displayFPS) {
-		renderer->DrawString(std::to_string((int)((1 / dt) + 0.5f)) + " FPS", Vector2(WIDTH - 200, HEIGHT - 100));
+		renderer->DrawString(std::to_string((int)((1 / dt))) + " FPS", Vector2(WIDTH - 200, HEIGHT - 100));
 	}
 
 	if (paused) {

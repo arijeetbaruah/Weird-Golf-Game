@@ -8,13 +8,14 @@ using namespace NCL;
 using namespace CSC8503;
 cubeDebuff::cubeDebuff(OGLMesh* before, OGLMesh* after) {
 	setName("cubeDebuff");
-	maxTime = 5;
+	maxShots = 5;
 	this->Before = before;
 	this->After = after;
 	mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
 }
 
 void cubeDebuff::Start() {
+	LimitedShot::Start();
 	par = (Player*) this->getParent();
 	ren = this->getParent()->GetRenderObject();
 	pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
