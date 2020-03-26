@@ -15,6 +15,9 @@ namespace NCL {
 			void StartAsServer();
 			void StartAsClient(char a, char b, char c, char d);
 
+			void ResetServerPacketReceivers();
+			void ResetClientPacketReceivers();
+
 			void UpdateGame(float dt) override;
 			Player* GetCurrentPlayer() { return Ball; }
 

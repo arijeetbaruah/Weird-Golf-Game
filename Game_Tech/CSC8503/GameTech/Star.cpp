@@ -21,10 +21,10 @@ void Star::DuringUpdate(float dt)
 	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
 	{
 		world->RemoveGameObject(this);
-		for (int i = 0; i < game->starList.size(); i++)
+		for (int i = 0; i < world->starList.size(); i++)
 		{
-			if (game->starList[i] == this)
-				game->starList[i] = nullptr;
+			if (world->starList[i] == this)
+				world->starList[i] = nullptr;
 		}
 		
 		return;

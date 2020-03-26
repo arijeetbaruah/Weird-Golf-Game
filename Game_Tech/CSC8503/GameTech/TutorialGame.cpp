@@ -55,6 +55,8 @@ TutorialGame::TutorialGame()	{
 
 	inSelectionMode = false;
 
+	switchingLevels = false;
+
 	Ball = nullptr;
 	playerConnected = false;
 
@@ -145,7 +147,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex, int I
 		
 		star->setGameWorld(worlds[worldIndex]);
 
-		starList.push_back(star);
+		worlds[worldIndex]->starList.push_back(star);
 
 		resultList.push_back(star);
 		worlds[worldIndex]->AddGameObject(star);
@@ -217,7 +219,6 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
-		PhysxController::getInstance().setActiveScene(0);
 		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
@@ -247,20 +248,16 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
 		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
 
-		PhysxController::getInstance().setActiveScene(1);
-
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level2, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	else if (worldIndex == 2)
 	{
-		PhysxController::getInstance().setActiveScene(2);
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level3, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	else if (worldIndex == 3)
 	{
-		PhysxController::getInstance().setActiveScene(3);
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
@@ -620,22 +617,39 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 
 void TutorialGame::changeLevel()
 {
-	int newWorldIndex = currentWorld;
-
-	while (newWorldIndex == currentWorld)
-	{
-		newWorldIndex = rand() % numberOfLevels;
-	}
-
-	currentWorld = newWorldIndex;
-
-	delete renderer;
-
-	renderer = new GameTechRenderer(*worlds[currentWorld]);
-
-	InitCamera();
+	currentWorld++;
 
 	PhysxController::getInstance().setActiveScene(currentWorld);
+
+	/*Ball->RemoveComponent("PhysicsComponent");
+	worlds[oldWorld]->RemoveGameObject(Ball);*/
+
+	switchingLevels = true;
+
+	if (currentWorld >= worlds.size())
+		// reset all levels then start from beginning
+
+	delete renderer;
+	
+	renderer = new GameTechRenderer(*worlds[currentWorld]);
+
+
+	otherplayers.clear();
+
+	AddPlayerObjectToWorld(getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), currentWorld, 0, Vector3(1, 1, 1), "player" + 0);
+
+	renderer->SetBallObject(Ball);
+
+	Ball->isCurrentPlayer = true;
+
+	otherplayers.push_back(Ball);
+
+	if (isServer)
+		Ball->isServer = true;
+
+	serverPlayers[0] = Ball;
+
+	InitCamera();
 }
 
 MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {

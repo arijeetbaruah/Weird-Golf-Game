@@ -25,7 +25,6 @@ public:
 
 			int playerCount = 0;
 
-
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
 					continue;
@@ -273,23 +272,6 @@ protected:
 	NetworkedGame& networkedGame;
 };
 
-class CollectableCountReceiver : public PacketReceiver {
-public:
-	CollectableCountReceiver(GameWorld& w) : world(w) {
-
-	}
-
-	void ReceivePacket(int type, GamePacket* payload, int source) {
-		if (type == Collectable_Count) {
-			CollectableCountPacket* realPacket = (CollectableCountPacket*)payload;
-
-			world.SetCollectableCount(realPacket->count);
-		}
-	}
-protected:
-	GameWorld& world;
-};
-
 class StarRemovedReceiver : public PacketReceiver {
 public:
 	StarRemovedReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
@@ -304,10 +286,10 @@ public:
 
 			StarRemovedPacket* realPacket = (StarRemovedPacket*)payload;
 
-			for (int i = 0; i < game->starList.size(); i++)
+			for (int i = 0; i < world.starList.size(); i++)
 			{
-				if (game->starList[i]->GetNetworkObject()->GetID() == realPacket->objectID)
-					world.RemoveGameObject(game->starList[i]);
+				if (world.starList[i]->GetNetworkObject()->GetID() == realPacket->objectID)
+					world.RemoveGameObject(world.starList[i]);
 			}
 		}
 	}
@@ -340,6 +322,19 @@ void NetworkedGame::StartAsServer()
 	thisServer->RegisterPacketHandler(Full_State, fullReceiver);
 }
 
+void NetworkedGame::ResetServerPacketReceivers() 
+{
+	thisServer->ClearPacketHandlers();
+
+	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*worlds[currentWorld], this);
+	FullPacketReceiver* fullReceiver = new FullPacketReceiver(*worlds[currentWorld], this);
+
+
+	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
+	thisServer->RegisterPacketHandler(Full_State, fullReceiver);
+}
+
+
 void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 {
 	thisClient = new GameClient();
@@ -360,6 +355,27 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	thisClient->RegisterPacketHandler(Player_Disconnected, &(*playerDisconnectPacketReceiver));
 
 	thisClient->Connect(127, 0, 0, 1, port);
+}
+
+void NetworkedGame::ResetClientPacketReceivers()
+{
+	thisClient->ClearPacketHandlers();
+
+	PlayerPacketReceiver* serverReceiver = new PlayerPacketReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Received_State, &(*serverReceiver));
+
+	PlayerIDPacketRecevier* countReceiver = new PlayerIDPacketRecevier(this);
+	thisClient->RegisterPacketHandler(Player_ID, &(*countReceiver));
+
+	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
+
+	StarRemovedReceiver* StarRemovedPacketReceiver = new StarRemovedReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Star_Removed, &(*StarRemovedPacketReceiver));
+
+	PlayerDisconnectPacketReceiver* playerDisconnectPacketReceiver = new PlayerDisconnectPacketReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Player_Disconnected, &(*playerDisconnectPacketReceiver));
+
 }
 
 void NetworkedGame::InsertPlayer(int ID, GameObject* p) {
@@ -387,6 +403,17 @@ void NetworkedGame::UpdateGame(float dt)
 {
 	
 	TutorialGame::UpdateGame(dt);
+
+	if (switchingLevels)
+	{
+		if (isServer)
+			ResetServerPacketReceivers();
+
+		ResetClientPacketReceivers();
+
+		switchingLevels = false;
+	}
+
 
 	/*if (Ball && serverPlayers.size() == 0)
 		serverPlayers.insert(std::pair<int, GameObject*>(1, (GameObject*)Ball));*/
@@ -428,8 +455,8 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 
 		StarRemovedPacket starPacket;
 
-		for (int i = 0; i < starList.size(); i++) {
-			if (starList[i] != nullptr) {
+		for (int i = 0; i < worlds[currentWorld]->starList.size(); i++) {
+			if (worlds[currentWorld]->starList[i] != nullptr) {
 				continue;
 			}
 
@@ -446,7 +473,7 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 
 void NetworkedGame::EndSession()
 {
-	if (isServer)
+	if (isServer || !Ball)
 		return;
 
 	int packetCount = 1000;

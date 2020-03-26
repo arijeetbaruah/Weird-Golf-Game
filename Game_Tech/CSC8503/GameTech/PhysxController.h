@@ -36,6 +36,8 @@ private:
 	PxScene* actualScene = NULL;
 	PxSceneDesc* sceneDesc;
 
+	int* sceneIndex;
+
 	std::vector<PxScene*> scenes;
 
 	CollisionCallback callback;

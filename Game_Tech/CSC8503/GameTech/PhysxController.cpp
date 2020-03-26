@@ -11,13 +11,17 @@ PhysxController::PhysxController() {
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
-	createDefaultScene(); createDefaultScene(); createDefaultScene();
+	sceneIndex = new int(0);
+
+	createDefaultScene();
+
+	
 
 }
 
 void PhysxController::stepPhysics(bool interactive, float dt) {
-	actualScene->simulate(dt);
-	actualScene->fetchResults(interactive);
+	scenes[*sceneIndex]->simulate(dt);
+	scenes[*sceneIndex]->fetchResults(interactive);
 }
 
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -71,6 +75,7 @@ void PhysxController::addScene(PxScene* scene) {
 
 void PhysxController::setActiveScene(int index) {
 	actualScene = scenes[index];
+	*sceneIndex = index;
 }
 
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {

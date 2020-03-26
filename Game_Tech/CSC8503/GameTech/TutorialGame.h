@@ -32,7 +32,6 @@ namespace NCL {
 			// Public variables due to time constraints
 			int currentWorld;
 			int currentPlayerCount;
-			vector<GameObject*> starList;
 
 			bool getIsServer() { return isServer; };
 
@@ -52,6 +51,7 @@ namespace NCL {
 			Player* Ball;
 			Player* playerTwo;
 
+			bool switchingLevels;
 
 			bool playerConnected;
 
@@ -147,8 +147,6 @@ namespace NCL {
 			void UpdateInGame();
 			bool ifQuitGame = false;
 			OGLShader* UIShader = nullptr;
-
-
 		};
 	}
 }
