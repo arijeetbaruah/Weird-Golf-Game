@@ -20,7 +20,8 @@ enum BasicNetworkMessages {
 	Send_Packet,
 	Player_ID,
 	Shutdown,
-	Collectable_Count
+	Collectable_Count,
+	Star_Removed
 };
 
 struct GamePacket {

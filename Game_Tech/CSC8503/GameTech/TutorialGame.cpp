@@ -92,7 +92,7 @@ void TutorialGame::InitialiseAssets() {
 	LoadColladaRenderObjects();
 }
 
-GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
+GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex, int ID)
 {
 	std::vector<GameObject*> resultList;
 	std::vector<RenderObject*> renderList = powerUpStar->GetAllMesh();
@@ -139,9 +139,13 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 		
 		star->setPhysxComponent(sphere);
 
+		star->SetNetworkObject(new NetworkObject(*star, ID));
+
 		//sphere->setAsTrigger();
 		
 		star->setGameWorld(worlds[worldIndex]);
+
+		starList.push_back(star);
 
 		resultList.push_back(star);
 		worlds[worldIndex]->AddGameObject(star);
@@ -227,15 +231,21 @@ void TutorialGame::InitWorld(int worldIndex) {
 	/*for (int i = 0; i < worlds.size(); i++) 
 		worlds[i]->ClearAndErase();*/
 
+	int starCount = 0;
+
 	// The player to act as the server
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
 		PhysxController::getInstance().setActiveScene(0);
-		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex);
-		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex);
-		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex);
+		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex, 1000 + starCount);
+		starCount++;
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
@@ -578,7 +588,6 @@ Player* TutorialGame::			AddSphereObjectToWorld(MeshSceneNode* sceneNode, const 
 	}
 
 	BallTemp->SetNetworkObject(new NetworkObject(*BallTemp, playerID));
-	//Ball->addComponent(new CurveBall());
 
 	worlds[currentWorld]->AddGameObject(BallTemp);
 

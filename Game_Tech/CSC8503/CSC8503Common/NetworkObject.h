@@ -15,6 +15,15 @@ namespace NCL {
 			}
 		};
 
+		struct StarRemovedPacket : public GamePacket {
+			int		objectID = -1;
+
+			StarRemovedPacket() {
+				type = Star_Removed;
+				size = sizeof(StarRemovedPacket) - sizeof(GamePacket);
+			}
+		};
+
 		struct SendPacket : public GamePacket {
 			int playerID;
 			NetworkState fullState;

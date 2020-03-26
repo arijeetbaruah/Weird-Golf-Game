@@ -281,6 +281,32 @@ protected:
 	GameWorld& world;
 };
 
+class StarRemovedReceiver : public PacketReceiver {
+public:
+	StarRemovedReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
+
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Star_Removed) {
+
+			if (game->getIsServer())
+				return;
+
+			StarRemovedPacket* realPacket = (StarRemovedPacket*)payload;
+
+			for (int i = 0; i < game->starList.size(); i++)
+			{
+				if (game->starList[i]->GetNetworkObject()->GetID() == realPacket->objectID)
+					world.RemoveGameObject(game->starList[i]);
+			}
+		}
+	}
+protected:
+	GameWorld& world;
+	NetworkedGame* game;
+};
+
 
 NetworkedGame::NetworkedGame()
 {
@@ -316,6 +342,9 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 
 	NewPlayerPacketReceiver* newPlayerPacketReceiver = new NewPlayerPacketReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Player_Connected, &(*newPlayerPacketReceiver));
+
+	StarRemovedReceiver* StarRemovedPacketReceiver = new StarRemovedReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Star_Removed, &(*StarRemovedPacketReceiver));
 
 	thisClient->Connect(127, 0, 0, 1, port);
 }
@@ -385,13 +414,21 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 
 			Player* p = dynamic_cast<Player*>(it->second);
 			packet.fullState[it->first].powerUps = p->getCurrentPowerUp();
-
-			/*if ((p->getCurrentPowerUp() != NetworkPowerUps::SQUARE) &&
-				(p->getCurrentPowerUp() != NetworkPowerUps::SIZE))
-				p->setCurrentPowerUp(NetworkPowerUps::NONE);*/
 		}
 
 		this->thisServer->SendGlobalPacket(packet);
+
+		StarRemovedPacket starPacket;
+
+		for (int i = 0; i < starList.size(); i++) {
+			if (starList[i] != nullptr) {
+				continue;
+			}
+
+			starPacket.objectID = i + 1000;
+			this->thisServer->SendGlobalPacket(starPacket);
+		}
+
 	}
 
 	if (thisClient) {

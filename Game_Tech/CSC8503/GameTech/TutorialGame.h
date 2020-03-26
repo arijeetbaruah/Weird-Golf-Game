@@ -35,6 +35,8 @@ namespace NCL {
 
 			bool hasPlayer() { return playerConnected; };
 
+			vector<GameObject*> starList;
+
 			Player* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 		protected:
@@ -44,6 +46,7 @@ namespace NCL {
 
 			Player* Ball;
 			Player* playerTwo;
+
 
 			bool playerConnected;
 
@@ -62,7 +65,7 @@ namespace NCL {
 			void LoadColladaRenderObjects();
 			//sub functions of initiate
 			vector<GameObject*> AddSomeObject(MeshSceneNode* sceneNode, const Vector3& position, const int worldIndex, const Vector3& size = Vector3(1, 1, 1), Quaternion rotate = Quaternion(Matrix4::Rotation(0, Vector3(0, 0, 0))), std::string objectName = "");
-			GameObject* AddStarToWorld(Vector3 position, int worldIndex);
+			GameObject* AddStarToWorld(Vector3 position, int worldIndex, int ID);
 			
 			//update game 
 			void UpdateKeys();

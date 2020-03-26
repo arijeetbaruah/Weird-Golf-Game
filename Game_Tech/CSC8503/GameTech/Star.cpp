@@ -8,7 +8,7 @@ Star::Star() : GameObject("STAR")
 {
 	layer = 2;
 	layerMask = 1; // Collide with only player
-
+	
 }
 
 Star::~Star() 
@@ -21,11 +21,21 @@ void Star::DuringUpdate(float dt)
 	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
 	{
 		world->RemoveGameObject(this);
+		for (int i = 0; i < game->starList.size(); i++)
+		{
+			if (game->starList[i] == this)
+				game->starList[i] = nullptr;
+		}
 		
 		return;
 	}
+	else 
+	{
+		RotateStar(dt);
+		physx->getActor()->setLinearVelocity(PxVec3(0, 0, 0));
+	}
 
-	RotateStar(dt);
+	
 }
 
 void Star::OnCollisionBegin(GameObject* otherObject)
@@ -42,8 +52,8 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 #else 
 		Player* p = (Player*)(otherObject);
 #endif
-		/*if (p->getCurrentPowerUp() != NetworkPowerUps::NONE)
-			return;*/
+		if (p->getCurrentPowerUp() != NetworkPowerUps::NONE)
+			return;
 
 		int randNum = rand() % 6 + 1;
 
