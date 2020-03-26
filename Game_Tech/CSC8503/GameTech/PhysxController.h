@@ -53,6 +53,16 @@ public:
 		addScene(newScene);
 	}
 
+	void clearScenes() 
+	{
+		int size = scenes.size();
+		scenes.clear();
+		for (int i = 0; i < size; i++)
+		{
+			addNewScene();
+		}
+	}
+
 	void stepPhysics(bool interactive, float dt);
 	void createDefaultScene();
 	void addActor(PxActor* actor, int index);

@@ -22,5 +22,6 @@ void WinningTriggerPlane::OnCollisionBegin(GameObject* otherObject)
 	if (playersCollided.size() >= game->currentPlayerCount) 
 	{
 		game->changeLevel();
+		playersCollided.clear();
 	}
 }

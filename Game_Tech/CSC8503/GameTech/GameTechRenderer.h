@@ -70,6 +70,8 @@ namespace NCL {
 			{
 				isStarted = true;
 			}
+
+			void SetWorld(GameWorld& g) { gameWorld = g; };
 		protected:
 			void RenderFrame()	override;
 

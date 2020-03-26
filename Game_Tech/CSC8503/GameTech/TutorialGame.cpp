@@ -219,14 +219,14 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
-		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
+		/*AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex, 1000 + starCount);
-		starCount++;
+		starCount++;*/
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
@@ -250,16 +250,22 @@ void TutorialGame::InitWorld(int worldIndex) {
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level2, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0, -5, 0)), 30, 2, 30, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 	}
 	else if (worldIndex == 2)
 	{
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level3, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0, -5, 0)), 30, 2, 30, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 	}
 	else if (worldIndex == 3)
 	{
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0, -5, 0)), 30, 2, 30, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 	}
 	
 	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
@@ -619,24 +625,21 @@ void TutorialGame::changeLevel()
 {
 	currentWorld++;
 
+	if (currentWorld >= worlds.size())
+	{
+		// end game
+	}
+		
 	PhysxController::getInstance().setActiveScene(currentWorld);
 
-	/*Ball->RemoveComponent("PhysicsComponent");
-	worlds[oldWorld]->RemoveGameObject(Ball);*/
-
 	switchingLevels = true;
-
-	if (currentWorld >= worlds.size())
-		// reset all levels then start from beginning
-
-	delete renderer;
-	
-	renderer = new GameTechRenderer(*worlds[currentWorld]);
-
 
 	otherplayers.clear();
 
 	AddPlayerObjectToWorld(getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), currentWorld, 0, Vector3(1, 1, 1), "player" + 0);
+
+	renderer->SetWorld(*worlds[currentWorld]);
+	InitCamera();
 
 	renderer->SetBallObject(Ball);
 
@@ -649,7 +652,7 @@ void TutorialGame::changeLevel()
 
 	serverPlayers[0] = Ball;
 
-	InitCamera();
+	
 }
 
 MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
