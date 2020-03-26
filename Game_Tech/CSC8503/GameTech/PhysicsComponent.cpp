@@ -32,11 +32,15 @@ void PhysicsComponent::Update(float dt) {
 }
 
 void PhysicsComponent::setAsTrigger() {
-	PxShape* shape;
-	actor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
-	actor->getShapes(&shape, 1);
-	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+	//PxShape* shape;
+	//actor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
+	for each (PxShape* shape in getShapes())
+	{
+		shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+		shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+	}
+	//actor->getShapes(&shape, 1);
+	
 }
 
 void PhysicsComponent::addForce(PxVec3 force) {

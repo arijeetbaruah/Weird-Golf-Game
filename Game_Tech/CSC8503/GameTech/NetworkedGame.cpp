@@ -359,7 +359,6 @@ void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
 	serverPlayers.erase(it);
 }
 
-// TODO: BOH
 //void NetworkedGame::CreateNewPlayer(int id) {
 //	GameObject* other;
 //	if (id == 2) {

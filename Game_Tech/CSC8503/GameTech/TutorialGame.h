@@ -39,6 +39,8 @@ namespace NCL {
 
 			Player* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
+
+			void changeLevel();
 		protected:
 
 			//check if you need show mouse on window
