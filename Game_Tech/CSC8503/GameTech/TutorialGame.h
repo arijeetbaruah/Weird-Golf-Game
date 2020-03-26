@@ -29,13 +29,16 @@ namespace NCL {
 			OGLMesh* cubeMesh = nullptr;
 			MeshSceneNode* getPlayerMesh(int ID = 0);
 
+			// Public variables due to time constraints
 			int currentWorld;
+			int currentPlayerCount;
+			vector<GameObject*> starList;
 
 			bool getIsServer() { return isServer; };
 
 			bool hasPlayer() { return playerConnected; };
 
-			vector<GameObject*> starList;
+			
 
 			Player* AddSphereObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");

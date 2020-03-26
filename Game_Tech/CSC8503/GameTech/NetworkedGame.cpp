@@ -23,17 +23,21 @@ public:
 			PlayerPacket* realPacket = (PlayerPacket*)payload;
 			auto serverPlayers = game->GetServerPlayers();
 
+			int playerCount = 0;
+
 
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
 					continue;
 				}
+				playerCount++;
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
 
-				
 				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
+
+			game->currentPlayerCount = playerCount;
 		}
 	}
 
@@ -84,6 +88,23 @@ public:
 	NetworkedGame* game;
 };
 
+class PlayerDisconnectPacketReceiver : public PacketReceiver {
+public:
+	PlayerDisconnectPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
+	}
+
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == Player_Disconnected) {
+			PlayerDisconnectPacket* realPacket = (PlayerDisconnectPacket*)payload;
+
+			game->RemovePlayer(realPacket->playerID);
+		}
+	}
+
+	GameWorld& world;
+	NetworkedGame* game;
+};
+
 class NewPlayerPacketReceiver : public PacketReceiver {
 public:
 	NewPlayerPacketReceiver(GameWorld& w, NetworkedGame* g) : world(w), game(g) {
@@ -113,6 +134,8 @@ public:
 			else if (realPacket->playerID == 3) {
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
+
+			game->currentPlayerCount++;
 
 			Player* b = game->AddSphereObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
 
@@ -181,24 +204,6 @@ public:
 			game->InsertPlayer(realPacket->playerID, player);
 		}
 	}
-	NetworkedGame* game;
-};
-
-class PlayerDisconnectPacketReceiver : public PacketReceiver {
-public:
-	PlayerDisconnectPacketReceiver(GameWorld& w, Player* player, NetworkedGame* g) : world(w), controlledplayer(player), game(g) {
-	}
-
-	void ReceivePacket(int type, GamePacket* payload, int source) {
-		if (type == Player_Disconnected) {
-			PlayerDisconnectPacket* realPacket = (PlayerDisconnectPacket*)payload;
-
-			game->RemovePlayer(realPacket->playerID, controlledplayer);
-		}
-	}
-
-	GameWorld& world;
-	Player* controlledplayer;
 	NetworkedGame* game;
 };
 
@@ -329,6 +334,7 @@ void NetworkedGame::StartAsServer()
 
 	SendPacketReceiver* serverReceiver = new SendPacketReceiver(*worlds[currentWorld], this);
 	FullPacketReceiver* fullReceiver = new FullPacketReceiver(*worlds[currentWorld], this);
+	
 
 	thisServer->RegisterPacketHandler(Send_Packet, serverReceiver);
 	thisServer->RegisterPacketHandler(Full_State, fullReceiver);
@@ -350,6 +356,9 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d)
 	StarRemovedReceiver* StarRemovedPacketReceiver = new StarRemovedReceiver(*worlds[currentWorld], this);
 	thisClient->RegisterPacketHandler(Star_Removed, &(*StarRemovedPacketReceiver));
 
+	PlayerDisconnectPacketReceiver* playerDisconnectPacketReceiver = new PlayerDisconnectPacketReceiver(*worlds[currentWorld], this);
+	thisClient->RegisterPacketHandler(Player_Disconnected, &(*playerDisconnectPacketReceiver));
+
 	thisClient->Connect(127, 0, 0, 1, port);
 }
 
@@ -358,11 +367,21 @@ void NetworkedGame::InsertPlayer(int ID, GameObject* p) {
 	serverPlayers.insert(std::pair<int, GameObject*>(ID, p));
 }
 
-void NetworkedGame::RemovePlayer(int ID, GameObject* p) {
+void NetworkedGame::RemovePlayer(int ID) {
+
 	std::map<int, GameObject*>::iterator it = serverPlayers.find(ID);
+
+	if (it == serverPlayers.end())
+		return;
+	
+	GameObject* p = (*it).second;
+
+	p->RemoveComponent("PhysicsComponent");
+
+	worlds[currentWorld]->RemoveGameObject(p);
+
 	serverPlayers.erase(it);
 }
-
 
 void NetworkedGame::UpdateGame(float dt)
 {
@@ -423,7 +442,20 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	if (thisClient) {
 		
 	}
+}
 
+void NetworkedGame::EndSession()
+{
+	if (isServer)
+		return;
+
+	int packetCount = 1000;
+
+	for (int i = 0; i < packetCount; i++)
+	{
+		PlayerDisconnectPacket packet(Ball->getID());
+		thisClient->SendPacket(packet);
+	}
 }
 
 void NetworkedGame::StartLevel()

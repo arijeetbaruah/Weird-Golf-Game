@@ -45,6 +45,8 @@ TutorialGame::TutorialGame()	{
 			PhysxController::getInstance().addNewScene();
 	}
 
+	currentPlayerCount = 1;
+
 	currentWorld = 0;
 	renderer = new GameTechRenderer(*worlds[currentWorld]);
 	
@@ -755,6 +757,7 @@ void TutorialGame::InitUIWorld()
 	//link function to UIBar
 	auto quitgame = [this]() {ifQuitGame = true; };
 	interBar3->funL = quitgame;
+
 
 	auto intogame = [this]() {
 		isNetworkedGame = true;

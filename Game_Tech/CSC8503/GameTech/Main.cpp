@@ -77,5 +77,7 @@ int main(int argc, char* argv[])
 		g->UpdateGame(dt);
 		c.stepPhysics(true, dt);
 	}
+
+	g->EndSession();
 	Window::DestroyGameWindow();
 }
