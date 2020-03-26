@@ -168,11 +168,7 @@ void Player::UpdateClientPlayerKeys(float dt)
 		q = cameraRot * q * c;
 		shotDir = Vector3(q.x, q.y, q.z);
 
-		Vector3 vec = getShotDir() * distance * speed;
-		Component* shotTracker = this->getComponent<ShotTracker*>("Shots");
-		this->getComponent<ShotTracker*>("ShotTracker")->addShots();
-		//sphere->addForce(PxVec3(vec.x, vec.y, vec.z));
-		std::cout << vec.x << "," << vec.y << "," << vec.z;
+		Vector3 vec = shotDir * distance * speed;
 		forceState = vec;		
 
 		initialMousePos.x = 0;

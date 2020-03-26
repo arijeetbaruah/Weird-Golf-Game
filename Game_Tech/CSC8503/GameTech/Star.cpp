@@ -56,7 +56,6 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 			return;
 
 		int randNum = rand() % 6 + 1;
-
 		switch (randNum)
 		{
 		case 1: p->addComponent(new cubeDebuff(p->GetPlayerMesh(), p->GetCubeMesh()));

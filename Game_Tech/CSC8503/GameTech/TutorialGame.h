@@ -61,6 +61,7 @@ namespace NCL {
 			bool isNetworkedGame;
 			bool solo;
 			bool isServer;
+			bool displayFPS = false;
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 

@@ -34,20 +34,6 @@ namespace NCL {
 			bool isCurrentPlayer;
 			bool isServer;
 
-			Vector3 getShotDir() {
-				if (isOffset)
-					return Vector3(shotDir.z, shotDir.y, shotDir.x);
-				return shotDir;
-			}
-
-			void setShotDir(Vector3 v) {
-				shotDir = v;
-			}
-
-
-
-			float getSpeed() { return speed; }
-			void setSpeed(float s) { speed = s; }
 
 			int getID() { return playerID; }
 

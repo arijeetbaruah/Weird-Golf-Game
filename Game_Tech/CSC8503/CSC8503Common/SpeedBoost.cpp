@@ -6,14 +6,21 @@ SpeedBoost::SpeedBoost(float multiplier, string name) {
 	this->multiplier = multiplier;
 }
 
-void SpeedBoost::Apply() {
-	po->setSpeed(origSpeed * multiplier);
+void SpeedBoost::Update(float dt) {
+	Timed::Update(dt);
+	int currShot = st->getShots();
+	if (currShot > lastShot) {
+		lastShot = currShot;
+		PhysicsComponent* pc = po->getComponent<PhysicsComponent*>("PhysicsComponent");
+		PxVec3 lvel = pc->getLinearVelocity();
+		PxVec3 avel = pc->getAngularVelocity();
+		pc->setLinearVelocity(lvel * multiplier);
+		pc->setAngularVelocity(avel * multiplier);
+	}
 }
 
 void SpeedBoost::Remove() {
-	po->setSpeed(origSpeed);
 	po->setCurrentPowerUp(NetworkPowerUps::NONE);
-	po = nullptr;
 }
 
 void SpeedBoost::Start() {
@@ -22,5 +29,6 @@ void SpeedBoost::Start() {
 #else 
 	po = (Player*)(this->getParent());
 #endif
-	origSpeed = po->getSpeed();
+	st = po->getComponent<ShotTracker*>("ShotTracker");
+	lastShot = st->getShots();
 }

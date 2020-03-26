@@ -1,5 +1,5 @@
 #pragma once
-#include "Timed.h"
+#include "LimitedShot.h"
 #include "GameObject.h"
 #include "RenderObject.h"
 #include "../GameTech/PhysicsComponent.h"
@@ -13,7 +13,7 @@ namespace NCL {
 	}
 }
 
-class cubeDebuff : public Timed {
+class cubeDebuff : public LimitedShot {
 	public:
 		cubeDebuff(OGLMesh* before, OGLMesh* after);
 
