@@ -671,6 +671,10 @@ void TutorialGame::UpdateGame(float dt) {
 	UpdateKeys();
 
 	SelectObject();
+	if (displayFPS) {
+		renderer->DrawString(std::to_string((int)((1 / dt) + 0.5f)) + " FPS", Vector2(WIDTH - 200, HEIGHT - 100));
+	}
+
 	if (paused) {
 		if(isNetworkedGame)
 			dt = 0;
@@ -724,6 +728,9 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
 		UIworld->SetUIactive(false);
 		//de something else
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F3)) {
+		displayFPS = !displayFPS;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
