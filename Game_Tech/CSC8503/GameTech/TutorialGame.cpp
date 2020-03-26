@@ -230,14 +230,12 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//world->ClearAndErase();
 	/*for (int i = 0; i < worlds.size(); i++) 
 		worlds[i]->ClearAndErase();*/
-
 	int starCount = 0;
-
+	PhysxController::getInstance().setActiveScene(worldIndex);
 	// The player to act as the server
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
-		PhysxController::getInstance().setActiveScene(0);
 		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
@@ -247,48 +245,75 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 
-		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0,-5, 0)), 30, 2, 30, worldIndex, this);
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(-2.7,-0.3, 1.5)), 0.4, 0.2, 0.4, worldIndex, this);
 		worlds[worldIndex]->AddGameObject(wPlane);
-		/*AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");*/
 	}
 	else if (worldIndex == 1)
 	{
-		/*AddStarToWorld(Vector3(-0.4, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(-0.1, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(0.1, 0.3, 1), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.3, 1), worldIndex);
+		AddStarToWorld(Vector3(-2, -0.9, 3), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2, -0.9, 3.3), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2, -0.9, 3.6), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2, -0.9, 3.9), worldIndex, 1000 + starCount);
+		starCount++;
 
-		AddStarToWorld(Vector3(-0.4, 0.3, 2), worldIndex);
-		AddStarToWorld(Vector3(-0.1, 0.3, 2), worldIndex);
-		AddStarToWorld(Vector3(0.1, 0.3, 2), worldIndex);
-		AddStarToWorld(Vector3(0.4, 0.3, 2), worldIndex);*/
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0, -2.5, 3.1)), 0.4, 0.2, 0.4, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 
-		PhysxController::getInstance().setActiveScene(1);
-
-		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level2, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
 	}
 	else if (worldIndex == 2)
 	{
-		PhysxController::getInstance().setActiveScene(2);
-		//			 RenderObject(must)	    Position(must)							scale						rotation													name
+		AddStarToWorld(Vector3(-0.5, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-0.2, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(0, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(0.3, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		
+		AddStarToWorld(Vector3(5.3, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(5.0, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(4.8, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(4.5, 0.05, 2.5), worldIndex, 1000 + starCount);
+		starCount++;
+
+		AddStarToWorld(Vector3(-3.5, 0.05, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-3.2, 0.05, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-3, 0.05, 1), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2.7, 0.05, 1), worldIndex, 1000 + starCount);
+		starCount++;
+
 		AddSomeObject(level3, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(-0.1, -0.5, 4.55)), 0.5, 0.2, 0.5, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 	}
 	else if (worldIndex == 3)
 	{
-		PhysxController::getInstance().setActiveScene(3);
-		//			 RenderObject(must)	    Position(must)							scale						rotation													name
-		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
-	}
-	
-	//AddSomeObject(treeFormRhino,	Vector3(  0,    0, 0.5),		Vector3( 1,	 1,  1),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	//AddSomeObject(treeWithMultiTex,	Vector3(  0,    0,   0),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
-	//AddSomeObject(treeFromBlender,	Vector3(  0,	0,-0.3),		Vector3(10, 10, 10),		Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0))),		"tree");
+		AddStarToWorld(Vector3(-1.6, 0.10, 3), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-1.9, 0.10, 3), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2.1, 0.10, 3), worldIndex, 1000 + starCount);
+		starCount++;
+		AddStarToWorld(Vector3(-2.4, 0.10, 3), worldIndex, 1000 + starCount);
+		starCount++;
 
+		AddSomeObject(level4, Vector3(0, 0, 0), worldIndex, Vector3(1, 1, 1), Quaternion(Matrix4::Rotation(00, Vector3(1, 0, 0))), "map");
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0, -0.5, 9.15)), 0.5, 0.2, 0.5, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
+	}
 }
 
 void TutorialGame::LoadColladaRenderObjects() {
