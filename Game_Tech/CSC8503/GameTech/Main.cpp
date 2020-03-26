@@ -53,8 +53,7 @@ int main(int argc, char* argv[])
 	PhysxController c = PhysxController::getInstance();
 
 	NetworkBase::Initialise();
-
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE) && g->IfQiutGame() != true) {
+	while (w->UpdateWindow() && g->IfQuitGame() != true) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 
 		if (dt > 1.0f) {
@@ -68,14 +67,13 @@ int main(int argc, char* argv[])
 			w->ShowConsole(false);
 		}
 		
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
 		//DisplayPathfinding();
-
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+		w->SetTitle("Gametech frame Rate: " + std::to_string(1/dt));
 
 		g->UpdateGame(dt);
-		c.stepPhysics(true, dt);
+		if (!g->isPaused() || !g->isSolo())
+			c.stepPhysics(true, dt);
 	}
 	Window::DestroyGameWindow();
 }
