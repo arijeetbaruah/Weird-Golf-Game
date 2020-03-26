@@ -12,5 +12,5 @@ WinningTriggerPlane::~WinningTriggerPlane()
 
 void WinningTriggerPlane::OnCollisionBegin(GameObject* otherObject)
 {
-	//game->changeLevel();
+	game->changeLevel();
 }

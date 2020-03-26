@@ -24,7 +24,7 @@
 #include "TriangleMeshPhysicsComponent.h"
 
 #include "PhysxController.h"
-#include "KillPlane.h"
+#include "WinningTriggerPlane.h"
 
 #include <functional>
 
@@ -128,7 +128,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 
 		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial, worldIndex);
 		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-		PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
+		//PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
 
 		star->addComponent(sphere);
 
@@ -136,7 +136,7 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex)
 		
 		star->setPhysxComponent(sphere);
 
-		//sphere->setAsTrigger();
+		sphere->setAsTrigger();
 		
 		star->setGameWorld(worlds[worldIndex]);
 
@@ -236,8 +236,8 @@ void TutorialGame::InitWorld(int worldIndex) {
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
-		KillPlane* kPlane = new KillPlane(PxTransform(PxVec3(0,-5, 0)), 30, 2, 30, worldIndex);
-		worlds[worldIndex]->AddGameObject(kPlane);
+		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(0,-5, 0)), 30, 2, 30, worldIndex, this);
+		worlds[worldIndex]->AddGameObject(wPlane);
 		/*AddSomeObject(gameMapExplode,	Vector3(  0, -0.5,   2),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		AddSomeObject(gameMapOrigin,	Vector3(  0, -1.5,   4),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		AddSomeObject(gameMapExplode,	Vector3(  0, -2.0,   6),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");*/
@@ -615,6 +615,10 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	worlds[currentWorld]->AddGameObject(Ball);
 
 	return Ball;
+}
+
+void TutorialGame::changeLevel()
+{
 }
 
 MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {

@@ -37,6 +37,7 @@ void cubeDebuff::Remove() {
 void cubeDebuff::applyTransformation(Vector3 scale, OGLMesh* mesh, PhysicsComponent* physC) {
 	par->GetTransform().SetWorldScale(scale * par->getSizeScale());
 	par->SetRenderObject(new RenderObject(&par->GetTransform(), mesh, ren->GetDefaultTexture(), ren->GetShader()));
+	PhysicsComponent* pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
 	PxVec3 angVec = pc->getAngularVelocity();
 	PxVec3 linVec = pc->getLinearVelocity();
 	par->RemoveComponent("PhysicsComponent");

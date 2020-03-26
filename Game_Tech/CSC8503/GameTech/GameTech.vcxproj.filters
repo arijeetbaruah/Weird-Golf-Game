@@ -43,7 +43,9 @@
     <ClCompile Include="KillPlane.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="WinningTriggerPlane.cpp" />
+    <ClCompile Include="WinningTriggerPlane.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectable.h" />
@@ -90,7 +92,9 @@
     <ClInclude Include="KillPlane.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="WinningTriggerPlane.h" />
+    <ClInclude Include="WinningTriggerPlane.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Physics">

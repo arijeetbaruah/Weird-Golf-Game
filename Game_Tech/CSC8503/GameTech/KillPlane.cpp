@@ -12,6 +12,7 @@ KillPlane::KillPlane(physx::PxTransform pos, float xSide, float ySide, float zSi
 
 KillPlane::~KillPlane()
 {
+	this->RemoveComponent("PhysicsComponent");
 }
 
 void KillPlane::OnCollisionBegin(GameObject* otherObject)
