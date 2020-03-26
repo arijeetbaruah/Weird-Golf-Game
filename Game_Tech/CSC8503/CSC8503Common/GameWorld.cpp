@@ -74,21 +74,21 @@ void GameWorld::OperateOnContents(GameObjectFunc f) {
 
 void GameWorld::UpdateWorld(float dt) {
 	UpdateTransforms();
+		for (auto& i : gameObjects) {
 
-	for (auto& i : gameObjects) {
-		
-		if (isNetworkedGame)
-		{
-			if (isServer && i->GetNetworkObject()->GetID() == 2000)
-				continue;
+			if (isNetworkedGame)
+			{
+				if (isServer && i->GetNetworkObject()->GetID() == 2000)
+					continue;
 
-			if (!isServer && i->GetNetworkObject()->GetID() == 1000)
-				continue;
+				if (!isServer && i->GetNetworkObject()->GetID() == 1000)
+					continue;
 
-			i->Update(dt);
-		} else
-			i->Update(dt);
-	}
+				i->Update(dt);
+			}
+			else
+				i->Update(dt);
+		}
 
 	if (shuffleObjects) {
 		std::random_shuffle(gameObjects.begin(), gameObjects.end());

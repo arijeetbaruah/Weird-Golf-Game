@@ -667,12 +667,17 @@ void TutorialGame::UpdateGame(float dt) {
 		UpdateUIWorld(dt);
 		if (UIworld->GetUIactive() == false)return;
 	}
-	
+
 	//update Render
 	UpdateInGame();
 	UpdateKeys();
 
 	SelectObject();
+	if (paused) {
+		if(isNetworkedGame)
+			dt = 0;
+		displayPauseMenu();
+	}
 
 	if (powerUpName.size() > 0)
 		displayPowerUpText(dt);
@@ -680,12 +685,20 @@ void TutorialGame::UpdateGame(float dt) {
 	worlds[currentWorld]->UpdateWorld(dt);
 	renderer->Update(dt);
 	SelectObject();
+
 	Debug::FlushRenderables();
 	renderer->Render();
 
 	//update NetWork
 	UpdateNetworkPostion(Ball);
 #endif
+}
+
+void TutorialGame::displayPauseMenu() {
+	renderer->DrawString("Quit?", Vector2(WIDTH / 2 - 50, HEIGHT/2));
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
+		ifQuitGame = true;
+	}
 }
 
 void TutorialGame::displayPowerUpText(float dt)
@@ -713,6 +726,10 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
 		UIworld->SetUIactive(false);
 		//de something else
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
+		paused = !paused;
 	}
 }
 
@@ -761,6 +778,7 @@ void TutorialGame::InitUIWorld()
 
 	auto intogame = [this]() {
 		isNetworkedGame = true;
+		solo = true;
 		isServer = true;
 		UIworld->SetUIactive(true); 
 		renderer->SetGameStarted();
@@ -769,6 +787,7 @@ void TutorialGame::InitUIWorld()
 
 	auto servergame = [this]() { 
 		isNetworkedGame = true;
+		solo = false;
 		isServer = true;
 		UIworld->SetUIactive(true);
 		renderer->SetGameStarted();
@@ -777,6 +796,7 @@ void TutorialGame::InitUIWorld()
 
 	auto clientgame = [this]() { 
 		isNetworkedGame = true;
+		solo = false;
 		isServer = false;
 		UIworld->SetUIactive(true);
 		renderer->SetGameStarted();

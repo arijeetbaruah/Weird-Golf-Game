@@ -22,7 +22,8 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
-			bool IfQiutGame() { return ifQuitGame; }
+			void displayPauseMenu();
+			bool IfQuitGame() { return ifQuitGame; }
 
 			void setPowerUpName(string name) { powerUpName = name; };
 
@@ -35,6 +36,7 @@ namespace NCL {
 			vector<GameObject*> starList;
 
 			bool getIsServer() { return isServer; };
+			bool isPaused() { return paused; }
 
 			bool hasPlayer() { return playerConnected; };
 
@@ -44,6 +46,7 @@ namespace NCL {
 			Player* AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vector3& position, int scene, int playerID, const Vector3& size = Vector3(1, 1, 1), std::string objectName = "");
 
 			void changeLevel();
+			const bool isSolo() { return solo; }
 		protected:
 
 			//check if you need show mouse on window
@@ -56,6 +59,7 @@ namespace NCL {
 			bool playerConnected;
 
 			bool isNetworkedGame;
+			bool solo;
 			bool isServer;
 
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
@@ -148,6 +152,7 @@ namespace NCL {
 			void UpdateUIKeyWords(UIPushDownMachine* UIMachine);
 			void UpdateInGame();
 			bool ifQuitGame = false;
+			bool paused = false;
 			OGLShader* UIShader = nullptr;
 
 
