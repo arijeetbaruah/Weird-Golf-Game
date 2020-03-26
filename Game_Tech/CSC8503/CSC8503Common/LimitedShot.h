@@ -1,14 +1,17 @@
 #pragma once
 #include "Targeted.h"
+#include "ShotTracker.h"
+#include "../GameTech/Player.h"
 class LimitedShot : public Targeted {
 	public:
 		void setTakenShots();
 		void Start();
-		void Update(float dt);
+		virtual void Update(float dt);
 		bool conditionCheck();
 	protected:
 		int takenShots = 0;
 		int maxShots;
-		int startingShots = 0;
+		int lastShot;
+		ShotTracker* st = nullptr;
 };
 

@@ -2,18 +2,21 @@
 #include "GameObject.h"
 #include "ShotTracker.h"
 
-void LimitedShot::setTakenShots() {
-	startingShots = this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots();
-}
 
 void LimitedShot::Start() {
-	setTakenShots();
+	st = ((Player*)this->getParent())->getComponent<ShotTracker*>("ShotTracker");
+	lastShot = st->getShots();
 }
 
 void LimitedShot::Update(float dt) {
 	Targeted::Update(dt);
+	int currShot = st->getShots();
+	if (currShot > lastShot) {
+		lastShot = currShot;
+		takenShots++;
+	}
 }
 
 bool LimitedShot::conditionCheck() {
-	return this->getParent()->getComponent<ShotTracker*>("ShotTracker")->getShots() > startingShots + maxShots;
+	return takenShots > maxShots;
 }

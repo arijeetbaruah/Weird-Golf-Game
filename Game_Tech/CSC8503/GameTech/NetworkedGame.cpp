@@ -237,12 +237,7 @@ public:
 			{
 				players[realPacket->playerID]->getComponent<ShotTracker*>("ShotTracker")->addShots();
 			}
-
-			PxVec3 temp = PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z);
-			if (players[realPacket->playerID]->getOffset()) {
-				temp = PxVec3(temp.z, temp.y, temp.x);
-			}
-			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(temp);
+			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 		}
 	}
 protected:
