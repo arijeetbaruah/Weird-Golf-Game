@@ -55,8 +55,7 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		if (p->getCurrentPowerUp() != NetworkPowerUps::NONE)
 			return;
 
-		//int randNum = rand() % 6 + 1;
-		int randNum = 4;
+		int randNum = rand() % 6 + 1;
 		switch (randNum)
 		{
 		case 1: p->addComponent(new cubeDebuff(p->GetPlayerMesh(), p->GetCubeMesh()));

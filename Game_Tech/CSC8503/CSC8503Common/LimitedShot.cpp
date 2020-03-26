@@ -18,5 +18,5 @@ void LimitedShot::Update(float dt) {
 }
 
 bool LimitedShot::conditionCheck() {
-	return takenShots > maxShots;
+	return takenShots >= maxShots;
 }
