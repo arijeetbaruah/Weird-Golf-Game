@@ -36,6 +36,8 @@ private:
 	PxScene* actualScene = NULL;
 	PxSceneDesc* sceneDesc;
 
+	int* sceneIndex;
+
 	std::vector<PxScene*> scenes;
 
 	CollisionCallback callback;
@@ -51,10 +53,12 @@ public:
 		addScene(newScene);
 	}
 
+	void clearScenes();
+
 	void stepPhysics(bool interactive, float dt);
 	void createDefaultScene();
 	void addActor(PxActor* actor, int index);
-	void removeActor(PxActor* actor);
+	void removeActor(PxActor* actor, int index);
 	void addScene(PxScene* scene);
 	void setActiveScene(int index);
 

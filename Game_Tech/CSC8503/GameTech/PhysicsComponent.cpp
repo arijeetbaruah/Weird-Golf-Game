@@ -16,7 +16,7 @@ PhysicsComponent::PhysicsComponent(PxTransform transform, GameObject* go, int sc
 }
 
 PhysicsComponent::~PhysicsComponent() {
-	PhysxController::getInstance().removeActor(actor);
+	PhysxController::getInstance().removeActor(actor, scene);
 }
 
 

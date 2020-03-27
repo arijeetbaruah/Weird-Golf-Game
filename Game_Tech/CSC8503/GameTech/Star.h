@@ -37,6 +37,8 @@ namespace NCL {
 
 			SpherePhysicsComponent* physx;
 
+			Vector2 holePositions[4];
+
 			vector<PowerUp*> powerUps;
 
 			GameWorld* world;

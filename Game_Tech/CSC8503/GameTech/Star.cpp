@@ -8,7 +8,12 @@ Star::Star() : GameObject("STAR")
 {
 	layer = 2;
 	layerMask = 1; // Collide with only player
-	
+
+	// Hole positions for each level
+	holePositions[0] = Vector2(-2.7, 1.5);
+	holePositions[1] = Vector2(0.02, 3.19);
+	holePositions[2] = Vector2(-0.09, 4.5);
+	holePositions[3] = Vector2(0, 9.19);
 }
 
 Star::~Star() 
@@ -21,10 +26,10 @@ void Star::DuringUpdate(float dt)
 	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
 	{
 		world->RemoveGameObject(this);
-		for (int i = 0; i < game->starList.size(); i++)
+		for (int i = 0; i < world->starList.size(); i++)
 		{
-			if (game->starList[i] == this)
-				game->starList[i] = nullptr;
+			if (world->starList[i] == this)
+				world->starList[i] = nullptr;
 		}
 		
 		return;
@@ -58,42 +63,73 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		int randNum = rand() % 6 + 1;
 		switch (randNum)
 		{
-		case 1: p->addComponent(new cubeDebuff(p->GetPlayerMesh(), p->GetCubeMesh()));
-			p->setCurrentPowerUp(NetworkPowerUps::SQUARE);
+			case 1:
+			{
+				p->addComponent(new cubeDebuff(p->GetPlayerMesh(), p->GetCubeMesh()));
+				p->setCurrentPowerUp(NetworkPowerUps::SQUARE);
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("BOXED IN!");
-			break;
-		case 2: p->addComponent(new Homing(Vector3(0, 0, 3)));
-			p->setCurrentPowerUp(NetworkPowerUps::HOMING);
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("BOXED IN!");
+				break;
+			}
+			case 2: 
+			{
+				Vector3 pos;
+				switch (game->currentWorld)
+				{
+				case 0: pos = Vector3(holePositions[0].x, transform.GetWorldPosition().y, holePositions[0].y);
+					break;
+				case 1: pos = Vector3(holePositions[1].x, transform.GetWorldPosition().y, holePositions[1].y);
+					break;
+				case 2: pos = Vector3(holePositions[2].x, transform.GetWorldPosition().y, holePositions[2].y);
+					break;
+				case 3: pos = Vector3(holePositions[3].x, transform.GetWorldPosition().y, holePositions[3].y);
+					break;
+				}
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("HOMING BALL!");
-			break;
-		case 3: p->addComponent(new SpeedBoost());
-			p->setCurrentPowerUp(NetworkPowerUps::SPEED);
+				p->addComponent(new Homing(pos));
+				p->setCurrentPowerUp(NetworkPowerUps::HOMING);
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("SPEED BOOST!");
-			break;
-		case 4: p->addComponent(new offForward());
-			p->setCurrentPowerUp(NetworkPowerUps::DIRECTION);
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("HOMING BALL!");
+				break;
+			}
+			case 3:
+			{
+				p->addComponent(new SpeedBoost());
+				p->setCurrentPowerUp(NetworkPowerUps::SPEED);
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("DIRECTION CHANGE!");
-			break;
-		case 5: p->addComponent(new CurveBall());
-			p->setCurrentPowerUp(NetworkPowerUps::CURVE);
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("SPEED BOOST!");
+				break;
+			}
+			case 4: 
+			{
+				p->addComponent(new offForward());
+				p->setCurrentPowerUp(NetworkPowerUps::DIRECTION);
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("CURVE BALL!");
-			break;
-		case 6: p->addComponent(new sizeChange(2));
-			p->setCurrentPowerUp(NetworkPowerUps::SIZE);
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("DIRECTION CHANGE!");
+				break;
+			}
+			case 5:
+			{
+				p->addComponent(new CurveBall());
+				p->setCurrentPowerUp(NetworkPowerUps::CURVE);
 
-			if (otherObject->getLayer() == 1)
-				game->setPowerUpName("BIG BALL!");
-			break;
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("CURVE BALL!");
+				break;
+			}
+			case 6: 
+			{
+				p->addComponent(new sizeChange(2));
+				p->setCurrentPowerUp(NetworkPowerUps::SIZE);
+
+				if (otherObject->getLayer() == 1)
+					game->setPowerUpName("BIG BALL!");
+				break;
+			}
 		}
 
 		this->getComponent<SpherePhysicsComponent*>("PhysicsComponent")->toRemove = true;

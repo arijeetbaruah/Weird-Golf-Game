@@ -42,6 +42,8 @@ namespace NCL {
 				shuffleObjects = state;
 			}
 
+			vector<GameObject*> starList;
+
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false) const;
 
 			virtual void UpdateWorld(float dt);
@@ -56,38 +58,20 @@ namespace NCL {
 				std::vector<Constraint*>::const_iterator& first,
 				std::vector<Constraint*>::const_iterator& last) const;
 
-			void increaseScore(int s) { score += s; };
-			int getScore() { return score; };
-
-			void increasePlayerOneScore(int s) { playerOneScore += s; };
-			void setPlayerOneScore(int s) { playerOneScore = s; };
-			int getPlayerOneScore() { return playerOneScore; };
-
-			void increasePlayerTwoScore(int s) { playerTwoScore += s; };
-			void setPlayerTwoScore(int s) { playerTwoScore = s; };
-			int getPlayerTwoScore() { return playerTwoScore; };
-
-			void IncrementCollectableCount() { CollectableCount++; };
-			void DecrementCollectableCount() { CollectableCount--; };
-			void SetCollectableCount(int c) { CollectableCount = c; };
-			int GetCollectableCount() { return CollectableCount; };
-
 			void SetIsServer(bool b) { isServer = b; };
 			void SetIsNetworkedGame(bool b) { isNetworkedGame = b; };
 
 			bool GetIsServer() { return isServer; };
 			bool GetIsNetworkedGame() { return isNetworkedGame; };
 
-			void IncreasePlayerOneTotal(int i) { playerOneTotalScore += i; };
-			void SetPlayerOneTotal(int i) { playerOneTotalScore = i; };
-			int GetPlayerOneTotal() { return playerOneTotalScore; };
-
-			void IncreasePlayerTwoTotal(int i) { playerTwoTotalScore += i; };
-			void SetPlayerTwoTotal(int i) { playerTwoTotalScore = i; };
-			int GetPlayerTwoTotal() { return playerTwoTotalScore; };
-
 			void SetUIactive(bool state) { isUIactive = state; }
 			bool GetUIactive() { return isUIactive; }
+
+			void SetPlayer(GameObject* p) { player = p; };
+			GameObject* GetPlayer() { return player; };
+
+			void SetServerPlayer(GameObject* p, int index) { serverPlayers.insert(std::pair<int, GameObject*>(index, p)); };
+			GameObject* GetServerPlayer(int index) { return serverPlayers.at(index); };
 
 			void SetObjectList(std::vector<GameObject*> newList) { gameObjects = newList; }
 		protected:
@@ -102,15 +86,11 @@ namespace NCL {
 
 			QuadTree<GameObject*>* quadTree;
 
+			std::map<int, GameObject*> serverPlayers;
+
 			Camera* mainCamera;
 
-			int score;
-
-			int playerOneScore;
-			int playerTwoScore;
-
-			int playerOneTotalScore;
-			int playerTwoTotalScore;
+			GameObject* player;
 
 			bool isServer;
 			bool isNetworkedGame;

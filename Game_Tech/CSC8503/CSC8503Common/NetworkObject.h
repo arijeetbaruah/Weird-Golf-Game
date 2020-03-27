@@ -8,6 +8,7 @@ namespace NCL {
 		struct PlayerPacket : public GamePacket {
 			int		objectID = -1;
 			NetworkState fullState[4];
+			bool switchingLevel;
 
 			PlayerPacket() {
 				type = Received_State;

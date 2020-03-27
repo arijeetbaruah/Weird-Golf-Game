@@ -11,13 +11,30 @@ PhysxController::PhysxController() {
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
-	createDefaultScene(); createDefaultScene(); createDefaultScene();
+	sceneIndex = new int(0);
 
+	createDefaultScene();
 }
 
 void PhysxController::stepPhysics(bool interactive, float dt) {
-	actualScene->simulate(dt);
-	actualScene->fetchResults(interactive);
+
+	if (scenes[*sceneIndex])
+	{
+		scenes[*sceneIndex]->simulate(dt);
+		scenes[*sceneIndex]->fetchResults(interactive);
+	}
+}
+
+void PhysxController::clearScenes()
+{
+	int size = scenes.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		scenes[i]->release();
+	}
+
+	//scenes.clear();
 }
 
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -55,8 +72,8 @@ void PhysxController::addActor(PxActor* actor, int index) {
 	scenes[index]->addActor(*actor);
 }
 
-void PhysxController::removeActor(PxActor* actor) {
-	actualScene->removeActor(*actor);
+void PhysxController::removeActor(PxActor* actor, int index) {
+	scenes[index]->removeActor(*actor);
 }
 
 void PhysxController::addScene(PxScene* scene) {
@@ -71,6 +88,7 @@ void PhysxController::addScene(PxScene* scene) {
 
 void PhysxController::setActiveScene(int index) {
 	actualScene = scenes[index];
+	*sceneIndex = index;
 }
 
 void PhysxController::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {

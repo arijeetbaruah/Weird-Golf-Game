@@ -104,6 +104,10 @@ public:
 		packetHandlers.insert(std::make_pair(msgID, receiver));
 	}
 
+	void ClearPacketHandlers() {
+		packetHandlers.clear();
+	}
+
 	std::map<int, ENetPeer*>::const_iterator GetPlayerIterator() const {
 		return players.begin();
 	}

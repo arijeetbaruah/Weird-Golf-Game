@@ -13,14 +13,6 @@ GameWorld::GameWorld()	{
 
 	quadTree = nullptr;
 
-	score = 0;
-
-	playerOneScore = 0;
-	playerTwoScore = 0;
-
-	playerOneTotalScore = 0;
-	playerTwoTotalScore = 0;
-
 	isServer = false;
 	isNetworkedGame = false;
 
@@ -34,7 +26,6 @@ GameWorld::~GameWorld()	{
 void GameWorld::Clear() {
 	gameObjects.clear();
 	constraints.clear();
-	score = 0;
 }
 
 void GameWorld::ClearAndErase() {
@@ -45,9 +36,6 @@ void GameWorld::ClearAndErase() {
 		delete i;
 	}
 	Clear();
-	score = 0;
-	playerOneScore = 0;
-	playerTwoScore = 0;
 }
 
 void GameWorld::AddGameObject(GameObject* o) {
