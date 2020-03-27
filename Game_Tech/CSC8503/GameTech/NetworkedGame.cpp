@@ -25,6 +25,9 @@ public:
 
 			int playerCount = 0;
 
+			if (realPacket->switchingLevel)
+				game->changeLevel();
+
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
 					continue;
@@ -158,7 +161,6 @@ public:
 				return;
 
 			PlayerIDPacket* realPacket = (PlayerIDPacket*)payload;
-			//game->InsertPlayer(realPacket->playerID, game->GetCurrentPlayer());
 
 			Vector3 pos;
 			if (realPacket->playerID == 0) {
@@ -190,9 +192,6 @@ public:
 				Player* d = game->AddSphereObjectToWorld(game->getPlayerMesh(2), Vector3(-0.4, 0.1, -0.9), 0, 2, Vector3(1, 1, 1), "player" + 2);
 				game->InsertPlayer(2, d);
 			}
-
-			//GameObject* b = game->AddSphereObjectToWorld(game->getPlayerMesh(1), Vector3(-0.4, 0.1, -0.9), 0, 1, Vector3(1, 1, 1), "player" + 1);
-			//game->InsertPlayer(1, b);
 
 			Player* player = game->AddPlayerObjectToWorld(game->getPlayerMesh(realPacket->playerID), pos, 0, realPacket->playerID, Vector3(1, 1, 1), "player" + realPacket->playerID);
 
@@ -437,6 +436,13 @@ void NetworkedGame::UpdateGame(float dt)
 void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 	if (thisServer) {
 		PlayerPacket packet;
+
+		if (switchingLevels)
+			packet.switchingLevel = true;
+		else
+			packet.switchingLevel = false;
+
+		switchingLevels = false;
 
 		for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
 			if (it->second == NULL) {

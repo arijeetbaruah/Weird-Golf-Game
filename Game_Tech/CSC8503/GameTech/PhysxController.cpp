@@ -14,14 +14,27 @@ PhysxController::PhysxController() {
 	sceneIndex = new int(0);
 
 	createDefaultScene();
-
-	
-
 }
 
 void PhysxController::stepPhysics(bool interactive, float dt) {
-	scenes[*sceneIndex]->simulate(dt);
-	scenes[*sceneIndex]->fetchResults(interactive);
+
+	if (scenes[*sceneIndex])
+	{
+		scenes[*sceneIndex]->simulate(dt);
+		scenes[*sceneIndex]->fetchResults(interactive);
+	}
+}
+
+void PhysxController::clearScenes()
+{
+	int size = scenes.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		scenes[i]->release();
+	}
+
+	//scenes.clear();
 }
 
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -59,8 +72,8 @@ void PhysxController::addActor(PxActor* actor, int index) {
 	scenes[index]->addActor(*actor);
 }
 
-void PhysxController::removeActor(PxActor* actor) {
-	actualScene->removeActor(*actor);
+void PhysxController::removeActor(PxActor* actor, int index) {
+	scenes[index]->removeActor(*actor);
 }
 
 void PhysxController::addScene(PxScene* scene) {

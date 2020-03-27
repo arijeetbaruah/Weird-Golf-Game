@@ -624,35 +624,100 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 void TutorialGame::changeLevel()
 {
 	currentWorld++;
-
-	if (currentWorld >= worlds.size())
-	{
-		// end game
-	}
-		
-	PhysxController::getInstance().setActiveScene(currentWorld);
-
 	switchingLevels = true;
-
 	otherplayers.clear();
 
-	AddPlayerObjectToWorld(getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), currentWorld, 0, Vector3(1, 1, 1), "player" + 0);
-
-	renderer->SetWorld(*worlds[currentWorld]);
-	InitCamera();
-
-	renderer->SetBallObject(Ball);
-
-	Ball->isCurrentPlayer = true;
-
-	otherplayers.push_back(Ball);
+	if (currentWorld >= 4)
+	{
+		// finish game
+	}
 
 	if (isServer)
-		Ball->isServer = true;
+	{
 
-	serverPlayers[0] = Ball;
+		PhysxController::getInstance().setActiveScene(currentWorld);
 
-	
+		AddPlayerObjectToWorld(getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), currentWorld, 0, Vector3(1, 1, 1), "player" + 0);
+
+		for (int i = 1; i < serverPlayers.size(); i++)
+		{
+			Vector3 pos;
+			if (i == 1) {
+				pos = Vector3(-0.2, 0.1, -0.9);
+			}
+			else if (i == 2) {
+				pos = Vector3(0.2, 0.1, -0.9);
+			}
+			else if (i == 3) {
+				pos = Vector3(0.4, 0.1, -0.9);
+			}
+
+			Player* p = AddSphereObjectToWorld(getPlayerMesh(i), pos, currentWorld, i, Vector3(1, 1, 1), "player" + i);
+
+			if (isServer)
+				p->isServer = true;
+
+			serverPlayers[i] = p;
+			otherplayers.push_back(serverPlayers[i]);
+		}
+
+		renderer->SetWorld(*worlds[currentWorld]);
+		InitCamera();
+
+		renderer->SetBallObject(Ball);
+
+		Ball->isCurrentPlayer = true;
+
+		otherplayers.push_back(Ball);
+
+		if (isServer)
+			Ball->isServer = true;
+
+		serverPlayers[0] = Ball;
+	}
+	else
+	{
+
+		for (int i = 0; i < serverPlayers.size(); i++)
+		{
+			Vector3 pos;
+			if (i == 0) {
+				pos = Vector3(-0.4, 0.1, -0.9);
+			}
+			else if (i == 1) {
+				pos = Vector3(-0.2, 0.1, -0.9);
+			}
+			else if (i == 2) {
+				pos = Vector3(0.2, 0.1, -0.9);
+			}
+			else if (i == 3) {
+				pos = Vector3(0.4, 0.1, -0.9);
+			}
+
+			Player* p = nullptr;
+
+			if (i == Ball->getID())
+			{
+				p = AddPlayerObjectToWorld(getPlayerMesh(i), pos, currentWorld, i, Vector3(1, 1, 1), "player" + i);
+				p->isCurrentPlayer = true;
+			}
+			else
+			{
+				p = AddSphereObjectToWorld(getPlayerMesh(i), pos, currentWorld, i, Vector3(1, 1, 1), "player" + i);
+			}
+				
+
+			if (p)
+				serverPlayers[i] = p;
+
+			otherplayers.push_back(serverPlayers[i]);
+		}
+
+		renderer->SetWorld(*worlds[currentWorld]);
+		InitCamera();
+
+		renderer->SetBallObject(Ball);
+	}
 }
 
 MeshSceneNode* TutorialGame::getPlayerMesh(int ID) {
