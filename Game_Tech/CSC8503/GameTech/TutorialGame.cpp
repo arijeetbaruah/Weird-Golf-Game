@@ -219,14 +219,14 @@ void TutorialGame::InitWorld(int worldIndex) {
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
-		/*AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
+		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(0.1, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex, 1000 + starCount);
-		starCount++;*/
+		starCount++;
 
 		//			 RenderObject(must)	    Position(must)							scale						rotation													name
 		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
