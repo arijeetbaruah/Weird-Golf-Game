@@ -721,7 +721,7 @@ void TutorialGame::changeLevel()
 
 			Player* p = AddSphereObjectToWorld(getPlayerMesh(i), pos, currentWorld, i, Vector3(1, 1, 1), "player" + i);
 
-			p->getComponent<ShotTracker*>("ShotTracker")->setShots(shotsSoFar);
+			p->getComponent<ShotTracker*>("ShotTracker")->setShots(shots);
 
 			if (isServer)
 				p->isServer = true;
@@ -958,7 +958,7 @@ void TutorialGame::UpdateKeys() {
 
 void TutorialGame::UpdateInGame() {
 #ifdef WIN32
-	renderer->DrawString("Your point : XXXXXX ", Vector2(10, 0));
+	//renderer->DrawString("Your point : XXXXXX ", Vector2(10, 0));
 #else 
 	//PS4 code
 #endif
