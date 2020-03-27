@@ -819,7 +819,6 @@ void TutorialGame::UpdateGame(float dt) {
 	UpdateInGame();
 	UpdateKeys();
 
-	SelectObject();
 	if (displayFPS) {
 		renderer->DrawString(std::to_string((int)((1 / dt))) + " FPS", Vector2(WIDTH - 200, HEIGHT - 100));
 	}
@@ -842,7 +841,6 @@ void TutorialGame::UpdateGame(float dt) {
 		worlds[currentWorld]->UpdateWorld(dt);
 
 	renderer->Update(dt);
-	SelectObject();
 
 	Debug::FlushRenderables();
 	renderer->Render();
@@ -942,9 +940,6 @@ void TutorialGame::displayScoreBoard(float dt)
 }
 
 void TutorialGame::UpdateKeys() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		InitWorld(0); //We can reset the simulation at any time with F1
-	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
 		UIworld->SetUIactive(false);
@@ -957,21 +952,6 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
 		paused = !paused;
 	}
-}
-
-bool TutorialGame::SelectObject() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
-		inSelectionMode = !inSelectionMode;
-		if (inSelectionMode) {
-			Window::GetWindow()->ShowOSPointer(true);
-			Window::GetWindow()->LockMouseToWindow(false);
-		}
-		else {
-			Window::GetWindow()->ShowOSPointer(false);
-			Window::GetWindow()->LockMouseToWindow(true);
-		}
-	}
-	return false;
 }
 
 //following is UIfunction

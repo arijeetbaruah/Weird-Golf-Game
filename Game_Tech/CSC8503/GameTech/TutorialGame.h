@@ -50,9 +50,6 @@ namespace NCL {
 			void setScore(int id, int shots) { score[id] = shots; };
 		protected:
 
-			//check if you need show mouse on window
-			bool SelectObject();
-
 			Player* Ball;
 			Player* playerTwo;
 
