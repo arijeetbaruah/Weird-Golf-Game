@@ -2,7 +2,7 @@
 
 SpherePhysicsComponent::SpherePhysicsComponent(PxTransform transform, GameObject* go, float mass, float radius, PxMaterial* mMaterial, int scene)
 	: PhysicsComponent(transform, go, scene) {
-	PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *mMaterial);
+	PxShape* shape = gPhysics->createShape(PxSphereGeometry(radius), *mMaterial, true);
 	shape->setName("Sphere");
 	actor->attachShape(*shape);
 	PxRigidBodyExt::updateMassAndInertia(*actor, mass);

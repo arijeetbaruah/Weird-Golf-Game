@@ -5,6 +5,17 @@
 using namespace NCL;
 using namespace CSC8503;
 
+void CollisionCallback::onTrigger(PxTriggerPair* pairs, PxU32 count)
+{
+	for (PxU32 i = 0; i < count; i++)
+	{
+		GameObject* go1 = (GameObject*)pairs[i].otherShape->getActor()->userData;
+		GameObject* go2 = (GameObject*)pairs[i].triggerShape->getActor()->userData;
+		go1->OnCollisionBegin(go2);
+		go2->OnCollisionBegin(go1);
+	}
+}
+
 void CollisionCallback::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) {
 	PX_UNUSED((pairHeader));
 	std::vector<PxContactPairPoint> contactPoints;
