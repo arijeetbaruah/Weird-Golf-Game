@@ -50,6 +50,11 @@ TutorialGame::TutorialGame()	{
 	score[2] = 0;
 	score[3] = 0;
 
+	winner = -1;
+	draw = false;
+
+	gameFinished = false;
+
 	currentPlayerCount = 1;
 
 	currentWorld = 0;
@@ -646,6 +651,7 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 	}
 
 	Ball->SetNetworkObject(new NetworkObject(*Ball, playerID));
+	Ball->setWorldNumber(scene);
 	//Ball->addComponent(new CurveBall());
 
 	worlds[currentWorld]->AddGameObject(Ball);
@@ -655,21 +661,48 @@ Player* TutorialGame::AddPlayerObjectToWorld(MeshSceneNode* sceneNode, const Vec
 
 void TutorialGame::changeLevel()
 {
-	currentWorld++;
-	switchingLevels = true;
-	otherplayers.clear();
+	if (gameFinished)
+		return;
 
-	if (currentWorld >= 4)
+	switchingLevels = true;
+
+	if (currentWorld >= 0)
 	{
-		// finish game
+		gameFinished = true;
+		winner = 0;
+
+		for (int i = 1; i < 4; i++)
+		{
+			if ((score[i] < score[winner]) && (score[i] > 0))
+				winner = i;
+		}
+
+		int count = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			if (score[i] == score[winner])
+				count++;
+		}
+
+		if (count > 1)
+			draw = true;
+		
+		return;
 	}
+
+	currentWorld++;
+	otherplayers.clear();
 
 	if (isServer)
 	{
 
 		PhysxController::getInstance().setActiveScene(currentWorld);
 
+		int shotsSoFar = Ball->getComponent<ShotTracker*>("ShotTracker")->getShots();
+
 		AddPlayerObjectToWorld(getPlayerMesh(0), Vector3(-0.4, 0.1, -0.9), currentWorld, 0, Vector3(1, 1, 1), "player" + 0);
+
+		Ball->getComponent<ShotTracker*>("ShotTracker")->setShots(shotsSoFar);
 
 		for (int i = 1; i < serverPlayers.size(); i++)
 		{
@@ -684,7 +717,11 @@ void TutorialGame::changeLevel()
 				pos = Vector3(0.4, 0.1, -0.9);
 			}
 
+			int shots = serverPlayers[i]->getComponent<ShotTracker*>("ShotTracker")->getShots();
+
 			Player* p = AddSphereObjectToWorld(getPlayerMesh(i), pos, currentWorld, i, Vector3(1, 1, 1), "player" + i);
+
+			p->getComponent<ShotTracker*>("ShotTracker")->setShots(shotsSoFar);
 
 			if (isServer)
 				p->isServer = true;
@@ -793,12 +830,17 @@ void TutorialGame::UpdateGame(float dt) {
 		displayPauseMenu();
 	}
 
-	displayScoreBoard(dt);
+	if (gameFinished)
+		displayWinner(dt);
+	else
+		displayScoreBoard(dt);
 
 	if (powerUpName.size() > 0)
 		displayPowerUpText(dt);
 
-	worlds[currentWorld]->UpdateWorld(dt);
+	if (!gameFinished)
+		worlds[currentWorld]->UpdateWorld(dt);
+
 	renderer->Update(dt);
 	SelectObject();
 
@@ -824,7 +866,6 @@ void TutorialGame::displayPowerUpText(float dt)
 #else 
 #endif
 	
-
 	powerUpTxtTimer -= dt;
 
 	if (powerUpTxtTimer <= 0) 
@@ -834,12 +875,44 @@ void TutorialGame::displayPowerUpText(float dt)
 	}
 }
 
+void TutorialGame::displayWinner(float dt) 
+{
+	int startYPos = 400;
+	int startXPos = 400;
+
+	if (!Ball)
+		return;
+
+	if (draw && (score[winner] == score[Ball->getID()]))
+	{
+		renderer->DrawString("!! DRAW !!", Vector2(startXPos, startYPos));
+	}
+	else if (winner == Ball->getID())
+	{
+		renderer->DrawString("!! WINNER WINNER CHICKEN DINNER !!", Vector2(startXPos - 300, startYPos));
+	}
+	else 
+	{
+		renderer->DrawString("!! YOU LOSE !!", Vector2(startXPos, startYPos));
+	}
+
+	renderer->DrawString("FINAL SCORES: ", Vector2(startXPos + 10, startYPos - 30));
+
+	renderer->DrawString("Player1: " + std::to_string(score[0]), Vector2(startXPos + 40, startYPos - 60));
+
+	renderer->DrawString("Player2: " + std::to_string(score[1]), Vector2(startXPos + 40, startYPos - 90));
+
+	renderer->DrawString("Player3: " + std::to_string(score[2]), Vector2(startXPos + 40, startYPos - 120));
+
+	renderer->DrawString("Player4: " + std::to_string(score[3]), Vector2(startXPos + 40, startYPos - 150));
+}
+
 void TutorialGame::displayScoreBoard(float dt)
 {
 #ifdef WIN32
 
 	int startYPos = 650;
-	int startXPos = 800;
+	int startXPos = 900;
 
 	if (isServer) 
 	{

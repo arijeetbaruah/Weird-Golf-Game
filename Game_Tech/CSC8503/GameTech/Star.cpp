@@ -69,7 +69,7 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 		if (p->getCurrentPowerUp() != NetworkPowerUps::NONE)
 			return;
 
-		int randNum = rand() % 6 + 1;
+		int randNum = rand() % 5 + 1;
 		switch (randNum)
 		{
 			case 1:
@@ -121,16 +121,7 @@ void Star::OnCollisionBegin(GameObject* otherObject)
 					game->setPowerUpName("DIRECTION CHANGE!");
 				break;
 			}
-			case 5:
-			{
-				p->addComponent(new CurveBall());
-				p->setCurrentPowerUp(NetworkPowerUps::CURVE);
-
-				if (otherObject->getLayer() == 1)
-					game->setPowerUpName("CURVE BALL!");
-				break;
-			}
-			case 6: 
+			case 5: 
 			{
 				p->addComponent(new sizeChange(2));
 				p->setCurrentPowerUp(NetworkPowerUps::SIZE);

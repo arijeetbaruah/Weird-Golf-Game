@@ -26,7 +26,7 @@ void cubeDebuff::Apply() {
 	Vector3 position = par->GetTransform().GetWorldPosition();
 	float size = 0.1 * par->getSizeScale();
 	PhysicsComponent* pc = par->getComponent<PhysicsComponent*>("PhysicsComponent");
-	applyTransformation(Vector3(0.05, 0.05, 0.05), After, new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 10, size, size, size, pc->getScene()));
+	applyTransformation(Vector3(0.05, 0.05, 0.05), After, new BoxPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), par, 5, size, size, size, pc->getScene()));
 }
 
 void cubeDebuff::Remove() {

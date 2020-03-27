@@ -47,6 +47,9 @@ namespace NCL {
 
 			void setCurrentPowerUp(NetworkPowerUps p) { power = p; };
 			NetworkPowerUps getCurrentPowerUp() { return power; };
+
+			const bool getCanMove() { return canMove; };
+			void setWorldNumber(int num) { worldNumber = num; };
 			
 		protected:
 
@@ -58,7 +61,11 @@ namespace NCL {
 			float speed = 0.005;
 			float sizeScale = 1;
 
-		
+			Vector2 holePositions[4];
+			bool holeReached;
+			int worldNumber;
+
+			bool canMove;
 
 			Vector3 camPos;
 			Vector3 direction;

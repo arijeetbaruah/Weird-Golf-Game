@@ -236,11 +236,22 @@ public:
 //			Player* p = (Player*)(players[realPacket->playerID]);
 //#endif
 
-			if (realPacket->force.x > 0 || realPacket->force.y > 0 || realPacket->force.z > 0)
+			if (realPacket->force.x != 0 || realPacket->force.y != 0 || realPacket->force.z != 0)
 			{
+				PhysicsComponent* sphere = players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent");
+
+				float x = (float)sphere->getVelocity().x;
+				float y = (float)sphere->getVelocity().y;
+				float z = (float)sphere->getVelocity().z;
+
+				// Ball can only be moved when standing still
+				if ((x > 0) || (y > 0) || (z > 0))
+					return;
+
 				players[realPacket->playerID]->getComponent<ShotTracker*>("ShotTracker")->addShots();
+				players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
 			}
-			players[realPacket->playerID]->getComponent<PhysicsComponent*>("PhysicsComponent")->addForce(PxVec3(realPacket->force.x, realPacket->force.y, realPacket->force.z));
+			
 		}
 	}
 protected:

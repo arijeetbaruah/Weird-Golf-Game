@@ -25,7 +25,16 @@ Player::Player(int id) : GameObject("PLAYER")
 	layer = 1;
 	layerMask = 0; // Collide with everything
 
+	holePositions[0] = Vector2(-2.7, 1.5);
+	holePositions[1] = Vector2(0.02, 3.19);
+	holePositions[2] = Vector2(-0.09, 4.5);
+	holePositions[3] = Vector2(0, 9.19);
+
+	holeReached = false;
+
 	power = NONE;
+
+	canMove = true;
 
 	isServer = false;
 
@@ -118,15 +127,20 @@ void Player::UpdateClientPlayerKeys(float dt)
 		return;
 	}
 
-	/*PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
+	if (isServer)
+	{
+		PhysicsComponent* sphere = (PhysicsComponent*)components.at("PhysicsComponent");
 
-	float x = (float)sphere->getVelocity().x;
-	float y = (float)sphere->getVelocity().y;
-	float z = (float)sphere->getVelocity().z;*/
+		float x = (float)sphere->getVelocity().x;
+		float y = (float)sphere->getVelocity().y;
+		float z = (float)sphere->getVelocity().z;
 
-	// Ball can only be moved when standing still
-	/*if ((x > 0) || (y > 0) || (z > 0))
-		return;*/
+		// Ball can only be moved when standing still
+		if ((x > 0) || (y > 0) || (z > 0))
+			return;
+	}
+	
+		
 
 	// Gets intitial mouse pos on first click
 	if (Window::GetMouse()->ButtonDown(MouseButtons::LEFT) && (initialMousePos.x == 0 && initialMousePos.y == 0))
@@ -216,9 +230,22 @@ void Player::UpdateClientPlayerKeys(float dt)
 }
 
 void Player::OnCollisionBegin(GameObject* otherObject) {
+
+	// Win plane collision
+	// Make camera hover above hole
 	if (otherObject->getLayer() == 6)
 	{
-		// Do something
+		holeReached = true;
+
+		switch (worldNumber) 
+		{
+			case 0: 
+			{
+				mainCamera->SetPosition(Vector3(holePositions[0]));
+			}
+		}
+
+		
 	}
 }
 

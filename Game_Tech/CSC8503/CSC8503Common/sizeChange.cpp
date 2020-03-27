@@ -3,7 +3,7 @@
 
 sizeChange::sizeChange(float multiplier) {
 	setName("sizeChange");
-	maxShots = 5;
+	maxShots = 3;
 	mult = multiplier;
 }
 
@@ -25,7 +25,7 @@ void sizeChange::Apply() {
 			else {
 				float size = po->sphereSize * mult;
 				PxMaterial* mat = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 1);
-				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 10, size, mat, pc->getScene()));
+				applyTransformation(new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z)), po, 2, size, mat, pc->getScene()));
 			}
 		}
 	}

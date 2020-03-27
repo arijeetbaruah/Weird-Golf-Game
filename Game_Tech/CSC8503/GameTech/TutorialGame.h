@@ -65,6 +65,8 @@ namespace NCL {
 			bool isServer;
 			bool displayFPS = false;
 
+			bool gameFinished;
+
 			virtual void UpdateNetworkPostion(GameObject* obj) = 0;
 
 			//initiate the game
@@ -115,6 +117,11 @@ namespace NCL {
 			OGLShader* basicShader = nullptr;
 
 			float	forceMagnitude;
+
+			void displayWinner(float dt);
+			int winner;
+			bool draw;
+
 
 			void displayScoreBoard(float dt);
 			int score[4];
