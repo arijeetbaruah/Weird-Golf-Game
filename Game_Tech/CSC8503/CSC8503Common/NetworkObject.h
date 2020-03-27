@@ -18,6 +18,9 @@ namespace NCL {
 
 		struct StarRemovedPacket : public GamePacket {
 			int		objectID = -1;
+			Vector3		position;
+			Quaternion	orientation;
+			bool toRemove;
 
 			StarRemovedPacket() {
 				type = Star_Removed;

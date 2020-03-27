@@ -27,6 +27,7 @@ namespace NCL {
 			Vector4		colour;
 			Quaternion	orientation;
 			int			stateID;
+			int shotsTaken;
 			NetworkPowerUps powerUps;
 			bool		valid = false;
 		};

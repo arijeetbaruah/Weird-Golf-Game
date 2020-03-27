@@ -45,6 +45,11 @@ TutorialGame::TutorialGame()	{
 			PhysxController::getInstance().addNewScene();
 	}
 
+	score[0] = 0;
+	score[1] = 0;
+	score[2] = 0;
+	score[3] = 0;
+
 	currentPlayerCount = 1;
 
 	currentWorld = 0;
@@ -124,26 +129,22 @@ GameObject* TutorialGame::AddStarToWorld(Vector3 position, int worldIndex, int I
 			verts.push_back(PxVec3(vert.x, vert.y, vert.z));
 		}
 		for (unsigned int index : newRender->GetMesh()->GetIndexData())		tris.push_back(index);
-		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
+		
 
 		Quaternion rotate = Quaternion(Matrix4::Rotation(-90, Vector3(1, 0, 0)));
 
-		//TriangleMeshPhysicsComponent* physicsC = new TriangleMeshPhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), 1, verts, tris, mMaterial);
-		//star->addComponent(physicsC);
-
+		PxMaterial* mMaterial = PhysxController::getInstance().Physics()->createMaterial(0.99f, 0.99f, 0.5f);
 		SpherePhysicsComponent* sphere = new SpherePhysicsComponent(PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate.x, rotate.y, rotate.z, rotate.w)), star, 5, 0.1, mMaterial, worldIndex);
 		sphere->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 		//PhysxController::getInstance().setupFiltering(sphere->getActor(), FilterGroup::eSTAR, FilterGroup::ePLAYER);
 
 		star->addComponent(sphere);
+		star->setPhysxComponent(sphere);
+		sphere->setAsTrigger();
 
 		star->setTutorialGame(this);
-		
-		star->setPhysxComponent(sphere);
 
 		star->SetNetworkObject(new NetworkObject(*star, ID));
-
-		sphere->setAsTrigger();
 		
 		star->setGameWorld(worlds[worldIndex]);
 
@@ -209,15 +210,14 @@ void TutorialGame::InitCamera() {
 }
 
 void TutorialGame::InitWorld(int worldIndex) {
-	//world->ClearAndErase();
-	/*for (int i = 0; i < worlds.size(); i++) 
-		worlds[i]->ClearAndErase();*/
-	int starCount = 0;
+
 	PhysxController::getInstance().setActiveScene(worldIndex);
 	// The player to act as the server
 	//AddPlayerToWorld(Vector3(0, 1, 0), 1);
 	if (worldIndex == 0) 
 	{
+		int starCount = 0;
+
 		AddStarToWorld(Vector3(-0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.1, 0.15, 1), worldIndex, 1000 + starCount);
@@ -227,12 +227,14 @@ void TutorialGame::InitWorld(int worldIndex) {
 		AddStarToWorld(Vector3(0.4, 0.15, 1), worldIndex, 1000 + starCount);
 		starCount++;
 
-		AddSomeObject(level1,	Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
+		AddSomeObject(level1, Vector3(  0,   0,    0),	worldIndex,		Vector3( 1,  1,  1),		Quaternion(Matrix4::Rotation( 00, Vector3(1, 0, 0))),		"map");
 		WinningTriggerPlane* wPlane = new WinningTriggerPlane(PxTransform(PxVec3(-2.7,-0.3, 1.5)), 0.4, 0.2, 0.4, worldIndex, this);
 		worlds[worldIndex]->AddGameObject(wPlane);
 	}
 	else if (worldIndex == 1)
 	{
+		int starCount = 0;
+
 		AddStarToWorld(Vector3(-2, -0.9, 3), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-2, -0.9, 3.3), worldIndex, 1000 + starCount);
@@ -251,6 +253,8 @@ void TutorialGame::InitWorld(int worldIndex) {
 	}
 	else if (worldIndex == 2)
 	{
+		int starCount = 0;
+
 		AddStarToWorld(Vector3(-0.5, 0.05, 2.5), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-0.2, 0.05, 2.5), worldIndex, 1000 + starCount);
@@ -285,6 +289,8 @@ void TutorialGame::InitWorld(int worldIndex) {
 	}
 	else if (worldIndex == 3)
 	{
+		int starCount = 0;
+
 		AddStarToWorld(Vector3(-1.6, 0.10, 3), worldIndex, 1000 + starCount);
 		starCount++;
 		AddStarToWorld(Vector3(-1.9, 0.10, 3), worldIndex, 1000 + starCount);
@@ -787,6 +793,8 @@ void TutorialGame::UpdateGame(float dt) {
 		displayPauseMenu();
 	}
 
+	displayScoreBoard(dt);
+
 	if (powerUpName.size() > 0)
 		displayPowerUpText(dt);
 
@@ -824,6 +832,40 @@ void TutorialGame::displayPowerUpText(float dt)
 		powerUpName.clear();
 		powerUpTxtTimer = powerUpTxtLength;
 	}
+}
+
+void TutorialGame::displayScoreBoard(float dt)
+{
+#ifdef WIN32
+
+	int startYPos = 650;
+	int startXPos = 800;
+
+	if (isServer) 
+	{
+		int i = 0;
+		for (auto it = serverPlayers.begin(); it != serverPlayers.end(); it++) {
+			if (it->second == NULL) {
+				continue;
+			}
+
+			score[i] = it->second->getComponent<ShotTracker*>("ShotTracker")->getShots();
+			i++;
+		}
+	}
+
+	renderer->DrawString("SHOTS TAKEN:", Vector2(startXPos, startYPos));
+
+	renderer->DrawString("Player1: " + std::to_string(score[0]), Vector2(startXPos, startYPos - 30));
+
+	renderer->DrawString("Player2: " + std::to_string(score[1]), Vector2(startXPos, startYPos - 60));
+	
+	renderer->DrawString("Player3: " + std::to_string(score[2]), Vector2(startXPos, startYPos - 90));
+
+	renderer->DrawString("Player4: " + std::to_string(score[3]), Vector2(startXPos, startYPos - 120));
+	
+#else 
+#endif
 }
 
 void TutorialGame::UpdateKeys() {

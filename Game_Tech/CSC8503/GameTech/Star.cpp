@@ -23,13 +23,24 @@ Star::~Star()
 
 void Star::DuringUpdate(float dt) 
 {
+	if (!game->getIsServer())
+		return;
+
 	if (!this->getComponent<SpherePhysicsComponent*>("PhysicsComponent"))
 	{
+		
 		world->RemoveGameObject(this);
+
+		isActive = false;
+
 		for (int i = 0; i < world->starList.size(); i++)
 		{
 			if (world->starList[i] == this)
+			{
 				world->starList[i] = nullptr;
+				break;
+			}
+				
 		}
 		
 		return;
@@ -39,8 +50,6 @@ void Star::DuringUpdate(float dt)
 		RotateStar(dt);
 		physx->getActor()->setLinearVelocity(PxVec3(0, 0, 0));
 	}
-
-	
 }
 
 void Star::OnCollisionBegin(GameObject* otherObject)

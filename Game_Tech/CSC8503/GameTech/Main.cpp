@@ -72,8 +72,13 @@ int main(int argc, char* argv[])
 		w->SetTitle("Gametech frame Rate: " + std::to_string(1/dt));
 
 		g->UpdateGame(dt);
-		if (!g->isPaused() || !g->isSolo())
-			c.stepPhysics(true, dt);
+
+		if (g->getIsServer()) 
+		{
+			if (!g->isPaused() || !g->isSolo())
+				c.stepPhysics(true, dt);
+		}
+		
 	}
 
 	g->EndSession();

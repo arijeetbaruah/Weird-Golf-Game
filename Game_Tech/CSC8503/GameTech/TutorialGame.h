@@ -46,6 +46,8 @@ namespace NCL {
 
 			void changeLevel();
 			const bool isSolo() { return solo; }
+
+			void setScore(int id, int shots) { score[id] = shots; };
 		protected:
 
 			//check if you need show mouse on window
@@ -113,6 +115,9 @@ namespace NCL {
 			OGLShader* basicShader = nullptr;
 
 			float	forceMagnitude;
+
+			void displayScoreBoard(float dt);
+			int score[4];
 
 			void displayPowerUpText(float dt);
 			string powerUpName;

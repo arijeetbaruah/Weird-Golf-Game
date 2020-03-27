@@ -141,6 +141,7 @@ namespace NCL {
 			void SetPlayerMesh(OGLMesh* cm) { playerMesh = cm; }
 
 			const bool getOffset() { return isOffset; }
+			bool	isActive;
 		protected:
 			Transform			transform;
 
@@ -155,8 +156,6 @@ namespace NCL {
 
 			unsigned long layer; // Bit number
 			unsigned long layerMask; // Set bit for each layer that this gameobject should not collide with
-
-			bool	isActive;
 			string	name;
 
 			std::unordered_map<string, Component*> components;

@@ -35,7 +35,7 @@ public:
 				playerCount++;
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
-
+				game->setScore(packet.playerID, packet.shotsTaken);
 				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
 
@@ -283,7 +283,20 @@ public:
 			for (int i = 0; i < world.starList.size(); i++)
 			{
 				if (world.starList[i]->GetNetworkObject()->GetID() == realPacket->objectID)
-					world.RemoveGameObject(world.starList[i]);
+				{
+
+
+					if (realPacket->toRemove)
+					{
+						world.RemoveGameObject(world.starList[i]);
+						world.starList[i]->isActive = false;
+					}
+					else 
+					{
+						world.starList[i]->GetTransform().SetWorldPosition(realPacket->position);
+						world.starList[i]->GetTransform().SetLocalOrientation(realPacket->orientation);
+					}
+				}
 			}
 		}
 	}
@@ -447,6 +460,7 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 			packet.fullState[it->first].orientation = it->second->GetTransform().GetLocalOrientation();
 			packet.fullState[it->first].playerID = it->first;
 			packet.fullState[it->first].valid = true;
+			packet.fullState[it->first].shotsTaken = it->second->getComponent<ShotTracker*>("ShotTracker")->getShots();
 
 			Player* p = dynamic_cast<Player*>(it->second);
 			packet.fullState[it->first].powerUps = p->getCurrentPowerUp();
@@ -457,11 +471,19 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 		StarRemovedPacket starPacket;
 
 		for (int i = 0; i < worlds[currentWorld]->starList.size(); i++) {
-			if (worlds[currentWorld]->starList[i] != nullptr) {
-				continue;
-			}
 
 			starPacket.objectID = i + 1000;
+
+			if (worlds[currentWorld]->starList[i] != nullptr) {
+				starPacket.position = worlds[currentWorld]->starList[i]->GetTransform().GetWorldPosition();
+				starPacket.orientation = worlds[currentWorld]->starList[i]->GetTransform().GetLocalOrientation();
+				starPacket.toRemove = false;
+			}
+			else 
+			{
+				starPacket.toRemove = true;
+			}
+
 			this->thisServer->SendGlobalPacket(starPacket);
 		}
 
