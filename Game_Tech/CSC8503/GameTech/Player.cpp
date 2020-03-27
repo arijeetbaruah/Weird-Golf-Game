@@ -25,10 +25,10 @@ Player::Player(int id) : GameObject("PLAYER")
 	layer = 1;
 	layerMask = 0; // Collide with everything
 
-	holePositions[0] = Vector2(-2.7, 1.5);
-	holePositions[1] = Vector2(0.02, 3.19);
-	holePositions[2] = Vector2(-0.09, 4.5);
-	holePositions[3] = Vector2(0, 9.19);
+	holePositions[0] = Vector3(-2.7, 0.4, 1.5);
+	holePositions[1] = Vector3(0.02, -2, 3.19);
+	holePositions[2] = Vector3(-0.09, 0.32, 4.5);
+	holePositions[3] = Vector3(0, 0.4, 9.19);
 
 	holeReached = false;
 
@@ -65,7 +65,9 @@ void Player::DuringUpdate(float dt)
 	if (isCurrentPlayer) 
 	{
 		UpdateCamera(dt);
-		UpdateClientPlayerKeys(dt);
+
+		if (!holeReached)
+			UpdateClientPlayerKeys(dt);
 	}
 }
 
@@ -102,6 +104,9 @@ void Player::UpdateCamera(float dt)
 
 	Vector3 pos = transform.GetWorldPosition();
 
+	if (holeReached)
+		pos = holePositions[worldNumber];
+
 	Vector4 f = transform.GetWorldMatrix().GetColumn(2);
 
 	Vector3 forward = Vector3(f.x, f.y, f.z);
@@ -109,7 +114,7 @@ void Player::UpdateCamera(float dt)
 	camPos = pos;
 	camPos -= direction;
 
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, transform.GetWorldPosition(), Vector3(0, 1, 0));
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, pos, Vector3(0, 1, 0));
 	Matrix4 modelMat = temp.Inverse();
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler(); //nearly there now!
@@ -236,16 +241,6 @@ void Player::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->getLayer() == 6)
 	{
 		holeReached = true;
-
-		switch (worldNumber) 
-		{
-			case 0: 
-			{
-				mainCamera->SetPosition(Vector3(holePositions[0]));
-			}
-		}
-
-		
 	}
 }
 

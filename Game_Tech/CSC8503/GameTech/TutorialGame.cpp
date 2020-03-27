@@ -666,7 +666,7 @@ void TutorialGame::changeLevel()
 
 	switchingLevels = true;
 
-	if (currentWorld >= 0)
+	if (currentWorld >= 3)
 	{
 		gameFinished = true;
 		winner = 0;

@@ -50,6 +50,9 @@ namespace NCL {
 
 			const bool getCanMove() { return canMove; };
 			void setWorldNumber(int num) { worldNumber = num; };
+
+			void setHoleReached() { holeReached = true; };
+			bool getHoleReached() { return holeReached; };
 			
 		protected:
 
@@ -61,7 +64,7 @@ namespace NCL {
 			float speed = 0.005;
 			float sizeScale = 1;
 
-			Vector2 holePositions[4];
+			Vector3 holePositions[4];
 			bool holeReached;
 			int worldNumber;
 

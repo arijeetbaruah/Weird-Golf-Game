@@ -25,9 +25,6 @@ public:
 
 			int playerCount = 0;
 
-			if (realPacket->switchingLevel)
-				game->changeLevel();
-
 			for (NetworkState& packet : realPacket->fullState) {
 				if (!packet.valid) {
 					continue;
@@ -36,8 +33,18 @@ public:
 				serverPlayers[packet.playerID]->GetTransform().SetWorldPosition(packet.position);
 				serverPlayers[packet.playerID]->GetTransform().SetLocalOrientation(packet.orientation);
 				game->setScore(packet.playerID, packet.shotsTaken);
+
+				if (packet.holeReached)
+				{
+					Player* p = dynamic_cast<Player*>(serverPlayers[packet.playerID]);
+					p->setHoleReached();
+				}
+
 				AddComponent(packet.powerUps, serverPlayers[packet.playerID]);
 			}
+
+			if (realPacket->switchingLevel)
+				game->changeLevel();
 
 			game->currentPlayerCount = playerCount;
 		}
@@ -50,7 +57,9 @@ public:
 			Player* p = dynamic_cast<Player*>(target);
 			target->GetTransform().SetWorldScale(Vector3(0.05, 0.05, 0.05) * p->getSizeScale());
 			target->SetRenderObject(new RenderObject(&p->GetTransform(), p->GetCubeMesh(), p->GetRenderObject()->GetDefaultTexture(), p->GetRenderObject()->GetShader()));
-			game->setPowerUpName("BOXED IN!");
+
+			if (target == game->GetCurrentPlayer())
+				game->setPowerUpName("BOXED IN!");
 		}
 		else if (powerUps == NetworkPowerUps::SIZE) {
 			Player* p = dynamic_cast<Player*>(target);
@@ -58,20 +67,25 @@ public:
 			{
 				p->GetTransform().SetWorldScale(p->GetTransform().GetLocalScale() * 2);
 				//p->setSizeScale(2);
-				game->setPowerUpName("BIG BALL!");
+				if (target == game->GetCurrentPlayer())
+					game->setPowerUpName("BIG BALL!");
 			}
 		}
 		else if (powerUps == NetworkPowerUps::HOMING) {
-			game->setPowerUpName("HOMING BALL!");
+			if (target == game->GetCurrentPlayer())
+				game->setPowerUpName("HOMING BALL!");
 		}
 		else if (powerUps == NetworkPowerUps::SPEED) {
-			game->setPowerUpName("SPEED BOOST!");
+			if (target == game->GetCurrentPlayer())
+				game->setPowerUpName("SPEED BOOST!");
 		}
 		else if (powerUps == NetworkPowerUps::DIRECTION) {
-			game->setPowerUpName("DIRECTION CHANGE!");
+			if (target == game->GetCurrentPlayer())
+				game->setPowerUpName("DIRECTION CHANGE!");
 		}
 		else if (powerUps == NetworkPowerUps::CURVE) {
-			game->setPowerUpName("CURVE BALL!");
+			if (target == game->GetCurrentPlayer())
+				game->setPowerUpName("CURVE BALL!");
 		}
 		else if (powerUps == NetworkPowerUps::NONE) {
 			Player* p = dynamic_cast<Player*>(target);
@@ -475,6 +489,11 @@ void NetworkedGame::UpdateNetworkPostion(GameObject* obj) {
 
 			Player* p = dynamic_cast<Player*>(it->second);
 			packet.fullState[it->first].powerUps = p->getCurrentPowerUp();
+
+			if (p->getHoleReached())
+				packet.fullState[it->first].holeReached = true;
+			else
+				packet.fullState[it->first].holeReached = false;
 		}
 
 		this->thisServer->SendGlobalPacket(packet);
